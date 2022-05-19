@@ -1,0 +1,8 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Core support for test resources loading.
+This module defines interfaces of test resources resolvers, as well as facilities for loading them lazily.
+"""

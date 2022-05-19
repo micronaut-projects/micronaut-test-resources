@@ -1,0 +1,13 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for loading test resources resolvers directly within the application.
+The resource resolvers are loaded via service loading.
+"""
+
+dependencies {
+    api(mn.micronaut.http.client)
+    api(project(':test-resources-core'))
+}

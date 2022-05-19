@@ -23,21 +23,33 @@ import io.micronaut.testresources.core.TestResourcesResolver;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
+
+/**
+ * A property expression resolver which lazily resolves properties used for test resources
+ * resolution. It will delegate to test resources resolvers, which are loaded via service
+ * loading.
+ */
 public class EmbeddedTestResourcesPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {
     public EmbeddedTestResourcesPropertyExpressionResolver() {
         super(new PropertyExpressionResolver() {
             private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
 
             @Override
-            public <T> Optional<T> resolve(PropertyResolver propertyResolver, ConversionService<?> conversionService, String expression, Class<T> requiredType) {
+            public <T> Optional<T> resolve(PropertyResolver propertyResolver,
+                                           ConversionService<?> conversionService,
+                                           String expression,
+                                           Class<T> requiredType) {
                 List<TestResourcesResolver> resolvers = loader.getResolvers();
                 for (TestResourcesResolver resolver : resolvers) {
-                    Set<String> supported = new HashSet<>(resolver.listProperties());
+                    Set<String> supported = new HashSet<>(resolver.getResolvableProperties());
                     if (supported.contains(expression)) {
-                        Optional<String> resolve = resolver.resolve(expression);
+                        Map<String, Object> props = resolveRequiredProperties(propertyResolver, resolver);
+                        Optional<String> resolve = resolver.resolve(expression, props);
                         if (resolve.isPresent()) {
                             return conversionService.convert(resolve.get(), requiredType);
                         }

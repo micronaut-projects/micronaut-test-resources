@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * A property source loader responsible for resolving test resources.
+ * This delegates to test resources resolver loaded via service loading.
+ */
 public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResourcesPropertySourceLoader {
     public EmbeddedTestResourcesPropertySourceLoader() {
         super(new Function<ResourceLoader, List<String>>() {
@@ -32,7 +36,7 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
             public List<String> apply(ResourceLoader resourceLoader) {
                 List<TestResourcesResolver> resolvers = loader.getResolvers();
                 return resolvers.stream()
-                    .flatMap(r -> r.listProperties().stream())
+                    .flatMap(r -> r.getResolvableProperties().stream())
                     .distinct()
                     .collect(Collectors.toList());
             }

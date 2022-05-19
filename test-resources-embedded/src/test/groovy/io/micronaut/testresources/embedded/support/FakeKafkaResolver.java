@@ -18,23 +18,31 @@ package io.micronaut.testresources.embedded.support;
 import io.micronaut.testresources.core.TestResourcesResolver;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class FakeKafkaResolver implements TestResourcesResolver {
 
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap-servers";
     public static final String KAFKA_TOPIC = "kafka.topic";
+    public static final String KAFKA_TEST_PORT = "kafka.test-port";
 
     @Override
-    public List<String> listProperties() {
+    public List<String> getResolvableProperties() {
         return Arrays.asList(KAFKA_BOOTSTRAP_SERVERS, KAFKA_TOPIC);
     }
 
     @Override
-    public Optional<String> resolve(String propertyName) {
+    public List<String> getRequiredProperties() {
+        return Collections.singletonList(KAFKA_TEST_PORT);
+    }
+
+    @Override
+    public Optional<String> resolve(String propertyName, Map<String, Object> properties) {
         if (KAFKA_BOOTSTRAP_SERVERS.equals(propertyName)) {
-            return Optional.of("http://localhost:12345");
+            return Optional.of("http://localhost:" + properties.get(KAFKA_TEST_PORT));
         }
         if (KAFKA_TOPIC.equals(propertyName)) {
             return Optional.of("This value should not be seen in tests");

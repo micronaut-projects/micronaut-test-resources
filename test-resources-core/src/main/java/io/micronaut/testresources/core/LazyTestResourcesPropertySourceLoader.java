@@ -59,16 +59,16 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
         return Collections.emptyMap();
     }
 
-    private static class LazyPropertySource implements PropertySource, Ordered {
+    private static final class LazyPropertySource implements PropertySource, Ordered {
         private final List<String> keys;
+
+        private LazyPropertySource(List<String> keys) {
+            this.keys = keys;
+        }
 
         @Override
         public int getOrder() {
             return HIGHEST_PRECEDENCE;
-        }
-
-        private LazyPropertySource(List<String> keys) {
-            this.keys = keys;
         }
 
         @Override

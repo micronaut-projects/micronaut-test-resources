@@ -25,6 +25,10 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
+/**
+ * A property source loader which delegates resolution of properties to the client
+ * lazily.
+ */
 public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPropertySourceLoader {
 
     public TestResourcesClientPropertySourceLoader() {
@@ -36,7 +40,7 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
                 if (loaded.compareAndSet(false, true)) {
                     Optional<URL> config = resourceLoader.getResource("/test-resources.properties");
                     if (config.isPresent()) {
-                        return TestResourcesClientFactory.configuredAt(config.get()).listProperties();
+                        return TestResourcesClientFactory.configuredAt(config.get()).getResolvableProperties();
                     }
                 }
                 return Collections.emptyList();

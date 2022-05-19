@@ -15,7 +15,10 @@
  */
 package io.micronaut.testresources.client;
 
-public class TestResourcesException extends RuntimeException{
+/**
+ * Test resources resolution exception.
+ */
+public class TestResourcesException extends RuntimeException {
     public TestResourcesException(Throwable cause) {
         super(cause);
     }

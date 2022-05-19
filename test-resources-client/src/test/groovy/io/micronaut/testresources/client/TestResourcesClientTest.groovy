@@ -4,6 +4,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Put
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.core.TestResourcesResolver
@@ -62,13 +63,13 @@ class TestResourcesClientTest extends Specification {
 
         @Override
         @Get("/list")
-        List<String> listProperties() {
+        List<String> getResolvableProperties() {
             ["dummy1", "dummy2"]
         }
 
         @Override
-        @Get('/resolve/{name}')
-        Optional<String> resolve(String name) {
+        @Put('/resolve')
+        Optional<String> resolve(String name, Map<String, Object> properties) {
             Optional.of("value for $name".toString())
         }
     }

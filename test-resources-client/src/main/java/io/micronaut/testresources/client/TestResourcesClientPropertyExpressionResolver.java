@@ -28,6 +28,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
+
+/**
+ * A property expression resolver which connects via client to a proxy in order to resolve
+ * properties.
+ */
 public class TestResourcesClientPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {
 
     public TestResourcesClientPropertyExpressionResolver() {
@@ -38,7 +44,8 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
             public <T> Optional<T> resolve(PropertyResolver propertyResolver, ConversionService<?> conversionService, String expression, Class<T> requiredType) {
                 if (propertyResolver instanceof Environment) {
                     TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
-                    Optional<String> resolved = client.resolve(expression);
+                    Map<String, Object> props = resolveRequiredProperties(propertyResolver, client);
+                    Optional<String> resolved = client.resolve(expression, props);
                     if (resolved.isPresent()) {
                         return conversionService.convert(resolved.get(), requiredType);
                     }
@@ -58,12 +65,12 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         static final TestResourcesClient INSTANCE = new NoOpClient();
 
         @Override
-        public List<String> listProperties() {
+        public List<String> getResolvableProperties() {
             return Collections.emptyList();
         }
 
         @Override
-        public Optional<String> resolve(String name) {
+        public Optional<String> resolve(String name, Map<String, Object> properties) {
             return Optional.empty();
         }
     }

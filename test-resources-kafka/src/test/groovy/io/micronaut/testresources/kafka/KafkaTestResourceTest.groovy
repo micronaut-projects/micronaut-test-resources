@@ -1,11 +1,14 @@
 package io.micronaut.testresources.kafka
 
+import com.github.dockerjava.api.DockerClient
+import com.github.dockerjava.api.model.Container
 import io.micronaut.configuration.kafka.annotation.KafkaClient
 import io.micronaut.configuration.kafka.annotation.Topic
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Prototype
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
+import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
@@ -20,7 +23,7 @@ class KafkaTestResourceTest extends Specification {
         def bean = applicationContext.getBean(SomeBean)
 
         then:
-        "TODO: test no kafka running"
+        kafkaContainers().empty
     }
 
     def "automatically starts a Kafka container"() {
@@ -29,6 +32,7 @@ class KafkaTestResourceTest extends Specification {
         def result = client.updateAnalytics("oh yeah!")
 
         then:
+        kafkaContainers().size() == 1
         result.block() == "oh yeah!"
     }
 
@@ -41,5 +45,26 @@ class KafkaTestResourceTest extends Specification {
     static interface AnalyticsClient {
         @Topic("analytics")
         Mono<String> updateAnalytics(String book);
+    }
+
+    private DockerClient dockerClient() {
+        DockerClientFactory.instance().client()
+    }
+
+    private List<Container> runningTestContainers() {
+        dockerClient().listContainersCmd()
+                .exec()
+                .findAll {
+                    it.labels['org.testcontainers'] == 'true'
+                }
+                .findAll {
+                    println it
+                    it.state == 'running'
+                }
+    }
+
+    private List<Container> kafkaContainers() {
+        runningTestContainers()
+                .findAll { it.image.contains('cp-kafka') }
     }
 }

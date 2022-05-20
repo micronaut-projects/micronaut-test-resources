@@ -2,12 +2,17 @@ package io.micronaut.testresources.jdbc
 
 import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.api.model.Container
+import io.micronaut.testresources.testcontainers.TestContainers
 import org.testcontainers.DockerClientFactory
 import spock.lang.Specification
 
 abstract class AbstractJDBCSpec extends Specification {
 
     abstract String getImageName()
+
+    void cleanupSpec() {
+        TestContainers.closeAll()
+    }
 
     protected DockerClient dockerClient() {
         DockerClientFactory.instance().client()
@@ -25,7 +30,7 @@ abstract class AbstractJDBCSpec extends Specification {
                 }
     }
 
-    protected List<Container> kafkaContainers() {
+    protected List<Container> databaseContainers() {
         runningTestContainers()
                 .findAll { it.image.contains(imageName) }
     }

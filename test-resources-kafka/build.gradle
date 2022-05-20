@@ -15,7 +15,3 @@ dependencies {
     testImplementation(mn.micronaut.reactor)
     testImplementation(mn.micronaut.kafka)
 }
-
-tasks.withType(Test).configureEach {
-    forkEvery = 1
-}

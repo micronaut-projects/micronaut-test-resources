@@ -5,11 +5,17 @@ import com.github.dockerjava.api.model.Container
 import io.micronaut.configuration.kafka.annotation.KafkaClient
 import io.micronaut.configuration.kafka.annotation.Topic
 import io.micronaut.context.annotation.Prototype
+import io.micronaut.testresources.testcontainers.TestContainers
 import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
 abstract class AbstractKafkaSpec extends Specification {
+
+    void cleanupSpec() {
+        TestContainers.closeAll()
+    }
+
     @Prototype
     static class SomeBean {
         String message = 'hello'

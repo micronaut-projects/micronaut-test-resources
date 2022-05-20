@@ -41,6 +41,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     protected String getSimpleName() {
         return "kafka";
     }
+
     @Override
     protected String getDefaultImageName() {
         return DEFAULT_IMAGE;

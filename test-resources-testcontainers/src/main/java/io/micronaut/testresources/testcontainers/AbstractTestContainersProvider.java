@@ -16,8 +16,6 @@
 package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.testresources.core.TestResourcesResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -34,10 +32,6 @@ import java.util.Optional;
 public abstract class AbstractTestContainersProvider<T extends GenericContainer<? extends T>> implements TestResourcesResolver {
 
     public static final String IMAGE_NAME_PROPERTY = "image-name";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTestContainersProvider.class);
-
-    private T container;
 
     /**
      * Returns the name of the resource resolver, for example "kafka" or "mysql".
@@ -92,25 +86,20 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
     @Override
     public final Optional<String> resolve(String propertyName, Map<String, Object> properties) {
         if (shouldAnswer(propertyName, properties)) {
-            maybeCreateContainer(properties);
-            return resolveProperty(propertyName, container);
+            return resolveProperty(propertyName,
+                TestContainers.getOrCreate(this.getClass(), getSimpleName(), properties, () -> {
+                    String defaultImageName = getDefaultImageName();
+                    DockerImageName imageName = DockerImageName.parse(defaultImageName);
+                    String imageNameProperty = getImageNameProperty();
+                    if (properties.containsKey(imageNameProperty)) {
+                        imageName = DockerImageName.parse(String.valueOf(properties.get(imageNameProperty))).asCompatibleSubstituteFor(defaultImageName);
+                    }
+                    return createContainer(imageName, properties);
+                }));
         }
         return Optional.empty();
     }
 
     protected abstract Optional<String> resolveProperty(String propertyName, T container);
 
-    private void maybeCreateContainer(Map<String, Object> properties) {
-        if (container == null) {
-            LOGGER.info("Starting a " + getSimpleName() + "  test container");
-            String defaultImageName = getDefaultImageName();
-            DockerImageName imageName = DockerImageName.parse(defaultImageName);
-            String imageNameProperty = getImageNameProperty();
-            if (properties.containsKey(imageNameProperty)) {
-                imageName = DockerImageName.parse(String.valueOf(properties.get(imageNameProperty))).asCompatibleSubstituteFor(defaultImageName);
-            }
-            container = createContainer(imageName, properties);
-            container.start();
-        }
-    }
 }

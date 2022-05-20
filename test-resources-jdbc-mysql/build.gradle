@@ -1,0 +1,19 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for launching a MySQL test container.
+"""
+
+dependencies {
+    api(project(':test-resources-core'))
+    implementation(platform(libs.boms.testcontainers))
+    implementation(libs.testcontainers.mysql)
+
+    testCompileOnly(mn.micronaut.data.processor)
+    testImplementation(project(":test-resources-embedded"))
+    testImplementation(mn.micronaut.data.jdbc)
+    testRuntimeOnly(libs.mysql)
+    testRuntimeOnly(mn.micronaut.jdbc.hikari)
+}

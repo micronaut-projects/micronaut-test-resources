@@ -16,6 +16,7 @@ include 'test-resources-embedded'
 include 'test-resources-client'
 include 'test-resources-bom'
 include 'test-resources-kafka'
+include 'test-resources-jdbc-mysql'
 
 micronautBuild {
     importMicronautCatalog()

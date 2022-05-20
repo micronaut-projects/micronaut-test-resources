@@ -29,6 +29,8 @@ managed-testcontainers = "1.16.3"
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
 
 testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }
+testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
+mysql = { module = "mysql:mysql-connector-java", version = "" }
 
 #
 # Managed dependencies appear in the BOM

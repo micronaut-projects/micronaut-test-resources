@@ -6,7 +6,7 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 
 @MicronautTest
-@Property(name = KafkaTestResourceProvider.IMAGE_NAME_PROPERTY, value = "vectorized/redpanda:v21.11.3")
+@Property(name = KafkaTestResourceProvider.IMAGE_NAME_PROPERTY, value = "confluentinc/cp-kafka:6.2.2")
 class CustomKafkaImageTest extends AbstractKafkaSpec {
 
     @Inject

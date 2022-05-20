@@ -1,0 +1,14 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Defines base classes for test resources providers which make use
+of testcontainers.
+"""
+
+dependencies {
+    api(project(':test-resources-core'))
+    api(libs.testcontainers.core)
+    api(platform(libs.boms.testcontainers))
+}

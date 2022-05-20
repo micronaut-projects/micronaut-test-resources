@@ -1,4 +1,4 @@
-package io.micronaut.testresources.mysql
+package io.micronaut.testresources.jdbc
 
 import groovy.transform.ToString
 import io.micronaut.data.annotation.GeneratedValue

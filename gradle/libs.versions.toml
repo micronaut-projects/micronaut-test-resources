@@ -28,8 +28,11 @@ managed-testcontainers = "1.16.3"
 [libraries]
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
 
+testcontainers-core = { module = "org.testcontainers:testcontainers", version = "" }
 testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }
 testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
+testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
+
 mysql = { module = "mysql:mysql-connector-java", version = "" }
 
 #

@@ -1,10 +1,10 @@
-package io.micronaut.testresources.mysql
+package io.micronaut.testresources.jdbc
 
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 
 @MicronautTest
-class StartMySQLTest extends AbstractMySQLSpec {
+class StartMySQLTest extends AbstractJDBCSpec {
     @Inject
     BookRepository repository
 
@@ -17,5 +17,10 @@ class StartMySQLTest extends AbstractMySQLSpec {
 
         then:
         books.size() == 1
+    }
+
+    @Override
+    String getImageName() {
+        "mysql"
     }
 }

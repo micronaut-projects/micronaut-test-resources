@@ -1,0 +1,2 @@
+io.micronaut.testresources.jdbc.MySQLTestResourceProvider
+io.micronaut.testresources.jdbc.PostgreSQLTestResourceProvider

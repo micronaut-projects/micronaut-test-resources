@@ -15,7 +15,7 @@
  */
 package io.micronaut.testresources.kafka;
 
-import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -27,10 +27,9 @@ import java.util.Optional;
 /**
  * A test resource provider which will spawn a Kafka test container.
  */
-public class KafkaTestResourceProvider implements TestResourcesResolver {
+public class KafkaTestResourceProvider extends AbstractTestContainersProvider<KafkaContainer> {
 
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
-    public static final String IMAGE_NAME_PROPERTY = "micronaut.testresources.kafka.image-name";
     public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:6.2.1";
 
     @Override
@@ -39,21 +38,23 @@ public class KafkaTestResourceProvider implements TestResourcesResolver {
     }
 
     @Override
-    public List<String> getRequiredProperties() {
-        return Collections.singletonList(IMAGE_NAME_PROPERTY);
+    protected String getSimpleName() {
+        return "kafka";
+    }
+    @Override
+    protected String getDefaultImageName() {
+        return DEFAULT_IMAGE;
     }
 
     @Override
-    public Optional<String> resolve(String propertyName, Map<String, Object> properties) {
+    protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> properties) {
+        return new KafkaContainer(imageName);
+    }
+
+    @Override
+    protected Optional<String> resolveProperty(String propertyName, KafkaContainer container) {
         if (KAFKA_BOOTSTRAP_SERVERS.equals(propertyName)) {
-            System.out.println("Starting a Kafka test container");
-            DockerImageName imageName = DockerImageName.parse(DEFAULT_IMAGE) ;
-            if (properties.containsKey(IMAGE_NAME_PROPERTY)) {
-                imageName = DockerImageName.parse(String.valueOf(properties.get(IMAGE_NAME_PROPERTY))).asCompatibleSubstituteFor(DEFAULT_IMAGE);
-            }
-            KafkaContainer kafka = new KafkaContainer(imageName);
-            kafka.start();
-            return Optional.of(kafka.getBootstrapServers());
+            return Optional.of(container.getBootstrapServers());
         }
         return Optional.empty();
     }

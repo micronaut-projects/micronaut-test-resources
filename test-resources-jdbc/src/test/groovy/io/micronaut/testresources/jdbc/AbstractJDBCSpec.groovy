@@ -1,12 +1,13 @@
-package io.micronaut.testresources.mysql
+package io.micronaut.testresources.jdbc
 
 import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.api.model.Container
 import org.testcontainers.DockerClientFactory
 import spock.lang.Specification
 
-abstract class AbstractMySQLSpec extends Specification {
+abstract class AbstractJDBCSpec extends Specification {
 
+    abstract String getImageName()
 
     protected DockerClient dockerClient() {
         DockerClientFactory.instance().client()
@@ -26,6 +27,6 @@ abstract class AbstractMySQLSpec extends Specification {
 
     protected List<Container> kafkaContainers() {
         runningTestContainers()
-                .findAll { it.image.contains('mysql') }
+                .findAll { it.image.contains(imageName) }
     }
 }

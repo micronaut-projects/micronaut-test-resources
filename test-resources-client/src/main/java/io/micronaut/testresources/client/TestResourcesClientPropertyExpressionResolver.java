@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static io.micronaut.testresources.client.ConfigFinder.findConfiguration;
 import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
 
 /**
@@ -37,26 +38,11 @@ import static io.micronaut.testresources.core.PropertyResolverSupport.resolveReq
 public class TestResourcesClientPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {
 
     public TestResourcesClientPropertyExpressionResolver() {
-        super(new PropertyExpressionResolver() {
-            private final Map<Environment, TestResourcesClient> clients = new ConcurrentHashMap<>();
-
-            @Override
-            public <T> Optional<T> resolve(PropertyResolver propertyResolver, ConversionService<?> conversionService, String expression, Class<T> requiredType) {
-                if (propertyResolver instanceof Environment) {
-                    TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
-                    Map<String, Object> props = resolveRequiredProperties(propertyResolver, client);
-                    Optional<String> resolved = client.resolve(expression, props);
-                    if (resolved.isPresent()) {
-                        return conversionService.convert(resolved.get(), requiredType);
-                    }
-                }
-                return Optional.empty();
-            }
-        });
+        super(new DelegateResolver());
     }
 
     private static TestResourcesClient createClient(Environment env) {
-        Optional<URL> config = env.getResource("/test-resources.properties");
+        Optional<URL> config = findConfiguration(env);
         return config.map(TestResourcesClientFactory::configuredAt)
             .orElse(NoOpClient.INSTANCE);
     }
@@ -84,4 +70,27 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
     }
 
+    private static class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {
+        private final Map<Environment, TestResourcesClient> clients = new ConcurrentHashMap<>();
+
+        @Override
+        public <T> Optional<T> resolve(PropertyResolver propertyResolver, ConversionService<?> conversionService, String expression, Class<T> requiredType) {
+            if (propertyResolver instanceof Environment) {
+                TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
+                Map<String, Object> props = resolveRequiredProperties(propertyResolver, client);
+                Optional<String> resolved = client.resolve(expression, props);
+                if (resolved.isPresent()) {
+                    return conversionService.convert(resolved.get(), requiredType);
+                }
+            }
+            return Optional.empty();
+        }
+
+        @Override
+        public void close() throws Exception {
+            for (TestResourcesClient client : clients.values()) {
+                client.closeAll();
+            }
+        }
+    }
 }

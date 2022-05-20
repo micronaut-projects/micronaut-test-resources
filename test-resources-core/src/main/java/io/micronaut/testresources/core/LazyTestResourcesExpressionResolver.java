@@ -27,7 +27,7 @@ import java.util.Optional;
  * with the expected prefix. The delegate is called with the
  * prefix removed.
  */
-public class LazyTestResourcesExpressionResolver implements PropertyExpressionResolver {
+public class LazyTestResourcesExpressionResolver implements PropertyExpressionResolver, AutoCloseable {
     public static final String PLACEHOLDER_PREFIX = "auto.test.resources.";
     private final PropertyExpressionResolver delegate;
 
@@ -36,10 +36,20 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
     }
 
     @Override
-    public <T> Optional<T> resolve(PropertyResolver propertyResolver, ConversionService<?> conversionService, String expression, Class<T> requiredType) {
+    public <T> Optional<T> resolve(PropertyResolver propertyResolver,
+                                   ConversionService<?> conversionService,
+                                   String expression,
+                                   Class<T> requiredType) {
         if (expression.startsWith(PLACEHOLDER_PREFIX)) {
             return delegate.resolve(propertyResolver, conversionService, expression.substring(PLACEHOLDER_PREFIX.length()), requiredType);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (delegate instanceof AutoCloseable) {
+            ((AutoCloseable) delegate).close();
+        }
     }
 }

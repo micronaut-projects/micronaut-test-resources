@@ -25,6 +25,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
+import static io.micronaut.testresources.client.ConfigFinder.findConfiguration;
+
 /**
  * A property source loader which delegates resolution of properties to the client
  * lazily.
@@ -38,7 +40,7 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
             @Override
             public List<String> apply(ResourceLoader resourceLoader) {
                 if (loaded.compareAndSet(false, true)) {
-                    Optional<URL> config = resourceLoader.getResource("/test-resources.properties");
+                    Optional<URL> config = findConfiguration(resourceLoader);
                     if (config.isPresent()) {
                         return TestResourcesClientFactory.configuredAt(config.get()).getResolvableProperties();
                     }

@@ -15,12 +15,12 @@
  */
 package io.micronaut.testresources.client;
 
-import io.micronaut.context.ApplicationContext;
+import io.micronaut.http.client.HttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -30,7 +30,11 @@ import java.util.Properties;
  * regular dependency injection, so this factory creates an application
  * context to create the client.
  */
-public class TestResourcesClientFactory {
+public final class TestResourcesClientFactory {
+    private TestResourcesClientFactory() {
+
+    }
+
     static TestResourcesClient configuredAt(URL configFile) {
         Properties props = new Properties();
         try (InputStream input = configFile.openStream()) {
@@ -38,10 +42,11 @@ public class TestResourcesClientFactory {
         } catch (IOException e) {
             throw new TestResourcesException(e);
         }
-        ApplicationContext context = ApplicationContext.builder()
-            .packages("io.micronaut.testresources.client")
-            .properties(Collections.singletonMap("micronaut.testresources.proxy.url", props.getProperty(TestResourcesClient.PROXY_URI)))
-            .start();
-        return context.getBean(TestResourcesClient.class);
+        try {
+            HttpClient client = HttpClient.create(new URL(props.getProperty(TestResourcesClient.PROXY_URI)));
+            return new DefaultTestResourcesClient(client);
+        } catch (MalformedURLException e) {
+            throw new TestResourcesException(e);
+        }
     }
 }

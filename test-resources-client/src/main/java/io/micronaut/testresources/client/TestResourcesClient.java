@@ -17,7 +17,6 @@ package io.micronaut.testresources.client;
 
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Put;
-import io.micronaut.http.client.annotation.Client;
 import io.micronaut.testresources.core.TestResourcesResolver;
 
 import java.util.List;
@@ -28,7 +27,6 @@ import java.util.Optional;
  * A client responsible for connecting to a test resources
  * proxy.
  */
-@Client("${micronaut.testresources.proxy.url}/proxy")
 public interface TestResourcesClient extends TestResourcesResolver {
     String PROXY_URI = "proxy.uri";
 

@@ -13,21 +13,18 @@ import spock.lang.Specification
 class TestResourcesControllerTest extends Specification {
 
     @Inject
-    TestResourcesClient client
-
-    @Inject
-    DiagnosticsClient diagnostics
+    DiagnosticsClient client
 
     def "verifies that proxy can instantiate container"() {
         expect:
         client.resolvableProperties == ['kafka.bootstrap.servers']
-        diagnostics.listContainers().empty
+        client.listContainers().empty
 
         when:
         client.resolve("kafka.bootstrap.servers", [:])
 
         then:
-        def containers = diagnostics.listContainers()
+        def containers = client.listContainers()
         containers.size() == 1
         containers[0].imageName.startsWith 'confluentinc/cp-kafka'
 
@@ -35,11 +32,11 @@ class TestResourcesControllerTest extends Specification {
         client.closeAll()
 
         then:
-        diagnostics.listContainers().empty
+        client.listContainers().empty
     }
 
     @Client("/proxy")
-    static interface DiagnosticsClient {
+    static interface DiagnosticsClient extends TestResourcesClient {
         @Get("/testcontainers")
         List<TestContainer> listContainers();
     }

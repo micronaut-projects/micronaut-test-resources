@@ -18,6 +18,7 @@ include 'test-resources-bom'
 include 'test-resources-kafka'
 include 'test-resources-jdbc'
 include 'test-resources-testcontainers'
+include 'test-resources-proxy'
 
 micronautBuild {
     importMicronautCatalog()

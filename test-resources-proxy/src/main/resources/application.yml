@@ -1,0 +1,5 @@
+micronaut:
+  application:
+    name: Test resources proxy
+  server:
+    #port: 34111

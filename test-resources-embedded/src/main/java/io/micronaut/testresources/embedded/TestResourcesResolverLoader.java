@@ -26,11 +26,11 @@ import java.util.List;
  * This class is responsible for loading {@link TestResourcesResolver} instances
  * via service loading and caching them.
  */
-final class TestResourcesResolverLoader {
+public final class TestResourcesResolverLoader {
 
     private final List<TestResourcesResolver> resolvers;
 
-    private TestResourcesResolverLoader() {
+    public TestResourcesResolverLoader() {
         SoftServiceLoader<TestResourcesResolver> loader = SoftServiceLoader.load(TestResourcesResolver.class);
         ArrayList<TestResourcesResolver> values = new ArrayList<>();
         loader.collectAll(values);

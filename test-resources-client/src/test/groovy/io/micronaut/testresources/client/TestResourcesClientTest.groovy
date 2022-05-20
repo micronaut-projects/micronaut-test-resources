@@ -68,9 +68,20 @@ class TestResourcesClientTest extends Specification {
         }
 
         @Override
+        @Get("/requirements")
+        List<String> getRequiredProperties() {
+            []
+        }
+
+        @Override
         @Put('/resolve')
         Optional<String> resolve(String name, Map<String, Object> properties) {
             Optional.of("value for $name".toString())
+        }
+
+        @Get("/close/all")
+        void closeAll() {
+
         }
     }
 }

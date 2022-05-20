@@ -40,7 +40,11 @@ public interface TestResourcesClient extends TestResourcesResolver {
 
     @Override
     @Get("/requirements")
-    default List<String> getRequiredProperties() {
-        return TestResourcesResolver.super.getRequiredProperties();
-    }
+    List<String> getRequiredProperties();
+
+    /**
+     * Closes all test resources.
+     */
+    @Get("/close/all")
+    void closeAll();
 }

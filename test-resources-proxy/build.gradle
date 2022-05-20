@@ -1,0 +1,21 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+A lightweight server which runs a VM responsible for hosting
+test resource resolvers.
+This server must be used in conjunction with the test resources
+client.
+"""
+
+dependencies {
+    implementation(mn.micronaut.http.server.netty)
+    implementation(project(':test-resources-core'))
+    implementation(project(':test-resources-embedded'))
+    implementation(project(':test-resources-testcontainers'))
+    runtimeOnly(mn.logback)
+
+    testImplementation(project(':test-resources-client'))
+    testRuntimeOnly(project(':test-resources-kafka'))
+}

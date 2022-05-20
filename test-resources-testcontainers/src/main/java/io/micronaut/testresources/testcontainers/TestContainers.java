@@ -17,10 +17,13 @@ package io.micronaut.testresources.testcontainers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
@@ -70,6 +73,19 @@ public final class TestContainers {
         }
         LOCK.unlock();
         return container;
+    }
+
+    /**
+     * Lists all containers.
+     * @return the containers
+     */
+    public static List<Container> listAll() {
+        LOCK.lock();
+        try {
+            return new ArrayList<>(CONTAINERS.values());
+        } finally {
+            LOCK.unlock();
+        }
     }
 
     public static void closeAll() {

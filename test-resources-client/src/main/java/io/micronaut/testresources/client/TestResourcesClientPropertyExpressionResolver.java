@@ -73,6 +73,15 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         public Optional<String> resolve(String name, Map<String, Object> properties) {
             return Optional.empty();
         }
+
+        @Override
+        public List<String> getRequiredProperties() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public void closeAll() {
+        }
     }
 
 }

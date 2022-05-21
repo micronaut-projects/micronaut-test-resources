@@ -59,7 +59,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);
-        HttpRequest<?> req = HttpRequest.PUT(resolveURI, params)
+        HttpRequest<?> req = HttpRequest.POST(resolveURI, params)
             .header(USER_AGENT, "Micronaut HTTP Client")
             .header(ACCEPT, "application/json");
         return Optional.ofNullable(client.retrieve(req));

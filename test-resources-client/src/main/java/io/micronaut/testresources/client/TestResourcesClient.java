@@ -16,7 +16,7 @@
 package io.micronaut.testresources.client;
 
 import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.Post;
 import io.micronaut.testresources.core.TestResourcesResolver;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public interface TestResourcesClient extends TestResourcesResolver {
     @Get("/list")
     List<String> getResolvableProperties();
 
-    @Put("/resolve")
+    @Post("/resolve")
     Optional<String> resolve(String name, Map<String, Object> properties);
 
     @Override

@@ -37,7 +37,8 @@ public class Application {
         @Override
         public void configure(ApplicationContextBuilder builder) {
             builder.packages("io.micronaut.testresources.proxy")
-                .deduceEnvironment(false);
+                .deduceEnvironment(false)
+                .banner(false);
         }
     }
 }

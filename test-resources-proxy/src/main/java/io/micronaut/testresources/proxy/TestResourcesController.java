@@ -17,7 +17,7 @@ package io.micronaut.testresources.proxy;
 
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.Post;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
 import io.micronaut.testresources.testcontainers.TestContainers;
@@ -59,7 +59,7 @@ public final class TestResourcesController implements TestResourcesResolver {
             .collect(Collectors.toList());
     }
 
-    @Put("/resolve")
+    @Post("/resolve")
     public Optional<String> resolve(String name, Map<String, Object> properties) {
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {

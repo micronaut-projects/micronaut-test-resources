@@ -74,7 +74,7 @@ class TestResourcesClientTest extends Specification {
         }
 
         @Override
-        @Put('/resolve')
+        @Post('/resolve')
         Optional<String> resolve(String name, Map<String, Object> properties) {
             Optional.of("value for $name".toString())
         }

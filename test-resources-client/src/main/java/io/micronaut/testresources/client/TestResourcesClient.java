@@ -29,6 +29,7 @@ import java.util.Optional;
  */
 public interface TestResourcesClient extends TestResourcesResolver {
     String PROXY_URI = "proxy.uri";
+    String ACCESS_TOKEN = "proxy.access.token";
 
     @Get("/list")
     List<String> getResolvableProperties();

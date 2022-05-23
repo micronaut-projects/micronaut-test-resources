@@ -43,8 +43,10 @@ public final class TestResourcesClientFactory {
             throw new TestResourcesException(e);
         }
         try {
-            HttpClient client = HttpClient.create(new URL(props.getProperty(TestResourcesClient.PROXY_URI)));
-            return new DefaultTestResourcesClient(client);
+            String proxyUri = props.getProperty(TestResourcesClient.PROXY_URI);
+            String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
+            HttpClient client = HttpClient.create(new URL(proxyUri));
+            return new DefaultTestResourcesClient(client, accessToken);
         } catch (MalformedURLException e) {
             throw new TestResourcesException(e);
         }

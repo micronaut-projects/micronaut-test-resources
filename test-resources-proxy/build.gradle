@@ -11,6 +11,7 @@ client.
 
 dependencies {
     implementation(mn.micronaut.http.server.netty)
+    implementation(mn.reactor)
     implementation(project(':test-resources-core'))
     implementation(project(':test-resources-embedded'))
     implementation(project(':test-resources-testcontainers'))

@@ -16,6 +16,7 @@
 package io.micronaut.testresources.client;
 
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.BlockingHttpClient;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.uri.UriBuilder;
@@ -34,24 +35,25 @@ import static io.micronaut.http.HttpHeaders.USER_AGENT;
  */
 @SuppressWarnings("unchecked")
 public class DefaultTestResourcesClient implements TestResourcesClient {
+    public static final String ACCESS_TOKEN = "Access-Token";
+
+    private static final URI RESOLVABLE_PROPERTIES_URI = UriBuilder.of("/proxy").path("/list").build();
+    private static final URI REQUIRED_PROPERTIES_URI = UriBuilder.of("/proxy").path("/requirements").build();
+    private static final URI CLOSE_ALL_URI = UriBuilder.of("/proxy").path("/close/all").build();
+    private static final URI RESOLVE_URI = UriBuilder.of("/proxy").path("/resolve").build();
 
     private final BlockingHttpClient client;
-    private final URI resolvablePropertiesURI;
-    private final URI requiredPropertiesURI;
-    private final URI closeAllURI;
-    private final URI resolveURI;
 
-    public DefaultTestResourcesClient(HttpClient client) {
+    private final String accessToken;
+
+    public DefaultTestResourcesClient(HttpClient client, String accessToken) {
         this.client = client.toBlocking();
-        this.resolvablePropertiesURI = UriBuilder.of("/proxy").path("/list").build();
-        this.requiredPropertiesURI = UriBuilder.of("/proxy").path("/requirements").build();
-        this.closeAllURI = UriBuilder.of("/proxy").path("/close/all").build();
-        this.resolveURI = UriBuilder.of("/proxy").path("/resolve").build();
+        this.accessToken = accessToken;
     }
 
     @Override
     public List<String> getResolvableProperties() {
-        return doGet(resolvablePropertiesURI, List.class);
+        return doGet(RESOLVABLE_PROPERTIES_URI, List.class);
     }
 
     @Override
@@ -59,26 +61,31 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);
-        HttpRequest<?> req = HttpRequest.POST(resolveURI, params)
-            .header(USER_AGENT, "Micronaut HTTP Client")
-            .header(ACCEPT, "application/json");
+        HttpRequest<?> req = configure(HttpRequest.POST(RESOLVE_URI, params));
         return Optional.ofNullable(client.retrieve(req));
     }
 
     @Override
     public List<String> getRequiredProperties() {
-        return doGet(requiredPropertiesURI, List.class);
+        return doGet(REQUIRED_PROPERTIES_URI, List.class);
     }
 
     @Override
     public void closeAll() {
-        doGet(closeAllURI, String.class);
+        doGet(CLOSE_ALL_URI, String.class);
     }
 
     private <T> T doGet(URI uri, Class<T> clazz) {
-        HttpRequest<?> req = HttpRequest.GET(uri)
-            .header(USER_AGENT, "Micronaut HTTP Client")
-            .header(ACCEPT, "application/json");
+        HttpRequest<?> req = configure(HttpRequest.GET(uri));
         return client.retrieve(req, clazz);
+    }
+
+    private <T> MutableHttpRequest<T> configure(MutableHttpRequest<T> request) {
+        MutableHttpRequest<T> result = request.header(USER_AGENT, "Micronaut HTTP Client")
+            .header(ACCEPT, "application/json");
+        if (accessToken != null) {
+            result = result.header(ACCESS_TOKEN, accessToken);
+        }
+        return result;
     }
 }

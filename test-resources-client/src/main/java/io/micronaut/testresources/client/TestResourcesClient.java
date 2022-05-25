@@ -19,6 +19,8 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.testresources.core.TestResourcesResolver;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,14 +34,25 @@ public interface TestResourcesClient extends TestResourcesResolver {
     String ACCESS_TOKEN = "proxy.access.token";
 
     @Get("/list")
-    List<String> getResolvableProperties();
+    default List<String> getResolvableProperties() {
+        return getResolvableProperties(Collections.emptyMap());
+    }
 
+    @Override
+    @Post("/list")
+    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries);
+
+    @Override
     @Post("/resolve")
     Optional<String> resolve(String name, Map<String, Object> properties);
 
     @Override
-    @Get("/requirements")
-    List<String> getRequiredProperties();
+    @Get("/requirements/expr/{expression}")
+    List<String> getRequiredProperties(String expression);
+
+    @Override
+    @Get("/requirements/entries")
+    List<String> getRequiredPropertyEntries();
 
     /**
      * Closes all test resources.

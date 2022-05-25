@@ -17,10 +17,11 @@ package io.micronaut.testresources.embedded;
 
 import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.testresources.core.LazyTestResourcesPropertySourceLoader;
-import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.PropertyExpressionProducer;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -29,17 +30,28 @@ import java.util.stream.Collectors;
  */
 public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResourcesPropertySourceLoader {
     public EmbeddedTestResourcesPropertySourceLoader() {
-        super(new Function<ResourceLoader, List<String>>() {
-            private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
+        super(new EmbeddedTestResourcesProducer());
+    }
 
-            @Override
-            public List<String> apply(ResourceLoader resourceLoader) {
-                List<TestResourcesResolver> resolvers = loader.getResolvers();
-                return resolvers.stream()
-                    .flatMap(r -> r.getResolvableProperties().stream())
-                    .distinct()
-                    .collect(Collectors.toList());
-            }
-        });
+    private static class EmbeddedTestResourcesProducer implements PropertyExpressionProducer {
+        private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
+
+        @Override
+        public List<String> getPropertyEntries() {
+            return loader.getResolvers()
+                .stream()
+                .flatMap(resolver -> resolver.getRequiredPropertyEntries().stream())
+                .distinct()
+                .collect(Collectors.toList());
+        }
+
+        @Override
+        public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries) {
+            return loader.getResolvers()
+                .stream()
+                .flatMap(r -> r.getResolvableProperties(propertyEntries).stream())
+                .distinct()
+                .collect(Collectors.toList());
+        }
     }
 }

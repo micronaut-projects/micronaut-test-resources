@@ -20,33 +20,31 @@ import io.micronaut.context.env.PropertySource;
 import io.micronaut.context.env.PropertySourceLoader;
 import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.core.order.Ordered;
+import io.micronaut.core.value.PropertyResolver;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * A property source loader which works in conjunction with the {@link LazyTestResourcesExpressionResolver}
  * in order to resolve properties lazily.
  */
 public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoader {
-    private final Function<ResourceLoader, List<String>> producer;
+    private final PropertyExpressionProducer producer;
 
-    public LazyTestResourcesPropertySourceLoader(Function<ResourceLoader, List<String>> producer) {
+    public LazyTestResourcesPropertySourceLoader(PropertyExpressionProducer producer) {
         this.producer = producer;
     }
 
     @Override
     public Optional<PropertySource> load(String resourceName, ResourceLoader resourceLoader) {
-        List<String> keys = producer.apply(resourceLoader);
-        if (keys.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(new LazyPropertySource(keys));
+        return Optional.of(new LazyPropertySource(resourceLoader));
     }
 
     @Override
@@ -59,16 +57,18 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
         return Collections.emptyMap();
     }
 
-    private static final class LazyPropertySource implements PropertySource, Ordered {
-        private final List<String> keys;
+    private final class LazyPropertySource implements PropertySource, Ordered {
+        private final ResourceLoader resourceLoader;
 
-        private LazyPropertySource(List<String> keys) {
-            this.keys = keys;
+        private List<String> keys;
+
+        private LazyPropertySource(ResourceLoader resourceLoader) {
+            this.resourceLoader = resourceLoader;
         }
 
         @Override
         public int getOrder() {
-            return HIGHEST_PRECEDENCE;
+            return LOWEST_PRECEDENCE;
         }
 
         @Override
@@ -83,7 +83,47 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
 
         @Override
         public Iterator<String> iterator() {
+            computeKeys();
             return keys.iterator();
+        }
+
+        private void computeKeys() {
+            if (keys == null) {
+                if (resourceLoader instanceof PropertyResolver) {
+                    PropertyResolver propertyResolver = (PropertyResolver) resourceLoader;
+                    Map<String, Collection<String>> entries = producer.getPropertyEntries()
+                        .stream()
+                        .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));
+                    keys = producer.produceKeys(resourceLoader, entries)
+                        .stream()
+                        // We use "containsProperties" here because "containsProperty"
+                        // has a caching side effect which we don't want!
+                        .filter(key -> !propertyResolver.containsProperties(key))
+                        .collect(Collectors.toList());
+                } else {
+                    keys = producer.produceKeys(resourceLoader, Collections.emptyMap());
+                }
+            }
+        }
+
+    }
+
+    private static class NoOpPropertySource implements PropertySource {
+        private static final PropertySource INSTANCE = new NoOpPropertySource();
+
+        @Override
+        public String getName() {
+            return "no-op";
+        }
+
+        @Override
+        public Object get(String key) {
+            return null;
+        }
+
+        @Override
+        public Iterator<String> iterator() {
+            return Collections.emptyIterator();
         }
     }
 }

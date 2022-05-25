@@ -18,6 +18,7 @@ package io.micronaut.testresources.embedded.support;
 import io.micronaut.testresources.core.TestResourcesResolver;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +31,12 @@ public class FakeKafkaResolver implements TestResourcesResolver {
     public static final String KAFKA_TEST_PORT = "kafka.test-port";
 
     @Override
-    public List<String> getResolvableProperties() {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
         return Arrays.asList(KAFKA_BOOTSTRAP_SERVERS, KAFKA_TOPIC);
     }
 
     @Override
-    public List<String> getRequiredProperties() {
+    public List<String> getRequiredProperties(String expression) {
         return Collections.singletonList(KAFKA_TEST_PORT);
     }
 

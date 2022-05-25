@@ -25,7 +25,10 @@ final class ConfigFinder {
     public static final String TEST_RESOURCES_PROPERTIES = "/test-resources.properties";
 
     static Optional<URL> findConfiguration(ResourceLoader loader) {
-        Optional<URL> resource = loader.getResource(TEST_RESOURCES_PROPERTIES);
+        Optional<URL> resource = Optional.empty();
+        if (loader != null) {
+            resource = loader.getResource(TEST_RESOURCES_PROPERTIES);
+        }
         if (!resource.isPresent()) {
             resource = Optional.ofNullable(ConfigFinder.class.getResource(TEST_RESOURCES_PROPERTIES));
         }

@@ -62,14 +62,20 @@ class TestResourcesClientTest extends Specification {
     static class TestProxy implements TestResourcesResolver {
 
         @Override
-        @Get("/list")
-        List<String> getResolvableProperties() {
+        @Post("/list")
+        List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
             ["dummy1", "dummy2"]
         }
 
         @Override
-        @Get("/requirements")
-        List<String> getRequiredProperties() {
+        @Get("/requirements/expr/{expression}")
+        List<String> getRequiredProperties(String expression) {
+            []
+        }
+
+        @Override
+        @Get("/requirements/entries")
+        List<String> getRequiredPropertyEntries() {
             []
         }
 

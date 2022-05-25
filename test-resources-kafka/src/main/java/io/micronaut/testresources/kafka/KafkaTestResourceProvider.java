@@ -19,6 +19,7 @@ import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:6.2.1";
 
     @Override
-    public List<String> getResolvableProperties() {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
         return Collections.singletonList(KAFKA_BOOTSTRAP_SERVERS);
     }
 

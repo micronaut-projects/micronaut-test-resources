@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.core;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,19 +33,31 @@ import java.util.Optional;
 public interface TestResourcesResolver {
     /**
      * Returns the list of properties that this resolver
-     * is able to support.
+     * is able to support. The property entries map is
+     * a map which keys are the property entries retrieved
+     * from calling {@link #getRequiredPropertyEntries()} and
+     * values are those property entries resolved.
+     *
+     * @param propertyEntries the property entries
      * @return the list of properties
      */
-    List<String> getResolvableProperties();
+    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries);
 
     /**
      * Returns the list of properties which should be read
-     * before resolving: this can be used if the resolver
+     * before resolving an expression: this can be used if the resolver
      * itself needs some configuration properties.
+     *
+     * @param expression the expression which needs to be resolved.
+     *
      * @return the list of configuration properties this
      * resolver requires
      */
-    default List<String> getRequiredProperties() {
+    default List<String> getRequiredProperties(String expression) {
+        return Collections.emptyList();
+    }
+
+    default List<String> getRequiredPropertyEntries() {
         return Collections.emptyList();
     }
 

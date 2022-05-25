@@ -19,6 +19,7 @@ import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -29,36 +30,51 @@ import java.util.stream.Stream;
 
 /**
  * Superclass for JDBC test containers providers.
+ *
  * @param <T> the type of the container
  */
 public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseContainer<? extends T>> extends AbstractTestContainersProvider<T> {
-    public static final String URL = "datasources.default.url";
-    public static final String USERNAME = "datasources.default.username";
-    public static final String PASSWORD = "datasources.default.password";
-    public static final String DIALECT = "datasources.default.dialect";
-    public static final String DRIVER = "datasources.default.driverClassName";
+    private static final String PREFIX = "datasources";
+    private static final String URL = "url";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String DIALECT = "dialect";
+    private static final String DRIVER = "driverClassName";
 
     private static final List<String> SUPPORTED_LIST = Collections.unmodifiableList(
         Arrays.asList(URL, USERNAME, PASSWORD)
     );
 
     @Override
-    public List<String> getResolvableProperties() {
-        return SUPPORTED_LIST;
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+        Collection<String> datasources = propertyEntries.getOrDefault(PREFIX, Collections.emptyList());
+        return datasources.stream()
+            .flatMap(ds -> SUPPORTED_LIST.stream().map(p -> PREFIX + "." + ds + "." + p))
+            .collect(Collectors.toList());
     }
 
     @Override
-    public List<String> getRequiredProperties() {
-        return Stream.concat(super.getRequiredProperties().stream(), Stream.of(DIALECT, DRIVER)).collect(Collectors.toList());
+    public List<String> getRequiredPropertyEntries() {
+        return Collections.singletonList(PREFIX);
+    }
+
+    @Override
+    public List<String> getRequiredProperties(String expression) {
+        String datasource = datasourceNameFrom(expression);
+        return Stream.concat(super.getRequiredProperties(expression).stream(), Stream.of(
+                datasourceExpressionOf(datasource, DIALECT),
+                datasourceExpressionOf(datasource, DRIVER)))
+            .collect(Collectors.toList());
     }
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
-        String dialect = String.valueOf(properties.get(DIALECT));
+        String datasource = datasourceNameFrom(propertyName);
+        String dialect = String.valueOf(properties.get(datasourceExpressionOf(datasource, DIALECT)));
         if (dialect != null) {
             return dialect.equalsIgnoreCase(getSimpleName());
         }
-        String driver = String.valueOf(properties.get(DRIVER));
+        String driver = String.valueOf(properties.get(datasourceExpressionOf(datasource, DRIVER)));
         if (driver != null) {
             return driver.toLowerCase(Locale.US).contains(getSimpleName());
         }
@@ -66,9 +82,9 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, T container) {
+    protected Optional<String> resolveProperty(String expression, T container) {
         String value;
-        switch (propertyName) {
+        switch (datasourcePropertyFrom(expression)) {
             case URL:
                 value = container.getJdbcUrl();
                 break;
@@ -79,7 +95,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
                 value = container.getPassword();
                 break;
             default:
-                value = resolveDbSpecificProperty(propertyName, container);
+                value = resolveDbSpecificProperty(expression, container);
         }
         return Optional.ofNullable(value);
     }
@@ -87,11 +103,26 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     /**
      * Given the started container, resolves properties which are specific to
      * a particular JDBC implementation.
+     *
      * @param propertyName the property to resolve
      * @param container the started container
      * @return the resolved property, or null if not resolvable
      */
     protected String resolveDbSpecificProperty(String propertyName, JdbcDatabaseContainer<?> container) {
         return null;
+    }
+
+    protected static String datasourceNameFrom(String expression) {
+        String remainder = expression.substring(1 + expression.indexOf('.'));
+        return remainder.substring(0, remainder.indexOf("."));
+    }
+
+    protected static String datasourcePropertyFrom(String expression) {
+        String remainder = expression.substring(1 + expression.indexOf('.'));
+        return remainder.substring(1 + remainder.indexOf("."));
+    }
+
+    protected static String datasourceExpressionOf(String datasource, String property) {
+        return PREFIX + "." + datasource + "." + property;
     }
 }

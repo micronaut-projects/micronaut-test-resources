@@ -23,6 +23,7 @@ import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
 import io.micronaut.testresources.testcontainers.TestContainers;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,22 +39,38 @@ public final class TestResourcesController implements TestResourcesResolver {
     private final TestResourcesResolverLoader loader = new TestResourcesResolverLoader();
 
     @Get("/list")
-    @Override
     public List<String> getResolvableProperties() {
+        return getResolvableProperties(Collections.emptyMap());
+    }
+
+    @Override
+    @Post("/list")
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
         return loader.getResolvers()
             .stream()
-            .map(TestResourcesResolver::getResolvableProperties)
+            .map(r -> r.getResolvableProperties(propertyEntries))
             .flatMap(Collection::stream)
             .distinct()
             .collect(Collectors.toList());
     }
 
     @Override
-    @Get("/requirements")
-    public List<String> getRequiredProperties() {
+    @Get("/requirements/expr/{expression}")
+    public List<String> getRequiredProperties(String expression) {
         return loader.getResolvers()
             .stream()
-            .map(TestResourcesResolver::getRequiredProperties)
+            .map(testResourcesResolver -> testResourcesResolver.getRequiredProperties(expression))
+            .flatMap(Collection::stream)
+            .distinct()
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    @Get("/requirements/entries")
+    public List<String> getRequiredPropertyEntries() {
+        return loader.getResolvers()
+            .stream()
+            .map(TestResourcesResolver::getRequiredPropertyEntries)
             .flatMap(Collection::stream)
             .distinct()
             .collect(Collectors.toList());
@@ -63,11 +80,9 @@ public final class TestResourcesController implements TestResourcesResolver {
     public Optional<String> resolve(String name, Map<String, Object> properties) {
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {
-            if (resolver.getResolvableProperties().contains(name)) {
-                result = resolver.resolve(name, properties);
-                if (result.isPresent()) {
-                    return result;
-                }
+            result = resolver.resolve(name, properties);
+            if (result.isPresent()) {
+                return result;
             }
         }
         return result;

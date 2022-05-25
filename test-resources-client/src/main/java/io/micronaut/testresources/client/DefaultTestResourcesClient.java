@@ -22,6 +22,8 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.uri.UriBuilder;
 
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,8 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     public static final String ACCESS_TOKEN = "Access-Token";
 
     private static final URI RESOLVABLE_PROPERTIES_URI = UriBuilder.of("/proxy").path("/list").build();
-    private static final URI REQUIRED_PROPERTIES_URI = UriBuilder.of("/proxy").path("/requirements").build();
+    private static final URI REQUIRED_PROPERTIES_URI = UriBuilder.of("/proxy").path("/requirements/expr").build();
+    private static final URI REQUIRED_PROPERTY_ENTRIES_URI = UriBuilder.of("/proxy").path("/requirements/entries").build();
     private static final URI CLOSE_ALL_URI = UriBuilder.of("/proxy").path("/close/all").build();
     private static final URI RESOLVE_URI = UriBuilder.of("/proxy").path("/resolve").build();
 
@@ -52,8 +55,9 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public List<String> getResolvableProperties() {
-        return doGet(RESOLVABLE_PROPERTIES_URI, List.class);
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+        HttpRequest<?> req = configure(HttpRequest.POST(RESOLVABLE_PROPERTIES_URI, Collections.singletonMap("propertyEntries", propertyEntries)));
+        return client.retrieve(req, List.class);
     }
 
     @Override
@@ -66,8 +70,13 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public List<String> getRequiredProperties() {
-        return doGet(REQUIRED_PROPERTIES_URI, List.class);
+    public List<String> getRequiredProperties(String expression) {
+        return doGet(REQUIRED_PROPERTIES_URI, List.class, expression);
+    }
+
+    @Override
+    public List<String> getRequiredPropertyEntries() {
+        return doGet(REQUIRED_PROPERTY_ENTRIES_URI, List.class);
     }
 
     @Override
@@ -75,8 +84,12 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         doGet(CLOSE_ALL_URI, String.class);
     }
 
-    private <T> T doGet(URI uri, Class<T> clazz) {
-        HttpRequest<?> req = configure(HttpRequest.GET(uri));
+    private <T> T doGet(URI uri, Class<T> clazz, String... pathElements) {
+        UriBuilder builder = UriBuilder.of(uri);
+        for (String param : pathElements) {
+            builder = builder.path(param);
+        }
+        MutableHttpRequest<?> req = configure(HttpRequest.GET(builder.build()));
         return client.retrieve(req, clazz);
     }
 

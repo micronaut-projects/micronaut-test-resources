@@ -21,12 +21,11 @@ import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
 import io.micronaut.testresources.core.TestResourcesResolver;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
+import static io.micronaut.testresources.core.PropertyResolverSupport.canResolveExpression;
 import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
 
 /**
@@ -36,27 +35,28 @@ import static io.micronaut.testresources.core.PropertyResolverSupport.resolveReq
  */
 public class EmbeddedTestResourcesPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {
     public EmbeddedTestResourcesPropertyExpressionResolver() {
-        super(new PropertyExpressionResolver() {
-            private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
+        super(new Delegate());
+    }
 
-            @Override
-            public <T> Optional<T> resolve(PropertyResolver propertyResolver,
-                                           ConversionService<?> conversionService,
-                                           String expression,
-                                           Class<T> requiredType) {
-                List<TestResourcesResolver> resolvers = loader.getResolvers();
-                for (TestResourcesResolver resolver : resolvers) {
-                    Set<String> supported = new HashSet<>(resolver.getResolvableProperties());
-                    if (supported.contains(expression)) {
-                        Map<String, Object> props = resolveRequiredProperties(propertyResolver, resolver);
-                        Optional<String> resolve = resolver.resolve(expression, props);
-                        if (resolve.isPresent()) {
-                            return conversionService.convert(resolve.get(), requiredType);
-                        }
+    private static class Delegate implements PropertyExpressionResolver {
+        private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
+
+        @Override
+        public <T> Optional<T> resolve(PropertyResolver propertyResolver,
+                                       ConversionService<?> conversionService,
+                                       String expression,
+                                       Class<T> requiredType) {
+            List<TestResourcesResolver> resolvers = loader.getResolvers();
+            for (TestResourcesResolver resolver : resolvers) {
+                if (canResolveExpression(propertyResolver, resolver, expression)) {
+                    Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, resolver);
+                    Optional<String> resolve = resolver.resolve(expression, props);
+                    if (resolve.isPresent()) {
+                        return conversionService.convert(resolve.get(), requiredType);
                     }
                 }
-                return Optional.empty();
             }
-        });
+            return Optional.empty();
+        }
     }
 }

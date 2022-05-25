@@ -17,13 +17,15 @@ package io.micronaut.testresources.client;
 
 import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.testresources.core.LazyTestResourcesPropertySourceLoader;
+import io.micronaut.testresources.core.PropertyExpressionProducer;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static io.micronaut.testresources.client.ConfigFinder.findConfiguration;
 
@@ -34,20 +36,38 @@ import static io.micronaut.testresources.client.ConfigFinder.findConfiguration;
 public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPropertySourceLoader {
 
     public TestResourcesClientPropertySourceLoader() {
-        super(new Function<ResourceLoader, List<String>>() {
-            private final AtomicBoolean loaded = new AtomicBoolean(false);
+        super(new ClientTestResourcesResolver());
+    }
 
-            @Override
-            public List<String> apply(ResourceLoader resourceLoader) {
-                if (loaded.compareAndSet(false, true)) {
+    private static class ClientTestResourcesResolver implements PropertyExpressionProducer {
+        private final ReentrantLock lock = new ReentrantLock();
+        private TestResourcesClient client;
+
+        @Override
+        public List<String> getPropertyEntries() {
+            return findClient(null)
+                .map(TestResourcesClient::getRequiredPropertyEntries)
+                .orElse(Collections.emptyList());
+        }
+
+        @Override
+        public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries) {
+            return findClient(resourceLoader)
+                .map(client -> client.getResolvableProperties(propertyEntries))
+                .orElse(Collections.emptyList());
+        }
+
+        private Optional<TestResourcesClient> findClient(ResourceLoader resourceLoader) {
+            lock.lock();
+            try {
+                if (client == null) {
                     Optional<URL> config = findConfiguration(resourceLoader);
-                    if (config.isPresent()) {
-                        return TestResourcesClientFactory.configuredAt(config.get()).getResolvableProperties();
-                    }
+                    config.ifPresent(url -> client = TestResourcesClientFactory.configuredAt(url));
                 }
-                return Collections.emptyList();
+                return Optional.ofNullable(client);
+            } finally {
+                lock.unlock();
             }
-
-        });
+        }
     }
 }

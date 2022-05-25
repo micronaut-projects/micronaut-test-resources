@@ -22,6 +22,7 @@ import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         static final TestResourcesClient INSTANCE = new NoOpClient();
 
         @Override
-        public List<String> getResolvableProperties() {
+        public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
             return Collections.emptyList();
         }
 
@@ -61,7 +62,12 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         @Override
-        public List<String> getRequiredProperties() {
+        public List<String> getRequiredProperties(String expression) {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public List<String> getRequiredPropertyEntries() {
             return Collections.emptyList();
         }
 
@@ -74,10 +80,13 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         private final Map<Environment, TestResourcesClient> clients = new ConcurrentHashMap<>();
 
         @Override
-        public <T> Optional<T> resolve(PropertyResolver propertyResolver, ConversionService<?> conversionService, String expression, Class<T> requiredType) {
+        public <T> Optional<T> resolve(PropertyResolver propertyResolver,
+                                       ConversionService<?> conversionService,
+                                       String expression,
+                                       Class<T> requiredType) {
             if (propertyResolver instanceof Environment) {
                 TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
-                Map<String, Object> props = resolveRequiredProperties(propertyResolver, client);
+                Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
                 Optional<String> resolved = client.resolve(expression, props);
                 if (resolved.isPresent()) {
                     return conversionService.convert(resolved.get(), requiredType);

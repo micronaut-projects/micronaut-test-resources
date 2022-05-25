@@ -49,7 +49,7 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
     }
 
     @Override
-    public List<String> getRequiredProperties() {
+    public List<String> getRequiredProperties(String expression) {
         return Collections.singletonList(getImageNameProperty());
     }
 

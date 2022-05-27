@@ -15,12 +15,16 @@
  */
 package io.micronaut.testresources.client;
 
+import io.micronaut.http.client.DefaultHttpClientConfiguration;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.HttpClientConfiguration;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Properties;
 
 /**
@@ -45,7 +49,10 @@ public final class TestResourcesClientFactory {
         try {
             String proxyUri = props.getProperty(TestResourcesClient.PROXY_URI);
             String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
-            HttpClient client = HttpClient.create(new URL(proxyUri));
+            int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, "60"));
+            HttpClientConfiguration config = new DefaultHttpClientConfiguration();
+            config.setReadTimeout(Duration.of(clientReadTimeout, ChronoUnit.SECONDS));
+            HttpClient client = HttpClient.create(new URL(proxyUri), config);
             return new DefaultTestResourcesClient(client, accessToken);
         } catch (MalformedURLException e) {
             throw new TestResourcesException(e);

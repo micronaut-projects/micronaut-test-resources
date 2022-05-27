@@ -27,6 +27,5 @@ micronautBuild {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        mavenLocal()
     }
 }

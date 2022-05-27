@@ -17,5 +17,6 @@ dependencies {
     testImplementation(project(":test-resources-embedded"))
     testImplementation(mn.micronaut.data.jdbc)
     testRuntimeOnly(libs.mysql)
+    testRuntimeOnly(libs.postgres)
     testRuntimeOnly(mn.micronaut.jdbc.hikari)
 }

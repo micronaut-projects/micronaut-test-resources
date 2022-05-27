@@ -34,6 +34,7 @@ testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
 
 mysql = { module = "mysql:mysql-connector-java", version = "" }
+postgres = { module = "org.postgresql:postgresql", version = "" }
 
 #
 # Managed dependencies appear in the BOM

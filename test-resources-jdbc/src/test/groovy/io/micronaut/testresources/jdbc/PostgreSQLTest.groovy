@@ -1,14 +1,17 @@
 package io.micronaut.testresources.jdbc
 
+import io.micronaut.context.annotation.Property
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 
 @MicronautTest
-class StartMySQLTest extends AbstractJDBCSpec {
+@Property(name = "datasources.default.dialect", value = "POSTGRES")
+@Property(name = "datasources.default.driverClassName", value = "org.postgresql.Driver")
+class PostgreSQLTest extends AbstractJDBCSpec {
     @Inject
-    MySQLBookRepository repository
+    PostgreSQLBookRepository repository
 
-    def "starts a MySQL container"() {
+    def "starts a PostgreSQL container"() {
         def book = new Book(title: "Micronaut for Spring developers")
         repository.save(book)
 
@@ -21,6 +24,6 @@ class StartMySQLTest extends AbstractJDBCSpec {
 
     @Override
     String getImageName() {
-        "mysql"
+        "postgres"
     }
 }

@@ -93,14 +93,29 @@ public final class TestResourcesController implements TestResourcesResolver {
         TestContainers.closeAll();
     }
 
+    @Get("/close/{id}")
+    public void closeScope(String id) {
+        TestContainers.closeScope(id);
+    }
+
     @Get("/testcontainers")
     public List<TestContainer> listContainers() {
-        return TestContainers.listAll()
+        return listContainersByScope(null);
+    }
+
+    @Get("/testcontainers/{scope}")
+    public List<TestContainer> listContainersByScope(String scope) {
+        return TestContainers.listByScope(scope)
+            .entrySet()
             .stream()
-            .map(c -> new TestContainer(
-                c.getContainerName(),
-                c.getDockerImageName(),
-                c.getContainerId()))
+            .flatMap(entry -> entry.getValue().stream()
+                .map(c -> new TestContainer(
+                    c.getContainerName(),
+                    c.getDockerImageName(),
+                    c.getContainerId(),
+                    entry.getKey().toString())
+                ))
             .collect(Collectors.toList());
     }
+
 }

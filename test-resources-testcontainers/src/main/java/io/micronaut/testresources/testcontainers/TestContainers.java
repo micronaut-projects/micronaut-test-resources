@@ -15,18 +15,21 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import io.micronaut.testresources.core.Scope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static io.micronaut.testresources.core.Scope.PROPERTY_KEY;
 
 /**
  * An utility class used to manage the lifecycle of test containers.
@@ -49,19 +52,19 @@ public final class TestContainers {
      * Returns a test container and caches it, so that if the same owner
      * and properties are requested, we can return an existing container.
      *
+     * @param <T> the container type
      * @param owner the class which requested the creation of a container
      * @param name an identifier for the container, used for logging purposes
      * @param query the parameters used to create the container. Different parameters mean
      * different container will be created.
      * @param creator if the container is not in cache, factory to create the container
-     * @param <T> the container type
      * @return the container
      */
     static <T extends GenericContainer<? extends T>> T getOrCreate(Class<?> owner,
                                                                    String name,
                                                                    Map<String, Object> query,
                                                                    Supplier<T> creator) {
-        Key key = Key.of(owner, query);
+        Key key = Key.of(owner, scopeOf(query), query);
         LOCK.lock();
         @SuppressWarnings("unchecked")
         T container = (T) CONTAINERS.get(key);
@@ -75,14 +78,36 @@ public final class TestContainers {
         return container;
     }
 
+    private static Scope scopeOf(Map<String, Object> query) {
+        Object scopeId = query.getOrDefault(PROPERTY_KEY, null);
+        if (scopeId == null) {
+            return Scope.ROOT;
+        }
+        return Scope.of(String.valueOf(scopeId));
+    }
+
     /**
      * Lists all containers.
      * @return the containers
      */
-    public static List<Container> listAll() {
+    public static Map<Scope, List<GenericContainer<?>>> listAll() {
+        return listByScope(null);
+    }
+
+    public static Map<Scope, List<GenericContainer<?>>> listByScope(String id) {
+        Scope scope = Scope.of(id);
         LOCK.lock();
         try {
-            return new ArrayList<>(CONTAINERS.values());
+            return CONTAINERS.entrySet()
+                .stream()
+                .filter(entry -> scope.includes(entry.getKey().scope))
+                .collect(Collectors.groupingBy(
+                    entry -> entry.getKey().scope,
+                    Collectors.mapping(
+                        Map.Entry::getValue,
+                        Collectors.toList()
+                    )
+                ));
         } finally {
             LOCK.unlock();
         }
@@ -97,15 +122,31 @@ public final class TestContainers {
         LOCK.unlock();
     }
 
+    public static void closeScope(String id) {
+        Scope scope = Scope.of(id);
+        LOCK.lock();
+        Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Key, GenericContainer<?>> entry = iterator.next();
+            if (entry.getKey().scope.includes(scope)) {
+                iterator.remove();
+                entry.getValue().close();
+            }
+        }
+        LOCK.unlock();
+    }
+
     private static final class Key {
         private final Class<?> type;
+        private final Scope scope;
         private final Map<String, String> properties;
         private final int hashCode;
 
-        private Key(Class<?> type, Map<String, String> properties) {
+        private Key(Class<?> type, Scope scope, Map<String, String> properties) {
             this.type = type;
+            this.scope = scope;
             this.properties = properties;
-            this.hashCode = 31 * type.hashCode() + properties.hashCode();
+            this.hashCode = 31 * (31 * type.hashCode() + properties.hashCode()) + scope.hashCode();
         }
 
         @Override
@@ -118,6 +159,9 @@ public final class TestContainers {
             }
 
             Key key = (Key) o;
+            if (!scope.equals(key.scope)) {
+                return false;
+            }
 
             if (!type.equals(key.type)) {
                 return false;
@@ -130,15 +174,15 @@ public final class TestContainers {
             return hashCode;
         }
 
-        static <T> Key of(Class<T> type, Map<String, Object> properties) {
+        static <T> Key of(Class<T> type, Scope scope, Map<String, Object> properties) {
             if (properties.isEmpty()) {
-                return new Key(type, Collections.emptyMap());
+                return new Key(type, scope, Collections.emptyMap());
             }
             Map<String, String> converted = new HashMap<>(properties.size());
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
                 converted.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
-            return new Key(type, Collections.unmodifiableMap(converted));
+            return new Key(type, scope, Collections.unmodifiableMap(converted));
         }
     }
 }

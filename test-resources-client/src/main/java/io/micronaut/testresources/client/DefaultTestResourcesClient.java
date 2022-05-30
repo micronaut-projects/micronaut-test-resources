@@ -43,6 +43,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     private static final URI REQUIRED_PROPERTIES_URI = UriBuilder.of("/proxy").path("/requirements/expr").build();
     private static final URI REQUIRED_PROPERTY_ENTRIES_URI = UriBuilder.of("/proxy").path("/requirements/entries").build();
     private static final URI CLOSE_ALL_URI = UriBuilder.of("/proxy").path("/close/all").build();
+    private static final URI CLOSE_URI = UriBuilder.of("/proxy").path("/close").build();
     private static final URI RESOLVE_URI = UriBuilder.of("/proxy").path("/resolve").build();
 
     private final BlockingHttpClient client;
@@ -82,6 +83,11 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     @Override
     public void closeAll() {
         doGet(CLOSE_ALL_URI, String.class);
+    }
+
+    @Override
+    public void closeScope(String id) {
+        doGet(CLOSE_URI, String.class, id);
     }
 
     private <T> T doGet(URI uri, Class<T> clazz, String... pathElements) {

@@ -41,7 +41,8 @@ public class PropertyResolverSupport {
         TestResourcesResolver testResourcesResolver
     ) {
         List<String> requiredProperties = testResourcesResolver.getRequiredProperties(expression);
-        Map<String, Object> props = new HashMap<>(requiredProperties.size());
+        Map<String, Object> props = new HashMap<>(requiredProperties.size() + 1);
+        propertyResolver.getProperty(Scope.PROPERTY_KEY, String.class).ifPresent(scope -> props.put(Scope.PROPERTY_KEY, scope));
         for (String property : requiredProperties) {
             propertyResolver.getProperty(property, Object.class).ifPresent(value ->
                 props.put(property, value)

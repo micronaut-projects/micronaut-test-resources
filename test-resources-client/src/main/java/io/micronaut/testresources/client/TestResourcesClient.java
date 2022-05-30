@@ -60,4 +60,7 @@ public interface TestResourcesClient extends TestResourcesResolver {
      */
     @Get("/close/all")
     void closeAll();
+
+    @Get("/close/{id}")
+    void closeScope(String id);
 }

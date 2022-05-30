@@ -74,6 +74,10 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         @Override
         public void closeAll() {
         }
+
+        @Override
+        public void closeScope(String id) {
+        }
     }
 
     private static class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {

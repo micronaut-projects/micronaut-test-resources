@@ -5,15 +5,21 @@ import com.github.dockerjava.api.model.Container
 import io.micronaut.configuration.kafka.annotation.KafkaClient
 import io.micronaut.configuration.kafka.annotation.Topic
 import io.micronaut.context.annotation.Prototype
+import io.micronaut.test.support.TestPropertyProvider
+import io.micronaut.testresources.core.Scope
 import io.micronaut.testresources.testcontainers.TestContainers
 import org.testcontainers.DockerClientFactory
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
-abstract class AbstractKafkaSpec extends Specification {
+abstract class AbstractKafkaSpec extends Specification implements TestPropertyProvider {
+
+    Map<String, String> getProperties() {
+        [(Scope.PROPERTY_KEY): 'kafka']
+    }
 
     void cleanupSpec() {
-        TestContainers.closeAll()
+        TestContainers.closeScope("kafka")
     }
 
     @Prototype

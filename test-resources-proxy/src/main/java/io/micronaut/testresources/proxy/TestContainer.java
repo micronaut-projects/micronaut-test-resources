@@ -26,10 +26,13 @@ public final class TestContainer {
     private final String imageName;
     private final String id;
 
-    public TestContainer(String name, String imageName, String id) {
+    private final String scope;
+
+    public TestContainer(String name, String imageName, String id, String scope) {
         this.name = name;
         this.imageName = imageName;
         this.id = id;
+        this.scope = scope;
     }
 
     /**
@@ -54,6 +57,14 @@ public final class TestContainer {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Returns the scope for which this container is defined.
+     * @return the scope
+     */
+    public String getScope() {
+        return scope;
     }
 
     @Override

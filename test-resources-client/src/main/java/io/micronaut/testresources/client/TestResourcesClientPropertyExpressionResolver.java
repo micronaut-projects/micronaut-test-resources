@@ -20,6 +20,8 @@ import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Collection;
@@ -37,6 +39,7 @@ import static io.micronaut.testresources.core.PropertyResolverSupport.resolveReq
  * properties.
  */
 public class TestResourcesClientPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesClientPropertyExpressionResolver.class);
 
     public TestResourcesClientPropertyExpressionResolver() {
         super(new DelegateResolver());
@@ -93,7 +96,11 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
                 Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
                 Optional<String> resolved = client.resolve(expression, props);
                 if (resolved.isPresent()) {
-                    return conversionService.convert(resolved.get(), requiredType);
+                    String resolvedValue = resolved.get();
+                    LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
+                    return conversionService.convert(resolvedValue, requiredType);
+                } else if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Test resources cannot resolve expression '{}'", expression);
                 }
             }
             return Optional.empty();

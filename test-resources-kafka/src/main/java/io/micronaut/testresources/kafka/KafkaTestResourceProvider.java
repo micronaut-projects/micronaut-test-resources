@@ -55,9 +55,11 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, KafkaContainer container) {
-        if (KAFKA_BOOTSTRAP_SERVERS.equals(propertyName)) {
-            return Optional.of(container.getBootstrapServers());
-        }
-        return Optional.empty();
+        return Optional.of(container.getBootstrapServers());
+    }
+
+    @Override
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+        return KAFKA_BOOTSTRAP_SERVERS.equals(propertyName);
     }
 }

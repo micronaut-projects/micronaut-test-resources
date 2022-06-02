@@ -11,14 +11,25 @@ plugins {
 
 rootProject.name = 'testresources-parent'
 
+def jdbcModules = [
+        'core',
+        'mysql',
+        'postgresql'
+]
+
 include 'test-resources-core'
 include 'test-resources-embedded'
 include 'test-resources-client'
 include 'test-resources-bom'
 include 'test-resources-kafka'
-include 'test-resources-jdbc'
 include 'test-resources-testcontainers'
 include 'test-resources-proxy'
+
+jdbcModules.each {
+    String projectName = "test-resources-jdbc-$it"
+    include projectName
+    project(":test-resources-jdbc-$it").projectDir = file("test-resources-jdbc/$projectName")
+}
 
 micronautBuild {
     importMicronautCatalog()

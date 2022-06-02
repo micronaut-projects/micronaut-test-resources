@@ -15,18 +15,42 @@
  */
 package io.micronaut.testresources.proxy;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
 import io.micronaut.runtime.Micronaut;
+import io.micronaut.runtime.server.EmbeddedServer;
+import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.FileWriter;
+import java.util.Arrays;
 
 /**
  * Main entry point for the proxy.
  */
+@Singleton
 public class Application {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
-        Micronaut.run(Application.class, args);
+        ApplicationContext context = Micronaut.run(Application.class, args);
+        Arrays.stream(args)
+            .filter(arg -> arg.startsWith("--port-file="))
+            .findFirst()
+            .map(arg -> arg.substring("--port-file=".length()))
+            .ifPresent(portFile -> {
+                try (FileWriter writer = new FileWriter(portFile)) {
+                    EmbeddedServer server = context.getBean(EmbeddedServer.class);
+                    int port = server.getPort();
+                    writer.write(String.valueOf(port));
+                    LOGGER.debug("Wrote port {} to {}", port, portFile);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
     }
 
     /**

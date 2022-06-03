@@ -1,0 +1,17 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for launching a HiveMQ test container.
+"""
+
+dependencies {
+    api(project(':test-resources-core'))
+    api(project(':test-resources-testcontainers'))
+    implementation(libs.testcontainers.hivemq)
+
+    testImplementation(project(":test-resources-embedded"))
+    testImplementation(mn.micronaut.reactor)
+    testImplementation(mn.micronaut.mqttv5)
+}

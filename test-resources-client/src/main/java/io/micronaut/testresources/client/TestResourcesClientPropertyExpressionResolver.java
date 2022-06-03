@@ -95,7 +95,8 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
             if (propertyResolver instanceof Environment) {
                 TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
                 Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
-                Optional<String> resolved = client.resolve(expression, props, propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY));
+                Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+                Optional<String> resolved = client.resolve(expression, props, properties);
                 if (resolved.isPresent()) {
                     String resolvedValue = resolved.get();
                     LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);

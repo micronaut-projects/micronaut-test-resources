@@ -89,13 +89,12 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
 
         private void computeKeys() {
             if (keys == null) {
-                Map<String, Object> testResourcesConfig = null;
                 if (resourceLoader instanceof PropertyResolver) {
                     PropertyResolver propertyResolver = (PropertyResolver) resourceLoader;
                     Map<String, Collection<String>> entries = producer.getPropertyEntries()
                         .stream()
                         .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));
-                    testResourcesConfig = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+                    Map<String, Object> testResourcesConfig = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
                     keys = producer.produceKeys(resourceLoader, entries, testResourcesConfig)
                         .stream()
                         // We use "containsProperties" here because "containsProperty"
@@ -103,29 +102,11 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
                         .filter(key -> !propertyResolver.containsProperties(key))
                         .collect(Collectors.toList());
                 } else {
-                    keys = producer.produceKeys(resourceLoader, Collections.emptyMap(), testResourcesConfig);
+                    keys = producer.produceKeys(resourceLoader, Collections.emptyMap(), Collections.emptyMap());
                 }
             }
         }
 
     }
 
-    private static class NoOpPropertySource implements PropertySource {
-        private static final PropertySource INSTANCE = new NoOpPropertySource();
-
-        @Override
-        public String getName() {
-            return "no-op";
-        }
-
-        @Override
-        public Object get(String key) {
-            return null;
-        }
-
-        @Override
-        public Iterator<String> iterator() {
-            return Collections.emptyIterator();
-        }
-    }
 }

@@ -23,7 +23,6 @@ import io.micronaut.http.uri.UriBuilder;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +55,12 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        HttpRequest<?> req = configure(HttpRequest.POST(RESOLVABLE_PROPERTIES_URI, Collections.singletonMap("propertyEntries", propertyEntries)));
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
+                                                Map<String, Object> testResourcesConfig) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("propertyEntries", propertyEntries);
+        properties.put("testResourcesConfig", testResourcesConfig);
+        HttpRequest<?> req = configure(HttpRequest.POST(RESOLVABLE_PROPERTIES_URI, properties));
         return client.retrieve(req, List.class);
     }
 
@@ -66,6 +69,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);
+        params.put("testResourcesConfig", testResourcesConfiguration);
         HttpRequest<?> req = configure(HttpRequest.POST(RESOLVE_URI, params));
         return Optional.ofNullable(client.retrieve(req));
     }

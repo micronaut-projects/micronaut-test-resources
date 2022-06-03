@@ -21,6 +21,8 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
 import io.micronaut.testresources.testcontainers.TestContainers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
  */
 @Controller("/proxy")
 public final class TestResourcesController implements TestResourcesResolver {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
 
     private final TestResourcesResolverLoader loader = new TestResourcesResolverLoader();
 
@@ -51,6 +54,7 @@ public final class TestResourcesController implements TestResourcesResolver {
             .map(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig))
             .flatMap(Collection::stream)
             .distinct()
+            .peek(p -> LOGGER.debug("For configuration {} and property entries {} , resolvable property: {}", testResourcesConfig, propertyEntries, p))
             .collect(Collectors.toList());
     }
 
@@ -77,10 +81,13 @@ public final class TestResourcesController implements TestResourcesResolver {
     }
 
     @Post("/resolve")
-    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    public Optional<String> resolve(String name,
+                                    Map<String, Object> properties,
+                                    Map<String, Object> testResourcesConfig) {
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {
-            result = resolver.resolve(name, properties, testResourcesConfiguration);
+            result = resolver.resolve(name, properties, testResourcesConfig);
+            LOGGER.debug("Attempt to resolve {} with resolver {}, properties {} and test resources configuration {} : {}", name, resolver.getClass(), properties, testResourcesConfig, result.isPresent() ? result.get() : "\uD83D\uDEAB");
             if (result.isPresent()) {
                 return result;
             }

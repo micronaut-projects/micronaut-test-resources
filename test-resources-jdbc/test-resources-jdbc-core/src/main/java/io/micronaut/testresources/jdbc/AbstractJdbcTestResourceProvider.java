@@ -60,6 +60,9 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
 
     @Override
     public List<String> getRequiredProperties(String expression) {
+        if (!expression.startsWith(PREFIX)) {
+            return Collections.emptyList();
+        }
         String datasource = datasourceNameFrom(expression);
         return Stream.concat(super.getRequiredProperties(expression).stream(), Stream.of(
                 datasourceExpressionOf(datasource, DIALECT),
@@ -69,6 +72,9 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+        if (!propertyName.startsWith(PREFIX)) {
+            return false;
+        }
         String datasource = datasourceNameFrom(propertyName);
         String dialect = String.valueOf(properties.get(datasourceExpressionOf(datasource, DIALECT)));
         if (dialect != null) {

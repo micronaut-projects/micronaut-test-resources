@@ -19,6 +19,7 @@ import io.micronaut.testresources.core.TestResourcesResolver;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -91,7 +92,9 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
                 if (containerName != null) {
                     Map<String, Integer> exposedPorts = extractExposedPortsFrom(prefix, testResourcesConfig);
                     Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
-                    return Optional.of(new GenericContainerMetadata(name, containerName, exposedPorts, hostNames));
+                    Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
+                    Map<String, String> roFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, true);
+                    return Optional.of(new GenericContainerMetadata(name, containerName, exposedPorts, hostNames, rwFsBinds, roFsBinds));
                 }
                 return Optional.<GenericContainerMetadata>empty();
             })
@@ -127,6 +130,8 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
                         GenericContainer<?> selfGenericContainer = new GenericContainer<>(imageName);
                         Collection<Integer> exposedPorts = md.exposedPorts.values();
                         selfGenericContainer.withExposedPorts(exposedPorts.toArray(new Integer[0]));
+                        md.rwFsBinds.forEach(selfGenericContainer::withFileSystemBind);
+                        md.roFsBinds.forEach((hostPath, containerPath) -> selfGenericContainer.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
                         return selfGenericContainer;
                     }
                 ));
@@ -202,20 +207,68 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
             .orElse(Collections.emptySet());
     }
 
+    private static Map<String, String> extractFsBindsFrom(String prefix,
+                                                          Map<String, Object> testResourcesConfiguration,
+                                                          boolean readOnly) {
+        class FsBind {
+            final String key;
+            final String value;
+
+            FsBind(Object key, Object value) {
+                this.key = String.valueOf(key);
+                this.value = String.valueOf(value);
+            }
+
+            public String getKey() {
+                return key;
+            }
+
+            public String getValue() {
+                return value;
+            }
+        }
+        String key = prefix + (readOnly ? "ro-" : "rw-") + "fs-bind";
+        return Optional.ofNullable(testResourcesConfiguration.get(key))
+            .map(o -> {
+                if (o instanceof List) {
+                    List<Object> list = (List<Object>) o;
+                    return list.stream()
+                        .flatMap(definition -> {
+                            if (definition instanceof Map) {
+                                return ((Map<?, ?>) definition).entrySet()
+                                    .stream()
+                                    .map(e -> new FsBind(e.getKey(), e.getValue()));
+                            }
+                            return Stream.empty();
+                        })
+                        .collect(Collectors.toMap(FsBind::getKey, FsBind::getValue));
+                }
+                return Collections.<String, String>emptyMap();
+            })
+            .orElse(Collections.emptyMap());
+    }
+
     private static final class GenericContainerMetadata {
         private final String id;
         private final String imageName;
         private final Map<String, Integer> exposedPorts;
         private final Set<String> hostNames;
 
+        private final Map<String, String> rwFsBinds;
+        private final Map<String, String> roFsBinds;
+
         private GenericContainerMetadata(String id,
                                          String imageName,
                                          Map<String, Integer> exposedPorts,
-                                         Set<String> hostNames) {
+                                         Set<String> hostNames,
+                                         Map<String, String> rwFsBinds,
+                                         Map<String, String> roFsBinds) {
             this.id = id;
             this.imageName = imageName;
             this.exposedPorts = exposedPorts;
             this.hostNames = hostNames;
+            this.rwFsBinds = rwFsBinds;
+            this.roFsBinds = roFsBinds;
         }
 
         public String getId() {
@@ -232,6 +285,14 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
 
         public Set<String> getHostNames() {
             return hostNames;
+        }
+
+        public Map<String, String> getRwFsBinds() {
+            return rwFsBinds;
+        }
+
+        public Map<String, String> getRoFsBinds() {
+            return roFsBinds;
         }
     }
 }

@@ -1,0 +1,8 @@
+test-resources:
+  containers:
+    fakesmtp:
+      image-name: ghusta/fakesmtp:2.0
+      hostnames:
+        - smtp.host
+      exposed-ports:
+        - smtp.port: 25

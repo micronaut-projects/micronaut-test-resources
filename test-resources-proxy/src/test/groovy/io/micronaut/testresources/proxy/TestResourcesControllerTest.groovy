@@ -21,7 +21,7 @@ class TestResourcesControllerTest extends Specification {
         client.listContainers().empty
 
         when:
-        client.resolve("kafka.bootstrap.servers", [:])
+        client.resolve("kafka.bootstrap.servers", [:], [:])
 
         then:
         def containers = client.listContainers()

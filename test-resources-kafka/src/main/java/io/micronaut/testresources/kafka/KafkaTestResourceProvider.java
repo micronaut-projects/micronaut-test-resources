@@ -34,7 +34,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:6.2.1";
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return Collections.singletonList(KAFKA_BOOTSTRAP_SERVERS);
     }
 

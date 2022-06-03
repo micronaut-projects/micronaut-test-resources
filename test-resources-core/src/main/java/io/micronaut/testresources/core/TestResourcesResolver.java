@@ -23,7 +23,7 @@ import java.util.Optional;
 
 /**
  * A test resources resolver is responsible for resolving test
- * resources. This should be done when the {@link #resolve(String, Map)}
+ * resources. This should be done when the {@link #resolve(String, Map, Map)}
  * method is called. This method is called with a property, corresponding
  * to a property which doesn't exist in the user configuration.
  * For example, if the "jdbc.driver" property is missing, a resolver
@@ -32,6 +32,11 @@ import java.util.Optional;
  */
 public interface TestResourcesResolver {
     /**
+     * The name of the top-level test resources property configuration key.
+     */
+    String TEST_RESOURCES_PROPERTY = "test-resources";
+
+    /**
      * Returns the list of properties that this resolver
      * is able to support. The property entries map is
      * a map which keys are the property entries retrieved
@@ -39,9 +44,10 @@ public interface TestResourcesResolver {
      * values are those property entries resolved.
      *
      * @param propertyEntries the property entries
+     * @param testResourcesConfig the test resources configuration
      * @return the list of properties
      */
-    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries);
+    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
 
     /**
      * Returns the list of properties which should be read
@@ -63,9 +69,11 @@ public interface TestResourcesResolver {
 
     /**
      * Resolves the given property.
+     *
      * @param propertyName the property to resolve
      * @param properties the resolved required properties
+     * @param testResourcesConfiguration the test resources configuration
      * @return the resolved property or empty if not found
      */
-    Optional<String> resolve(String propertyName, Map<String, Object> properties);
+    Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration);
 }

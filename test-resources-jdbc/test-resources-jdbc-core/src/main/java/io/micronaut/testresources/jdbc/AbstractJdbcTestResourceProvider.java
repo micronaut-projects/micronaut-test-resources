@@ -46,7 +46,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     );
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         Collection<String> datasources = propertyEntries.getOrDefault(PREFIX, Collections.emptyList());
         return datasources.stream()
             .flatMap(ds -> SUPPORTED_LIST.stream().map(p -> PREFIX + "." + ds + "." + p))

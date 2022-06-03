@@ -51,10 +51,11 @@ public class EmbeddedTestResourcesPropertyExpressionResolver extends LazyTestRes
                                        String expression,
                                        Class<T> requiredType) {
             List<TestResourcesResolver> resolvers = loader.getResolvers();
+            Map<String, Object> testProperties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
             for (TestResourcesResolver resolver : resolvers) {
-                if (canResolveExpression(propertyResolver, resolver, expression)) {
+                if (canResolveExpression(propertyResolver, resolver, expression, testProperties)) {
                     Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, resolver);
-                    Optional<String> resolve = resolver.resolve(expression, props);
+                    Optional<String> resolve = resolver.resolve(expression, props, testProperties);
                     if (resolve.isPresent()) {
                         String resolvedValue = resolve.get();
                         LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);

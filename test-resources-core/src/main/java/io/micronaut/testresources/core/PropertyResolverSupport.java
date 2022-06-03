@@ -54,22 +54,24 @@ public class PropertyResolverSupport {
     /**
      * Determines if a test resources resolver can resolve a particular
      * expression.
+     *
      * @param propertyResolver the property resolver
      * @param testResourcesResolver the test resources resolver
      * @param expression the expression
+     * @param testProperties the test resources configuration map
      * @return the resolved property entries
      */
     public static boolean canResolveExpression(
         PropertyResolver propertyResolver,
         TestResourcesResolver testResourcesResolver,
-        String expression
-    ) {
+        String expression,
+        Map<String, Object> testProperties) {
         List<String> requiredProperties = testResourcesResolver.getRequiredPropertyEntries();
         Map<String, Collection<String>> props = new HashMap<>(requiredProperties.size());
         for (String property : requiredProperties) {
             Collection<String> entries = propertyResolver.getPropertyEntries(property);
             props.put(property, entries);
         }
-        return testResourcesResolver.getResolvableProperties(props).contains(expression);
+        return testResourcesResolver.getResolvableProperties(props, testProperties).contains(expression);
     }
 }

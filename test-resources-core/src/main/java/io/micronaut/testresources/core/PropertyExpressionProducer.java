@@ -51,7 +51,8 @@ public interface PropertyExpressionProducer {
      *
      * @param resourceLoader the resource loader
      * @param propertyEntries the map of resolved property entries
+     * @param testResourcesConfig the test resources configuration
      * @return the list of keys
      */
-    List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries);
+    List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
 }

@@ -63,7 +63,7 @@ class TestResourcesClientTest extends Specification {
 
         @Override
         @Post("/list")
-        List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+        List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             ["dummy1", "dummy2"]
         }
 
@@ -81,7 +81,7 @@ class TestResourcesClientTest extends Specification {
 
         @Override
         @Post('/resolve')
-        Optional<String> resolve(String name, Map<String, Object> properties) {
+        Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
             Optional.of("value for $name".toString())
         }
 

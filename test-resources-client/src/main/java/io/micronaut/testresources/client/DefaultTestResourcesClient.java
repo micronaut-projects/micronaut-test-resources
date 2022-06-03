@@ -56,13 +56,13 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         HttpRequest<?> req = configure(HttpRequest.POST(RESOLVABLE_PROPERTIES_URI, Collections.singletonMap("propertyEntries", propertyEntries)));
         return client.retrieve(req, List.class);
     }
 
     @Override
-    public Optional<String> resolve(String name, Map<String, Object> properties) {
+    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);

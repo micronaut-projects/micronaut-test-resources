@@ -40,15 +40,15 @@ public final class TestResourcesController implements TestResourcesResolver {
 
     @Get("/list")
     public List<String> getResolvableProperties() {
-        return getResolvableProperties(Collections.emptyMap());
+        return getResolvableProperties(Collections.emptyMap(), Collections.emptyMap());
     }
 
     @Override
     @Post("/list")
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return loader.getResolvers()
             .stream()
-            .map(r -> r.getResolvableProperties(propertyEntries))
+            .map(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig))
             .flatMap(Collection::stream)
             .distinct()
             .collect(Collectors.toList());
@@ -77,10 +77,10 @@ public final class TestResourcesController implements TestResourcesResolver {
     }
 
     @Post("/resolve")
-    public Optional<String> resolve(String name, Map<String, Object> properties) {
+    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {
-            result = resolver.resolve(name, properties);
+            result = resolver.resolve(name, properties, testResourcesConfiguration);
             if (result.isPresent()) {
                 return result;
             }

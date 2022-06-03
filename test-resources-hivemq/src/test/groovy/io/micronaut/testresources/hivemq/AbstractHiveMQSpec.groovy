@@ -12,6 +12,8 @@ import io.micronaut.testresources.testcontainers.TestContainers
 import org.testcontainers.DockerClientFactory
 import spock.lang.Specification
 
+import java.util.concurrent.LinkedBlockingDeque
+
 abstract class AbstractHiveMQSpec extends Specification implements TestPropertyProvider {
 
     Map<String, String> getProperties() {
@@ -56,11 +58,15 @@ abstract class AbstractHiveMQSpec extends Specification implements TestPropertyP
 
     @MqttSubscriber
     static class Client {
-        List<String> messages = []
+        private final LinkedBlockingDeque<String> messages = new LinkedBlockingDeque<>()
 
         @Topic("/test/topic")
         void receive(byte[] message) {
-            messages << new String(message)
+            messages.add(new String(message))
+        }
+
+        String getMessage() {
+            messages.take()
         }
     }
 }

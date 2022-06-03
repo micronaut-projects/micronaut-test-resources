@@ -20,6 +20,7 @@ import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
+import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,12 +56,12 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         static final TestResourcesClient INSTANCE = new NoOpClient();
 
         @Override
-        public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+        public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return Collections.emptyList();
         }
 
         @Override
-        public Optional<String> resolve(String name, Map<String, Object> properties) {
+        public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
             return Optional.empty();
         }
 
@@ -94,7 +95,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
             if (propertyResolver instanceof Environment) {
                 TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
                 Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
-                Optional<String> resolved = client.resolve(expression, props);
+                Optional<String> resolved = client.resolve(expression, props, propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY));
                 if (resolved.isPresent()) {
                     String resolvedValue = resolved.get();
                     LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);

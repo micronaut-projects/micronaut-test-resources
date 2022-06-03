@@ -36,16 +36,16 @@ public interface TestResourcesClient extends TestResourcesResolver {
 
     @Get("/list")
     default List<String> getResolvableProperties() {
-        return getResolvableProperties(Collections.emptyMap());
+        return getResolvableProperties(Collections.emptyMap(), Collections.emptyMap());
     }
 
     @Override
     @Post("/list")
-    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries);
+    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
 
     @Override
     @Post("/resolve")
-    Optional<String> resolve(String name, Map<String, Object> properties);
+    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration);
 
     @Override
     @Get("/requirements/expr/{expression}")

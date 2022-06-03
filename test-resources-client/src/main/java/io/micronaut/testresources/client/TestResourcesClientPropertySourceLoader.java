@@ -51,9 +51,9 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
         }
 
         @Override
-        public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries) {
+        public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return findClient(resourceLoader)
-                .map(client -> client.getResolvableProperties(propertyEntries))
+                .map(client -> client.getResolvableProperties(propertyEntries, testResourcesConfig))
                 .orElse(Collections.emptyList());
         }
 

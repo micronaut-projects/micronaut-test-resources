@@ -11,4 +11,8 @@ dependencies {
     api(project(':test-resources-core'))
     api(libs.testcontainers.core)
     api(platform(libs.boms.testcontainers))
+
+    testImplementation(project(":test-resources-embedded"))
+    testImplementation(mn.micronaut.email)
+    testImplementation(mn.micronaut.email.javamail)
 }

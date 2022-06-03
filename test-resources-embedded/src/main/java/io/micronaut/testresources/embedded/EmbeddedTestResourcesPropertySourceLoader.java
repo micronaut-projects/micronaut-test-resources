@@ -46,10 +46,10 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
         }
 
         @Override
-        public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries) {
+        public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return loader.getResolvers()
                 .stream()
-                .flatMap(r -> r.getResolvableProperties(propertyEntries).stream())
+                .flatMap(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig).stream())
                 .distinct()
                 .collect(Collectors.toList());
         }

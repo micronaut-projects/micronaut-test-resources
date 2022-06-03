@@ -21,7 +21,7 @@ class HiveMQStartedTest extends AbstractHiveMQSpec {
 
         then:
         hivemqContainers().size() == 1
-        client.messages == ['hello']
+        client.message == 'hello'
     }
 
 }

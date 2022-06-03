@@ -34,7 +34,7 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
     public static final String DEFAULT_IMAGE = "hivemq/hivemq-ce:2021.3";
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries) {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return Collections.singletonList(MQTT_CLIENT_SERVER_URI);
     }
 

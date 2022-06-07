@@ -1,5 +1,5 @@
 micronaut:
   application:
-    name: Test resources proxy
+    name: Test resources server
   server:
     port: -1

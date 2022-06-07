@@ -32,18 +32,18 @@ import static io.micronaut.http.HttpHeaders.ACCEPT;
 import static io.micronaut.http.HttpHeaders.USER_AGENT;
 
 /**
- * A simple implementation of the test resources proxy client.
+ * A simple implementation of the test resources client.
  */
 @SuppressWarnings("unchecked")
 public class DefaultTestResourcesClient implements TestResourcesClient {
     public static final String ACCESS_TOKEN = "Access-Token";
 
-    private static final URI RESOLVABLE_PROPERTIES_URI = UriBuilder.of("/proxy").path("/list").build();
-    private static final URI REQUIRED_PROPERTIES_URI = UriBuilder.of("/proxy").path("/requirements/expr").build();
-    private static final URI REQUIRED_PROPERTY_ENTRIES_URI = UriBuilder.of("/proxy").path("/requirements/entries").build();
-    private static final URI CLOSE_ALL_URI = UriBuilder.of("/proxy").path("/close/all").build();
-    private static final URI CLOSE_URI = UriBuilder.of("/proxy").path("/close").build();
-    private static final URI RESOLVE_URI = UriBuilder.of("/proxy").path("/resolve").build();
+    private static final URI RESOLVABLE_PROPERTIES_URI = UriBuilder.of("/").path("/list").build();
+    private static final URI REQUIRED_PROPERTIES_URI = UriBuilder.of("/").path("/requirements/expr").build();
+    private static final URI REQUIRED_PROPERTY_ENTRIES_URI = UriBuilder.of("/").path("/requirements/entries").build();
+    private static final URI CLOSE_ALL_URI = UriBuilder.of("/").path("/close/all").build();
+    private static final URI CLOSE_URI = UriBuilder.of("/").path("/close").build();
+    private static final URI RESOLVE_URI = UriBuilder.of("/").path("/resolve").build();
 
     private final BlockingHttpClient client;
 

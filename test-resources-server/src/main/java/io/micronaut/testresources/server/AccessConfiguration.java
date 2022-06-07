@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.proxy;
+package io.micronaut.testresources.server;
 
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 /**
  * Configuration properties used to control access to
- * the proxy.
+ * the server.
  */
-@ConfigurationProperties("proxy")
+@ConfigurationProperties("server")
 public final class AccessConfiguration {
     public static final String ACCESS_TOKEN = "Access-Token";
 

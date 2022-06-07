@@ -1,4 +1,4 @@
-package io.micronaut.testresources.proxy
+package io.micronaut.testresources.server
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.http.annotation.Get
@@ -9,13 +9,13 @@ import jakarta.inject.Inject
 import spock.lang.Specification
 
 @MicronautTest
-@Property(name = "micronaut.testresources.proxy.url", value = "")
+@Property(name = "micronaut.testresources.server.url", value = "")
 class TestResourcesControllerTest extends Specification {
 
     @Inject
     DiagnosticsClient client
 
-    def "verifies that proxy can instantiate container"() {
+    def "verifies that server can instantiate container"() {
         expect:
         client.resolvableProperties == ['kafka.bootstrap.servers']
         client.listContainers().empty
@@ -35,7 +35,7 @@ class TestResourcesControllerTest extends Specification {
         client.listContainers().empty
     }
 
-    @Client("/proxy")
+    @Client("/")
     static interface DiagnosticsClient extends TestResourcesClient {
         @Get("/testcontainers")
         List<TestContainer> listContainers();

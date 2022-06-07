@@ -21,9 +21,9 @@ class TestResourcesClientTest extends Specification {
     Path tempDir
 
     @Inject
-    EmbeddedServer proxy
+    EmbeddedServer server
 
-    def "property source loader registers properties from proxy"() {
+    def "property source loader registers properties from server"() {
         def app = createApplication()
 
         expect:
@@ -47,19 +47,19 @@ class TestResourcesClientTest extends Specification {
         }
 
         propertiesFile << """
-            ${TestResourcesClient.PROXY_URI}=${proxy.getURI()}
+            ${TestResourcesClient.SERVER_URI}=${server.getURI()}
         """.stripIndent()
         def app = ApplicationContext.builder()
                 .classLoader(cl)
-                .properties(['proxy': 'false'])
+                .properties(['server': 'false'])
                 .start()
-        assert !app.findBean(TestProxy).present
+        assert !app.findBean(TestServer).present
         return app
     }
 
-    @Controller("/proxy")
-    @Requires(property = 'proxy', notEquals = 'false')
-    static class TestProxy implements TestResourcesResolver {
+    @Controller("/")
+    @Requires(property = 'server', notEquals = 'false')
+    static class TestServer implements TestResourcesResolver {
 
         @Override
         @Post("/list")

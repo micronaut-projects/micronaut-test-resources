@@ -36,7 +36,7 @@ import static io.micronaut.testresources.client.ConfigFinder.findConfiguration;
 import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
 
 /**
- * A property expression resolver which connects via client to a proxy in order to resolve
+ * A property expression resolver which connects via client to a server in order to resolve
  * properties.
  */
 public class TestResourcesClientPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {

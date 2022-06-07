@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.proxy;
+package io.micronaut.testresources.server;
 
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 
 /**
  * A client responsible for connecting to a test resources
- * proxy.
+ * server.
  */
-@Controller("/proxy")
+@Controller("/")
 public final class TestResourcesController implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
 

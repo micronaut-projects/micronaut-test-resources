@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.proxy;
+package io.micronaut.testresources.server;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
@@ -29,7 +29,7 @@ import java.io.FileWriter;
 import java.util.Arrays;
 
 /**
- * Main entry point for the proxy.
+ * Main entry point for the server.
  */
 @Singleton
 public class Application {
@@ -60,7 +60,7 @@ public class Application {
     public static class Configurer implements ApplicationContextConfigurer {
         @Override
         public void configure(ApplicationContextBuilder builder) {
-            builder.packages("io.micronaut.testresources.proxy")
+            builder.packages("io.micronaut.testresources.server")
                 .deduceEnvironment(false)
                 .banner(false);
         }

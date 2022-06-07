@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.proxy;
+package io.micronaut.testresources.server;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -25,16 +25,16 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 /**
- * A filter used to restrict access to the proxy: the proxy
+ * A filter used to restrict access to the server: the server
  * should only be available from a loopback connection, and
  * if an access token is specified, then the request should
  * include the access token header.
  *
- * This is to avoid services abusing the proxy to spawn
- * containers: when the proxy is started, a random access key
+ * This is to avoid services abusing the server to spawn
+ * containers: when the server is started, a random access key
  * should be generated, and passed to the allowed clients.
  */
-@Filter("/proxy/**")
+@Filter("/**")
 public class AccessFilter implements HttpServerFilter {
     private final AccessConfiguration accessConfiguration;
 

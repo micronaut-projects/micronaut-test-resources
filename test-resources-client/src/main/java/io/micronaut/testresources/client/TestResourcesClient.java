@@ -27,12 +27,12 @@ import java.util.Optional;
 
 /**
  * A client responsible for connecting to a test resources
- * proxy.
+ * server.
  */
 public interface TestResourcesClient extends TestResourcesResolver {
-    String PROXY_URI = "proxy.uri";
-    String ACCESS_TOKEN = "proxy.access.token";
-    String CLIENT_READ_TIMEOUT = "proxy.client.read.timeout";
+    String SERVER_URI = "server.uri";
+    String ACCESS_TOKEN = "server.access.token";
+    String CLIENT_READ_TIMEOUT = "server.client.read.timeout";
 
     @Get("/list")
     default List<String> getResolvableProperties() {

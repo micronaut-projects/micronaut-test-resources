@@ -3,8 +3,8 @@ plugins {
 }
 
 description = """
-Provides support for resolving test properties via a proxy.
-The proxy is responsible for returning the list of properties it can supply,
+Provides support for resolving test properties via a server.
+The server is responsible for returning the list of properties it can supply,
 and provide their value on demand.
 """
 

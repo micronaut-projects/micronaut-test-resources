@@ -24,7 +24,7 @@ include 'test-resources-bom'
 include 'test-resources-hivemq'
 include 'test-resources-kafka'
 include 'test-resources-testcontainers'
-include 'test-resources-proxy'
+include 'test-resources-server'
 
 jdbcModules.each {
     String projectName = "test-resources-jdbc-$it"

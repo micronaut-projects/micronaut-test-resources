@@ -47,12 +47,12 @@ public final class TestResourcesClientFactory {
             throw new TestResourcesException(e);
         }
         try {
-            String proxyUri = props.getProperty(TestResourcesClient.PROXY_URI);
+            String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
             String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
             int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, "60"));
             HttpClientConfiguration config = new DefaultHttpClientConfiguration();
             config.setReadTimeout(Duration.of(clientReadTimeout, ChronoUnit.SECONDS));
-            HttpClient client = HttpClient.create(new URL(proxyUri), config);
+            HttpClient client = HttpClient.create(new URL(serverUri), config);
             return new DefaultTestResourcesClient(client, accessToken);
         } catch (MalformedURLException e) {
             throw new TestResourcesException(e);

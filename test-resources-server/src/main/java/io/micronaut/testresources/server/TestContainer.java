@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.proxy;
+package io.micronaut.testresources.server;
 
 import io.micronaut.core.annotation.Introspected;
 

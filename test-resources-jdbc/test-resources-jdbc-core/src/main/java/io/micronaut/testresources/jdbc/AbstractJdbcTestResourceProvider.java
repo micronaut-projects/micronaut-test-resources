@@ -64,9 +64,9 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
             return Collections.emptyList();
         }
         String datasource = datasourceNameFrom(expression);
-        return Stream.concat(super.getRequiredProperties(expression).stream(), Stream.of(
+        return Stream.of(
                 datasourceExpressionOf(datasource, DIALECT),
-                datasourceExpressionOf(datasource, DRIVER)))
+                datasourceExpressionOf(datasource, DRIVER))
             .collect(Collectors.toList());
     }
 

@@ -24,13 +24,14 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static io.micronaut.testresources.testcontainers.TestContainerMetadataSupport.GENERIC_ORDER;
+import static io.micronaut.testresources.testcontainers.TestContainerMetadataSupport.containerMetadataFor;
 
 /**
  * A generic test containers provider. This provider is special in the sense
@@ -66,7 +67,11 @@ import java.util.stream.Stream;
 @SuppressWarnings("unchecked")
 public class GenericTestContainerProvider implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericTestContainerProvider.class);
-    private static final String TEST_RESOURCES_CONTAINERS = "containers.";
+
+    @Override
+    public int getOrder() {
+        return GENERIC_ORDER;
+    }
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
@@ -82,38 +87,18 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
     }
 
     @NotNull
-    private Stream<GenericContainerMetadata> containerMetadataFrom(Map<String, Object> testResourcesConfig) {
+    private Stream<TestContainerMetadata> containerMetadataFrom(Map<String, Object> testResourcesConfig) {
         List<String> genericContainers = containerNamesFrom(testResourcesConfig);
-
-        return genericContainers.stream()
-            .map(name -> {
-                String prefix = TEST_RESOURCES_CONTAINERS + name + ".";
-                String containerName = (String) testResourcesConfig.get(prefix + "image-name");
-                if (containerName != null) {
-                    Map<String, Integer> exposedPorts = extractExposedPortsFrom(prefix, testResourcesConfig);
-                    Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
-                    Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
-                    Map<String, String> roFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, true);
-                    return Optional.of(new GenericContainerMetadata(name, containerName, exposedPorts, hostNames, rwFsBinds, roFsBinds));
-                }
-                return Optional.<GenericContainerMetadata>empty();
-            })
-            .filter(Optional::isPresent)
-            .map(Optional::get);
-    }
-
-    @Override
-    public List<String> getRequiredProperties(String expression) {
-        return TestResourcesResolver.super.getRequiredProperties(expression);
+        return containerMetadataFor(genericContainers, testResourcesConfig);
     }
 
     @Override
     public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
         class MappedContainer {
-            private final GenericContainerMetadata md;
+            private final TestContainerMetadata md;
             private final GenericContainer<?> container;
 
-            MappedContainer(GenericContainerMetadata md, GenericContainer<?> container) {
+            MappedContainer(TestContainerMetadata md, GenericContainer<?> container) {
                 this.md = md;
                 this.container = container;
             }
@@ -128,15 +113,15 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
                     properties,
                     () -> {
                         GenericContainer<?> selfGenericContainer = new GenericContainer<>(imageName);
-                        Collection<Integer> exposedPorts = md.exposedPorts.values();
+                        Collection<Integer> exposedPorts = md.getExposedPorts().values();
                         selfGenericContainer.withExposedPorts(exposedPorts.toArray(new Integer[0]));
-                        md.rwFsBinds.forEach(selfGenericContainer::withFileSystemBind);
-                        md.roFsBinds.forEach((hostPath, containerPath) -> selfGenericContainer.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
+                        md.getRwFsBinds().forEach(selfGenericContainer::withFileSystemBind);
+                        md.getRoFsBinds().forEach((hostPath, containerPath) -> selfGenericContainer.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
                         return selfGenericContainer;
                     }
                 ));
             }).map(e -> {
-                Integer mappedPort = e.md.exposedPorts.get(propertyName);
+                Integer mappedPort = e.md.getExposedPorts().get(propertyName);
                 if (mappedPort != null) {
                     return String.valueOf(e.container.getMappedPort(mappedPort));
                 }
@@ -150,149 +135,11 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
     private static List<String> containerNamesFrom(Map<String, Object> configuration) {
         return configuration.keySet()
             .stream()
-            .filter(key -> key.startsWith(TEST_RESOURCES_CONTAINERS))
-            .map(key -> key.substring(TEST_RESOURCES_CONTAINERS.length()))
+            .filter(key -> key.startsWith(TestContainerMetadataSupport.TEST_RESOURCES_CONTAINERS))
+            .map(key -> key.substring(TestContainerMetadataSupport.TEST_RESOURCES_CONTAINERS.length()))
             .map(key -> key.substring(0, key.indexOf('.')))
             .distinct()
             .collect(Collectors.toList());
     }
 
-    private static Map<String, Integer> extractExposedPortsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
-        class MappedPort {
-            final String key;
-            final int value;
-
-            MappedPort(Object key, Object value) {
-                this.key = String.valueOf(key);
-                this.value = Integer.parseInt(String.valueOf(value));
-            }
-
-            public String getKey() {
-                return key;
-            }
-
-            public int getValue() {
-                return value;
-            }
-        }
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + "exposed-ports"))
-            .map(o -> {
-                if (o instanceof List) {
-                    List<Object> list = (List<Object>) o;
-                    return list.stream()
-                        .flatMap(definition -> {
-                            if (definition instanceof Map) {
-                                return ((Map<?, ?>) definition).entrySet()
-                                    .stream()
-                                    .map(e -> new MappedPort(e.getKey(), e.getValue()));
-                            }
-                            return Stream.empty();
-                        })
-                        .collect(Collectors.toMap(MappedPort::getKey, MappedPort::getValue));
-                }
-                return Collections.<String, Integer>emptyMap();
-            })
-            .orElse(Collections.emptyMap());
-    }
-
-    private static Set<String> extractHostsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + "hostnames"))
-            .map(o -> {
-                if (o instanceof List) {
-                    List<Object> list = (List<Object>) o;
-                    return list.stream().map(String::valueOf).collect(Collectors.toSet());
-                }
-                return Collections.singleton(String.valueOf(o));
-            })
-            .orElse(Collections.emptySet());
-    }
-
-    private static Map<String, String> extractFsBindsFrom(String prefix,
-                                                          Map<String, Object> testResourcesConfiguration,
-                                                          boolean readOnly) {
-        class FsBind {
-            final String key;
-            final String value;
-
-            FsBind(Object key, Object value) {
-                this.key = String.valueOf(key);
-                this.value = String.valueOf(value);
-            }
-
-            public String getKey() {
-                return key;
-            }
-
-            public String getValue() {
-                return value;
-            }
-        }
-        String key = prefix + (readOnly ? "ro-" : "rw-") + "fs-bind";
-        return Optional.ofNullable(testResourcesConfiguration.get(key))
-            .map(o -> {
-                if (o instanceof List) {
-                    List<Object> list = (List<Object>) o;
-                    return list.stream()
-                        .flatMap(definition -> {
-                            if (definition instanceof Map) {
-                                return ((Map<?, ?>) definition).entrySet()
-                                    .stream()
-                                    .map(e -> new FsBind(e.getKey(), e.getValue()));
-                            }
-                            return Stream.empty();
-                        })
-                        .collect(Collectors.toMap(FsBind::getKey, FsBind::getValue));
-                }
-                return Collections.<String, String>emptyMap();
-            })
-            .orElse(Collections.emptyMap());
-    }
-
-    private static final class GenericContainerMetadata {
-        private final String id;
-        private final String imageName;
-        private final Map<String, Integer> exposedPorts;
-        private final Set<String> hostNames;
-
-        private final Map<String, String> rwFsBinds;
-        private final Map<String, String> roFsBinds;
-
-        private GenericContainerMetadata(String id,
-                                         String imageName,
-                                         Map<String, Integer> exposedPorts,
-                                         Set<String> hostNames,
-                                         Map<String, String> rwFsBinds,
-                                         Map<String, String> roFsBinds) {
-            this.id = id;
-            this.imageName = imageName;
-            this.exposedPorts = exposedPorts;
-            this.hostNames = hostNames;
-            this.rwFsBinds = rwFsBinds;
-            this.roFsBinds = roFsBinds;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getImageName() {
-            return imageName;
-        }
-
-        public Map<String, Integer> getExposedPorts() {
-            return exposedPorts;
-        }
-
-        public Set<String> getHostNames() {
-            return hostNames;
-        }
-
-        public Map<String, String> getRwFsBinds() {
-            return rwFsBinds;
-        }
-
-        public Map<String, String> getRoFsBinds() {
-            return roFsBinds;
-        }
-    }
 }

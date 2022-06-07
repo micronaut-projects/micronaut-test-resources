@@ -20,9 +20,10 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static io.micronaut.testresources.testcontainers.TestContainerMetadataSupport.SPECIFIC_ORDER;
 
 /**
  * The base class for test resources providers which spawn test containers.
@@ -30,8 +31,10 @@ import java.util.Optional;
  * @param <T> the container type
  */
 public abstract class AbstractTestContainersProvider<T extends GenericContainer<? extends T>> implements TestResourcesResolver {
-
-    public static final String IMAGE_NAME_PROPERTY = "image-name";
+    @Override
+    public int getOrder() {
+        return SPECIFIC_ORDER;
+    }
 
     /**
      * Returns the name of the resource resolver, for example "kafka" or "mysql".
@@ -39,19 +42,6 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
      * @return the name of the resolver
      */
     protected abstract String getSimpleName();
-
-    protected final String getNamespace() {
-        return "micronaut.testresources." + getSimpleName();
-    }
-
-    protected final String getImageNameProperty() {
-        return getNamespace() + "." + IMAGE_NAME_PROPERTY;
-    }
-
-    @Override
-    public List<String> getRequiredProperties(String expression) {
-        return Collections.singletonList(getImageNameProperty());
-    }
 
     /**
      * Returns the default image name.
@@ -90,9 +80,13 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                 TestContainers.getOrCreate(this.getClass(), getSimpleName(), properties, () -> {
                     String defaultImageName = getDefaultImageName();
                     DockerImageName imageName = DockerImageName.parse(defaultImageName);
-                    String imageNameProperty = getImageNameProperty();
-                    if (properties.containsKey(imageNameProperty)) {
-                        imageName = DockerImageName.parse(String.valueOf(properties.get(imageNameProperty))).asCompatibleSubstituteFor(defaultImageName);
+                    Optional<TestContainerMetadata> metadata = TestContainerMetadataSupport.containerMetadataFor(Collections.singletonList(getSimpleName()), testResourcesConfiguration)
+                        .findAny();
+                    if (metadata.isPresent()) {
+                        TestContainerMetadata md = metadata.get();
+                        if (md.getImageName() != null) {
+                            imageName = DockerImageName.parse(md.getImageName()).asCompatibleSubstituteFor(defaultImageName);
+                        }
                     }
                     return createContainer(imageName, properties);
                 }));

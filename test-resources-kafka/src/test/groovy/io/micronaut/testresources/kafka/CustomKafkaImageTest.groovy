@@ -1,13 +1,22 @@
 package io.micronaut.testresources.kafka
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Property
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.testresources.core.Scope
+import io.micronaut.testresources.testcontainers.TestContainers
 import jakarta.inject.Inject
 
 @MicronautTest
-@Property(name = "micronaut.testresources.kafka.image-name", value = "confluentinc/cp-kafka:6.2.2")
 class CustomKafkaImageTest extends AbstractKafkaSpec {
+
+    @Override
+    Map<String, String> getProperties() {
+        super.properties + [
+                "test-resources.containers.kafka.image-name": "confluentinc/cp-kafka:6.2.2",
+                "test-resources.containers.kafka.exposed-ports": [["foo": "9092"]]
+
+        ]
+    }
 
     @Inject
     ApplicationContext applicationContext
@@ -20,6 +29,10 @@ class CustomKafkaImageTest extends AbstractKafkaSpec {
         then:
         kafkaContainers().size() == 1
         result.block() == "oh yeah!"
+        with(TestContainers.listByScope("kafka").get(Scope.of("kafka"))) {
+            size() == 1
+            get(0).dockerImageName == "confluentinc/cp-kafka:6.2.2"
+        }
     }
 
 }

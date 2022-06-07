@@ -16,12 +16,12 @@
 package io.micronaut.testresources.embedded;
 
 import io.micronaut.core.io.service.SoftServiceLoader;
+import io.micronaut.core.order.OrderUtil;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +38,7 @@ public final class TestResourcesResolverLoader {
         SoftServiceLoader<TestResourcesResolver> loader = SoftServiceLoader.load(TestResourcesResolver.class);
         ArrayList<TestResourcesResolver> values = new ArrayList<>();
         loader.collectAll(values);
-        resolvers = Collections.unmodifiableList(values);
+        resolvers = OrderUtil.sort(values.stream()).collect(Collectors.toList());
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Loaded {} test resources resolvers: {}", resolvers.size(), resolvers.stream().map(Object::getClass).map(Class::getName).collect(Collectors.joining(", ")));
         }

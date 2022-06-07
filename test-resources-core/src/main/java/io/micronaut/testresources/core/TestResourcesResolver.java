@@ -15,6 +15,8 @@
  */
 package io.micronaut.testresources.core;
 
+import io.micronaut.core.order.Ordered;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +32,7 @@ import java.util.Optional;
  * may declare that it can resolve that property.
  * As part of the process, it may start a test container for example.
  */
-public interface TestResourcesResolver {
+public interface TestResourcesResolver extends Ordered {
     /**
      * The name of the top-level test resources property configuration key.
      */

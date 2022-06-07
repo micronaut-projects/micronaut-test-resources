@@ -41,6 +41,8 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     private static final String DIALECT = "dialect";
     private static final String DRIVER = "driverClassName";
 
+    private static final String TYPE = "db-type";
+
     private static final List<String> SUPPORTED_LIST = Collections.unmodifiableList(
         Arrays.asList(URL, USERNAME, PASSWORD)
     );
@@ -76,13 +78,17 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
             return false;
         }
         String datasource = datasourceNameFrom(propertyName);
-        String dialect = String.valueOf(properties.get(datasourceExpressionOf(datasource, DIALECT)));
-        if (dialect != null) {
-            return dialect.equalsIgnoreCase(getSimpleName());
+        String type = String.valueOf(properties.get(datasourceExpressionOf(datasource, TYPE)));
+        if (type != null && type.equalsIgnoreCase(getSimpleName())) {
+            return true;
         }
         String driver = String.valueOf(properties.get(datasourceExpressionOf(datasource, DRIVER)));
-        if (driver != null) {
-            return driver.toLowerCase(Locale.US).contains(getSimpleName());
+        if (driver != null && driver.toLowerCase(Locale.US).contains(getSimpleName())) {
+            return true;
+        }
+        String dialect = String.valueOf(properties.get(datasourceExpressionOf(datasource, DIALECT)));
+        if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {
+            return true;
         }
         return false;
     }

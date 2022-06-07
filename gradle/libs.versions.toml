@@ -32,9 +32,11 @@ testcontainers-core = { module = "org.testcontainers:testcontainers", version = 
 testcontainers-jdbc = { module = "org.testcontainers:jdbc", version = "" }
 testcontainers-hivemq = { module = "org.testcontainers:hivemq", version = "" }
 testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }
+testcontainers-mariadb = { module = "org.testcontainers:mariadb", version = "" }
 testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
 
+mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version = ""}
 mysql = { module = "mysql:mysql-connector-java", version = "" }
 postgres = { module = "org.postgresql:postgresql", version = "" }
 

@@ -78,7 +78,8 @@ public final class TestResourcesClasspath {
             m.onArtifact("micronaut-mqtt", "hivemq");
             m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(artifactEquals("mysql-connector-java")), "jdbc-mysql");
             m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(moduleEquals("org.postgresql:postgresql")), "jdbc-postgresql");
-            m.passthroughModules("mysql:mysql-connector-java", "org.postgresql:postgresql");
+            m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(moduleEquals("org.mariadb.jdbc:mariadb-java-client")), "jdbc-mariadb");
+            m.passthroughModules("mysql:mysql-connector-java", "org.postgresql:postgresql", "org.mariadb.jdbc:mariadb-java-client");
         });
     }
 

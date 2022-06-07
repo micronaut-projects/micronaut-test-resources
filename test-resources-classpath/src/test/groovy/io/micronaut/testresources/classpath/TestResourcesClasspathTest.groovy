@@ -47,7 +47,8 @@ class TestResourcesClasspathTest extends Specification {
         where:
         driver << [
                 'mysql:mysql-connector-java',
-                'org.postgresql:postgresql'
+                'org.postgresql:postgresql',
+                'org.mariadb.jdbc:mariadb-java-client'
         ]
     }
 
@@ -64,9 +65,10 @@ class TestResourcesClasspathTest extends Specification {
         )
 
         where:
-        driver                       | module
-        'mysql:mysql-connector-java' | 'mysql'
-        'org.postgresql:postgresql'  | 'postgresql'
+        driver                                 | module
+        'mysql:mysql-connector-java'           | 'mysql'
+        'org.postgresql:postgresql'            | 'postgresql'
+        'org.mariadb.jdbc:mariadb-java-client' | 'mariadb'
 
     }
 
@@ -79,7 +81,7 @@ class TestResourcesClasspathTest extends Specification {
     private void infer(String... dependencies) {
         inferred = TestResourcesClasspath.inferTestResourcesClasspath(
                 dependencies.collect {
-                    def (g, a, v) = it.split(':')
+                    def (g, a, v) = it.split(':') as List
                     new MavenDependency(g, a, v)
                 },
                 '1.0.34'

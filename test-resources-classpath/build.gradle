@@ -1,0 +1,33 @@
+import io.micronaut.internal.WriteVersion
+
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+micronautBuild {
+    enableBom = false
+    enableProcessing = false
+}
+
+configurations.all {
+    dependencies.clear()
+}
+
+description = """
+A module designed to be integrated with build tools. Its
+responsibility is to provide a list of dependencies to add
+to the classpath of the test resources service, given a user
+classpath.
+"""
+
+def writeVersion = tasks.register("writeVersionClass", WriteVersion) {
+    outputDirectory.set(layout.buildDirectory.dir("version-info"))
+    getPackage().set("io.micronaut.testresources.classpath")
+    version.set(project.version as String)
+}
+
+sourceSets.main.java.srcDir(writeVersion)
+
+dependencies {
+    testImplementation(mn.spock)
+}

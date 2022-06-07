@@ -72,6 +72,27 @@ class TestResourcesClasspathTest extends Specification {
 
     }
 
+    def "infers Micronaut Data Mongo"() {
+        when:
+        infer 'io.micronaut.data:micronaut-data-mongodb:1.0', "$driver:1.0"
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.test:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.test:micronaut-test-resources-testcontainers:1.0.34',
+                "io.micronaut.test:micronaut-test-resources-mongodb:1.0.34",
+                "$driver:1.0"
+        )
+
+        where:
+        driver << [
+                "org.mongodb:mongodb-driver-async",
+                "org.mongodb:mongodb-driver-sync",
+                "org.mongodb:mongodb-driver-reactivestreams"
+        ]
+
+    }
+
     private void inferredClasspathEquals(String... dependencies) {
         Set<String> expected = dependencies as SortedSet<String>
         Set<String> actual = inferred as SortedSet<String>

@@ -76,10 +76,17 @@ public final class TestResourcesClasspath {
         return Matcher.match(input, allDependencies, testResourcesVersion, m -> {
             m.onArtifact("micronaut-kafka", "kafka");
             m.onArtifact("micronaut-mqtt", "hivemq");
+            m.onArtifact("micronaut-data-mongodb", "mongodb");
             m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(artifactEquals("mysql-connector-java")), "jdbc-mysql");
             m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(moduleEquals("org.postgresql:postgresql")), "jdbc-postgresql");
             m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(moduleEquals("org.mariadb.jdbc:mariadb-java-client")), "jdbc-mariadb");
-            m.passthroughModules("mysql:mysql-connector-java", "org.postgresql:postgresql", "org.mariadb.jdbc:mariadb-java-client");
+            m.passthroughModules("mysql:mysql-connector-java",
+                "org.postgresql:postgresql",
+                "org.mariadb.jdbc:mariadb-java-client",
+                "org.mongodb:mongodb-driver-async",
+                "org.mongodb:mongodb-driver-sync",
+                "org.mongodb:mongodb-driver-reactivestreams"
+            );
         });
     }
 

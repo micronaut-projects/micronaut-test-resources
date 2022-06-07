@@ -33,10 +33,12 @@ testcontainers-jdbc = { module = "org.testcontainers:jdbc", version = "" }
 testcontainers-hivemq = { module = "org.testcontainers:hivemq", version = "" }
 testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }
 testcontainers-mariadb = { module = "org.testcontainers:mariadb", version = "" }
+testcontainers-mongodb = { module = "org.testcontainers:mongodb", version = "" }
 testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
 
-mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version = ""}
+mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version = "" }
+mongodb = { module = "org.mongodb:mongodb-driver-sync", version = "" }
 mysql = { module = "mysql:mysql-connector-java", version = "" }
 postgres = { module = "org.postgresql:postgresql", version = "" }
 

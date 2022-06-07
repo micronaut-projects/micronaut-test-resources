@@ -1,0 +1,10 @@
+io.micronaut.testresources.client
+io.micronaut.testresources.core
+io.micronaut.testresources.embedded
+io.micronaut.testresources.hivemq
+io.micronaut.testresources.jdbc
+io.micronaut.testresources.kafka
+io.micronaut.testresources.mysql
+io.micronaut.testresources.postgres
+io.micronaut.testresources.server
+io.micronaut.testresources.testcontainers

@@ -5,6 +5,7 @@ io.micronaut.testresources.embedded
 io.micronaut.testresources.hivemq
 io.micronaut.testresources.jdbc
 io.micronaut.testresources.kafka
+io.micronaut.testresources.mariadb
 io.micronaut.testresources.mysql
 io.micronaut.testresources.postgres
 io.micronaut.testresources.server

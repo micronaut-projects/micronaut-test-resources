@@ -12,5 +12,6 @@ dependencies {
     implementation(libs.testcontainers.neo4j)
 
     testImplementation(project(":test-resources-embedded"))
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
     testImplementation(mn.micronaut.neo4j)
 }

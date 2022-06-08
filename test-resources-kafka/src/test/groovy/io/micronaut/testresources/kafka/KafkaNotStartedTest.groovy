@@ -15,7 +15,7 @@ class KafkaNotStartedTest extends AbstractKafkaSpec {
         def bean = applicationContext.getBean(SomeBean)
 
         then:
-        kafkaContainers().empty
+        listContainers().empty
     }
 
 }

@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.testcontainers.kafka)
 
     testImplementation(project(":test-resources-embedded"))
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
     testImplementation(mn.micronaut.reactor)
     testImplementation(mn.micronaut.kafka)
 }

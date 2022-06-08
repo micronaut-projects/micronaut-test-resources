@@ -13,6 +13,7 @@ dependencies {
 
     testCompileOnly(mn.micronaut.data.document.processor)
     testImplementation(project(":test-resources-embedded"))
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
     testImplementation(mn.micronaut.data.mongodb)
     testImplementation(libs.mongodb)
 }

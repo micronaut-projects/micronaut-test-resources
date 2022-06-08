@@ -9,6 +9,7 @@ io.micronaut.testresources.mariadb
 io.micronaut.testresources.mongodb
 io.micronaut.testresources.mysql
 io.micronaut.testresources.neo4j
+io.micronaut.testresources.oracle.xe
 io.micronaut.testresources.postgres
 io.micronaut.testresources.server
 io.micronaut.testresources.testcontainers

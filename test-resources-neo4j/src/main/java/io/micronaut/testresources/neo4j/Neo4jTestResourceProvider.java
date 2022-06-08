@@ -43,7 +43,6 @@ public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Ne
         SUPPORTED_PROPERTIES = Collections.unmodifiableSet(supported);
     }
 
-
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return Collections.singletonList(NEO4J_SERVER_URI);

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
  * test resources modules for JDBC and the MySQL driver.
  */
 public final class TestResourcesClasspath {
-    private static final String TEST_RESOURCES_GROUP = "io.micronaut.test";
+    private static final String TEST_RESOURCES_GROUP = "io.micronaut.testresources";
     private static final String TEST_RESOURCES_ARTIFACT_PREFIX = "micronaut-test-resources-";
 
     private static final List<String> CORE_SUPPORT = Arrays.asList(

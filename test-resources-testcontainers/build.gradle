@@ -1,5 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.test-resources-module'
+    id 'java-test-fixtures'
 }
 
 description = """
@@ -15,4 +16,11 @@ dependencies {
     testImplementation(project(":test-resources-embedded"))
     testImplementation(mn.micronaut.email)
     testImplementation(mn.micronaut.email.javamail)
+
+    testFixturesApi(platform(mn.micronaut.bom))
+    testFixturesApi(mn.micronaut.test.core) {
+        because "exposes TestPropertyProvider"
+    }
+    testFixturesImplementation(mn.groovy)
+    testFixturesImplementation(mn.spock)
 }

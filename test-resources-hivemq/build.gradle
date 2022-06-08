@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.testcontainers.hivemq)
 
     testImplementation(project(":test-resources-embedded"))
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
     testImplementation(mn.micronaut.reactor)
     testImplementation(mn.micronaut.mqttv5)
 }

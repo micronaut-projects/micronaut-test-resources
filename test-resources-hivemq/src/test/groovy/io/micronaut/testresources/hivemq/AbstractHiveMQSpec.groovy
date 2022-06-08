@@ -1,48 +1,23 @@
 package io.micronaut.testresources.hivemq
 
-import com.github.dockerjava.api.DockerClient
-import com.github.dockerjava.api.model.Container
+
 import io.micronaut.context.annotation.Prototype
 import io.micronaut.mqtt.annotation.MqttSubscriber
 import io.micronaut.mqtt.annotation.Topic
 import io.micronaut.mqtt.v5.annotation.MqttPublisher
-import io.micronaut.test.support.TestPropertyProvider
-import io.micronaut.testresources.core.Scope
-import io.micronaut.testresources.testcontainers.TestContainers
-import org.testcontainers.DockerClientFactory
-import spock.lang.Specification
+import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 
 import java.util.concurrent.LinkedBlockingDeque
 
-abstract class AbstractHiveMQSpec extends Specification implements TestPropertyProvider {
-
-    Map<String, String> getProperties() {
-        [(Scope.PROPERTY_KEY): 'hivemq']
+abstract class AbstractHiveMQSpec extends AbstractTestContainersSpec {
+    @Override
+    String getScopeName() {
+        'hivemq'
     }
 
-    void cleanupSpec() {
-        TestContainers.closeScope("hivemq")
-    }
-
-    protected DockerClient dockerClient() {
-        DockerClientFactory.instance().client()
-    }
-
-    protected List<Container> runningTestContainers() {
-        dockerClient().listContainersCmd()
-                .exec()
-                .findAll {
-                    it.labels['org.testcontainers'] == 'true'
-                }
-                .findAll {
-                    println it
-                    it.state == 'running'
-                }
-    }
-
-    protected List<Container> hivemqContainers() {
-        runningTestContainers()
-                .findAll { it.image.contains('hivemq/hivemq') }
+    @Override
+    String getImageName() {
+        'hivemq/hivemq'
     }
 
     @Prototype

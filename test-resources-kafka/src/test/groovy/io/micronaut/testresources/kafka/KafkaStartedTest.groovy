@@ -16,7 +16,7 @@ class KafkaStartedTest extends AbstractKafkaSpec {
         def result = client.updateAnalytics("oh yeah!")
 
         then:
-        kafkaContainers().size() == 1
+        listContainers().size() == 1
         result.block() == "oh yeah!"
     }
 

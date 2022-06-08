@@ -18,7 +18,7 @@ class HiveMQNotStartedTest extends AbstractHiveMQSpec {
         def bean = applicationContext.getBean(SomeBean)
 
         then:
-        hivemqContainers().empty
+        listContainers().empty
     }
 
 }

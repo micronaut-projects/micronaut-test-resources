@@ -19,6 +19,9 @@ dependencies {
     testFixturesCompileOnly(mn.micronaut.data.processor)
     testFixturesImplementation(mn.groovy)
     testFixturesImplementation(mn.spock)
+    testFixturesApi(testFixtures(project(":test-resources-testcontainers"))) {
+        because "exposes AbstractTestContainersSpec"
+    }
     testFixturesImplementation(project(":test-resources-embedded"))
     testFixturesRuntimeOnly(mn.micronaut.jdbc.hikari)
 }

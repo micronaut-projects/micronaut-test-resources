@@ -35,6 +35,7 @@ testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }
 testcontainers-mariadb = { module = "org.testcontainers:mariadb", version = "" }
 testcontainers-mongodb = { module = "org.testcontainers:mongodb", version = "" }
 testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
+testcontainers-neo4j = { module = "org.testcontainers:neo4j", version = "" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
 
 mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version = "" }

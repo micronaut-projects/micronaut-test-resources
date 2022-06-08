@@ -22,7 +22,7 @@ classpath.
 
 def writeVersion = tasks.register("writeVersionClass", WriteVersion) {
     outputDirectory.set(layout.buildDirectory.dir("version-info"))
-    getPackage().set("io.micronaut.testresources.classpath")
+    getPackage().set("io.micronaut.testresources.buildtools")
     version.set(project.version as String)
 }
 

@@ -1,4 +1,4 @@
-package io.micronaut.testresources.classpath
+package io.micronaut.testresources.buildtools
 
 import spock.lang.Specification
 

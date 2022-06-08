@@ -67,6 +67,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         }
         String datasource = datasourceNameFrom(expression);
         return Stream.of(
+                datasourceExpressionOf(datasource, TYPE),
                 datasourceExpressionOf(datasource, DIALECT),
                 datasourceExpressionOf(datasource, DRIVER))
             .collect(Collectors.toList());

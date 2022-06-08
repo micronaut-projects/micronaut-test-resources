@@ -37,6 +37,24 @@ public final class TestResourcesClasspath {
         "server",
         "testcontainers"
     );
+    private static final String MICRONAUT_DATA_PREFIX = "micronaut-data-";
+    private static final String MICRONAUT_KAFKA = "micronaut-kafka";
+    private static final String MICRONAUT_MQTT = "micronaut-mqtt";
+    private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
+    private static final String MYSQL_CONNECTOR_JAVA = "mysql-connector-java";
+
+    private static final String MYSQL_MYSQL_CONNECTOR_JAVA = "mysql:mysql-connector-java";
+    private static final String POSTGRESQL = "org.postgresql:postgresql";
+    private static final String MARIADB_JAVA_CLIENT = "org.mariadb.jdbc:mariadb-java-client";
+    private static final String MONGODB_DRIVER_ASYNC = "org.mongodb:mongodb-driver-async";
+    private static final String MONGODB_DRIVER_SYNC = "org.mongodb:mongodb-driver-sync";
+    private static final String MONGODB_DRIVER_REACTIVESTREAMS = "org.mongodb:mongodb-driver-reactivestreams";
+    private static final String KAFKA_MODULE = "kafka";
+    private static final String HIVEMQ_MODULE = "hivemq";
+    private static final String MONGODB_MODULE = "mongodb";
+    private static final String MYSQL_MODULE = "jdbc-mysql";
+    private static final String POSTGRESQL_MODULE = "jdbc-postgresql";
+    private static final String MARIADB_MODULE = "jdbc-mariadb";
 
     private TestResourcesClasspath() {
 
@@ -74,18 +92,18 @@ public final class TestResourcesClasspath {
 
     private static Stream<MavenDependency> inferSingle(MavenDependency input, List<MavenDependency> allDependencies, String testResourcesVersion) {
         return Matcher.match(input, allDependencies, testResourcesVersion, m -> {
-            m.onArtifact("micronaut-kafka", "kafka");
-            m.onArtifact("micronaut-mqtt", "hivemq");
-            m.onArtifact("micronaut-data-mongodb", "mongodb");
-            m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(artifactEquals("mysql-connector-java")), "jdbc-mysql");
-            m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(moduleEquals("org.postgresql:postgresql")), "jdbc-postgresql");
-            m.onArtifact(name -> name.startsWith("micronaut-data-"), deps -> deps.anyMatch(moduleEquals("org.mariadb.jdbc:mariadb-java-client")), "jdbc-mariadb");
-            m.passthroughModules("mysql:mysql-connector-java",
-                "org.postgresql:postgresql",
-                "org.mariadb.jdbc:mariadb-java-client",
-                "org.mongodb:mongodb-driver-async",
-                "org.mongodb:mongodb-driver-sync",
-                "org.mongodb:mongodb-driver-reactivestreams"
+            m.onArtifact(MICRONAUT_KAFKA, KAFKA_MODULE);
+            m.onArtifact(MICRONAUT_MQTT, HIVEMQ_MODULE);
+            m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
+            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(artifactEquals(MYSQL_CONNECTOR_JAVA)), MYSQL_MODULE);
+            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL)), POSTGRESQL_MODULE);
+            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(MARIADB_JAVA_CLIENT)), MARIADB_MODULE);
+            m.passthroughModules(MYSQL_MYSQL_CONNECTOR_JAVA,
+                POSTGRESQL,
+                MARIADB_JAVA_CLIENT,
+                MONGODB_DRIVER_ASYNC,
+                MONGODB_DRIVER_SYNC,
+                MONGODB_DRIVER_REACTIVESTREAMS
             );
         });
     }

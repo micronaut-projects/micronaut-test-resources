@@ -51,11 +51,25 @@ public final class TestResourcesClasspath {
     private static final String MONGODB_DRIVER_ASYNC = "org.mongodb:mongodb-driver-async";
     private static final String MONGODB_DRIVER_SYNC = "org.mongodb:mongodb-driver-sync";
     private static final String MONGODB_DRIVER_REACTIVESTREAMS = "org.mongodb:mongodb-driver-reactivestreams";
+    private static final String ORACLE_DRIVER_5 = "com.oracle.database.jdbc:ojdbc5";
+    private static final String ORACLE_DRIVER_6 = "com.oracle.database.jdbc:ojdbc6";
+    private static final String ORACLE_DRIVER_8 = "com.oracle.database.jdbc:ojdbc8";
+    private static final String ORACLE_DRIVER_10 = "com.oracle.database.jdbc:ojdbc10";
+    private static final String ORACLE_DRIVER_11 = "com.oracle.database.jdbc:ojdbc11";
+    private static final List<String> ORACLE_DRIVERS = Arrays.asList(
+        ORACLE_DRIVER_5,
+        ORACLE_DRIVER_6,
+        ORACLE_DRIVER_8,
+        ORACLE_DRIVER_10,
+        ORACLE_DRIVER_11
+    );
+
     private static final String KAFKA_MODULE = "kafka";
     private static final String HIVEMQ_MODULE = "hivemq";
     private static final String MONGODB_MODULE = "mongodb";
     private static final String MYSQL_MODULE = "jdbc-mysql";
     private static final String NEO4J_MODULE = "neo4j";
+    private static final String ORACLE_XE_MODULE = "jdbc-oracle-xe";
     private static final String POSTGRESQL_MODULE = "jdbc-postgresql";
     private static final String MARIADB_MODULE = "jdbc-mariadb";
 
@@ -102,12 +116,14 @@ public final class TestResourcesClasspath {
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(artifactEquals(MYSQL_CONNECTOR_JAVA)), MYSQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL)), POSTGRESQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(MARIADB_JAVA_CLIENT)), MARIADB_MODULE);
+            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(d -> ORACLE_DRIVERS.contains(d.getModule())), ORACLE_XE_MODULE);
             m.passthroughModules(MYSQL_MYSQL_CONNECTOR_JAVA,
                 POSTGRESQL,
                 MARIADB_JAVA_CLIENT,
                 MONGODB_DRIVER_ASYNC,
                 MONGODB_DRIVER_SYNC,
-                MONGODB_DRIVER_REACTIVESTREAMS
+                MONGODB_DRIVER_REACTIVESTREAMS,
+                ORACLE_DRIVER_5, ORACLE_DRIVER_6, ORACLE_DRIVER_8, ORACLE_DRIVER_10, ORACLE_DRIVER_11
             );
         });
     }

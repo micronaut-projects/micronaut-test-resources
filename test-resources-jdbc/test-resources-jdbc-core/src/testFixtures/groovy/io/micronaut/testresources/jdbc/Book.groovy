@@ -8,7 +8,7 @@ import io.micronaut.data.annotation.MappedEntity
 @MappedEntity
 @ToString
 class Book {
-    @GeneratedValue(GeneratedValue.Type.AUTO)
+    @GeneratedValue(GeneratedValue.Type.IDENTITY)
     @Id
     Long id
 

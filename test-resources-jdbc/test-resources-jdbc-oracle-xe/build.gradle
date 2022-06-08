@@ -1,0 +1,17 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for launching a PostgreSQL test container.
+"""
+
+dependencies {
+    api(project(':test-resources-jdbc-core'))
+    implementation(libs.testcontainers.oracle.xe)
+
+    testCompileOnly(mn.micronaut.data.processor)
+    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
+    testRuntimeOnly(libs.oracle.xe)
+    testRuntimeOnly(mn.micronaut.jdbc.hikari)
+}

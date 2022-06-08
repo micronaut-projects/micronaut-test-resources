@@ -15,6 +15,7 @@ def jdbcModules = [
         'core',
         'mysql',
         'mariadb',
+        'oracle-xe',
         'postgresql'
 ]
 

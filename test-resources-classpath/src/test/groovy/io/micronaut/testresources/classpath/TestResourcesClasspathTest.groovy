@@ -28,9 +28,10 @@ class TestResourcesClasspathTest extends Specification {
         )
 
         where:
-        mn      | module
-        'kafka' | 'kafka'
-        'mqtt'  | 'hivemq'
+        mn           | module
+        'kafka'      | 'kafka'
+        'mqtt'       | 'hivemq'
+        'neo4j-bolt' | 'neo4j'
     }
 
     def "passes through JDBC driver #driver"() {

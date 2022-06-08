@@ -11,8 +11,8 @@ class TestResourcesClasspathTest extends Specification {
 
         then:
         inferredClasspathEquals(
-                'io.micronaut.test:micronaut-test-resources-server:1.0.34',
-                'io.micronaut.test:micronaut-test-resources-testcontainers:1.0.34'
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34'
         )
     }
 
@@ -22,9 +22,9 @@ class TestResourcesClasspathTest extends Specification {
 
         then:
         inferredClasspathEquals(
-                'io.micronaut.test:micronaut-test-resources-server:1.0.34',
-                'io.micronaut.test:micronaut-test-resources-testcontainers:1.0.34',
-                "io.micronaut.test:micronaut-test-resources-$module:1.0.34"
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                "io.micronaut.testresources:micronaut-test-resources-$module:1.0.34"
         )
 
         where:
@@ -39,8 +39,8 @@ class TestResourcesClasspathTest extends Specification {
 
         then:
         inferredClasspathEquals(
-                'io.micronaut.test:micronaut-test-resources-server:1.0.34',
-                'io.micronaut.test:micronaut-test-resources-testcontainers:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
                 "$driver:1.0"
         )
 
@@ -58,9 +58,9 @@ class TestResourcesClasspathTest extends Specification {
 
         then:
         inferredClasspathEquals(
-                'io.micronaut.test:micronaut-test-resources-server:1.0.34',
-                'io.micronaut.test:micronaut-test-resources-testcontainers:1.0.34',
-                "io.micronaut.test:micronaut-test-resources-jdbc-$module:1.0.34",
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                "io.micronaut.testresources:micronaut-test-resources-jdbc-$module:1.0.34",
                 "$driver:1.0"
         )
 
@@ -78,9 +78,9 @@ class TestResourcesClasspathTest extends Specification {
 
         then:
         inferredClasspathEquals(
-                'io.micronaut.test:micronaut-test-resources-server:1.0.34',
-                'io.micronaut.test:micronaut-test-resources-testcontainers:1.0.34',
-                "io.micronaut.test:micronaut-test-resources-mongodb:1.0.34",
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                "io.micronaut.testresources:micronaut-test-resources-mongodb:1.0.34",
                 "$driver:1.0"
         )
 

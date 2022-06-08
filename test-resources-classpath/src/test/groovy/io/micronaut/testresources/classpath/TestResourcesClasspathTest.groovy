@@ -49,7 +49,12 @@ class TestResourcesClasspathTest extends Specification {
         driver << [
                 'mysql:mysql-connector-java',
                 'org.postgresql:postgresql',
-                'org.mariadb.jdbc:mariadb-java-client'
+                'org.mariadb.jdbc:mariadb-java-client',
+                'com.oracle.database.jdbc:ojdbc5',
+                'com.oracle.database.jdbc:ojdbc6',
+                'com.oracle.database.jdbc:ojdbc8',
+                'com.oracle.database.jdbc:ojdbc10',
+                'com.oracle.database.jdbc:ojdbc11',
         ]
     }
 
@@ -70,6 +75,7 @@ class TestResourcesClasspathTest extends Specification {
         'mysql:mysql-connector-java'           | 'mysql'
         'org.postgresql:postgresql'            | 'postgresql'
         'org.mariadb.jdbc:mariadb-java-client' | 'mariadb'
+        'com.oracle.database.jdbc:ojdbc8'      | 'oracle-xe'
 
     }
 

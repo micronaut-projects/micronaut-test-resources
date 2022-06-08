@@ -23,7 +23,7 @@ groovy = "3.0.10"
 spock = "2.1-groovy-3.0"
 
 # Managed versions appear in the BOM
-managed-testcontainers = "1.16.3"
+managed-testcontainers = "1.17.2"
 
 [libraries]
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }

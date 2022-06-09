@@ -48,8 +48,8 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractR2DBCTestResourceProvider.class);
 
     private static final String DATASOURCES = "datasources";
-    private static final String R2DBC_DATASOURCES = "r2dbc.datasources";
     private static final String R2DBC_PREFIX = "r2dbc.";
+    private static final String R2DBC_DATASOURCES = R2DBC_PREFIX + DATASOURCES;
     private static final String URL = "url";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -167,10 +167,13 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         String property = propertyName.substring(propertyName.lastIndexOf(".") + 1);
         switch (property) {
             case URL:
-                // r2dbc:mysql://localhost:3306/db
-                String url = "r2dbc:" + options.getValue(ConnectionFactoryOptions.DRIVER) +
-                    "://" + options.getValue(ConnectionFactoryOptions.HOST) + ":" + options.getValue(ConnectionFactoryOptions.PORT) +
-                    "/" + options.getValue(ConnectionFactoryOptions.DATABASE);
+                String url = String.format(
+                    "r2dbc:%s://%s:%s/%s",
+                    options.getValue(ConnectionFactoryOptions.DRIVER),
+                    options.getValue(ConnectionFactoryOptions.HOST),
+                    options.getValue(ConnectionFactoryOptions.PORT),
+                    options.getValue(ConnectionFactoryOptions.DATABASE)
+                );
                 LOGGER.debug("Resolved property: {} with value: {}", propertyName, url);
                 return url;
             case USERNAME:

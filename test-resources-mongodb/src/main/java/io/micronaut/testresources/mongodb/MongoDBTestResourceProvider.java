@@ -33,7 +33,6 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     public static final String MONGODB_SERVER_URI = "mongodb.uri";
     public static final String DEFAULT_IMAGE = "mongo";
 
-
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return Collections.singletonList(MONGODB_SERVER_URI);

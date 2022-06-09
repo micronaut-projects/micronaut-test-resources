@@ -15,6 +15,8 @@
  */
 package io.micronaut.testresources.core;
 
+import java.util.Map;
+
 /**
  * A scope represents the lifecycle of a test resource.
  * The root scope is handled by the test resources provider,
@@ -41,6 +43,19 @@ public final class Scope {
     private Scope(Scope parent, String id) {
         this.id = id;
         this.parent = parent;
+    }
+
+    /**
+     * Returns the scope id if found in the supplied properties.
+     * @param properties the properties where to look for the scope
+     * @return the scope
+     */
+    public static Scope from(Map<String, Object> properties) {
+        Object scopeId = properties.getOrDefault(PROPERTY_KEY, null);
+        if (scopeId == null) {
+            return ROOT;
+        }
+        return of(String.valueOf(scopeId));
     }
 
     /**

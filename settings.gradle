@@ -18,6 +18,13 @@ def jdbcModules = [
         'oracle-xe',
         'postgresql'
 ]
+def r2dbcModules = [
+        'core',
+        'mariadb',
+        'mysql',
+        'oracle-xe',
+        'postgresql'
+]
 
 include 'test-resources-bom'
 include 'test-resources-build-tools'
@@ -35,6 +42,11 @@ jdbcModules.each {
     String projectName = "test-resources-jdbc-$it"
     include projectName
     project(":test-resources-jdbc-$it").projectDir = file("test-resources-jdbc/$projectName")
+}
+r2dbcModules.each {
+    String projectName = "test-resources-r2dbc-$it"
+    include projectName
+    project(":test-resources-r2dbc-$it").projectDir = file("test-resources-r2dbc/$projectName")
 }
 
 micronautBuild {

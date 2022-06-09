@@ -1,0 +1,6 @@
+r2dbc:
+  datasources:
+    default:
+      schema-generate: CREATE_DROP
+      db-type: mariadb
+      dialect: MYSQL

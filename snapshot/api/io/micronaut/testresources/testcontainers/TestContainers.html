@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -142,12 +142,17 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/TestContainers.html#closeScope-java.lang.String-">closeScope</a></span>(java.lang.String&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static java.util.List&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/TestContainers.html#findByRequestedProperty-io.micronaut.testresources.core.Scope-java.lang.String-">findByRequestedProperty</a></span>(<a href="../../../../io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>&nbsp;scope,
+                       java.lang.String&nbsp;property)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static java.util.Map&lt;<a href="../../../../io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>,java.util.List&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/TestContainers.html#listAll--">listAll</a></span>()</code>
 <div class="block">Lists all containers.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static java.util.Map&lt;<a href="../../../../io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>,java.util.List&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/TestContainers.html#listByScope-java.lang.String-">listByScope</a></span>(java.lang.String&nbsp;id)</code>&nbsp;</td>
 </tr>
@@ -208,10 +213,20 @@ extends java.lang.Object</pre>
 <a name="closeScope-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>closeScope</h4>
 <pre>public static&nbsp;void&nbsp;closeScope(java.lang.String&nbsp;id)</pre>
+</li>
+</ul>
+<a name="findByRequestedProperty-io.micronaut.testresources.core.Scope-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>findByRequestedProperty</h4>
+<pre>public static&nbsp;java.util.List&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;&nbsp;findByRequestedProperty(<a href="../../../../io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>&nbsp;scope,
+                                                                                                        java.lang.String&nbsp;property)</pre>
 </li>
 </ul>
 </li>

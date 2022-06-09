@@ -11,5 +11,10 @@ io.micronaut.testresources.mysql
 io.micronaut.testresources.neo4j
 io.micronaut.testresources.oracle.xe
 io.micronaut.testresources.postgres
+io.micronaut.testresources.r2dbc.core
+io.micronaut.testresources.r2dbc.mariadb
+io.micronaut.testresources.r2dbc.mysql
+io.micronaut.testresources.r2dbc.oracle
+io.micronaut.testresources.r2dbc.postgres
 io.micronaut.testresources.server
 io.micronaut.testresources.testcontainers

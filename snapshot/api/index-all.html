@@ -67,7 +67,7 @@
 <!--   -->
 </a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
-<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a name="I:A">
+<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a name="I:A">
 <!--   -->
 </a>
 <h2 class="title">A</h2>
@@ -77,6 +77,12 @@
 <div class="block">Superclass for JDBC test containers providers.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#AbstractJdbcTestResourceProvider--">AbstractJdbcTestResourceProvider()</a></span> - Constructor for class io.micronaut.testresources.jdbc.<a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core"><span class="typeNameLink">AbstractR2DBCTestResourceProvider</span></a>&lt;<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="type parameter in AbstractR2DBCTestResourceProvider">T</a> extends org.testcontainers.containers.GenericContainer&lt;? extends <a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&gt;&gt; - Class in <a href="io/micronaut/testresources/r2dbc/core/package-summary.html">io.micronaut.testresources.r2dbc.core</a></dt>
+<dd>
+<div class="block">Base class for R2DBC test resources.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#AbstractR2DBCTestResourceProvider--">AbstractR2DBCTestResourceProvider()</a></span> - Constructor for class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers"><span class="typeNameLink">AbstractTestContainersProvider</span></a>&lt;<a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="type parameter in AbstractTestContainersProvider">T</a> extends org.testcontainers.containers.GenericContainer&lt;? extends <a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="type parameter in AbstractTestContainersProvider">T</a>&gt;&gt; - Class in <a href="io/micronaut/testresources/testcontainers/package-summary.html">io.micronaut.testresources.testcontainers</a></dt>
 <dd>
@@ -173,6 +179,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/postgres/PostgreSQLTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer(DockerImageName, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.postgres.<a href="io/micronaut/testresources/postgres/PostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.postgres">PostgreSQLTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer(DockerImageName, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.mariadb.<a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mariadb">R2DBCMariaDBTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer(DockerImageName, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.mysql.<a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mysql">R2DBCMySQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer(DockerImageName, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.oracle.<a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.oracle">R2DBCOracleXETestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer(DockerImageName, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.postgres.<a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.postgres">R2DBCPostgreSQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer(DockerImageName, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></dt>
 <dd>
 <div class="block">Creates the test container.</div>
@@ -186,6 +200,8 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourceExpressionOf-java.lang.String-java.lang.String-">datasourceExpressionOf(String, String)</a></span> - Static method in class io.micronaut.testresources.jdbc.<a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourceNameFrom-java.lang.String-">datasourceNameFrom(String)</a></span> - Static method in class io.micronaut.testresources.jdbc.<a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#datasourceNameFrom-java.lang.String-">datasourceNameFrom(String)</a></span> - Static method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourcePropertyFrom-java.lang.String-">datasourcePropertyFrom(String)</a></span> - Static method in class io.micronaut.testresources.jdbc.<a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
@@ -228,6 +244,28 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/core/Scope.html#equals-java.lang.Object-">equals(Object)</a></span> - Method in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#extractOptions-org.testcontainers.containers.GenericContainer-">extractOptions(GenericContainer&lt;?&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html#extractOptions-org.testcontainers.containers.GenericContainer-">extractOptions(GenericContainer&lt;?&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.mariadb.<a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mariadb">R2DBCMariaDBTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html#extractOptions-org.testcontainers.containers.GenericContainer-">extractOptions(GenericContainer&lt;?&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.mysql.<a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mysql">R2DBCMySQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html#extractOptions-org.testcontainers.containers.GenericContainer-">extractOptions(GenericContainer&lt;?&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.oracle.<a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.oracle">R2DBCOracleXETestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html#extractOptions-org.testcontainers.containers.GenericContainer-">extractOptions(GenericContainer&lt;?&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.postgres.<a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.postgres">R2DBCPostgreSQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a name="I:F">
+<!--   -->
+</a>
+<h2 class="title">F</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/testcontainers/TestContainers.html#findByRequestedProperty-io.micronaut.testresources.core.Scope-java.lang.String-">findByRequestedProperty(Scope, String)</a></span> - Static method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/TestContainers.html" title="class in io.micronaut.testresources.testcontainers">TestContainers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/core/Scope.html#from-java.util.Map-">from(Map&lt;String, Object&gt;)</a></span> - Static method in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a></dt>
+<dd>
+<div class="block">Returns the scope id if found in the supplied properties.</div>
+</dd>
 </dl>
 <a name="I:G">
 <!--   -->
@@ -259,6 +297,14 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/oracle/xe/OracleXETestResourceProvider.html#getDefaultImageName--">getDefaultImageName()</a></span> - Method in class io.micronaut.testresources.oracle.xe.<a href="io/micronaut/testresources/oracle/xe/OracleXETestResourceProvider.html" title="class in io.micronaut.testresources.oracle.xe">OracleXETestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/postgres/PostgreSQLTestResourceProvider.html#getDefaultImageName--">getDefaultImageName()</a></span> - Method in class io.micronaut.testresources.postgres.<a href="io/micronaut/testresources/postgres/PostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.postgres">PostgreSQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html#getDefaultImageName--">getDefaultImageName()</a></span> - Method in class io.micronaut.testresources.r2dbc.mariadb.<a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mariadb">R2DBCMariaDBTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html#getDefaultImageName--">getDefaultImageName()</a></span> - Method in class io.micronaut.testresources.r2dbc.mysql.<a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mysql">R2DBCMySQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html#getDefaultImageName--">getDefaultImageName()</a></span> - Method in class io.micronaut.testresources.r2dbc.oracle.<a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.oracle">R2DBCOracleXETestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html#getDefaultImageName--">getDefaultImageName()</a></span> - Method in class io.micronaut.testresources.r2dbc.postgres.<a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.postgres">R2DBCPostgreSQLTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#getDefaultImageName--">getDefaultImageName()</a></span> - Method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></dt>
 <dd>
@@ -301,6 +347,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredProperties-java.lang.String-">getRequiredProperties(String)</a></span> - Method in class io.micronaut.testresources.jdbc.<a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#getRequiredProperties-java.lang.String-">getRequiredProperties(String)</a></span> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/server/TestResourcesController.html#getRequiredProperties-java.lang.String-">getRequiredProperties(String)</a></span> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/client/DefaultTestResourcesClient.html#getRequiredPropertyEntries--">getRequiredPropertyEntries()</a></span> - Method in class io.micronaut.testresources.client.<a href="io/micronaut/testresources/client/DefaultTestResourcesClient.html" title="class in io.micronaut.testresources.client">DefaultTestResourcesClient</a></dt>
@@ -310,6 +358,8 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/core/TestResourcesResolver.html#getRequiredPropertyEntries--">getRequiredPropertyEntries()</a></span> - Method in interface io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredPropertyEntries--">getRequiredPropertyEntries()</a></span> - Method in class io.micronaut.testresources.jdbc.<a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#getRequiredPropertyEntries--">getRequiredPropertyEntries()</a></span> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/server/TestResourcesController.html#getRequiredPropertyEntries--">getRequiredPropertyEntries()</a></span> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></dt>
 <dd>&nbsp;</dd>
@@ -333,6 +383,8 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#getResolvableProperties-java.util.Map-java.util.Map-">getResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.mongodb.<a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html#getResolvableProperties-java.util.Map-java.util.Map-">getResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.neo4j.<a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#getResolvableProperties-java.util.Map-java.util.Map-">getResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/server/TestResourcesController.html#getResolvableProperties--">getResolvableProperties()</a></span> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></dt>
 <dd>&nbsp;</dd>
@@ -361,6 +413,14 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/oracle/xe/OracleXETestResourceProvider.html#getSimpleName--">getSimpleName()</a></span> - Method in class io.micronaut.testresources.oracle.xe.<a href="io/micronaut/testresources/oracle/xe/OracleXETestResourceProvider.html" title="class in io.micronaut.testresources.oracle.xe">OracleXETestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/postgres/PostgreSQLTestResourceProvider.html#getSimpleName--">getSimpleName()</a></span> - Method in class io.micronaut.testresources.postgres.<a href="io/micronaut/testresources/postgres/PostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.postgres">PostgreSQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html#getSimpleName--">getSimpleName()</a></span> - Method in class io.micronaut.testresources.r2dbc.mariadb.<a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mariadb">R2DBCMariaDBTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html#getSimpleName--">getSimpleName()</a></span> - Method in class io.micronaut.testresources.r2dbc.mysql.<a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mysql">R2DBCMySQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html#getSimpleName--">getSimpleName()</a></span> - Method in class io.micronaut.testresources.r2dbc.oracle.<a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.oracle">R2DBCOracleXETestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html#getSimpleName--">getSimpleName()</a></span> - Method in class io.micronaut.testresources.r2dbc.postgres.<a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.postgres">R2DBCPostgreSQLTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#getSimpleName--">getSimpleName()</a></span> - Method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></dt>
 <dd>
@@ -432,6 +492,16 @@
 <dt><a href="io/micronaut/testresources/oracle/xe/package-summary.html">io.micronaut.testresources.oracle.xe</a> - package io.micronaut.testresources.oracle.xe</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/postgres/package-summary.html">io.micronaut.testresources.postgres</a> - package io.micronaut.testresources.postgres</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/core/package-summary.html">io.micronaut.testresources.r2dbc.core</a> - package io.micronaut.testresources.r2dbc.core</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/mariadb/package-summary.html">io.micronaut.testresources.r2dbc.mariadb</a> - package io.micronaut.testresources.r2dbc.mariadb</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/mysql/package-summary.html">io.micronaut.testresources.r2dbc.mysql</a> - package io.micronaut.testresources.r2dbc.mysql</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/oracle/package-summary.html">io.micronaut.testresources.r2dbc.oracle</a> - package io.micronaut.testresources.r2dbc.oracle</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/postgres/package-summary.html">io.micronaut.testresources.r2dbc.postgres</a> - package io.micronaut.testresources.r2dbc.postgres</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/package-summary.html">io.micronaut.testresources.server</a> - package io.micronaut.testresources.server</dt>
 <dd>&nbsp;</dd>
@@ -592,6 +662,32 @@
 </a>
 <h2 class="title">R</h2>
 <dl>
+<dt><a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mariadb"><span class="typeNameLink">R2DBCMariaDBTestResourceProvider</span></a> - Class in <a href="io/micronaut/testresources/r2dbc/mariadb/package-summary.html">io.micronaut.testresources.r2dbc.mariadb</a></dt>
+<dd>
+<div class="block">A test resource provider for reactive MariaDB.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html#R2DBCMariaDBTestResourceProvider--">R2DBCMariaDBTestResourceProvider()</a></span> - Constructor for class io.micronaut.testresources.r2dbc.mariadb.<a href="io/micronaut/testresources/r2dbc/mariadb/R2DBCMariaDBTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mariadb">R2DBCMariaDBTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mysql"><span class="typeNameLink">R2DBCMySQLTestResourceProvider</span></a> - Class in <a href="io/micronaut/testresources/r2dbc/mysql/package-summary.html">io.micronaut.testresources.r2dbc.mysql</a></dt>
+<dd>
+<div class="block">A test resource provider for reactive MySQL.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html#R2DBCMySQLTestResourceProvider--">R2DBCMySQLTestResourceProvider()</a></span> - Constructor for class io.micronaut.testresources.r2dbc.mysql.<a href="io/micronaut/testresources/r2dbc/mysql/R2DBCMySQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.mysql">R2DBCMySQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.oracle"><span class="typeNameLink">R2DBCOracleXETestResourceProvider</span></a> - Class in <a href="io/micronaut/testresources/r2dbc/oracle/package-summary.html">io.micronaut.testresources.r2dbc.oracle</a></dt>
+<dd>
+<div class="block">A test resource provider which will spawn an Oracle XE reactive test container.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html#R2DBCOracleXETestResourceProvider--">R2DBCOracleXETestResourceProvider()</a></span> - Constructor for class io.micronaut.testresources.r2dbc.oracle.<a href="io/micronaut/testresources/r2dbc/oracle/R2DBCOracleXETestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.oracle">R2DBCOracleXETestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.postgres"><span class="typeNameLink">R2DBCPostgreSQLTestResourceProvider</span></a> - Class in <a href="io/micronaut/testresources/r2dbc/postgres/package-summary.html">io.micronaut.testresources.r2dbc.postgres</a></dt>
+<dd>
+<div class="block">A test resource provider for reactive PostgreSQL.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html#R2DBCPostgreSQLTestResourceProvider--">R2DBCPostgreSQLTestResourceProvider()</a></span> - Constructor for class io.micronaut.testresources.r2dbc.postgres.<a href="io/micronaut/testresources/r2dbc/postgres/R2DBCPostgreSQLTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.postgres">R2DBCPostgreSQLTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#r2dbDatasourceExpressionOf-java.lang.String-java.lang.String-">r2dbDatasourceExpressionOf(String, String)</a></span> - Static method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/core/LazyTestResourcesPropertySourceLoader.html#read-java.lang.String-java.io.InputStream-">read(String, InputStream)</a></span> - Method in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/LazyTestResourcesPropertySourceLoader.html" title="class in io.micronaut.testresources.core">LazyTestResourcesPropertySourceLoader</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/client/DefaultTestResourcesClient.html#resolve-java.lang.String-java.util.Map-java.util.Map-">resolve(String, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.client.<a href="io/micronaut/testresources/client/DefaultTestResourcesClient.html" title="class in io.micronaut.testresources.client">DefaultTestResourcesClient</a></dt>
@@ -625,12 +721,21 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html#resolveProperty-java.lang.String-org.testcontainers.containers.Neo4jContainer-">resolveProperty(String, Neo4jContainer&lt;?&gt;)</a></span> - Method in class io.micronaut.testresources.neo4j.<a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#resolveProperty-java.lang.String-T-">resolveProperty(String, T)</a></span> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveProperty-java.lang.String-T-">resolveProperty(String, T)</a></span> - Method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/core/PropertyResolverSupport.html#resolveRequiredProperties-java.lang.String-io.micronaut.core.value.PropertyResolver-io.micronaut.testresources.core.TestResourcesResolver-">resolveRequiredProperties(String, PropertyResolver, TestResourcesResolver)</a></span> - Static method in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/PropertyResolverSupport.html" title="class in io.micronaut.testresources.core">PropertyResolverSupport</a></dt>
 <dd>
 <div class="block">Resolves the required properties for a particular test resources
  resolver.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-">resolveWithoutContainer(String, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-">resolveWithoutContainer(String, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></dt>
+<dd>
+<div class="block">Lets a resolver provide a value for the requested property without triggering the
+ creation of a test container.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/core/Scope.html#ROOT">ROOT</a></span> - Static variable in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a></dt>
 <dd>
@@ -659,6 +764,8 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer(String, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.mongodb.<a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer(String, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.neo4j.<a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer(String, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer(String, Map&lt;String, Object&gt;)</a></span> - Method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></dt>
 <dd>
@@ -755,7 +862,7 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/testresources/buildtools/VersionInfo.html#VersionInfo--">VersionInfo()</a></span> - Constructor for class io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/VersionInfo.html" title="class in io.micronaut.testresources.buildtools">VersionInfo</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;</div>
+<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;</div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar.bottom">
 <!--   -->

@@ -1,0 +1,25 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides core support for R2DBC test resources.
+"""
+
+dependencies {
+    api(project(':test-resources-core'))
+    api(project(':test-resources-testcontainers'))
+    api(project(':test-resources-r2dbc-core'))
+
+    implementation(libs.testcontainers.oracle.xe)
+    runtimeOnly(project(":test-resources-jdbc-oracle-xe"))
+
+    testImplementation(mn.micronaut.data.processor)
+    testImplementation(mn.micronaut.data.r2dbc)
+    testImplementation(project(":test-resources-embedded"))
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
+    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
+
+    testRuntimeOnly(libs.reactive.oracle.xe)
+    testRuntimeOnly(libs.oracle.xe)
+}

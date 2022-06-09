@@ -108,7 +108,7 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
             .findFirst()
             .map(md -> {
                 DockerImageName imageName = DockerImageName.parse(md.getImageName());
-                return new MappedContainer(md, TestContainers.getOrCreate(GenericTestContainerProvider.class,
+                return new MappedContainer(md, TestContainers.getOrCreate(propertyName, GenericTestContainerProvider.class,
                     md.getId(),
                     properties,
                     () -> {

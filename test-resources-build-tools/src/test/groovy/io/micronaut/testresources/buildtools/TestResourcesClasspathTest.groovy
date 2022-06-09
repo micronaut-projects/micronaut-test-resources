@@ -34,7 +34,7 @@ class TestResourcesClasspathTest extends Specification {
         'neo4j-bolt' | 'neo4j'
     }
 
-    def "passes through JDBC driver #driver"() {
+    def "passes through driver #driver"() {
         when:
         infer("org:foo:1.0", "$driver:1.0")
 
@@ -55,6 +55,10 @@ class TestResourcesClasspathTest extends Specification {
                 'com.oracle.database.jdbc:ojdbc8',
                 'com.oracle.database.jdbc:ojdbc10',
                 'com.oracle.database.jdbc:ojdbc11',
+                'dev.miku:r2dbc-mysql',
+                'org.mariadb:r2dbc-mariadb',
+                'org.postgresql:r2dbc-postgresql',
+                'com.oracle.database.r2dbc:oracle-r2dbc'
         ]
     }
 
@@ -98,6 +102,26 @@ class TestResourcesClasspathTest extends Specification {
                 "org.mongodb:mongodb-driver-reactivestreams"
         ]
 
+    }
+
+    def "infers Micronaut Data R2DBC #driver"() {
+        when:
+        infer 'io.micronaut.data:micronaut-data-r2dbc:1.0', "$driver:1.0"
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                "io.micronaut.testresources:micronaut-test-resources-r2dbc-$module:1.0.34",
+                "$driver:1.0"
+        )
+
+        where:
+        driver                                   | module
+        'dev.miku:r2dbc-mysql'                   | 'mysql'
+        'org.mariadb:r2dbc-mariadb'              | 'mariadb'
+        'org.postgresql:r2dbc-postgresql'        | 'postgresql'
+        'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-xe'
     }
 
     private void inferredClasspathEquals(String... dependencies) {

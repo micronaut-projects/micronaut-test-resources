@@ -73,11 +73,27 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
         return true;
     }
 
+    /**
+     * Lets a resolver provide a value for the requested property without triggering the
+     * creation of a test container. This can be used in case a resolver wants to check
+     * existing containers first.
+     * @param propertyName the name of the property to resolve
+     * @param properties the properties used to resolve
+     * @return a resolved property
+     */
+    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties) {
+        return Optional.empty();
+    }
+
     @Override
     public final Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
         if (shouldAnswer(propertyName, properties)) {
+            Optional<String> firstPass = resolveWithoutContainer(propertyName, properties);
+            if (firstPass.isPresent()) {
+                return firstPass;
+            }
             return resolveProperty(propertyName,
-                TestContainers.getOrCreate(this.getClass(), getSimpleName(), properties, () -> {
+                TestContainers.getOrCreate(propertyName, this.getClass(), getSimpleName(), properties, () -> {
                     String defaultImageName = getDefaultImageName();
                     DockerImageName imageName = DockerImageName.parse(defaultImageName);
                     Optional<TestContainerMetadata> metadata = TestContainerMetadataSupport.containerMetadataFor(Collections.singletonList(getSimpleName()), testResourcesConfiguration)

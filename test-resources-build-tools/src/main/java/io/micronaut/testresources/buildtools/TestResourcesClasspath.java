@@ -43,11 +43,14 @@ public final class TestResourcesClasspath {
 
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
+    private static final String MICRONAUT_DATA_R2DBC = "micronaut-data-r2dbc";
     private static final String MYSQL_CONNECTOR_JAVA = "mysql-connector-java";
-
+    private static final String REACTIVE_MYSQL_DRIVER = "dev.miku:r2dbc-mysql";
     private static final String MYSQL_MYSQL_CONNECTOR_JAVA = "mysql:mysql-connector-java";
-    private static final String POSTGRESQL = "org.postgresql:postgresql";
+    private static final String POSTGRESQL_DRIVER = "org.postgresql:postgresql";
+    private static final String REACTIVE_POSTGRESQL_DRIVER = "org.postgresql:r2dbc-postgresql";
     private static final String MARIADB_JAVA_CLIENT = "org.mariadb.jdbc:mariadb-java-client";
+    private static final String REACTIVE_MARIADB_DRIVER = "org.mariadb:r2dbc-mariadb";
     private static final String MONGODB_DRIVER_ASYNC = "org.mongodb:mongodb-driver-async";
     private static final String MONGODB_DRIVER_SYNC = "org.mongodb:mongodb-driver-sync";
     private static final String MONGODB_DRIVER_REACTIVESTREAMS = "org.mongodb:mongodb-driver-reactivestreams";
@@ -63,15 +66,20 @@ public final class TestResourcesClasspath {
         ORACLE_DRIVER_10,
         ORACLE_DRIVER_11
     );
+    private static final String REACTIVE_ORACLE_DRIVER = "com.oracle.database.r2dbc:oracle-r2dbc";
 
     private static final String KAFKA_MODULE = "kafka";
     private static final String HIVEMQ_MODULE = "hivemq";
     private static final String MONGODB_MODULE = "mongodb";
     private static final String MYSQL_MODULE = "jdbc-mysql";
+    private static final String REACTIVE_MYSQL_MODULE = "r2dbc-mysql";
     private static final String NEO4J_MODULE = "neo4j";
     private static final String ORACLE_XE_MODULE = "jdbc-oracle-xe";
+    private static final String REACTIVE_ORACLE_XE_MODULE = "r2dbc-oracle-xe";
     private static final String POSTGRESQL_MODULE = "jdbc-postgresql";
+    private static final String REACTIVE_POSTGRESQL_MODULE = "r2dbc-postgresql";
     private static final String MARIADB_MODULE = "jdbc-mariadb";
+    private static final String REACTIVE_MARIADB_MODULE = "r2dbc-mariadb";
 
     private TestResourcesClasspath() {
 
@@ -114,16 +122,24 @@ public final class TestResourcesClasspath {
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_NEO4J), deps -> true, NEO4J_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(artifactEquals(MYSQL_CONNECTOR_JAVA)), MYSQL_MODULE);
-            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL)), POSTGRESQL_MODULE);
+            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL_DRIVER)), POSTGRESQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(MARIADB_JAVA_CLIENT)), MARIADB_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(d -> ORACLE_DRIVERS.contains(d.getModule())), ORACLE_XE_MODULE);
+            m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_MYSQL_DRIVER)), REACTIVE_MYSQL_MODULE);
+            m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_MARIADB_DRIVER)), REACTIVE_MARIADB_MODULE);
+            m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_POSTGRESQL_DRIVER)), REACTIVE_POSTGRESQL_MODULE);
+            m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_ORACLE_DRIVER)), REACTIVE_ORACLE_XE_MODULE);
             m.passthroughModules(MYSQL_MYSQL_CONNECTOR_JAVA,
-                POSTGRESQL,
+                POSTGRESQL_DRIVER,
                 MARIADB_JAVA_CLIENT,
                 MONGODB_DRIVER_ASYNC,
                 MONGODB_DRIVER_SYNC,
                 MONGODB_DRIVER_REACTIVESTREAMS,
-                ORACLE_DRIVER_5, ORACLE_DRIVER_6, ORACLE_DRIVER_8, ORACLE_DRIVER_10, ORACLE_DRIVER_11
+                ORACLE_DRIVER_5, ORACLE_DRIVER_6, ORACLE_DRIVER_8, ORACLE_DRIVER_10, ORACLE_DRIVER_11,
+                REACTIVE_MYSQL_DRIVER,
+                REACTIVE_MARIADB_DRIVER,
+                REACTIVE_POSTGRESQL_DRIVER,
+                REACTIVE_ORACLE_DRIVER
             );
         });
     }

@@ -1,0 +1,16 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides core support for R2DBC test resources.
+"""
+
+dependencies {
+    api(project(':test-resources-core'))
+    api(project(':test-resources-testcontainers'))
+    api(libs.testcontainers.r2dbc)
+
+    testImplementation(project(":test-resources-embedded"))
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
+}

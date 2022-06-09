@@ -23,13 +23,13 @@ import org.testcontainers.containers.GenericContainer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import static io.micronaut.testresources.core.Scope.PROPERTY_KEY;
 
 /**
  * An utility class used to manage the lifecycle of test containers.
@@ -40,7 +40,8 @@ import static io.micronaut.testresources.core.Scope.PROPERTY_KEY;
  * the {@link #closeAll()} method.
  */
 public final class TestContainers {
-    private static final Map<Key, GenericContainer<?>> CONTAINERS = new HashMap<>();
+    private static final Map<Key, GenericContainer<?>> CONTAINERS_BY_KEY = new HashMap<>();
+    private static final Map<String, Set<GenericContainer<?>>> CONTAINERS_BY_PROPERTY = new HashMap<>();
     private static final ReentrantLock LOCK = new ReentrantLock();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestContainers.class);
 
@@ -53,6 +54,7 @@ public final class TestContainers {
      * and properties are requested, we can return an existing container.
      *
      * @param <T> the container type
+     * @param requestedProperty the property that this container will resolve
      * @param owner the class which requested the creation of a container
      * @param name an identifier for the container, used for logging purposes
      * @param query the parameters used to create the container. Different parameters mean
@@ -60,30 +62,25 @@ public final class TestContainers {
      * @param creator if the container is not in cache, factory to create the container
      * @return the container
      */
-    static <T extends GenericContainer<? extends T>> T getOrCreate(Class<?> owner,
+    static <T extends GenericContainer<? extends T>> T getOrCreate(String requestedProperty,
+                                                                   Class<?> owner,
                                                                    String name,
                                                                    Map<String, Object> query,
                                                                    Supplier<T> creator) {
-        Key key = Key.of(owner, scopeOf(query), query);
+        Key key = Key.of(owner, Scope.from(query), query);
         LOCK.lock();
         @SuppressWarnings("unchecked")
-        T container = (T) CONTAINERS.get(key);
+        T container = (T) CONTAINERS_BY_KEY.get(key);
         if (container == null) {
             container = creator.get();
             LOGGER.info("Starting test container {}", name);
             container.start();
-            CONTAINERS.put(key, container);
+            CONTAINERS_BY_KEY.put(key, container);
         }
+        CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty, e -> new LinkedHashSet<>())
+            .add(container);
         LOCK.unlock();
         return container;
-    }
-
-    private static Scope scopeOf(Map<String, Object> query) {
-        Object scopeId = query.getOrDefault(PROPERTY_KEY, null);
-        if (scopeId == null) {
-            return Scope.ROOT;
-        }
-        return Scope.of(String.valueOf(scopeId));
     }
 
     /**
@@ -91,14 +88,18 @@ public final class TestContainers {
      * @return the containers
      */
     public static Map<Scope, List<GenericContainer<?>>> listAll() {
-        return listByScope(null);
+        return listByScope(Scope.ROOT);
     }
 
     public static Map<Scope, List<GenericContainer<?>>> listByScope(String id) {
         Scope scope = Scope.of(id);
+        return listByScope(scope);
+    }
+
+    private static Map<Scope, List<GenericContainer<?>>> listByScope(Scope scope) {
         LOCK.lock();
         try {
-            return CONTAINERS.entrySet()
+            return CONTAINERS_BY_KEY.entrySet()
                 .stream()
                 .filter(entry -> scope.includes(entry.getKey().scope))
                 .collect(Collectors.groupingBy(
@@ -113,27 +114,59 @@ public final class TestContainers {
         }
     }
 
+    private static List<GenericContainer<?>> filterByScope(Scope scope, Set<GenericContainer<?>> containers) {
+        if (containers.isEmpty()) {
+            return Collections.emptyList();
+        }
+        LOCK.lock();
+        try {
+            return CONTAINERS_BY_KEY.entrySet()
+                .stream()
+                .filter(entry -> containers.contains(entry.getValue()) && scope.includes(entry.getKey().scope))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        } finally {
+            LOCK.unlock();
+        }
+    }
+
     public static void closeAll() {
         LOCK.lock();
-        for (GenericContainer<?> container : CONTAINERS.values()) {
+        for (GenericContainer<?> container : CONTAINERS_BY_KEY.values()) {
             container.close();
         }
-        CONTAINERS.clear();
+        CONTAINERS_BY_KEY.clear();
+        CONTAINERS_BY_PROPERTY.clear();
         LOCK.unlock();
     }
 
     public static void closeScope(String id) {
         Scope scope = Scope.of(id);
         LOCK.lock();
-        Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS.entrySet().iterator();
+        Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS_BY_KEY.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Key, GenericContainer<?>> entry = iterator.next();
             if (entry.getKey().scope.includes(scope)) {
                 iterator.remove();
-                entry.getValue().close();
+                GenericContainer<?> container = entry.getValue();
+                container.close();
+                for (Set<GenericContainer<?>> value : CONTAINERS_BY_PROPERTY.values()) {
+                    value.remove(container);
+                }
             }
         }
         LOCK.unlock();
+    }
+
+    public static List<GenericContainer<?>> findByRequestedProperty(Scope scope, String property) {
+        LOCK.lock();
+        try {
+            Set<GenericContainer<?>> byProperty = CONTAINERS_BY_PROPERTY.getOrDefault(property, Collections.emptySet());
+            LOGGER.debug("Found {} containers for property {}. All properties: {}", byProperty.size(), property, CONTAINERS_BY_PROPERTY.keySet());
+            return filterByScope(scope, byProperty);
+        } finally {
+            LOCK.unlock();
+        }
     }
 
     private static final class Key {

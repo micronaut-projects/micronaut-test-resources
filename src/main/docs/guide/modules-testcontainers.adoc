@@ -1,0 +1,70 @@
+There are cases where the provided test resources modules don't support your use case.
+For example, there is no built-in test resource for supplying a dummy SMTP server, but you may need such a resource for testing your application.
+
+In this case, Micronaut Test Resources provide generic support for starting arbitrary test containers.
+Unlike the other resources, this will require adding configuration to your application to make it work.
+
+Let's illustrate how we can declare an SMTP test container (here using YAML configuration) for use with https://micronaut-projects.github.io/micronaut-email[Micronaut Email]:
+
+.application.yml
+[source,yaml]
+----
+test-resources:
+  containers:
+    fakesmtp:                       <1>
+      image-name: ghusta/fakesmtp   <2>
+      hostnames:                    <3>
+        - smtp.host                 <4>
+      exposed-ports:                <5>
+        - smtp.port: 25             <6>
+----
+<1> The name of the test container
+<2> The image name to use
+<3> The hostnames declare what properties will be resolved with the value of the container host name
+<4> Declares that the `smtp.host` property will be resolved with the container host name
+<5> Declares what ports the container exposes
+<6> Declares that the property `smtp.port` will be set to the value of the mapped port `25`
+
+Then the values `smtp.host` and `smtp.port` can for example be used in a bean configuration:
+
+[source,java]
+----
+@Singleton
+public class JavamailSessionProvider implements SessionProvider {
+    @Value("${smtp.host}")          // <1>
+    private String smtpHost;
+
+    @Value("${smtp.port}")          // <2>
+    private String smtpPort;
+
+
+    @Override
+    public Session session() {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", smtpPort);
+        return Session.getDefaultInstance(props);
+    }
+}
+----
+<1> The `smtp.host` property that we exposed in the test container configuration
+<2> The `smtp.port` property that we exposed in the test container configuration
+
+In addition, generic containers can bind file system resources (either read-only or read-write):
+
+.application.yml
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-fs-bind:
+        - "path/to/local/readonly-file.conf": /path/to/container/readonly-file.conf
+      rw-fs-bind:
+        - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf
+----

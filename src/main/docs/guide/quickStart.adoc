@@ -1,1 +1,26 @@
-TODO
+Micronaut Test Resources are integrated via build plugins.
+
+For Gradle, you can use the `micronaut-test-resources` plugin:
+
+.Gradle
+[source,groovy,subs="verbatim,attributes"]
+----
+plugins {
+    id 'io.micronaut.application' version '{micronautVersion}'
+    id 'io.micronaut.test-resources' version '{micronautVersion}'
+}
+----
+
+Please refer to the https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/[Gradle plugin documentation] for more information about configuring the test resources plugin.
+
+For Maven, you can enable test resources support by adding the following configuration:
+
+.Maven
+[source,xml,subs="verbatim,attributes"]
+----
+<configuration>
+    <TODO/>
+</configuration>
+----
+
+Please refer to the https://micronaut-projects.github.io/micronaut-maven-plugin/latest/[Maven plugin documentation] for more information about configuring the test resources plugin.

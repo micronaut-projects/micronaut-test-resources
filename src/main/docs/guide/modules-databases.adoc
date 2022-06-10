@@ -1,0 +1,30 @@
+== Databases
+
+Micronaut Test Resources provides support for the following databases:
+
+[cols="2,1,1"]
+|===
+|Database | JDBC | R2DBC
+
+| https://mariadb.org/[MariaDB] | Yes | Yes
+| https://www.mysql.com/[MySQL] | Yes | Yes
+| https://www.oracle.com/fr/database/technologies/appdev/xe.html[Oracle Express Edition] | Yes | Yes
+| https://www.postgresql.org/[PostgreSQL] | Yes | Yes
+
+|===
+
+Databases are supplied via a https://www.testcontainers.com/[Testcontainers] container.
+It is possible to override the default image of the container by setting the following property in your application configuration:
+
+- `test-resources.containers.[db-type].image-name`
+
+For example, you can override the default image of the container for the `MariaDB` database by setting the following property:
+
+.application.yml
+[source,yaml]
+----
+test-resources:
+  containers:
+    mariadb:
+      image-name: mariadb:10.3
+----

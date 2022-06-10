@@ -1,0 +1,7 @@
+The embedded test resources module is used by the Test Resources Server internally.
+It is responsible for aggregating several test resources resolvers and providing a unified interface to the test resources.
+
+It is possible for an application to use the embedded test resources module directly instead of using the server and the client.
+However, we don't recommend it because it would enhance the application classpath with unnecessary dependencies: each of the test resource resolver would add dependencies on the application that you may not want, potentially introducing conflicts.
+
+The client/server model is designed to avoid this situation, while offering a more fine-grained control over the lifecycle of the test resources.

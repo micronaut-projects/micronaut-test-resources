@@ -2,3 +2,7 @@ plugins {
     id "io.micronaut.build.internal.docs"
     id "io.micronaut.build.internal.quality-reporting"
 }
+
+tasks.named("publishGuide") {
+    properties['micronautVersion'] = micronautVersion
+}

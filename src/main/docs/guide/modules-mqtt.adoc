@@ -1,0 +1,35 @@
+MQTT support is provided using a https://www.hivemq.com/[HiveMQ] container by default.
+
+It will automatically configure the `mqtt.client.server-uri` property.
+
+Alternatively, you can setup a custom container.
+For example, you can use Mosquitto instead:
+
+.application.yml
+[source,yaml]
+----
+mqtt:
+  client:
+    server-uri: tcp://${mqtt.host}:${mqtt.port}
+    client-id: ${random.uuid}
+test-resources:
+  containers:
+    mosquitto:
+      image-name: eclipse-mosquitto
+      hostnames:
+        - mqtt.host
+      exposed-ports:
+        - mqtt.port: 1883
+      ro-fs-bind:
+        - "mosquitto.conf": /mosquitto/config/mosquitto.conf
+----
+
+.mosquitto.conf
+[source,conf]
+----
+persistence false
+allow_anonymous true
+connection_messages true
+log_type all
+listener 1883
+----

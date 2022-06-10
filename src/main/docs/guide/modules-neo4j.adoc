@@ -1,0 +1,3 @@
+Neo4j support will automatically start a https://neo4j.com/[Neo4j container] and provide the value of the `neo4j.uri` property.
+
+The default image can be overwritten by setting the `test-resources.containers.neo4j.image-name` property.

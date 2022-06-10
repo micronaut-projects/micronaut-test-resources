@@ -1,0 +1,10 @@
+By default, a server will be spawned for each build, and shutdown at the end of a build (or after several builds if using the continuous mode in Gradle).
+
+However, what if you have several projects and that you want to share test resources between them?
+As an example, you might have a project which consists of a Kafka publisher and another project with a Kafka consumer.
+If they don't use the _same_ Kafka server, then they won't be able to communicate with each other.
+
+The solution to this problem is to use a _shared server_.
+By default builds would spawn a server per build on a different port, but if you specify a port explicitly, then both builds will use the same server.
+
+WARNING: If you use a shared server, then you must make sure that the _first build_ to start the server provides all the support modules.

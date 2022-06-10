@@ -1,0 +1,37 @@
+In case the provided test resources are not enough, or if you have to tweak the configuration of test resources in such a way that is not possible via simple configuration (for example, you might need to execute commands in a test container, which is not supported), you can implement your own test resource resolver.
+
+A test resource resolver is loaded _at application startup_, before the `ApplicationContext` is available, and therefore cannot use traditional Micronaut dependency injection.
+
+Therefore, a test resource resolver is a service implementing the api:io.micronaut.testresources.core.TestResourcesResolver[] interface.
+
+For test resources which make use of Testcontainers, you may extend the base api:io.micronaut.testresources.testcontainers.AbstractTestContainersProvider[] class.
+
+In addition, you need to declare the resolver for service loading, by adding your implementation type name in the `META-INF/services/io.micronaut.testresources.core.TestResourcesResolver` file.
+
+== Lifecycle
+
+=== At application startup
+
+Implementing a test resources resolver requires to understand the lifecycle of resolvers. An initial step is done when the resolvers are _loaded_ (for example in the server process)
+
+1. test resource resolvers are loaded via service loading
+2. the `TestResourcesResolver#getRequiredPropertyEntries()` method is called on a resolver. This method should return a list of property entries that the resolver needs to know about in order to determine which properties it can resolve. For example, a datasource URL resolver must know the names of the datasources before it can tell what properties it can resolve. Therefore, it would return `datasources` to this method.
+3. the `TestResourcesResolver#getResolvableProperties` method is called, with a couple maps:
+   - the first map contains at the key the name of a "required property entry" from the call in 2. For example, `datasources`. The value is the list of entries for that property. For example, `[default, users, books]`.
+   - the second map contains the whole `test-resources` configuration from the application, as a flat map of properties.
+
+The resolver can then return a _list of properties_ that it can resolve. For example, `datasources.default.url`, `datasources.users.url`, `datasources.books.url`, etc.
+
+=== When a property needs to be resolved
+
+At this stage, we know _all properties_ that resolvers are able to resolve.
+So whenever Micronaut will encounter a property without value, it will ask the resolvers to resolve it.
+This is done in 2 steps:
+
+1. the `TestResourceResolver#getRequiredProperties` is called with the expression being resolved. It gives a chance to the resolver to tell what other properties it needs to read _before_ resolving the expression. For example, a database resolver may need to read the `datasources.default.db-type` property before it can resolve the `datasources.default.url` property, so that it can tell if it's actually capable of handling that database type or not.
+2. the `resolve` method is called with the expression being resolved, the map of resolved properties from 1. and the whole configuration map of the `test-resources` from the application.
+
+It is the responsibility of the `TestResourcesResolver` to check, when `resolve` is called, that it can actually resolve the supplied expression. Do **not** assume that it will be called with an expression that it can resolve.
+If, for some reason, the resolver cannot resolve the expression then `Optional#empty()` should be returned, otherwise the test resource resolver can return the resolved value.
+
+As part of the resolution, a test resource may be started (for example a container).

@@ -1,0 +1,5 @@
+The Micronaut Test Resources client is a lightweight client which connects to the test resources server.
+It basically delegates requests of property resolution from Micronaut to the server.
+
+This client is automatically injected on the application classpath in development mode or during tests.
+As a user, you should never have to deal with this module directly.

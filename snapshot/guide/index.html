@@ -49,7 +49,11 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>4</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>5</strong><span>Architecture</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>6</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -86,7 +90,37 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>4</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-modules"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-databases"><a href="#modules-databases"><strong>4.1</strong><span>Databases</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-jdbc"><a href="#modules-databases-jdbc"><strong>4.1.1</strong><span>JDBC</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-r2dbc"><a href="#modules-databases-r2dbc"><strong>4.1.2</strong><span>R2DBC</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>4.2</strong><span>MQTT</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>4.3</strong><span>Kafka</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>4.4</strong><span>MongoDB</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>4.5</strong><span>Neo4j</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.6</strong><span>Generic Testcontainers support</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>5</strong><span>Architecture</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>5.1</strong><span>The test resources server</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>5.1.1</strong><span>Sharing containers between independent builds</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>5.2</strong><span>The test resources client</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>5.3</strong><span>Embedded test resources</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>5.4</strong><span>Implementing a test resource</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>6</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -95,7 +129,7 @@
     <div class="project">
         <h1>Micronaut Test Resources</h1>
         <p></p>
-        <p>TODO</p>
+        <p>Test resources integration (like Testcontainers) for Micronaut</p>
         <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M1/guide/index.html'>1.0.0-M1</option></select> </p>
     </div>
     
@@ -109,7 +143,21 @@
 
 
 <div class="paragraph">
-<p>TODO</p>
+<p>Micronaut Test Resources adds support for managing external resources which are required during development or testing.</p>
+</div>
+<div class="paragraph">
+<p>For example, an application may need a database to run (say MySQL), but such a database may not be installed on the development machine or you may not want to handle the setup and tear down of the database manually.</p>
+</div>
+<div class="paragraph">
+<p>Micronaut Test Resources offers a generic purpose solution for this problem, <strong>without any configuration</strong> when possible. In particular, it integrates with <a href="https://www.testcontainers.org/">Testcontainers</a> to provide throwaway containers for testing.</p>
+</div>
+<div class="paragraph">
+<p>Test resources are only available during <em>development</em> (for example when running the Gradle <code>run</code> task or the Maven <code>mn:run</code> goal) and <em>test execution</em>: production code will require the resources to be available.</p>
+</div>
+<div class="paragraph">
+<p>A key aspect of test resources to understand is that they are created in reaction to a <em>missing property</em> in configuration.
+For example, if the <code>datasources.default.url</code> property is missing, then a test resource will be responsible for resolving its value.
+If that property is set, then the test resource will not be used.</p>
 </div>
 
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
@@ -138,10 +186,676 @@
 
 
 <div class="paragraph">
-<p>TODO</p>
+<p>Micronaut Test Resources are integrated via build plugins.</p>
+</div>
+<div class="paragraph">
+<p>For Gradle, you can use the <code>micronaut-test-resources</code> plugin:</p>
+</div>
+<div class="listingblock">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
+    id 'io.micronaut.application' version '3.5.0'
+    id 'io.micronaut.test-resources' version '3.5.0'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please refer to the <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/">Gradle plugin documentation</a> for more information about configuring the test resources plugin.</p>
+</div>
+<div class="paragraph">
+<p>For Maven, you can enable test resources support by adding the following configuration:</p>
+</div>
+<div class="listingblock">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;TODO/&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please refer to the <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/">Maven plugin documentation</a> for more information about configuring the test resources plugin.</p>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>4 Repository</h1>
+<h1 id="modules"><a class="anchor" href="#modules"></a>4 Supported Modules</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The following modules are provided with Micronaut Test Resources.</p>
+</div>
+
+<h2 id="modules-databases"><a class="anchor" href="#modules-databases"></a>4.1 Databases</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_databases">Databases</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Micronaut Test Resources provides support for the following databases:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Database</th>
+<th class="tableblock halign-left valign-top">JDBC</th>
+<th class="tableblock halign-left valign-top">R2DBC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://mariadb.org/">MariaDB</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.mysql.com/">MySQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/fr/database/technologies/appdev/xe.html">Oracle Express Edition</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.postgresql.org/">PostgreSQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Databases are supplied via a <a href="https://www.testcontainers.com/">Testcontainers</a> container.
+It is possible to override the default image of the container by setting the following property in your application configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>test-resources.containers.[db-type].image-name</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, you can override the default image of the container for the <code>MariaDB</code> database by setting the following property:</p>
+</div>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mariadb:
+      image-name: mariadb:10.3</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="modules-databases-jdbc"><a class="anchor" href="#modules-databases-jdbc"></a>4.1.1 JDBC</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases-jdbc.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The following properties will automatically be set when using a JDBC database:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>datasources.*.url</code></p>
+</li>
+<li>
+<p><code>datasources.*.username</code></p>
+</li>
+<li>
+<p><code>datasources.*.password</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In order for the database to be properly detected, <em>one of</em> the following properties has to be set:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>)</p>
+</li>
+<li>
+<p><code>datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
+</li>
+<li>
+<p><code>datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
+</li>
+</ul>
+</div>
+
+<h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>4.1.2 R2DBC</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases-r2dbc.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In addition to traditional JDBC support, Micronaut Test Resources also supports R2DBC databases.</p>
+</div>
+<div class="paragraph">
+<p>The following properties will automatically be set when using a JDBC database:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>r2dbc.datasources.*.url</code></p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.username</code></p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.password</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In order for the database to be properly detected, <em>one of</em> the following properties has to be set:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>r2dbc.datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>)</p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition, R2DBC databases can be configured simply by reading the traditional JDBC properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>)</p>
+</li>
+<li>
+<p><code>datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
+</li>
+<li>
+<p><code>datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In which case, the name of the datasource must match the name of the R2DBC datasource.
+This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.</p>
+</div>
+
+<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>4.2 MQTT</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-mqtt.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>MQTT support is provided using a <a href="https://www.hivemq.com/">HiveMQ</a> container by default.</p>
+</div>
+<div class="paragraph">
+<p>It will automatically configure the <code>mqtt.client.server-uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can setup a custom container.
+For example, you can use Mosquitto instead:</p>
+</div>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">mqtt:
+  client:
+    server-uri: tcp://${mqtt.host}:${mqtt.port}
+    client-id: ${random.uuid}
+test-resources:
+  containers:
+    mosquitto:
+      image-name: eclipse-mosquitto
+      hostnames:
+        - mqtt.host
+      exposed-ports:
+        - mqtt.port: 1883
+      ro-fs-bind:
+        - "mosquitto.conf": /mosquitto/config/mosquitto.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">mosquitto.conf</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-conf hljs" data-lang="conf">persistence false
+allow_anonymous true
+connection_messages true
+log_type all
+listener 1883</code></pre>
+</div>
+</div>
+
+<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>4.3 Kafka</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-kafka.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Kafka support will automatically start a <a href="https://kafka.apache.org">Kafka container</a> and provide the value of the <code>kafka.bootstrap.servers</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>4.4 MongoDB</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-mongodb.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>MongoDB support will automatically start a <a href="https://www.mongodb.com">MongoDB container</a> and provide the value of the <code>mongodb.uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>4.5 Neo4j</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-neo4j.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Neo4j support will automatically start a <a href="https://neo4j.com/">Neo4j container</a> and provide the value of the <code>neo4j.uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.6 Generic Testcontainers support</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-testcontainers.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>There are cases where the provided test resources modules don&#8217;t support your use case.
+For example, there is no built-in test resource for supplying a dummy SMTP server, but you may need such a resource for testing your application.</p>
+</div>
+<div class="paragraph">
+<p>In this case, Micronaut Test Resources provide generic support for starting arbitrary test containers.
+Unlike the other resources, this will require adding configuration to your application to make it work.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s illustrate how we can declare an SMTP test container (here using YAML configuration) for use with <a href="https://micronaut-projects.github.io/micronaut-email">Micronaut Email</a>:</p>
+</div>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    fakesmtp:                       <i class="conum" data-value="1"></i><b>(1)</b>
+      image-name: ghusta/fakesmtp   <i class="conum" data-value="2"></i><b>(2)</b>
+      hostnames:                    <i class="conum" data-value="3"></i><b>(3)</b>
+        - smtp.host                 <i class="conum" data-value="4"></i><b>(4)</b>
+      exposed-ports:                <i class="conum" data-value="5"></i><b>(5)</b>
+        - smtp.port: 25             <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The name of the test container</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The image name to use</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The hostnames declare what properties will be resolved with the value of the container host name</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Declares that the <code>smtp.host</code> property will be resolved with the container host name</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Declares what ports the container exposes</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Declares that the property <code>smtp.port</code> will be set to the value of the mapped port <code>25</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Then the values <code>smtp.host</code> and <code>smtp.port</code> can for example be used in a bean configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+public class JavamailSessionProvider implements SessionProvider {
+    @Value("${smtp.host}")          <i class="conum" data-value="1"></i><b>(1)</b>
+    private String smtpHost;
+
+    @Value("${smtp.port}")          <i class="conum" data-value="2"></i><b>(2)</b>
+    private String smtpPort;
+
+
+    @Override
+    public Session session() {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", smtpPort);
+        return Session.getDefaultInstance(props);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>smtp.host</code> property that we exposed in the test container configuration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>smtp.port</code> property that we exposed in the test container configuration</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In addition, generic containers can bind file system resources (either read-only or read-write):</p>
+</div>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-fs-bind:
+        - "path/to/local/readonly-file.conf": /path/to/container/readonly-file.conf
+      rw-fs-bind:
+        - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
+</div>
+</div>
+
+<h1 id="architecture"><a class="anchor" href="#architecture"></a>5 Architecture</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Test Resources essentially consists of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a test resource server, which is responsible for service "test provisioning requests"</p>
+</li>
+<li>
+<p>a thin test resource client, which is injected in the classpath of the application under test</p>
+</li>
+<li>
+<p>test resources support modules, which are injected on the server classpath by build tools, based on inference and configuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The client is responsible for resolving "missing properties".
+For example, if a bean needs the value of the <code>datasources.default.url</code> property and that this property isn&#8217;t set, then the client will issue a request on the test resources server to give the value of that property.
+As a side effect of providing the value, a database container may be started.</p>
+</div>
+
+<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>5.1 The test resources server</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-server.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The Micronaut Test Resources server is a service which is responsible for handling the lifecycle of test resources.</p>
+</div>
+<div class="paragraph">
+<p>For example, a MySQL database may need to be started when the tests start, and shutdown at the end of the build.</p>
+</div>
+<div class="paragraph">
+<p>For this purpose, the test resource server must be started before the application under test starts, and shutdown after test resources are no longer needed.</p>
+</div>
+<div class="paragraph">
+<p>It means, for example, that with <a href="https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build">Gradle continuous builds</a>, the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For security reasons, the test resource server will only accept requests from the loopback interface, and only from clients which know a secret token generated at build time. However, if the server is started with a specific port, it will accept requests from any client on that port from the loopback interface, without security token.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>5.1.1 Sharing containers between independent builds</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-shared-server.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>By default, a server will be spawned for each build, and shutdown at the end of a build (or after several builds if using the continuous mode in Gradle).</p>
+</div>
+<div class="paragraph">
+<p>However, what if you have several projects and that you want to share test resources between them?
+As an example, you might have a project which consists of a Kafka publisher and another project with a Kafka consumer.
+If they don&#8217;t use the <em>same</em> Kafka server, then they won&#8217;t be able to communicate with each other.</p>
+</div>
+<div class="paragraph">
+<p>The solution to this problem is to use a <em>shared server</em>.
+By default builds would spawn a server per build on a different port, but if you specify a port explicitly, then both builds will use the same server.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If you use a shared server, then you must make sure that the <em>first build</em> to start the server provides all the support modules.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>5.2 The test resources client</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-client.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The Micronaut Test Resources client is a lightweight client which connects to the test resources server.
+It basically delegates requests of property resolution from Micronaut to the server.</p>
+</div>
+<div class="paragraph">
+<p>This client is automatically injected on the application classpath in development mode or during tests.
+As a user, you should never have to deal with this module directly.</p>
+</div>
+
+<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>5.3 Embedded test resources</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-embedded.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The embedded test resources module is used by the Test Resources Server internally.
+It is responsible for aggregating several test resources resolvers and providing a unified interface to the test resources.</p>
+</div>
+<div class="paragraph">
+<p>It is possible for an application to use the embedded test resources module directly instead of using the server and the client.
+However, we don&#8217;t recommend it because it would enhance the application classpath with unnecessary dependencies: each of the test resource resolver would add dependencies on the application that you may not want, potentially introducing conflicts.</p>
+</div>
+<div class="paragraph">
+<p>The client/server model is designed to avoid this situation, while offering a more fine-grained control over the lifecycle of the test resources.</p>
+</div>
+
+<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>5.4 Implementing a test resource</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/implementing-test-resources.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In case the provided test resources are not enough, or if you have to tweak the configuration of test resources in such a way that is not possible via simple configuration (for example, you might need to execute commands in a test container, which is not supported), you can implement your own test resource resolver.</p>
+</div>
+<div class="paragraph">
+<p>A test resource resolver is loaded <em>at application startup</em>, before the <code>ApplicationContext</code> is available, and therefore cannot use traditional Micronaut dependency injection.</p>
+</div>
+<div class="paragraph">
+<p>Therefore, a test resource resolver is a service implementing the <a href="../api/io/micronaut/testresources/core/TestResourcesResolver.html">TestResourcesResolver</a> interface.</p>
+</div>
+<div class="paragraph">
+<p>For test resources which make use of Testcontainers, you may extend the base <a href="../api/io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html">AbstractTestContainersProvider</a> class.</p>
+</div>
+<div class="paragraph">
+<p>In addition, you need to declare the resolver for service loading, by adding your implementation type name in the <code>META-INF/services/io.micronaut.testresources.core.TestResourcesResolver</code> file.</p>
+</div>
+<div class="sect1">
+<h2 id="_lifecycle">Lifecycle</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_at_application_startup">At application startup</h3>
+<div class="paragraph">
+<p>Implementing a test resources resolver requires to understand the lifecycle of resolvers. An initial step is done when the resolvers are <em>loaded</em> (for example in the server process)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>test resource resolvers are loaded via service loading</p>
+</li>
+<li>
+<p>the <code>TestResourcesResolver#getRequiredPropertyEntries()</code> method is called on a resolver. This method should return a list of property entries that the resolver needs to know about in order to determine which properties it can resolve. For example, a datasource URL resolver must know the names of the datasources before it can tell what properties it can resolve. Therefore, it would return <code>datasources</code> to this method.</p>
+</li>
+<li>
+<p>the <code>TestResourcesResolver#getResolvableProperties</code> method is called, with a couple maps:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>the first map contains at the key the name of a "required property entry" from the call in 2. For example, <code>datasources</code>. The value is the list of entries for that property. For example, <code>[default, users, books]</code>.</p>
+</li>
+<li>
+<p>the second map contains the whole <code>test-resources</code> configuration from the application, as a flat map of properties.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The resolver can then return a <em>list of properties</em> that it can resolve. For example, <code>datasources.default.url</code>, <code>datasources.users.url</code>, <code>datasources.books.url</code>, etc.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_when_a_property_needs_to_be_resolved">When a property needs to be resolved</h3>
+<div class="paragraph">
+<p>At this stage, we know <em>all properties</em> that resolvers are able to resolve.
+So whenever Micronaut will encounter a property without value, it will ask the resolvers to resolve it.
+This is done in 2 steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>the <code>TestResourceResolver#getRequiredProperties</code> is called with the expression being resolved. It gives a chance to the resolver to tell what other properties it needs to read <em>before</em> resolving the expression. For example, a database resolver may need to read the <code>datasources.default.db-type</code> property before it can resolve the <code>datasources.default.url</code> property, so that it can tell if it&#8217;s actually capable of handling that database type or not.</p>
+</li>
+<li>
+<p>the <code>resolve</code> method is called with the expression being resolved, the map of resolved properties from 1. and the whole configuration map of the <code>test-resources</code> from the application.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It is the responsibility of the <code>TestResourcesResolver</code> to check, when <code>resolve</code> is called, that it can actually resolve the supplied expression. Do <strong>not</strong> assume that it will be called with an expression that it can resolve.
+If, for some reason, the resolver cannot resolve the expression then <code>Optional#empty()</code> should be returned, otherwise the test resource resolver can return the resolved value.</p>
+</div>
+<div class="paragraph">
+<p>As part of the resolution, a test resource may be started (for example a container).</p>
+</div>
+</div>
+</div>
+</div>
+
+<h1 id="repository"><a class="anchor" href="#repository"></a>6 Repository</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/repository.adoc"'>

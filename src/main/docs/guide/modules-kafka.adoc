@@ -1,0 +1,3 @@
+Kafka support will automatically start a [Kafka container](https://kafka.apache.org) and provide the value of the `kafka.bootstrap.servers` property.
+
+The default image can be overwritten by setting the `test-resources.containers.kafka.image-name` property.

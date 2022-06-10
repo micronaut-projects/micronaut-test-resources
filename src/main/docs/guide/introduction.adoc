@@ -1,1 +1,11 @@
-TODO
+Micronaut Test Resources adds support for managing external resources which are required during development or testing.
+
+For example, an application may need a database to run (say MySQL), but such a database may not be installed on the development machine or you may not want to handle the setup and tear down of the database manually.
+
+Micronaut Test Resources offers a generic purpose solution for this problem, **without any configuration** when possible. In particular, it integrates with https://www.testcontainers.org/[Testcontainers] to provide throwaway containers for testing.
+
+Test resources are only available during _development_ (for example when running the Gradle `run` task or the Maven `mn:run` goal) and _test execution_: production code will require the resources to be available.
+
+A key aspect of test resources to understand is that they are created in reaction to a _missing property_ in configuration.
+For example, if the `datasources.default.url` property is missing, then a test resource will be responsible for resolving its value.
+If that property is set, then the test resource will not be used.

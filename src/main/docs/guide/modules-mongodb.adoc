@@ -1,0 +1,3 @@
+MongoDB support will automatically start a [MongoDB container](https://www.mongodb.com) and provide the value of the `mongodb.uri` property.
+
+The default image can be overwritten by setting the `test-resources.containers.mongodb.image-name` property.

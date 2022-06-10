@@ -1,0 +1,9 @@
+Micronaut Test Resources essentially consists of:
+
+- a test resource server, which is responsible for service "test provisioning requests"
+- a thin test resource client, which is injected in the classpath of the application under test
+- test resources support modules, which are injected on the server classpath by build tools, based on inference and configuration
+
+The client is responsible for resolving "missing properties".
+For example, if a bean needs the value of the `datasources.default.url` property and that this property isn't set, then the client will issue a request on the test resources server to give the value of that property.
+As a side effect of providing the value, a database container may be started.

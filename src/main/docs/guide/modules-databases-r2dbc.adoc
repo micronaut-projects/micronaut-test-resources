@@ -1,0 +1,22 @@
+In addition to traditional JDBC support, Micronaut Test Resources also supports R2DBC databases.
+
+The following properties will automatically be set when using a JDBC database:
+
+- `r2dbc.datasources.*.url`
+- `r2dbc.datasources.*.username`
+- `r2dbc.datasources.*.password`
+
+In order for the database to be properly detected, _one of_ the following properties has to be set:
+
+- `r2dbc.datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `postgresql`)
+- `r2dbc.datasources.*.driverClassName`: the class name of the driver (fallback)
+- `r2dbc.datasources.*.dialect`: the dialect to use for the database (fallback)
+
+In addition, R2DBC databases can be configured simply by reading the traditional JDBC properties:
+
+- `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `postgresql`)
+- `datasources.*.driverClassName`: the class name of the driver (fallback)
+- `datasources.*.dialect`: the dialect to use for the database (fallback)
+
+In which case, the name of the datasource must match the name of the R2DBC datasource.
+This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.

@@ -3,5 +3,34 @@ introduction:
 releaseHistory: Release History
 quickStart:
   title: Quick Start
+modules:
+  title: Supported Modules
+  modules-databases:
+    title: Databases
+    modules-databases-jdbc:
+      title: JDBC
+    modules-databases-r2dbc:
+      title: R2DBC
+  modules-mqtt:
+    title: MQTT
+  modules-kafka:
+    title: Kafka
+  modules-mongodb:
+    title: MongoDB
+  modules-neo4j:
+    title: Neo4j
+  modules-testcontainers:
+    title: Generic Testcontainers support
+architecture:
+    title: Architecture
+    architecture-server:
+      title: The test resources server
+      architecture-shared-server:
+        title: Sharing containers between independent builds
+    architecture-client:
+      title: The test resources client
+    architecture-embedded:
+      title: Embedded test resources
+    implementing-test-resources:
+      title: Implementing a test resource
 repository: Repository
-

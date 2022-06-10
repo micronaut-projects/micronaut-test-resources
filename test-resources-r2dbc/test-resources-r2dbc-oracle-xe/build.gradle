@@ -21,5 +21,4 @@ dependencies {
     testImplementation(testFixtures(project(":test-resources-jdbc-core")))
 
     testRuntimeOnly(libs.reactive.oracle.xe)
-    testRuntimeOnly(libs.oracle.xe)
 }

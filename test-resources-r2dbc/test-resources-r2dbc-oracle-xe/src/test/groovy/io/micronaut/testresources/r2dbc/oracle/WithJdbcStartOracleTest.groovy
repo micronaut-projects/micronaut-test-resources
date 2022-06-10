@@ -4,10 +4,8 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.jdbc.AbstractJDBCSpec
 import io.micronaut.testresources.jdbc.Book
 import jakarta.inject.Inject
-import spock.lang.Ignore
 
 @MicronautTest(environments = ["jdbc"] )
-@Ignore("R2dbcSchemaGenerator doesn't support Oracle")
 class WithJdbcStartOracleTest extends AbstractJDBCSpec {
 
     @Inject

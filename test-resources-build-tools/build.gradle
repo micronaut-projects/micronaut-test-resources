@@ -1,4 +1,5 @@
 import io.micronaut.internal.WriteVersion
+import io.micronaut.internal.WriteModuleList
 
 plugins {
     id 'io.micronaut.build.internal.test-resources-module'
@@ -25,8 +26,30 @@ def writeVersion = tasks.register("writeVersionClass", WriteVersion) {
     getPackage().set("io.micronaut.testresources.buildtools")
     version.set(project.version as String)
 }
+def writeModuleList = tasks.register("writeModuleList", WriteModuleList) {
+    outputDirectory.set(layout.buildDirectory.dir("module-list"))
+    getPackage().set("io.micronaut.testresources.buildtools")
+    def thisProject = project
+    modules = rootProject.allprojects.findAll { it != thisProject && it != rootProject }
+            .collect { it.name - 'test-resources-' }
+            .groupBy {
+                if (it.startsWith('jdbc')) {
+                    'jdbc'
+                } else if (it.startsWith('r2dbc')) {
+                    'r2dbc'
+                } else if (it in ['core', 'bom', 'embedded', 'client', 'testcontainers']) {
+                    'core'
+                } else {
+                    'modules'
+                }
+            }
+    moduleDescriptions.put('core', 'Core modules')
+    moduleDescriptions.put('jdbc', 'JDBC modules')
+    moduleDescriptions.put('r2dbc', 'R2DBC modules')
+    moduleDescriptions.put('modules', 'Extra modules')
+}
 
-sourceSets.main.java.srcDir(writeVersion)
+sourceSets.main.java.srcDirs(writeVersion, writeModuleList)
 
 dependencies {
     testImplementation(mn.spock)

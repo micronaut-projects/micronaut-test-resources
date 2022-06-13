@@ -29,13 +29,13 @@ import java.util.stream.Stream;
  * case we need to put on the test resources classpath the Micronaut
  * test resources modules for JDBC and the MySQL driver.
  */
-public final class TestResourcesClasspath {
+public final class TestResourcesClasspath implements KnownModules {
     private static final String TEST_RESOURCES_GROUP = "io.micronaut.testresources";
     private static final String TEST_RESOURCES_ARTIFACT_PREFIX = "micronaut-test-resources-";
 
     private static final List<String> CORE_SUPPORT = Arrays.asList(
-        "server",
-        "testcontainers"
+        SERVER,
+        TESTCONTAINERS
     );
     private static final String MICRONAUT_DATA_PREFIX = "micronaut-data-";
     private static final String MICRONAUT_KAFKA = "micronaut-kafka";

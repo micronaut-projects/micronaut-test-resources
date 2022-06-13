@@ -29,5 +29,9 @@ def writeVersion = tasks.register("writeVersionClass", WriteVersion) {
 sourceSets.main.java.srcDir(writeVersion)
 
 dependencies {
+    implementation(mn.slf4j)
+    testImplementation(platform(mn.micronaut.bom))
+    testImplementation(mn.micronaut.inject.groovy)
+    testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.spock)
 }

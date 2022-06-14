@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     private static final String TYPE = "db-type";
 
     private static final List<String> SUPPORTED_LIST = Collections.unmodifiableList(
-        Arrays.asList(URL, USERNAME, PASSWORD)
+        Arrays.asList(URL, USERNAME, PASSWORD, DRIVER)
     );
 
     @Override
@@ -68,9 +67,8 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         String datasource = datasourceNameFrom(expression);
         return Stream.of(
                 datasourceExpressionOf(datasource, TYPE),
-                datasourceExpressionOf(datasource, DIALECT),
-                datasourceExpressionOf(datasource, DRIVER))
-            .collect(Collectors.toList());
+                datasourceExpressionOf(datasource, DIALECT)
+            ).collect(Collectors.toList());
     }
 
     @Override
@@ -81,10 +79,6 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         String datasource = datasourceNameFrom(propertyName);
         String type = String.valueOf(properties.get(datasourceExpressionOf(datasource, TYPE)));
         if (type != null && type.equalsIgnoreCase(getSimpleName())) {
-            return true;
-        }
-        String driver = String.valueOf(properties.get(datasourceExpressionOf(datasource, DRIVER)));
-        if (driver != null && driver.toLowerCase(Locale.US).contains(getSimpleName())) {
             return true;
         }
         String dialect = String.valueOf(properties.get(datasourceExpressionOf(datasource, DIALECT)));
@@ -106,6 +100,9 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
                 break;
             case PASSWORD:
                 value = container.getPassword();
+                break;
+            case DRIVER:
+                value = container.getDriverClassName();
                 break;
             default:
                 value = resolveDbSpecificProperty(expression, container);

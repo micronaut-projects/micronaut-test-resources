@@ -16,14 +16,16 @@ def jdbcModules = [
         'mysql',
         'mariadb',
         'oracle-xe',
-        'postgresql'
+        'postgresql',
+        'mssql'
 ]
 def r2dbcModules = [
         'core',
         'mariadb',
         'mysql',
         'oracle-xe',
-        'postgresql'
+        'postgresql',
+        'mssql'
 ]
 
 include 'test-resources-bom'

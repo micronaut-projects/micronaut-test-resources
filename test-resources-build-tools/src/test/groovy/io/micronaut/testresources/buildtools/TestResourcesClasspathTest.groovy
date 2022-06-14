@@ -58,7 +58,9 @@ class TestResourcesClasspathTest extends Specification {
                 'dev.miku:r2dbc-mysql',
                 'org.mariadb:r2dbc-mariadb',
                 'org.postgresql:r2dbc-postgresql',
-                'com.oracle.database.r2dbc:oracle-r2dbc'
+                'com.oracle.database.r2dbc:oracle-r2dbc',
+                'com.microsoft.sqlserver:mssql-jdbc',
+                'io.r2dbc:r2dbc-mssql'
         ]
     }
 
@@ -80,7 +82,7 @@ class TestResourcesClasspathTest extends Specification {
         'org.postgresql:postgresql'            | 'postgresql'
         'org.mariadb.jdbc:mariadb-java-client' | 'mariadb'
         'com.oracle.database.jdbc:ojdbc8'      | 'oracle-xe'
-
+        'com.microsoft.sqlserver:mssql-jdbc'   | 'mssql'
     }
 
     def "infers Micronaut Data Mongo"() {
@@ -122,6 +124,7 @@ class TestResourcesClasspathTest extends Specification {
         'org.mariadb:r2dbc-mariadb'              | 'mariadb'
         'org.postgresql:r2dbc-postgresql'        | 'postgresql'
         'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-xe'
+        'io.r2dbc:r2dbc-mssql'                   | 'mssql'
     }
 
     private void inferredClasspathEquals(String... dependencies) {

@@ -2,14 +2,15 @@
 
 Micronaut Test Resources provides support for the following databases:
 
-[cols="2,1,1"]
+[cols="2,1,1,1"]
 |===
-|Database | JDBC | R2DBC
+|Database | JDBC | R2DBC | Database identifier
 
-| https://mariadb.org/[MariaDB] | Yes | Yes
-| https://www.mysql.com/[MySQL] | Yes | Yes
-| https://www.oracle.com/fr/database/technologies/appdev/xe.html[Oracle Express Edition] | Yes | Yes
-| https://www.postgresql.org/[PostgreSQL] | Yes | Yes
+| https://mariadb.org/[MariaDB] | Yes | Yes | mariadb
+| https://www.mysql.com/[MySQL] | Yes | Yes | mysql
+| https://www.oracle.com/fr/database/technologies/appdev/xe.html[Oracle Express Edition] | Yes | Yes | oracle-xe
+| https://www.postgresql.org/[PostgreSQL] | Yes | Yes | postgres
+| https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | mssql
 
 |===
 
@@ -28,3 +29,5 @@ test-resources:
     mariadb:
       image-name: mariadb:10.3
 ----
+
+The `db-type` property value can be found in the table above.

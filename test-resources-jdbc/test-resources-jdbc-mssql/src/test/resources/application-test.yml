@@ -1,5 +1,5 @@
 datasources:
   default:
-    db-type: mariadb
+    db-type: mssql
     schema-generate: CREATE_DROP
-    dialect: MYSQL
+    dialect: SQL_SERVER

@@ -5,5 +5,3 @@ For example, a MySQL database may need to be started when the tests start, and s
 For this purpose, the test resource server must be started before the application under test starts, and shutdown after test resources are no longer needed.
 
 It means, for example, that with https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build[Gradle continuous builds], the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.
-
-NOTE: For security reasons, the test resource server will only accept requests from the loopback interface, and only from clients which know a secret token generated at build time. However, if the server is started with a specific port, it will accept requests from any client on that port from the loopback interface, without security token.

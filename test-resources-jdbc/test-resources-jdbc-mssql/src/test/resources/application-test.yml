@@ -1,6 +1,5 @@
 datasources:
   default:
     db-type: mssql
-    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
     schema-generate: CREATE_DROP
     dialect: SQL_SERVER

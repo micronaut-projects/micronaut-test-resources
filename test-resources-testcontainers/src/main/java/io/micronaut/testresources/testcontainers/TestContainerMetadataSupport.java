@@ -177,7 +177,9 @@ final class TestContainerMetadataSupport {
 
     static GenericContainer<?> applyMetadata(TestContainerMetadata md, GenericContainer<?> container) {
         Collection<Integer> exposedPorts = md.getExposedPorts().values();
-        container.withExposedPorts(exposedPorts.toArray(new Integer[0]));
+        if (!exposedPorts.isEmpty()) {
+            container.withExposedPorts(exposedPorts.toArray(new Integer[0]));
+        }
         md.getRwFsBinds().forEach(container::withFileSystemBind);
         md.getRoFsBinds().forEach((hostPath, containerPath) -> container.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
         md.getCommand().ifPresent(container::withCommand);

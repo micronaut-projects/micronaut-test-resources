@@ -167,13 +167,24 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         String property = propertyName.substring(propertyName.lastIndexOf(".") + 1);
         switch (property) {
             case URL:
-                String url = String.format(
-                    "r2dbc:%s://%s:%s/%s",
-                    options.getValue(ConnectionFactoryOptions.DRIVER),
-                    options.getValue(ConnectionFactoryOptions.HOST),
-                    options.getValue(ConnectionFactoryOptions.PORT),
-                    options.getValue(ConnectionFactoryOptions.DATABASE)
-                );
+                Object db = options.getValue(ConnectionFactoryOptions.DATABASE);
+                String url;
+                if (db != null) {
+                    url = String.format(
+                        "r2dbc:%s://%s:%s/%s",
+                        options.getValue(ConnectionFactoryOptions.DRIVER),
+                        options.getValue(ConnectionFactoryOptions.HOST),
+                        options.getValue(ConnectionFactoryOptions.PORT),
+                        db
+                    );
+                } else {
+                    url = String.format(
+                        "r2dbc:%s://%s:%s",
+                        options.getValue(ConnectionFactoryOptions.DRIVER),
+                        options.getValue(ConnectionFactoryOptions.HOST),
+                        options.getValue(ConnectionFactoryOptions.PORT)
+                    );
+                }
                 LOGGER.debug("Resolved property: {} with value: {}", propertyName, url);
                 return url;
             case USERNAME:

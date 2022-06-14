@@ -59,7 +59,8 @@ class TestResourcesClasspathTest extends Specification {
                 'org.mariadb:r2dbc-mariadb',
                 'org.postgresql:r2dbc-postgresql',
                 'com.oracle.database.r2dbc:oracle-r2dbc',
-                'com.microsoft.sqlserver:mssql-jdbc'
+                'com.microsoft.sqlserver:mssql-jdbc',
+                'io.r2dbc:r2dbc-mssql'
         ]
     }
 
@@ -123,6 +124,7 @@ class TestResourcesClasspathTest extends Specification {
         'org.mariadb:r2dbc-mariadb'              | 'mariadb'
         'org.postgresql:r2dbc-postgresql'        | 'postgresql'
         'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-xe'
+        'io.r2dbc:r2dbc-mssql'                   | 'mssql'
     }
 
     private void inferredClasspathEquals(String... dependencies) {

@@ -2,7 +2,7 @@
 
 Micronaut Test Resources provides support for the following databases:
 
-[cols="2,1,1"]
+[cols="2,1,1,1"]
 |===
 |Database | JDBC | R2DBC | Database identifier
 
@@ -10,7 +10,7 @@ Micronaut Test Resources provides support for the following databases:
 | https://www.mysql.com/[MySQL] | Yes | Yes | mysql
 | https://www.oracle.com/fr/database/technologies/appdev/xe.html[Oracle Express Edition] | Yes | Yes | oracle-xe
 | https://www.postgresql.org/[PostgreSQL] | Yes | Yes | postgres
-| https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | No | mssql
+| https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | mssql
 
 |===
 

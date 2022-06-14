@@ -24,7 +24,8 @@ def r2dbcModules = [
         'mariadb',
         'mysql',
         'oracle-xe',
-        'postgresql'
+        'postgresql',
+        'mssql'
 ]
 
 include 'test-resources-bom'

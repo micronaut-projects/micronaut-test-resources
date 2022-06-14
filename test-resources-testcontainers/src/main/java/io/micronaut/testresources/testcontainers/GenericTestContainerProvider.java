@@ -19,7 +19,6 @@ import io.micronaut.testresources.core.TestResourcesResolver;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -105,19 +104,16 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
         }
         return containerMetadataFrom(testResourcesConfiguration)
             .filter(e -> e.getExposedPorts().containsKey(propertyName) || e.getHostNames().contains(propertyName))
+            .filter(md -> md.getImageName().isPresent())
             .findFirst()
             .map(md -> {
-                DockerImageName imageName = DockerImageName.parse(md.getImageName());
+                DockerImageName imageName = DockerImageName.parse(md.getImageName().get());
                 return new MappedContainer(md, TestContainers.getOrCreate(propertyName, GenericTestContainerProvider.class,
                     md.getId(),
                     properties,
                     () -> {
                         GenericContainer<?> selfGenericContainer = new GenericContainer<>(imageName);
-                        Collection<Integer> exposedPorts = md.getExposedPorts().values();
-                        selfGenericContainer.withExposedPorts(exposedPorts.toArray(new Integer[0]));
-                        md.getRwFsBinds().forEach(selfGenericContainer::withFileSystemBind);
-                        md.getRoFsBinds().forEach((hostPath, containerPath) -> selfGenericContainer.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
-                        return selfGenericContainer;
+                        return TestContainerMetadataSupport.applyMetadata(md, selfGenericContainer);
                     }
                 ));
             }).map(e -> {

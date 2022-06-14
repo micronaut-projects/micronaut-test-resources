@@ -100,11 +100,13 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                         .findAny();
                     if (metadata.isPresent()) {
                         TestContainerMetadata md = metadata.get();
-                        if (md.getImageName() != null) {
-                            imageName = DockerImageName.parse(md.getImageName()).asCompatibleSubstituteFor(defaultImageName);
+                        if (md.getImageName().isPresent()) {
+                            imageName = DockerImageName.parse(md.getImageName().get()).asCompatibleSubstituteFor(defaultImageName);
                         }
                     }
-                    return createContainer(imageName, properties);
+                    T container = createContainer(imageName, properties);
+                    metadata.ifPresent(md -> TestContainerMetadataSupport.applyMetadata(md, container));
+                    return container;
                 }));
         }
         return Optional.empty();

@@ -68,3 +68,31 @@ test-resources:
       rw-fs-bind:
         - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf
 ----
+
+The following properties are also supported:
+
+- `command`: Set the command that should be run in the container
+- `env`: the map of environment variables
+- `labels`: the map of labels
+- `startup-timeout`: the container startup timeout
+
+e.g:
+
+.application.yml
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      command: "some.sh"
+        env:
+          - MY_ENV_VAR: "my value"
+        labels:
+          - my.label: "my value"
+      startup-timeout: 120s
+----

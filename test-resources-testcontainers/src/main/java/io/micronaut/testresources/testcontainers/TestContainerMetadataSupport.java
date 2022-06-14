@@ -15,6 +15,13 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import io.micronaut.core.convert.DefaultConversionService;
+import io.micronaut.runtime.converters.time.TimeConverterRegistrar;
+import org.testcontainers.containers.BindMode;
+import org.testcontainers.containers.GenericContainer;
+
+import java.time.Duration;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,26 +39,38 @@ final class TestContainerMetadataSupport {
     static final int GENERIC_ORDER = 1000;
     static final int SPECIFIC_ORDER = 0;
 
+    private static final DefaultConversionService CONVERSION_SERVICE;
+
+    static {
+        CONVERSION_SERVICE = new DefaultConversionService();
+        TimeConverterRegistrar registrar = new TimeConverterRegistrar();
+        registrar.register(CONVERSION_SERVICE);
+    }
+
     private TestContainerMetadataSupport() {
 
     }
 
     static Stream<TestContainerMetadata> containerMetadataFor(List<String> containerNames, Map<String, Object> testResourcesConfig) {
         return containerNames.stream()
-            .map(name -> {
-                String prefix = TEST_RESOURCES_CONTAINERS + name + ".";
-                String imageName = (String) testResourcesConfig.get(prefix + "image-name");
-                if (imageName != null) {
-                    Map<String, Integer> exposedPorts = extractExposedPortsFrom(prefix, testResourcesConfig);
-                    Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
-                    Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
-                    Map<String, String> roFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, true);
-                    return Optional.of(new TestContainerMetadata(name, imageName, exposedPorts, hostNames, rwFsBinds, roFsBinds));
-                }
-                return Optional.<TestContainerMetadata>empty();
-            })
+            .map(name -> convertToMetadata(testResourcesConfig, name))
             .filter(Optional::isPresent)
             .map(Optional::get);
+    }
+
+    static Optional<TestContainerMetadata> convertToMetadata(Map<String, Object> testResourcesConfig, String name) {
+        String prefix = TEST_RESOURCES_CONTAINERS + name + ".";
+        String imageName = extractStringParameterFrom(prefix, "image-name", testResourcesConfig);
+        Map<String, Integer> exposedPorts = extractExposedPortsFrom(prefix, testResourcesConfig);
+        Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
+        Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
+        Map<String, String> roFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, true);
+        Map<String, String> env = extractMapFrom(prefix, "env", testResourcesConfig);
+        Map<String, String> labels = extractMapFrom(prefix, "labels", testResourcesConfig);
+        String command = extractStringParameterFrom(prefix, "command", testResourcesConfig);
+        String workingDirectory = extractStringParameterFrom(prefix, "working-directory", testResourcesConfig);
+        Duration startupTimeout = CONVERSION_SERVICE.convert(extractStringParameterFrom(prefix, "startup-timeout", testResourcesConfig), Duration.class).orElse(null);
+        return Optional.of(new TestContainerMetadata(name, imageName, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout));
     }
 
     private static Map<String, Integer> extractExposedPortsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
@@ -92,6 +111,12 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptyMap());
     }
 
+    private static String extractStringParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfiguration) {
+        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+            .map(String::valueOf)
+            .orElse(null);
+    }
+
     private static Set<String> extractHostsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
         return Optional.ofNullable(testResourcesConfiguration.get(prefix + "hostnames"))
             .map(o -> {
@@ -107,11 +132,17 @@ final class TestContainerMetadataSupport {
     private static Map<String, String> extractFsBindsFrom(String prefix,
                                                           Map<String, Object> testResourcesConfiguration,
                                                           boolean readOnly) {
-        class FsBind {
+        return extractMapFrom(prefix, (readOnly ? "ro-" : "rw-") + "fs-bind", testResourcesConfiguration);
+    }
+
+    private static Map<String, String> extractMapFrom(String prefix,
+                                                      String key,
+                                                      Map<String, Object> testResourcesConfiguration) {
+        class StringEntry {
             final String key;
             final String value;
 
-            FsBind(Object key, Object value) {
+            StringEntry(Object key, Object value) {
                 this.key = String.valueOf(key);
                 this.value = String.valueOf(value);
             }
@@ -124,8 +155,7 @@ final class TestContainerMetadataSupport {
                 return value;
             }
         }
-        String key = prefix + (readOnly ? "ro-" : "rw-") + "fs-bind";
-        return Optional.ofNullable(testResourcesConfiguration.get(key))
+        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
             .map(o -> {
                 if (o instanceof List) {
                     List<Object> list = (List<Object>) o;
@@ -134,14 +164,26 @@ final class TestContainerMetadataSupport {
                             if (definition instanceof Map) {
                                 return ((Map<?, ?>) definition).entrySet()
                                     .stream()
-                                    .map(e -> new FsBind(e.getKey(), e.getValue()));
+                                    .map(e -> new StringEntry(e.getKey(), e.getValue()));
                             }
                             return Stream.empty();
                         })
-                        .collect(Collectors.toMap(FsBind::getKey, FsBind::getValue));
+                        .collect(Collectors.toMap(StringEntry::getKey, StringEntry::getValue));
                 }
                 return Collections.<String, String>emptyMap();
             })
             .orElse(Collections.emptyMap());
+    }
+
+    static GenericContainer<?> applyMetadata(TestContainerMetadata md, GenericContainer<?> container) {
+        Collection<Integer> exposedPorts = md.getExposedPorts().values();
+        container.withExposedPorts(exposedPorts.toArray(new Integer[0]));
+        md.getRwFsBinds().forEach(container::withFileSystemBind);
+        md.getRoFsBinds().forEach((hostPath, containerPath) -> container.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
+        md.getCommand().ifPresent(container::withCommand);
+        container.withEnv(md.getEnv());
+        container.withLabels(md.getLabels());
+        md.getStartupTimeout().ifPresent(container::withStartupTimeout);
+        return container;
     }
 }

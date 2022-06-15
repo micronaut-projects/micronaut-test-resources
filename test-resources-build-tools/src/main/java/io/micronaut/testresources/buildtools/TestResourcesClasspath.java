@@ -40,6 +40,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_DATA_PREFIX = "micronaut-data-";
     private static final String MICRONAUT_KAFKA = "micronaut-kafka";
     private static final String MICRONAUT_MQTT = "micronaut-mqtt";
+    private static final String MICRONAUT_REDIS = "micronaut-redis-lettuce";
 
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
@@ -73,6 +74,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String KAFKA_MODULE = "kafka";
     private static final String HIVEMQ_MODULE = "hivemq";
     private static final String MONGODB_MODULE = "mongodb";
+    private static final String REDIS_MODULE = "redis";
     private static final String MYSQL_MODULE = "jdbc-mysql";
     private static final String REACTIVE_MYSQL_MODULE = "r2dbc-mysql";
     private static final String NEO4J_MODULE = "neo4j";
@@ -124,6 +126,7 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(MICRONAUT_KAFKA, KAFKA_MODULE);
             m.onArtifact(MICRONAUT_MQTT, HIVEMQ_MODULE);
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
+            m.onArtifact(MICRONAUT_REDIS, REDIS_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_NEO4J), deps -> true, NEO4J_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(artifactEquals(MYSQL_CONNECTOR_JAVA)), MYSQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL_DRIVER)), POSTGRESQL_MODULE);

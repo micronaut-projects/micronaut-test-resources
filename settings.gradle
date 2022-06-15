@@ -38,6 +38,7 @@ include 'test-resources-kafka'
 include 'test-resources-mongodb'
 include 'test-resources-neo4j'
 include 'test-resources-testcontainers'
+include 'test-resources-redis'
 include 'test-resources-server'
 
 jdbcModules.each {

@@ -1,0 +1,3 @@
+Redis support will automatically start a https://redis.io/[Redis container] and provide the value of the `redis.uri` property.
+
+The default image can be overwritten by setting the `test-resources.containers.redis.image-name` property.

@@ -19,6 +19,7 @@ import io.micronaut.core.convert.DefaultConversionService;
 import io.micronaut.runtime.converters.time.TimeConverterRegistrar;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -40,6 +41,7 @@ final class TestContainerMetadataSupport {
     static final int SPECIFIC_ORDER = 0;
 
     private static final DefaultConversionService CONVERSION_SERVICE;
+    private static final String CLASSPATH_PREFIX = "classpath:";
 
     static {
         CONVERSION_SERVICE = new DefaultConversionService();
@@ -70,7 +72,8 @@ final class TestContainerMetadataSupport {
         String command = extractStringParameterFrom(prefix, "command", testResourcesConfig);
         String workingDirectory = extractStringParameterFrom(prefix, "working-directory", testResourcesConfig);
         Duration startupTimeout = CONVERSION_SERVICE.convert(extractStringParameterFrom(prefix, "startup-timeout", testResourcesConfig), Duration.class).orElse(null);
-        return Optional.of(new TestContainerMetadata(name, imageName, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout));
+        List<TestContainerMetadata.CopyFileToContainer> fileCopies = extractFileCopiesFrom(prefix, testResourcesConfig);
+        return Optional.of(new TestContainerMetadata(name, imageName, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies));
     }
 
     private static Map<String, Integer> extractExposedPortsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
@@ -135,6 +138,23 @@ final class TestContainerMetadataSupport {
         return extractMapFrom(prefix, (readOnly ? "ro-" : "rw-") + "fs-bind", testResourcesConfiguration);
     }
 
+    private static List<TestContainerMetadata.CopyFileToContainer> extractFileCopiesFrom(String prefix,
+        Map<String, Object> testResourcesConfiguration) {
+        Map<String, String> copyDefinitions = extractMapFrom(prefix, "copy-to-container", testResourcesConfiguration);
+        return copyDefinitions.entrySet()
+            .stream()
+            .map(e -> {
+                String source = e.getKey();
+                String destination = e.getValue();
+                if (source.startsWith(CLASSPATH_PREFIX)) {
+                    String classpath = source.substring(CLASSPATH_PREFIX.length());
+                    return new TestContainerMetadata.CopyFileToContainer(MountableFile.forClasspathResource(classpath), destination);
+                }
+                return new TestContainerMetadata.CopyFileToContainer(MountableFile.forHostPath(source), destination);
+            })
+            .collect(Collectors.toList());
+    }
+
     private static Map<String, String> extractMapFrom(String prefix,
                                                       String key,
                                                       Map<String, Object> testResourcesConfiguration) {
@@ -186,6 +206,7 @@ final class TestContainerMetadataSupport {
         container.withEnv(md.getEnv());
         container.withLabels(md.getLabels());
         md.getStartupTimeout().ifPresent(container::withStartupTimeout);
+        md.getFileCopies().forEach(copy -> container.withCopyFileToContainer(copy.getFile(), copy.getDestination()));
         return container;
     }
 }

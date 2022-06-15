@@ -208,6 +208,26 @@ class TestContainerMetadataSupportTest extends Specification {
         "3h"     | Duration.ofHours(3)
     }
 
+    def "reads copy file to container"() {
+        def config = """
+                containers:
+                    foo:
+                        copy-to-container:
+                            - classpath:/some/file.txt: /some/container/file.txt
+                            - /host/path: /container/path
+"""
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def copies = it.fileCopies
+            assert copies.size() == 2
+            assert copies.findAll { it.destination == "/some/container/file.txt" }.size() == 1
+            assert copies.findAll { it.destination == "/container/path" }.size() == 1
+        }
+    }
 
     private static Optional<TestContainerMetadata> metadataFrom(String yaml, String key) {
         def asMap = convert(yaml)

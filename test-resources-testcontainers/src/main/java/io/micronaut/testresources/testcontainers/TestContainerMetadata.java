@@ -15,7 +15,10 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import org.testcontainers.utility.MountableFile;
+
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -33,6 +36,7 @@ final class TestContainerMetadata {
     private final Map<String, String> env;
     private final Map<String, String> labels;
     private final Duration startupTimeout;
+    private final List<CopyFileToContainer> fileCopies;
 
     TestContainerMetadata(String id,
                           String imageName,
@@ -44,7 +48,8 @@ final class TestContainerMetadata {
                           String workingDirectory,
                           Map<String, String> env,
                           Map<String, String> labels,
-                          Duration startupTimeout) {
+                          Duration startupTimeout,
+                          List<CopyFileToContainer> fileCopies) {
         this.id = id;
         this.imageName = imageName;
         this.exposedPorts = exposedPorts;
@@ -56,6 +61,7 @@ final class TestContainerMetadata {
         this.env = env;
         this.labels = labels;
         this.startupTimeout = startupTimeout;
+        this.fileCopies = fileCopies;
     }
 
     public String getId() {
@@ -100,5 +106,27 @@ final class TestContainerMetadata {
 
     public Map<String, String> getLabels() {
         return labels;
+    }
+
+    public List<CopyFileToContainer> getFileCopies() {
+        return fileCopies;
+    }
+
+    public static final class CopyFileToContainer {
+        private final MountableFile file;
+        private final String destination;
+
+        public CopyFileToContainer(MountableFile file, String destination) {
+            this.file = file;
+            this.destination = destination;
+        }
+
+        public MountableFile getFile() {
+            return file;
+        }
+
+        public String getDestination() {
+            return destination;
+        }
     }
 }

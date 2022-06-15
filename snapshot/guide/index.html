@@ -778,18 +778,6 @@ As a side effect of providing the value, a database container may be started.</p
 <div class="paragraph">
 <p>It means, for example, that with <a href="https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build">Gradle continuous builds</a>, the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-For security reasons, the test resource server will only accept requests from the loopback interface, and only from clients which know a secret token generated at build time. However, if the server is started with a specific port, it will accept requests from any client on that port from the loopback interface, without security token.
-</td>
-</tr>
-</table>
-</div>
 
 <h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>5.1.1 Sharing containers between independent builds</h2>
 

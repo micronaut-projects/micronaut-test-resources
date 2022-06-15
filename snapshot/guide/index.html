@@ -644,6 +644,47 @@ public class JavamailSessionProvider implements SessionProvider {
         - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The following properties are also supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>command</code>: Set the command that should be run in the container</p>
+</li>
+<li>
+<p><code>env</code>: the map of environment variables</p>
+</li>
+<li>
+<p><code>labels</code>: the map of labels</p>
+</li>
+<li>
+<p><code>startup-timeout</code>: the container startup timeout</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>e.g:</p>
+</div>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      command: "some.sh"
+        env:
+          - MY_ENV_VAR: "my value"
+        labels:
+          - my.label: "my value"
+      startup-timeout: 120s</code></pre>
+</div>
+</div>
 
 <h1 id="architecture"><a class="anchor" href="#architecture"></a>5 Architecture</h1>
 

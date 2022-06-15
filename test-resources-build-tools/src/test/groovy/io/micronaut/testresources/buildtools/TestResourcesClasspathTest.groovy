@@ -32,6 +32,7 @@ class TestResourcesClasspathTest extends Specification {
         'kafka'         | 'kafka'
         'mqtt'          | 'hivemq'
         'neo4j-bolt'    | 'neo4j'
+        'rabbitmq'      | 'rabbitmq'
         'redis-lettuce' | 'redis'
     }
 

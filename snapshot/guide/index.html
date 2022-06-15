@@ -645,6 +645,28 @@ public class JavamailSessionProvider implements SessionProvider {
 </div>
 </div>
 <div class="paragraph">
+<p>It is also possible to copy files from the host to the container:</p>
+</div>
+<div class="listingblock">
+<div class="title">application.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      copy-to-container:
+        - path/to/local/readonly-file.conf: /path/to/container/file.conf
+        - classpath:/file/on/classpath.conf: /path/to/container/other.conf</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you want to copy a file found on classpath, the source path must be prefixed with <code>classpath:</code>.</p>
+</div>
+<div class="paragraph">
 <p>The following properties are also supported:</p>
 </div>
 <div class="ulist">

@@ -1,5 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.jdbc-module'
 }
 
 description = """
@@ -7,11 +7,7 @@ Provides support for launching a MySQL test container.
 """
 
 dependencies {
-    api(project(':test-resources-jdbc-core'))
     implementation(libs.testcontainers.mysql)
 
-    testCompileOnly(mn.micronaut.data.processor)
-    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
     testRuntimeOnly(libs.mysql)
-    testRuntimeOnly(mn.micronaut.jdbc.hikari)
 }

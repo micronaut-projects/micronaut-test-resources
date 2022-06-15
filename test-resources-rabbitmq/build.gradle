@@ -1,5 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.testcontainers-module'
 }
 
 description = """
@@ -7,11 +7,7 @@ Provides support for launching a RabbitMQ test container.
 """
 
 dependencies {
-    api(project(':test-resources-core'))
-    api(project(':test-resources-testcontainers'))
     implementation(libs.testcontainers.rabbitmq)
 
-    testImplementation(project(":test-resources-embedded"))
-    testImplementation(testFixtures(project(":test-resources-testcontainers")))
     testImplementation(mn.micronaut.rabbitmq)
 }

@@ -1,0 +1,10 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+dependencies {
+    api(project(':test-resources-r2dbc-core'))
+    testImplementation(mn.micronaut.data.r2dbc)
+    testImplementation(mn.micronaut.data.processor)
+    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
+}

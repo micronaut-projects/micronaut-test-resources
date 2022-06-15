@@ -106,9 +106,11 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>4.5</strong><span>Neo4j</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>4.6</strong><span>Redis</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>4.6</strong><span>RabbitMQ</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.7</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>4.7</strong><span>Redis</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.8</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>5</strong><span>Architecture</span></a></div>
         
@@ -529,7 +531,23 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>4.6 Redis</h2>
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>4.6 RabbitMQ</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-rabbitmq.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>RabbitMQ support will automatically start a <a href="https://www.rabbitmq.com/">RabbitMQ container</a> and provide the value of the <code>rabbitmq.uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>4.7 Redis</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-redis.adoc"'>
@@ -545,7 +563,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.7 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.8 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-testcontainers.adoc"'>

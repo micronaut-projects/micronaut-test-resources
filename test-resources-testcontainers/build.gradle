@@ -12,10 +12,12 @@ dependencies {
     api(project(':test-resources-core'))
     api(libs.testcontainers.core)
     api(platform(libs.boms.testcontainers))
+    implementation(mn.micronaut.context)
 
     testImplementation(project(":test-resources-embedded"))
     testImplementation(mn.micronaut.email)
     testImplementation(mn.micronaut.email.javamail)
+    testImplementation(mn.snakeyaml)
 
     testFixturesApi(platform(mn.micronaut.bom))
     testFixturesApi(mn.micronaut.test.core) {

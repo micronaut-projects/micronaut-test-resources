@@ -12,9 +12,7 @@ class CustomKafkaImageTest extends AbstractKafkaSpec {
     @Override
     Map<String, String> getProperties() {
         super.properties + [
-                "test-resources.containers.kafka.image-name": "confluentinc/cp-kafka:6.2.2",
-                "test-resources.containers.kafka.exposed-ports": [["foo": "9092"]]
-
+                "test-resources.containers.kafka.image-name": "confluentinc/cp-kafka:6.2.2"
         ]
     }
 

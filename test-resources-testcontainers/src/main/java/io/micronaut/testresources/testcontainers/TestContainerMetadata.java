@@ -15,7 +15,9 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 final class TestContainerMetadata {
@@ -26,27 +28,42 @@ final class TestContainerMetadata {
 
     private final Map<String, String> rwFsBinds;
     private final Map<String, String> roFsBinds;
+    private final String command;
+    private final String workingDirectory;
+    private final Map<String, String> env;
+    private final Map<String, String> labels;
+    private final Duration startupTimeout;
 
     TestContainerMetadata(String id,
                           String imageName,
                           Map<String, Integer> exposedPorts,
                           Set<String> hostNames,
                           Map<String, String> rwFsBinds,
-                          Map<String, String> roFsBinds) {
+                          Map<String, String> roFsBinds,
+                          String command,
+                          String workingDirectory,
+                          Map<String, String> env,
+                          Map<String, String> labels,
+                          Duration startupTimeout) {
         this.id = id;
         this.imageName = imageName;
         this.exposedPorts = exposedPorts;
         this.hostNames = hostNames;
         this.rwFsBinds = rwFsBinds;
         this.roFsBinds = roFsBinds;
+        this.command = command;
+        this.workingDirectory = workingDirectory;
+        this.env = env;
+        this.labels = labels;
+        this.startupTimeout = startupTimeout;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getImageName() {
-        return imageName;
+    public Optional<String> getImageName() {
+        return Optional.ofNullable(imageName);
     }
 
     public Map<String, Integer> getExposedPorts() {
@@ -63,5 +80,25 @@ final class TestContainerMetadata {
 
     public Map<String, String> getRoFsBinds() {
         return roFsBinds;
+    }
+
+    public Optional<String> getCommand() {
+        return Optional.ofNullable(command);
+    }
+
+    public Optional<String> getWorkingDirectory() {
+        return Optional.ofNullable(workingDirectory);
+    }
+
+    public Optional<Duration> getStartupTimeout() {
+        return Optional.ofNullable(startupTimeout);
+    }
+
+    public Map<String, String> getEnv() {
+        return env;
+    }
+
+    public Map<String, String> getLabels() {
+        return labels;
     }
 }

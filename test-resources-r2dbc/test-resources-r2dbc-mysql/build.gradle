@@ -1,24 +1,14 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.r2dbc-module'
 }
 
 description = """
-Provides core support for R2DBC test resources.
+Provides support for MySQL R2DBC test resources.
 """
 
 dependencies {
-    api(project(':test-resources-core'))
-    api(project(':test-resources-testcontainers'))
-    api(project(':test-resources-r2dbc-core'))
-
     implementation(libs.testcontainers.mysql)
     runtimeOnly(project(":test-resources-jdbc-mysql"))
-
-    testImplementation(mn.micronaut.data.processor)
-    testImplementation(mn.micronaut.data.r2dbc)
-    testImplementation(project(":test-resources-embedded"))
-    testImplementation(testFixtures(project(":test-resources-testcontainers")))
-    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
 
     testRuntimeOnly(libs.reactive.mysql)
     testRuntimeOnly(libs.mysql)

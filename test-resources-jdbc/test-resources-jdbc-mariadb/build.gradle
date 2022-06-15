@@ -1,5 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.jdbc-module'
 }
 
 description = """
@@ -7,11 +7,7 @@ Provides support for launching a MariaDB test container.
 """
 
 dependencies {
-    api(project(':test-resources-jdbc-core'))
     implementation(libs.testcontainers.mariadb)
 
-    testCompileOnly(mn.micronaut.data.processor)
-    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
     testRuntimeOnly(libs.mariadb)
-    testRuntimeOnly(mn.micronaut.jdbc.hikari)
 }

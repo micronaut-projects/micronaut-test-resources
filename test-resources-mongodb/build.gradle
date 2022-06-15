@@ -1,5 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.testcontainers-module'
 }
 
 description = """
@@ -7,13 +7,9 @@ Provides support for launching a MongoDB test container.
 """
 
 dependencies {
-    api(project(':test-resources-core'))
-    api(project(':test-resources-testcontainers'))
     implementation(libs.testcontainers.mongodb)
 
     testCompileOnly(mn.micronaut.data.document.processor)
-    testImplementation(project(":test-resources-embedded"))
-    testImplementation(testFixtures(project(":test-resources-testcontainers")))
     testImplementation(mn.micronaut.data.mongodb)
     testImplementation(libs.mongodb)
 }

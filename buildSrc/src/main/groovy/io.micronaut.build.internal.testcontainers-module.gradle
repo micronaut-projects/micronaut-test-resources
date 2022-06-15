@@ -1,0 +1,11 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+dependencies {
+    api(project(':test-resources-core'))
+    api(project(':test-resources-testcontainers'))
+
+    testImplementation(project(":test-resources-embedded"))
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
+}

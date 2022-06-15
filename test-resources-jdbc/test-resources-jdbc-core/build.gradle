@@ -1,16 +1,13 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.testcontainers-module'
     id 'java-test-fixtures'
 }
 
 description = """
-Provides support for launching a MySQL test container.
+Provides core support for JDBC test containers.
 """
 
 dependencies {
-    api(project(':test-resources-core'))
-    api(project(':test-resources-testcontainers'))
-    implementation(platform(libs.boms.testcontainers))
     implementation(libs.testcontainers.jdbc)
 
     testFixturesApi(platform(mn.micronaut.bom))

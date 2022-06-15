@@ -63,6 +63,7 @@ final class TestContainerMetadataSupport {
     static Optional<TestContainerMetadata> convertToMetadata(Map<String, Object> testResourcesConfig, String name) {
         String prefix = TEST_RESOURCES_CONTAINERS + name + ".";
         String imageName = extractStringParameterFrom(prefix, "image-name", testResourcesConfig);
+        String imageTag = extractStringParameterFrom(prefix, "image-tag", testResourcesConfig);
         Map<String, Integer> exposedPorts = extractExposedPortsFrom(prefix, testResourcesConfig);
         Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
         Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
@@ -73,7 +74,7 @@ final class TestContainerMetadataSupport {
         String workingDirectory = extractStringParameterFrom(prefix, "working-directory", testResourcesConfig);
         Duration startupTimeout = CONVERSION_SERVICE.convert(extractStringParameterFrom(prefix, "startup-timeout", testResourcesConfig), Duration.class).orElse(null);
         List<TestContainerMetadata.CopyFileToContainer> fileCopies = extractFileCopiesFrom(prefix, testResourcesConfig);
-        return Optional.of(new TestContainerMetadata(name, imageName, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies));
+        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies));
     }
 
     private static Map<String, Integer> extractExposedPortsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {

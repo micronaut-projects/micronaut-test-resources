@@ -38,6 +38,7 @@ public final class TestResourcesClasspath implements KnownModules {
         TESTCONTAINERS
     );
     private static final String MICRONAUT_DATA_PREFIX = "micronaut-data-";
+    private static final String MICRONAUT_ELASTICSEARCH = "micronaut-elasticsearch";
     private static final String MICRONAUT_KAFKA = "micronaut-kafka";
     private static final String MICRONAUT_MQTT = "micronaut-mqtt";
     private static final String MICRONAUT_RABBITMQ = "micronaut-rabbitmq";
@@ -72,6 +73,7 @@ public final class TestResourcesClasspath implements KnownModules {
     );
     private static final String REACTIVE_ORACLE_DRIVER = "com.oracle.database.r2dbc:oracle-r2dbc";
 
+    private static final String ELASTICSEARCH_MODULE = "elasticsearch";
     private static final String KAFKA_MODULE = "kafka";
     private static final String HIVEMQ_MODULE = "hivemq";
     private static final String MONGODB_MODULE = "mongodb";
@@ -125,6 +127,7 @@ public final class TestResourcesClasspath implements KnownModules {
 
     private static Stream<MavenDependency> inferSingle(MavenDependency input, List<MavenDependency> allDependencies, String testResourcesVersion) {
         return Matcher.match(input, allDependencies, testResourcesVersion, m -> {
+            m.onArtifact(MICRONAUT_ELASTICSEARCH, ELASTICSEARCH_MODULE);
             m.onArtifact(MICRONAUT_KAFKA, KAFKA_MODULE);
             m.onArtifact(MICRONAUT_MQTT, HIVEMQ_MODULE);
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);

@@ -30,6 +30,7 @@ managed-testcontainers = "1.17.2"
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
 
 testcontainers-core = { module = "org.testcontainers:testcontainers", version = "" }
+testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version = "" }
 testcontainers-jdbc = { module = "org.testcontainers:jdbc", version = "" }
 testcontainers-hivemq = { module = "org.testcontainers:hivemq", version = "" }
 testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }

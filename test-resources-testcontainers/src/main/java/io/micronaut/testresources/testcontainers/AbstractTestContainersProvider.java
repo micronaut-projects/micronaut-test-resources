@@ -103,6 +103,9 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                         if (md.getImageName().isPresent()) {
                             imageName = DockerImageName.parse(md.getImageName().get()).asCompatibleSubstituteFor(defaultImageName);
                         }
+                        if (md.getImageTag().isPresent()) {
+                            imageName = imageName.withTag(md.getImageTag().get());
+                        }
                     }
                     T container = createContainer(imageName, properties);
                     metadata.ifPresent(md -> TestContainerMetadataSupport.applyMetadata(md, container));

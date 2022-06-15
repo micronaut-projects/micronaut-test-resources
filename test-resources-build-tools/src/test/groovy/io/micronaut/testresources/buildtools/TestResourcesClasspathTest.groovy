@@ -34,6 +34,7 @@ class TestResourcesClasspathTest extends Specification {
         'neo4j-bolt'    | 'neo4j'
         'rabbitmq'      | 'rabbitmq'
         'redis-lettuce' | 'redis'
+        'elasticsearch' | 'elasticsearch'
     }
 
     def "passes through driver #driver"() {

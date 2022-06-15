@@ -28,10 +28,11 @@ class TestResourcesClasspathTest extends Specification {
         )
 
         where:
-        mn           | module
-        'kafka'      | 'kafka'
-        'mqtt'       | 'hivemq'
-        'neo4j-bolt' | 'neo4j'
+        mn              | module
+        'kafka'         | 'kafka'
+        'mqtt'          | 'hivemq'
+        'neo4j-bolt'    | 'neo4j'
+        'redis-lettuce' | 'redis'
     }
 
     def "passes through driver #driver"() {

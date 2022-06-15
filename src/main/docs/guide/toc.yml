@@ -19,6 +19,8 @@ modules:
     title: MongoDB
   modules-neo4j:
     title: Neo4j
+  modules-redis:
+    title: Redis
   modules-testcontainers:
     title: Generic Testcontainers support
 architecture:

@@ -69,6 +69,26 @@ test-resources:
         - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf
 ----
 
+It is also possible to copy files from the host to the container:
+
+.application.yml
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      copy-to-container:
+        - path/to/local/readonly-file.conf: /path/to/container/file.conf
+        - classpath:/file/on/classpath.conf: /path/to/container/other.conf
+----
+
+In case you want to copy a file found on classpath, the source path must be prefixed with `classpath:`.
+
 The following properties are also supported:
 
 - `command`: Set the command that should be run in the container

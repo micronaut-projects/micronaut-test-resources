@@ -1,0 +1,55 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+afterEvaluate {
+
+    // For publication, we want the optimized jar instead of the traditional one
+    // so we're creating custom components
+    AdhocComponentWithVariants javaComponent = components.java
+    configurations {
+        [runtimeElements, apiElements].each { cnf ->
+            // We create a new outgoing configuration
+            def optimized = configurations.create("optimized${cnf.name.capitalize()}") {
+                canBeConsumed = true
+                canBeResolved = false
+                // published jar is the optimized jar
+                outgoing.artifact(tasks.named("optimizedJitJar")) {
+                    classifier = ''
+                }
+                // we use the same attributes at the original configuration
+                prepareAttributesForPublication(cnf, it)
+            }
+            cnf.attributes {
+                // default configurations are purely internal
+                attribute(Attribute.of("io.micronaut.aot.optimized", Boolean), false)
+            }
+            // we don't use extendsFrom because we don't want to inherit the artifacts
+            optimized.dependencies.addAll(cnf.allDependencies)
+            // we skip the publication of the default Gradle variants
+            javaComponent.withVariantsFromConfiguration(cnf) {
+                skip()
+            }
+        }
+        // When resolving the AOT application classpath, we want the regular jar
+        // Not the optimized (otherwise there would be a cycle)
+        aotApplicationClasspath.attributes {
+            attribute(Attribute.of("io.micronaut.aot.optimized", Boolean), false)
+        }
+    }
+    javaComponent.addVariantsFromConfiguration(configurations.optimizedApiElements) {
+        it.mapToMavenScope('compile')
+    }
+    javaComponent.addVariantsFromConfiguration(configurations.optimizedRuntimeElements) {
+        it.mapToMavenScope('runtime')
+    }
+}
+
+static void prepareAttributesForPublication(Configuration src, Configuration dest) {
+    dest.attributes { attrs ->
+        src.attributes.keySet().each { k ->
+            attrs.attribute(k, src.attributes.getAttribute(k))
+        }
+        attrs.attribute(Attribute.of("io.micronaut.aot.optimized", Boolean), true)
+    }
+}

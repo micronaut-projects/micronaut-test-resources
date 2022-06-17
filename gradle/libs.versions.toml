@@ -16,9 +16,10 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "3.5.0"
+micronaut = "3.5.1"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.1.1"
+micronaut-gradle-plugin = "3.4.1"
 groovy = "3.0.10"
 spock = "2.1-groovy-3.0"
 
@@ -73,3 +74,5 @@ reactive-postgres = { module = "org.postgresql:r2dbc-postgresql", version = "" }
 [bundles]
 
 [plugins]
+micronaut-miniapp = { id="io.micronaut.minimal.application", version.ref = "micronaut-gradle-plugin" }
+micronaut-aot = { id="io.micronaut.aot", version.ref = "micronaut-gradle-plugin" }

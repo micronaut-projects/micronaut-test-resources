@@ -31,17 +31,20 @@ afterEvaluate {
                 skip()
             }
         }
-        // When resolving the AOT application classpath, we want the regular jar
-        // Not the optimized (otherwise there would be a cycle)
-        aotApplicationClasspath.attributes {
-            attribute(Attribute.of("io.micronaut.aot.optimized", Boolean), false)
-        }
     }
     javaComponent.addVariantsFromConfiguration(configurations.optimizedApiElements) {
         it.mapToMavenScope('compile')
     }
     javaComponent.addVariantsFromConfiguration(configurations.optimizedRuntimeElements) {
         it.mapToMavenScope('runtime')
+    }
+
+    dependencies {
+        attributesSchema { AttributesSchema schema ->
+            schema.attribute(Attribute.of("io.micronaut.aot.optimized", Boolean)) {
+                disambiguationRules.add(AotOptimizedDisambiguationRule)
+            }
+        }
     }
 }
 
@@ -51,5 +54,16 @@ static void prepareAttributesForPublication(Configuration src, Configuration des
             attrs.attribute(k, src.attributes.getAttribute(k))
         }
         attrs.attribute(Attribute.of("io.micronaut.aot.optimized", Boolean), true)
+    }
+}
+
+class AotOptimizedDisambiguationRule implements AttributeDisambiguationRule<Boolean> {
+
+    @Override
+    void execute(MultipleCandidatesDetails<Boolean> details) {
+        if (details.consumerValue == null) {
+            // prefer candidate which isn't AOT optimized
+            details.closestMatch(false)
+        }
     }
 }

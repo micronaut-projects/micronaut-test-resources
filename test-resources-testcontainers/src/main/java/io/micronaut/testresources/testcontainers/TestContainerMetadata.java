@@ -39,6 +39,7 @@ final class TestContainerMetadata {
     private final Duration startupTimeout;
     private final List<CopyFileToContainer> fileCopies;
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     TestContainerMetadata(String id,
                           String imageName,
                           String imageTag,

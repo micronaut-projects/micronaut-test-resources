@@ -11,12 +11,14 @@ modules:
       title: JDBC
     modules-databases-r2dbc:
       title: R2DBC
-  modules-mqtt:
-    title: MQTT
+  modules-elasticsearch:
+    title: Elasticsearch
   modules-kafka:
     title: Kafka
   modules-mongodb:
     title: MongoDB
+  modules-mqtt:
+    title: MQTT
   modules-neo4j:
     title: Neo4j
   modules-rabbitmq:

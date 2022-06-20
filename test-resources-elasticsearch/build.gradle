@@ -1,0 +1,13 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching an Elasticsearch test container.
+"""
+
+dependencies {
+    implementation(libs.testcontainers.elasticsearch)
+
+    testImplementation(mn.micronaut.elasticsearch)
+}

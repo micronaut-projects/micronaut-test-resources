@@ -26,6 +26,7 @@ import java.util.Set;
 final class TestContainerMetadata {
     private final String id;
     private final String imageName;
+    private final String imageTag;
     private final Map<String, Integer> exposedPorts;
     private final Set<String> hostNames;
 
@@ -40,6 +41,7 @@ final class TestContainerMetadata {
 
     TestContainerMetadata(String id,
                           String imageName,
+                          String imageTag,
                           Map<String, Integer> exposedPorts,
                           Set<String> hostNames,
                           Map<String, String> rwFsBinds,
@@ -52,6 +54,7 @@ final class TestContainerMetadata {
                           List<CopyFileToContainer> fileCopies) {
         this.id = id;
         this.imageName = imageName;
+        this.imageTag = imageTag;
         this.exposedPorts = exposedPorts;
         this.hostNames = hostNames;
         this.rwFsBinds = rwFsBinds;
@@ -70,6 +73,10 @@ final class TestContainerMetadata {
 
     public Optional<String> getImageName() {
         return Optional.ofNullable(imageName);
+    }
+
+    public Optional<String> getImageTag() {
+        return Optional.ofNullable(imageTag);
     }
 
     public Map<String, Integer> getExposedPorts() {

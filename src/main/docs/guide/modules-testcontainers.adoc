@@ -116,3 +116,5 @@ test-resources:
           - my.label: "my value"
       startup-timeout: 120s
 ----
+
+Please refer to the <<configurationreference#io.micronaut.testresources.testcontainers.TestContainersConfiguration,configuration properties reference>> for details.

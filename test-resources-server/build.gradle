@@ -1,5 +1,7 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.server-module'
+    alias(libs.plugins.micronaut.miniapp)
+    alias(libs.plugins.micronaut.aot)
 }
 
 description = """
@@ -20,4 +22,24 @@ dependencies {
 
     testImplementation(project(':test-resources-client'))
     testRuntimeOnly(project(':test-resources-kafka'))
+
+    // For logback conversion
+    aotPlugins("ch.qos.logback:logback-classic:1.3.0-alpha14")
+    aotPlugins("org.fusesource.jansi:jansi:1.18")
+}
+
+application {
+    mainClass = "io.micronaut.testresources.server.Application"
+}
+
+micronaut {
+    aot {
+        cacheEnvironment.set(true)
+        optimizeServiceLoading.set(true)
+        optimizeClassLoading.set(true)
+        convertYamlToJava.set(true)
+        precomputeOperations.set(true)
+        deduceEnvironment.set(true)
+        replaceLogbackXml.set(true)
+    }
 }

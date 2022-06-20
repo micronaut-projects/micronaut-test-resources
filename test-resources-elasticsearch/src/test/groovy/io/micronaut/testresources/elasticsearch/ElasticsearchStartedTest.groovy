@@ -3,7 +3,7 @@ package io.micronaut.testresources.elasticsearch
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 
 @MicronautTest
-class ElasticSearchStartedTest extends AbstractElasticSearchSpec {
+class ElasticsearchStartedTest extends AbstractElasticsearchSpec {
 
 
     def "automatically starts an Elasticsearch container"() {

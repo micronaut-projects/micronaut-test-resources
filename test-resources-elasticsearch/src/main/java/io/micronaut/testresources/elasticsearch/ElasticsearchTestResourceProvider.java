@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * A test resource provider which will spawn an ElasticSearch test container.
  */
-public class ElasticSearchTestResourceProvider extends AbstractTestContainersProvider<ElasticsearchContainer> {
+public class ElasticsearchTestResourceProvider extends AbstractTestContainersProvider<ElasticsearchContainer> {
 
     public static final String ELASTICSEARCH_HOSTS = "elasticsearch.httpHosts";
     public static final String SIMPLE_NAME = "elasticsearch";

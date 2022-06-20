@@ -1,1 +1,1 @@
-io.micronaut.testresources.elasticsearch.ElasticSearchTestResourceProvider
+io.micronaut.testresources.elasticsearch.ElasticsearchTestResourceProvider

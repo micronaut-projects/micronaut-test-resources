@@ -74,7 +74,18 @@ final class TestContainerMetadataSupport {
         String workingDirectory = extractStringParameterFrom(prefix, "working-directory", testResourcesConfig);
         Duration startupTimeout = CONVERSION_SERVICE.convert(extractStringParameterFrom(prefix, "startup-timeout", testResourcesConfig), Duration.class).orElse(null);
         List<TestContainerMetadata.CopyFileToContainer> fileCopies = extractFileCopiesFrom(prefix, testResourcesConfig);
-        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies));
+        Long memory = extractMemoryParameterFrom(prefix, testResourcesConfig, "memory");
+        Long swapMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "swap-memory");
+        Long sharedMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "shared-memory");
+        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory));
+    }
+
+    private static Long extractMemoryParameterFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
+        String asString = extractStringParameterFrom(prefix, key, testResourcesConfig);
+        if (asString != null) {
+            return MemoryUnitParser.parse(asString);
+        }
+        return null;
     }
 
     private static Map<String, Integer> extractExposedPortsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
@@ -208,6 +219,9 @@ final class TestContainerMetadataSupport {
         container.withLabels(md.getLabels());
         md.getStartupTimeout().ifPresent(container::withStartupTimeout);
         md.getFileCopies().forEach(copy -> container.withCopyFileToContainer(copy.getFile(), copy.getDestination()));
+        md.getSharedMemory().ifPresent(container::withSharedMemorySize);
+        md.getMemory().ifPresent(memory -> container.withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withMemory(memory)));
+        md.getSwapMemory().ifPresent(memory -> container.withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withMemorySwap(memory)));
         return container;
     }
 }

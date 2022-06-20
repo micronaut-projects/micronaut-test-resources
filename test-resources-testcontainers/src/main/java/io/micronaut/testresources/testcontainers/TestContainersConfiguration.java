@@ -41,6 +41,9 @@ final class TestContainersConfiguration {
     private Map<String, String> labels;
     private String startupTimeout;
     private Map<String, String> copyToContainer;
+    private String memory;
+    private String swapMemory;
+    private String sharedMemory;
 
     /**
      * Returns the name of the docker image to use for the test resources container.
@@ -252,5 +255,59 @@ final class TestContainersConfiguration {
      */
     public void setCopyToContainer(Map<String, String> copyToContainer) {
         this.copyToContainer = copyToContainer;
+    }
+
+    /**
+     * The memory limit of the container.
+     * @return the memory limit
+     */
+    public String getMemory() {
+        return memory;
+    }
+
+    /**
+     * The memory limit of the container.
+     * Can be expressed in bytes, kilobytes (eg 600kb), megabytes (e.g 256mb),
+     * or gigabytes (e.g 1.5g).
+     * @param memory the memory limit
+     */
+    public void setMemory(String memory) {
+        this.memory = memory;
+    }
+
+    /**
+     * The swap memory limit of the container.
+     * @return the swap memory limit
+     */
+    public String getSwapMemory() {
+        return swapMemory;
+    }
+
+    /**
+     * The swap memory limit of the container.
+     * Can be expressed in bytes, kilobytes (eg 600kb), megabytes (e.g 256mb),
+     * or gigabytes (e.g 1.5g).
+     * @param swapMemory the memory limit
+     */
+    public void setSwapMemory(String swapMemory) {
+        this.swapMemory = swapMemory;
+    }
+
+    /**
+     * The shared memory limit of the container.
+     * @return the shared memory limit
+     */
+    public String getSharedMemory() {
+        return sharedMemory;
+    }
+
+    /**
+     * The shared memory limit of the container.
+     * Can be expressed in bytes, kilobytes (eg 600kb), megabytes (e.g 256mb),
+     * or gigabytes (e.g 1.5g).
+     * @param sharedMemory the memory limit
+     */
+    public void setSharedMemory(String sharedMemory) {
+        this.sharedMemory = sharedMemory;
     }
 }

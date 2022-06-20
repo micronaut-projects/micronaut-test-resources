@@ -1,6 +1,7 @@
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
 io.micronaut.testresources.core
+io.micronaut.testresources.elasticsearch
 io.micronaut.testresources.embedded
 io.micronaut.testresources.hivemq
 io.micronaut.testresources.jdbc

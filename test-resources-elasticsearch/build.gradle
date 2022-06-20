@@ -3,7 +3,7 @@ plugins {
 }
 
 description = """
-Provides support for launching an ElasticSearch test container.
+Provides support for launching an Elasticsearch test container.
 """
 
 dependencies {

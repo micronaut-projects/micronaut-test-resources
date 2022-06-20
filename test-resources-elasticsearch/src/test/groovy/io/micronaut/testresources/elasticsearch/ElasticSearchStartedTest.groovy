@@ -6,7 +6,7 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 class ElasticSearchStartedTest extends AbstractElasticSearchSpec {
 
 
-    def "automatically starts an ElasticSearch container"() {
+    def "automatically starts an Elasticsearch container"() {
         when:
         def info = client.info()
 

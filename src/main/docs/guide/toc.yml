@@ -12,7 +12,7 @@ modules:
     modules-databases-r2dbc:
       title: R2DBC
   modules-elasticsearch:
-    title: ElasticSearch
+    title: Elasticsearch
   modules-kafka:
     title: Kafka
   modules-mongodb:

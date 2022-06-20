@@ -1,4 +1,4 @@
-ElasticSearch support will automatically start an https://www.elastic.co/elasticsearch/[ElasticSearch container] and provide the value of the `elasticsearch.hosts` property.
+Elasticsearch support will automatically start an https://www.elastic.co/elasticsearch/[Elasticsearch container] and provide the value of the `elasticsearch.hosts` property.
 
 The default image can be overwritten by setting the `test-resources.containers.elasticsearch.image-name` property.
 The default version can be overwritten by setting the `test-resources.containers.elasticsearch.image-tag` property.

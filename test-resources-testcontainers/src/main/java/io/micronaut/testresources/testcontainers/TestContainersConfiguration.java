@@ -162,13 +162,12 @@ final class TestContainersConfiguration {
     }
 
     /**
-     * The container command, for example: "./gradlew run"
+     * The container command, for example: "./gradlew run".
      * @param command the container command
      */
     public void setCommand(String command) {
         this.command = command;
     }
-
 
     /**
      * The working directory for the container.
@@ -211,7 +210,7 @@ final class TestContainersConfiguration {
     }
 
     /**
-     * The labels to set on the started container
+     * The labels to set on the started container.
      * @param labels the labels
      */
     public void setLabels(Map<String, String> labels) {
@@ -227,7 +226,7 @@ final class TestContainersConfiguration {
     }
 
     /**
-     * The startup timer of the container, for example: "60s"
+     * The startup timer of the container, for example: "60s".
      * @param startupTimeout the startup timeout
      */
     public void setStartupTimeout(String startupTimeout) {

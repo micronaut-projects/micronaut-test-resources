@@ -35,6 +35,7 @@ public class ElasticSearchTestResourceProvider extends AbstractTestContainersPro
     public static final String SIMPLE_NAME = "elasticsearch";
     public static final String DEFAULT_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch";
     public static final String DEFAULT_TAG = "8.2.3";
+    public static final long DEFAULT_MEMORY = 1L * 1024 * 1024 * 1024;
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -60,6 +61,7 @@ public class ElasticSearchTestResourceProvider extends AbstractTestContainersPro
         ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer(imageName);
         elasticsearchContainer.withEnv("xpack.security.enabled", "false")
             .waitingFor(new LogMessageWaitStrategy().withRegEx(".*\"message\":\"started\".*"));
+        elasticsearchContainer.withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withMemory(DEFAULT_MEMORY));
         return elasticsearchContainer;
     }
 

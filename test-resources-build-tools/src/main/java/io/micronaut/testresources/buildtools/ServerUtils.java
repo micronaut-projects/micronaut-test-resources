@@ -33,6 +33,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ public class ServerUtils {
     private static final String SERVER_CLIENT_READ_TIMEOUT = "server.client.read.timeout";
     private static final String SERVER_ENTRY_POINT = "io.micronaut.testresources.server.Application";
     private static final String MICRONAUT_SERVER_PORT = "micronaut.server.port";
+    private static final String JMX_SYSTEM_PROPERTY = "com.sun.management.jmxremote";
 
     /**
      * Writes the server settings in an output directory.
@@ -209,6 +211,7 @@ public class ServerUtils {
             @Override
             public Map<String, String> getSystemProperties() {
                 Map<String, String> systemProperties = new HashMap<>();
+                systemProperties.put(JMX_SYSTEM_PROPERTY, null);
                 if (explicitPort != null) {
                     systemProperties.put(MICRONAUT_SERVER_PORT, String.valueOf(explicitPort));
                 }
@@ -229,6 +232,14 @@ public class ServerUtils {
                     return Collections.singletonList("--port-file=" + portFilePath.toAbsolutePath());
                 }
                 return Collections.emptyList();
+            }
+
+            @Override
+            public List<String> getJvmArguments() {
+                return Collections.unmodifiableList(Arrays.asList(
+                    "-XX:+TieredCompilation",
+                    "-XX:TieredStopAtLevel=1"
+                ));
             }
         });
         while (!Files.exists(portFilePath)) {
@@ -271,5 +282,11 @@ public class ServerUtils {
          * @return the arguments.
          */
         List<String> getArguments();
+
+        /**
+         * The JVM process arguments.
+         * @return the JVM process arguments.
+         */
+        List<String> getJvmArguments();
     }
 }

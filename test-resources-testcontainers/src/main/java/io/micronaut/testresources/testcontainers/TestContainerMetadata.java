@@ -38,6 +38,9 @@ final class TestContainerMetadata {
     private final Map<String, String> labels;
     private final Duration startupTimeout;
     private final List<CopyFileToContainer> fileCopies;
+    private final Long memory;
+    private final Long swapMemory;
+    private final Long sharedMemory;
 
     @SuppressWarnings("checkstyle:ParameterNumber")
     TestContainerMetadata(String id,
@@ -52,7 +55,10 @@ final class TestContainerMetadata {
                           Map<String, String> env,
                           Map<String, String> labels,
                           Duration startupTimeout,
-                          List<CopyFileToContainer> fileCopies) {
+                          List<CopyFileToContainer> fileCopies,
+                          Long memory,
+                          Long swapMemory,
+                          Long sharedMemory) {
         this.id = id;
         this.imageName = imageName;
         this.imageTag = imageTag;
@@ -66,6 +72,9 @@ final class TestContainerMetadata {
         this.labels = labels;
         this.startupTimeout = startupTimeout;
         this.fileCopies = fileCopies;
+        this.memory = memory;
+        this.swapMemory = swapMemory;
+        this.sharedMemory = sharedMemory;
     }
 
     public String getId() {
@@ -118,6 +127,18 @@ final class TestContainerMetadata {
 
     public List<CopyFileToContainer> getFileCopies() {
         return fileCopies;
+    }
+
+    public Optional<Long> getMemory() {
+        return Optional.ofNullable(memory);
+    }
+
+    public Optional<Long> getSwapMemory() {
+        return Optional.ofNullable(swapMemory);
+    }
+
+    public Optional<Long> getSharedMemory() {
+        return Optional.ofNullable(sharedMemory);
     }
 
     public static final class CopyFileToContainer {

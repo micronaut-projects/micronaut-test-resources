@@ -229,6 +229,78 @@ class TestContainerMetadataSupportTest extends Specification {
         }
     }
 
+    def "reads memory parameters"() {
+        def config = """
+                containers:
+                    foo:
+                        memory: $memory
+"""
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            assert it.memory.get() == expectedMemory
+        }
+
+        where:
+        memory  | expectedMemory
+        '12345' | 12345L
+        '300k'  | 307200L
+        '128m'  | 134217728L
+        '2g'    | 2147483648L
+        '2.5G'  | 2684354560L
+    }
+
+    def "reads swap memory parameters"() {
+        def config = """
+                containers:
+                    foo:
+                        swap-memory: $memory
+"""
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            assert it.swapMemory.get() == expectedMemory
+        }
+
+        where:
+        memory  | expectedMemory
+        '12345' | 12345L
+        '300k'  | 307200L
+        '128m'  | 134217728L
+        '2g'    | 2147483648L
+        '2.5G'  | 2684354560L
+    }
+
+    def "reads shared memory parameters"() {
+        def config = """
+                containers:
+                    foo:
+                        shared-memory: $memory
+"""
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            assert it.sharedMemory.get() == expectedMemory
+        }
+
+        where:
+        memory  | expectedMemory
+        '12345' | 12345L
+        '300k'  | 307200L
+        '128m'  | 134217728L
+        '2g'    | 2147483648L
+        '2.5G'  | 2684354560L
+    }
+
     private static Optional<TestContainerMetadata> metadataFrom(String yaml, String key) {
         def asMap = convert(yaml)
         TestContainerMetadataSupport.convertToMetadata(asMap, key)

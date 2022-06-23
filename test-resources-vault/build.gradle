@@ -3,7 +3,7 @@ plugins {
 }
 
 description = """
-Provides support for launching a MongoDB test container.
+Provides support for launching a Hashicorp Vault test container.
 """
 
 dependencies {

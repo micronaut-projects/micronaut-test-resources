@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A test resource provider which will spawn a MongoDB test container.
+ * A test resource provider which will spawn a Hashicorp Vault test container.
  */
 public class VaultTestResourceProvider extends AbstractTestContainersProvider<VaultContainer<?>> {
 

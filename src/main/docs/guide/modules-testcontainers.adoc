@@ -118,3 +118,32 @@ test-resources:
 ----
 
 Please refer to the <<configurationreference#io.micronaut.testresources.testcontainers.TestContainersConfiguration,configuration properties reference>> for details.
+
+== Advanced networking
+
+By default, each container is spawned in its own network.
+It is possible to let containers communicate with each other by declaring the network they belong to:
+
+[source,yaml]
+----
+test-resources:
+  containers:
+    producer:
+      image-name: alpine:3.14
+      command:
+        - /bin/sh
+        - "-c"
+        - "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"
+      network: custom
+      network-aliases: bob
+      hostnames: producer.host
+    consumer:
+      image-name: alpine:3.14
+      command: top
+      network: custom
+      network-aliases: alice
+      hostnames: consumer.host
+----
+
+The `network` key is used to declare the network containers use.
+The `network-aliases` can be used to assign host names to the containers.

@@ -6,3 +6,18 @@ test-resources:
         - smtp.host
       exposed-ports:
         - smtp.port: 25
+    producer:
+      image-name: alpine:3.14
+      command:
+        - /bin/sh
+        - "-c"
+        - "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"
+      network: custom
+      network-aliases: bob
+      hostnames: producer.host
+    consumer:
+      image-name: alpine:3.14
+      command: top
+      network: custom
+      network-aliases: alice
+      hostnames: consumer.host

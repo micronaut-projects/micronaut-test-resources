@@ -7,6 +7,7 @@ class AbstractTestContainersProviderTest extends Specification {
     def "test resources configuration is passed to the shouldAnswer and createContainer method"() {
         def provider = Mock(AbstractTestContainersProvider) {
             getDefaultImageName() >> 'my-image'
+            getSimpleName() >> 'test'
         }
 
         when:

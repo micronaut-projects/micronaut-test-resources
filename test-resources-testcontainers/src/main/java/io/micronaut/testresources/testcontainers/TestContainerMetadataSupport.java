@@ -70,14 +70,16 @@ final class TestContainerMetadataSupport {
         Map<String, String> roFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, true);
         Map<String, String> env = extractMapFrom(prefix, "env", testResourcesConfig);
         Map<String, String> labels = extractMapFrom(prefix, "labels", testResourcesConfig);
-        String command = extractStringParameterFrom(prefix, "command", testResourcesConfig);
+        List<String> command = extractListFrom(prefix, testResourcesConfig, "command");
         String workingDirectory = extractStringParameterFrom(prefix, "working-directory", testResourcesConfig);
         Duration startupTimeout = CONVERSION_SERVICE.convert(extractStringParameterFrom(prefix, "startup-timeout", testResourcesConfig), Duration.class).orElse(null);
         List<TestContainerMetadata.CopyFileToContainer> fileCopies = extractFileCopiesFrom(prefix, testResourcesConfig);
         Long memory = extractMemoryParameterFrom(prefix, testResourcesConfig, "memory");
         Long swapMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "swap-memory");
         Long sharedMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "shared-memory");
-        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory));
+        String network = extractStringParameterFrom(prefix, "network", testResourcesConfig);
+        Set<String> networkAliases = extractSetFrom(prefix, testResourcesConfig, "network-aliases");
+        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases));
     }
 
     private static Long extractMemoryParameterFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
@@ -132,8 +134,8 @@ final class TestContainerMetadataSupport {
             .orElse(null);
     }
 
-    private static Set<String> extractHostsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + "hostnames"))
+    private static Set<String> extractSetFrom(String prefix, Map<String, Object> testResourcesConfiguration, String key) {
+        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
             .map(o -> {
                 if (o instanceof List) {
                     List<Object> list = (List<Object>) o;
@@ -142,6 +144,22 @@ final class TestContainerMetadataSupport {
                 return Collections.singleton(String.valueOf(o));
             })
             .orElse(Collections.emptySet());
+    }
+
+    private static List<String> extractListFrom(String prefix, Map<String, Object> testResourcesConfiguration, String key) {
+        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+            .map(o -> {
+                if (o instanceof List) {
+                    List<Object> list = (List<Object>) o;
+                    return list.stream().map(String::valueOf).collect(Collectors.toList());
+                }
+                return Collections.singletonList(String.valueOf(o));
+            })
+            .orElse(Collections.emptyList());
+    }
+
+    private static Set<String> extractHostsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
+        return extractSetFrom(prefix, testResourcesConfiguration, "hostnames");
     }
 
     private static Map<String, String> extractFsBindsFrom(String prefix,
@@ -214,7 +232,9 @@ final class TestContainerMetadataSupport {
         }
         md.getRwFsBinds().forEach(container::withFileSystemBind);
         md.getRoFsBinds().forEach((hostPath, containerPath) -> container.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
-        md.getCommand().ifPresent(container::withCommand);
+        if (!md.getCommand().isEmpty()) {
+            container.withCommand(md.getCommand().toArray(new String[0]));
+        }
         container.withEnv(md.getEnv());
         container.withLabels(md.getLabels());
         md.getStartupTimeout().ifPresent(container::withStartupTimeout);
@@ -222,6 +242,10 @@ final class TestContainerMetadataSupport {
         md.getSharedMemory().ifPresent(container::withSharedMemorySize);
         md.getMemory().ifPresent(memory -> container.withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withMemory(memory)));
         md.getSwapMemory().ifPresent(memory -> container.withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withMemorySwap(memory)));
+        md.getNetwork().ifPresent(network -> container.withNetwork(TestContainers.network(network)));
+        if (!md.getNetworkAliases().isEmpty()) {
+            container.withNetworkAliases(md.getNetworkAliases().toArray(new String[0]));
+        }
         return container;
     }
 }

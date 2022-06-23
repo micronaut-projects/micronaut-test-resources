@@ -35,7 +35,7 @@ final class TestContainersConfiguration {
     private Map<String, Integer> exposedPorts;
     private Map<String, String> roFsBind;
     private Map<String, String> rwFsBind;
-    private String command;
+    private List<String> command;
     private String workingDirectory;
     private Map<String, String> env;
     private Map<String, String> labels;
@@ -44,6 +44,8 @@ final class TestContainersConfiguration {
     private String memory;
     private String swapMemory;
     private String sharedMemory;
+    private String network;
+    private List<String> networkAliases;
 
     /**
      * Returns the name of the docker image to use for the test resources container.
@@ -160,7 +162,7 @@ final class TestContainersConfiguration {
      * The container command.
      * @return the command
      */
-    public String getCommand() {
+    public List<String> getCommand() {
         return command;
     }
 
@@ -168,7 +170,7 @@ final class TestContainersConfiguration {
      * The container command, for example: "./gradlew run".
      * @param command the container command
      */
-    public void setCommand(String command) {
+    public void setCommand(List<String> command) {
         this.command = command;
     }
 
@@ -309,5 +311,39 @@ final class TestContainersConfiguration {
      */
     public void setSharedMemory(String sharedMemory) {
         this.sharedMemory = sharedMemory;
+    }
+
+    /**
+     * The network this container will belong to.
+     * @return the network.
+     */
+    public String getNetwork() {
+        return network;
+    }
+
+    /**
+     * The network this container will belong to.
+     * @param network the name of a network
+     */
+    public void setNetwork(String network) {
+        this.network = network;
+    }
+
+    /**
+     * The list of names this container will use in
+     * a custom network.
+     * @return the list of names
+     */
+    public List<String> getNetworkAliases() {
+        return networkAliases;
+    }
+
+    /**
+     * The list of names this container will use in
+     * a custom network.
+     * @param networkAliases the list of names
+     */
+    public void setNetworkAliases(List<String> networkAliases) {
+        this.networkAliases = networkAliases;
     }
 }

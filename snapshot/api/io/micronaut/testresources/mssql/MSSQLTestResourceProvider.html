@@ -183,8 +183,9 @@ extends <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestRes
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected org.testcontainers.containers.MSSQLServerContainer&lt;?&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/mssql/MSSQLTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer</a></span>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
-               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/mssql/MSSQLTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">createContainer</a></span>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
+               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</code>
 <div class="block">Creates the test container.</div>
 </td>
 </tr>
@@ -206,14 +207,14 @@ extends <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestRes
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.testresources.jdbc.<a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></h3>
-<code><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourceExpressionOf-java.lang.String-java.lang.String-">datasourceExpressionOf</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourceNameFrom-java.lang.String-">datasourceNameFrom</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourcePropertyFrom-java.lang.String-">datasourcePropertyFrom</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredProperties-java.lang.String-">getRequiredProperties</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredPropertyEntries--">getRequiredPropertyEntries</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getResolvableProperties-java.util.Map-java.util.Map-">getResolvableProperties</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#resolveDbSpecificProperty-java.lang.String-org.testcontainers.containers.JdbcDatabaseContainer-">resolveDbSpecificProperty</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#resolveProperty-java.lang.String-T-">resolveProperty</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer</a></code></li>
+<code><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourceExpressionOf-java.lang.String-java.lang.String-">datasourceExpressionOf</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourceNameFrom-java.lang.String-">datasourceNameFrom</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourcePropertyFrom-java.lang.String-">datasourcePropertyFrom</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredProperties-java.lang.String-">getRequiredProperties</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredPropertyEntries--">getRequiredPropertyEntries</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getResolvableProperties-java.util.Map-java.util.Map-">getResolvableProperties</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#resolveDbSpecificProperty-java.lang.String-org.testcontainers.containers.JdbcDatabaseContainer-">resolveDbSpecificProperty</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#resolveProperty-java.lang.String-T-">resolveProperty</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">shouldAnswer</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.io.micronaut.testresources.testcontainers.AbstractTestContainersProvider">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.testresources.testcontainers.<a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></h3>
-<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#getOrder--">getOrder</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolve-java.lang.String-java.util.Map-java.util.Map-">resolve</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-">resolveWithoutContainer</a></code></li>
+<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#getOrder--">getOrder</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolve-java.lang.String-java.util.Map-java.util.Map-">resolve</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-java.util.Map-">resolveWithoutContainer</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -287,22 +288,24 @@ extends <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestRes
 </dl>
 </li>
 </ul>
-<a name="createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">
+<a name="createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>createContainer</h4>
 <pre>protected&nbsp;org.testcontainers.containers.MSSQLServerContainer&lt;?&gt;&nbsp;createContainer(org.testcontainers.utility.DockerImageName&nbsp;imageName,
-                                                                                java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">AbstractTestContainersProvider</a></code></span></div>
+                                                                                java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+                                                                                java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">AbstractTestContainersProvider</a></code></span></div>
 <div class="block">Creates the test container.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MSSQLServerContainer&lt;?&gt;&gt;</code></dd>
+<dd><code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MSSQLServerContainer&lt;?&gt;&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>imageName</code> - the docker image name</dd>
-<dd><code>properties</code> - the resolved properties</dd>
+<dd><code>requestedProperties</code> - the resolved properties</dd>
+<dd><code>testResourcesConfiguration</code> - the test resources configuration</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a container</dd>
 </dl>

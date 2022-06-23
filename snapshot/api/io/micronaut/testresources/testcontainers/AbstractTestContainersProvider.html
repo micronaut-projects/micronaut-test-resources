@@ -115,7 +115,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/elasticsearch/ElasticsearchTestResourceProvider.html" title="class in io.micronaut.testresources.elasticsearch">ElasticsearchTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/hivemq/HiveMQTestResourceProvider.html" title="class in io.micronaut.testresources.hivemq">HiveMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/kafka/KafkaTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/rabbitmq/RabbitMQTestResourceProvider.html" title="class in io.micronaut.testresources.rabbitmq">RabbitMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/redis/RedisTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/mongodb/VaultTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">VaultTestResourceProvider</a></dd>
+<dd><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/elasticsearch/ElasticsearchTestResourceProvider.html" title="class in io.micronaut.testresources.elasticsearch">ElasticsearchTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/hivemq/HiveMQTestResourceProvider.html" title="class in io.micronaut.testresources.hivemq">HiveMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/kafka/KafkaTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/rabbitmq/RabbitMQTestResourceProvider.html" title="class in io.micronaut.testresources.rabbitmq">RabbitMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/redis/RedisTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/hashicorp/vault/VaultTestResourceProvider.html" title="class in io.micronaut.testresources.hashicorp.vault">VaultTestResourceProvider</a></dd>
 </dl>
 <hr>
 <br>
@@ -182,8 +182,9 @@ implements <a href="../../../../io/micronaut/testresources/core/TestResourcesRes
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected abstract <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="type parameter in AbstractTestContainersProvider">T</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer</a></span>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
-               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">createContainer</a></span>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
+               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</code>
 <div class="block">Creates the test container.</div>
 </td>
 </tr>
@@ -218,16 +219,18 @@ implements <a href="../../../../io/micronaut/testresources/core/TestResourcesRes
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>protected java.util.Optional&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-">resolveWithoutContainer</a></span>(java.lang.String&nbsp;propertyName,
-                       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-java.util.Map-">resolveWithoutContainer</a></span>(java.lang.String&nbsp;propertyName,
+                       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties,
+                       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</code>
 <div class="block">Lets a resolver provide a value for the requested property without triggering the
  creation of a test container.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer</a></span>(java.lang.String&nbsp;propertyName,
-            java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">shouldAnswer</a></span>(java.lang.String&nbsp;propertyName,
+            java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+            java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</code>
 <div class="block">Determines if this resolver can resolve the requested property.</div>
 </td>
 </tr>
@@ -318,32 +321,35 @@ implements <a href="../../../../io/micronaut/testresources/core/TestResourcesRes
 </dl>
 </li>
 </ul>
-<a name="createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">
+<a name="createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createContainer</h4>
 <pre>protected abstract&nbsp;<a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="type parameter in AbstractTestContainersProvider">T</a>&nbsp;createContainer(org.testcontainers.utility.DockerImageName&nbsp;imageName,
-                                     java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</pre>
+                                     java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+                                     java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</pre>
 <div class="block">Creates the test container.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>imageName</code> - the docker image name</dd>
-<dd><code>properties</code> - the resolved properties</dd>
+<dd><code>requestedProperties</code> - the resolved properties</dd>
+<dd><code>testResourcesConfiguration</code> - the test resources configuration</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a container</dd>
 </dl>
 </li>
 </ul>
-<a name="shouldAnswer-java.lang.String-java.util.Map-">
+<a name="shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>shouldAnswer</h4>
 <pre>protected&nbsp;boolean&nbsp;shouldAnswer(java.lang.String&nbsp;propertyName,
-                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</pre>
+                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</pre>
 <div class="block">Determines if this resolver can resolve the requested property.
  It is used in order to make sure that a "Postgres" resolver wouldn't
  provide a value if the requested container type is for MySQL, for
@@ -351,20 +357,22 @@ implements <a href="../../../../io/micronaut/testresources/core/TestResourcesRes
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>propertyName</code> - the property to resolve</dd>
-<dd><code>properties</code> - the resolved properties</dd>
+<dd><code>requestedProperties</code> - the resolved properties</dd>
+<dd><code>testResourcesConfiguration</code> - the test resources configuration</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>if this resolver should answer</dd>
 </dl>
 </li>
 </ul>
-<a name="resolveWithoutContainer-java.lang.String-java.util.Map-">
+<a name="resolveWithoutContainer-java.lang.String-java.util.Map-java.util.Map-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>resolveWithoutContainer</h4>
 <pre>protected&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;resolveWithoutContainer(java.lang.String&nbsp;propertyName,
-                                                                       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</pre>
+                                                                       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties,
+                                                                       java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</pre>
 <div class="block">Lets a resolver provide a value for the requested property without triggering the
  creation of a test container. This can be used in case a resolver wants to check
  existing containers first.</div>
@@ -372,6 +380,7 @@ implements <a href="../../../../io/micronaut/testresources/core/TestResourcesRes
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>propertyName</code> - the name of the property to resolve</dd>
 <dd><code>properties</code> - the properties used to resolve</dd>
+<dd><code>testResourcesConfiguration</code> - the test resources configuration</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a resolved property</dd>
 </dl>

@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../io/micronaut/testresources/mongodb/VaultTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" target="_top">Frames</a></li>
@@ -193,8 +193,9 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected org.testcontainers.containers.MongoDBContainer</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer</a></span>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
-               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">createContainer</a></span>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
+               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</code>
 <div class="block">Creates the test container.</div>
 </td>
 </tr>
@@ -225,8 +226,9 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer</a></span>(java.lang.String&nbsp;propertyName,
-            java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">shouldAnswer</a></span>(java.lang.String&nbsp;propertyName,
+            java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+            java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</code>
 <div class="block">Determines if this resolver can resolve the requested property.</div>
 </td>
 </tr>
@@ -236,7 +238,7 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;io.micronaut.testresources.testcontainers.<a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></h3>
-<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#getOrder--">getOrder</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolve-java.lang.String-java.util.Map-java.util.Map-">resolve</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-">resolveWithoutContainer</a></code></li>
+<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#getOrder--">getOrder</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolve-java.lang.String-java.util.Map-java.util.Map-">resolve</a>, <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer-java.lang.String-java.util.Map-java.util.Map-">resolveWithoutContainer</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -374,22 +376,24 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 </dl>
 </li>
 </ul>
-<a name="createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">
+<a name="createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createContainer</h4>
 <pre>protected&nbsp;org.testcontainers.containers.MongoDBContainer&nbsp;createContainer(org.testcontainers.utility.DockerImageName&nbsp;imageName,
-                                                                         java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">AbstractTestContainersProvider</a></code></span></div>
+                                                                         java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+                                                                         java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">AbstractTestContainersProvider</a></code></span></div>
 <div class="block">Creates the test container.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MongoDBContainer&gt;</code></dd>
+<dd><code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#createContainer-org.testcontainers.utility.DockerImageName-java.util.Map-java.util.Map-">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MongoDBContainer&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>imageName</code> - the docker image name</dd>
-<dd><code>properties</code> - the resolved properties</dd>
+<dd><code>requestedProperties</code> - the resolved properties</dd>
+<dd><code>testResourcesConfiguration</code> - the test resources configuration</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a container</dd>
 </dl>
@@ -409,25 +413,27 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 </dl>
 </li>
 </ul>
-<a name="shouldAnswer-java.lang.String-java.util.Map-">
+<a name="shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>shouldAnswer</h4>
 <pre>protected&nbsp;boolean&nbsp;shouldAnswer(java.lang.String&nbsp;propertyName,
-                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;properties)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#shouldAnswer-java.lang.String-java.util.Map-">AbstractTestContainersProvider</a></code></span></div>
+                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
+                               java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">AbstractTestContainersProvider</a></code></span></div>
 <div class="block">Determines if this resolver can resolve the requested property.
  It is used in order to make sure that a "Postgres" resolver wouldn't
  provide a value if the requested container type is for MySQL, for
  example.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#shouldAnswer-java.lang.String-java.util.Map-">shouldAnswer</a></code>&nbsp;in class&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MongoDBContainer&gt;</code></dd>
+<dd><code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">shouldAnswer</a></code>&nbsp;in class&nbsp;<code><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MongoDBContainer&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>propertyName</code> - the property to resolve</dd>
-<dd><code>properties</code> - the resolved properties</dd>
+<dd><code>requestedProperties</code> - the resolved properties</dd>
+<dd><code>testResourcesConfiguration</code> - the test resources configuration</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>if this resolver should answer</dd>
 </dl>
@@ -461,7 +467,7 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../io/micronaut/testresources/mongodb/VaultTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" target="_top">Frames</a></li>

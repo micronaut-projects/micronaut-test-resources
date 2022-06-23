@@ -49,7 +49,7 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
     }
 
     @Override
-    protected MySQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected MySQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new MySQLContainer<>(imageName);
     }
 

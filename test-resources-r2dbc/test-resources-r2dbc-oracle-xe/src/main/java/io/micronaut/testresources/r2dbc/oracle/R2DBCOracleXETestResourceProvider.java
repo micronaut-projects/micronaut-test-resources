@@ -59,7 +59,7 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
     }
 
     @Override
-    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new OracleContainer(imageName);
     }
 

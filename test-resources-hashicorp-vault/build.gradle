@@ -11,4 +11,5 @@ dependencies {
 
     testImplementation(testFixtures(project(":test-resources-testcontainers")))
     testImplementation(mn.micronaut.discovery)
+    testImplementation(mn.micronaut.security.oauth2)
 }

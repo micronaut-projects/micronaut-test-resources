@@ -1,0 +1,17 @@
+micronaut:
+  application:
+    name: vault-test
+  config-client:
+    enabled: true
+vault:
+  client:
+    config:
+      enabled: true
+    kv-version: "V2"
+test-resources:
+  containers:
+    hashicorp-vault:
+      path: 'secret/vault-test'
+      secrets:
+        - "micronaut.security.oauth2.clients.test.client-id=hello"
+        - "micronaut.security.oauth2.clients.test.client-secret=world"

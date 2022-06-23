@@ -1,1 +1,1 @@
-io.micronaut.testresources.mongodb.VaultTestResourceProvider
+io.micronaut.testresources.hashicorp.vault.VaultTestResourceProvider

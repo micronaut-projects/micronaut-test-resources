@@ -49,7 +49,7 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
     }
 
     @Override
-    protected HiveMQContainer createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected HiveMQContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new HiveMQContainer(imageName);
     }
 
@@ -59,7 +59,7 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return MQTT_CLIENT_SERVER_URI.equals(propertyName);
     }
 }

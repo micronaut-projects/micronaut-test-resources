@@ -72,16 +72,16 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         if (!propertyName.startsWith(PREFIX)) {
             return false;
         }
         String datasource = datasourceNameFrom(propertyName);
-        String type = String.valueOf(properties.get(datasourceExpressionOf(datasource, TYPE)));
+        String type = String.valueOf(requestedProperties.get(datasourceExpressionOf(datasource, TYPE)));
         if (type != null && type.equalsIgnoreCase(getSimpleName())) {
             return true;
         }
-        String dialect = String.valueOf(properties.get(datasourceExpressionOf(datasource, DIALECT)));
+        String dialect = String.valueOf(requestedProperties.get(datasourceExpressionOf(datasource, DIALECT)));
         if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {
             return true;
         }

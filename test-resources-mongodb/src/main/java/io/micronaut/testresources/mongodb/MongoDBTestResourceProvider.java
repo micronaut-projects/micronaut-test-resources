@@ -49,7 +49,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
-    protected MongoDBContainer createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected MongoDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new MongoDBContainer(imageName);
     }
 
@@ -59,7 +59,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return MONGODB_SERVER_URI.equals(propertyName);
     }
 }

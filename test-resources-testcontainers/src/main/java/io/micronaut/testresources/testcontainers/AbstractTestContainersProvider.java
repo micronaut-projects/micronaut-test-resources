@@ -54,10 +54,11 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
      * Creates the test container.
      *
      * @param imageName the docker image name
-     * @param properties the resolved properties
+     * @param requestedProperties the resolved properties
+     * @param testResourcesConfiguration the test resources configuration
      * @return a container
      */
-    protected abstract T createContainer(DockerImageName imageName, Map<String, Object> properties);
+    protected abstract T createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration);
 
     /**
      * Determines if this resolver can resolve the requested property.
@@ -66,10 +67,11 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
      * example.
      *
      * @param propertyName the property to resolve
-     * @param properties the resolved properties
+     * @param requestedProperties the resolved properties
+     * @param testResourcesConfiguration the test resources configuration
      * @return if this resolver should answer
      */
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return true;
     }
 
@@ -77,18 +79,20 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
      * Lets a resolver provide a value for the requested property without triggering the
      * creation of a test container. This can be used in case a resolver wants to check
      * existing containers first.
+     *
      * @param propertyName the name of the property to resolve
      * @param properties the properties used to resolve
+     * @param testResourcesConfiguration the test resources configuration
      * @return a resolved property
      */
-    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties) {
+    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
         return Optional.empty();
     }
 
     @Override
     public final Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
-        if (shouldAnswer(propertyName, properties)) {
-            Optional<String> firstPass = resolveWithoutContainer(propertyName, properties);
+        if (shouldAnswer(propertyName, properties, testResourcesConfiguration)) {
+            Optional<String> firstPass = resolveWithoutContainer(propertyName, properties, testResourcesConfiguration);
             if (firstPass.isPresent()) {
                 return firstPass;
             }
@@ -107,7 +111,7 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                             imageName = imageName.withTag(md.getImageTag().get());
                         }
                     }
-                    T container = createContainer(imageName, properties);
+                    T container = createContainer(imageName, properties, testResourcesConfiguration);
                     metadata.ifPresent(md -> TestContainerMetadataSupport.applyMetadata(md, container));
                     return container;
                 }));

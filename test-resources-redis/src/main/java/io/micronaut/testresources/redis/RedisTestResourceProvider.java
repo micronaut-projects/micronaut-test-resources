@@ -61,7 +61,7 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Ge
     }
 
     @Override
-    protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         GenericContainer<?> container = new GenericContainer<>(imageName);
         container.withExposedPorts(REDIS_PORT);
         return container;
@@ -76,7 +76,7 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Ge
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return SUPPORTED_PROPERTIES.contains(propertyName);
     }
 }

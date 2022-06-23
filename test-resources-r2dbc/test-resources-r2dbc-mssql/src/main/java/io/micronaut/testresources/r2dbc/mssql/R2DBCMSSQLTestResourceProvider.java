@@ -50,7 +50,7 @@ public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourcePro
     }
 
     @Override
-    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new MSSQLServerContainer<>(imageName);
     }
 

@@ -53,7 +53,7 @@ public class ElasticsearchTestResourceProvider extends AbstractTestContainersPro
     }
 
     @Override
-    protected ElasticsearchContainer createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected ElasticsearchContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         if ("latest".equals(imageName.getVersionPart())) {
             // ElasticSearch does't provide a latest tag, so we use a hardcoded version
             imageName = imageName.withTag(DEFAULT_TAG);
@@ -74,7 +74,7 @@ public class ElasticsearchTestResourceProvider extends AbstractTestContainersPro
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return ELASTICSEARCH_HOSTS.equals(propertyName);
     }
 }

@@ -37,7 +37,7 @@ public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProv
     }
 
     @Override
-    protected PostgreSQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected PostgreSQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new PostgreSQLContainer<>(imageName);
     }
 

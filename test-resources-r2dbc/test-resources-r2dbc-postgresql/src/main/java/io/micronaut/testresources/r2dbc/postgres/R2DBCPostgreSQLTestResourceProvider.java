@@ -49,7 +49,7 @@ public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResour
     }
 
     @Override
-    protected PostgreSQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected PostgreSQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new PostgreSQLContainer<>(imageName);
     }
 

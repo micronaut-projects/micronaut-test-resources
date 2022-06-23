@@ -105,21 +105,21 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         if (!propertyName.startsWith(R2DBC_PREFIX)) {
             return false;
         }
         String baseDatasourceExpression = removeR2dbPrefixFrom(propertyName);
         String datasource = datasourceNameFrom(baseDatasourceExpression);
-        String type = String.valueOf(properties.get(r2dbDatasourceExpressionOf(datasource, TYPE)));
+        String type = String.valueOf(requestedProperties.get(r2dbDatasourceExpressionOf(datasource, TYPE)));
         if (type != null && type.equalsIgnoreCase(getSimpleName())) {
             return true;
         }
-        String driver = String.valueOf(properties.get(r2dbDatasourceExpressionOf(datasource, DRIVER)));
+        String driver = String.valueOf(requestedProperties.get(r2dbDatasourceExpressionOf(datasource, DRIVER)));
         if (driver != null && driver.toLowerCase(Locale.US).contains(getSimpleName())) {
             return true;
         }
-        String dialect = String.valueOf(properties.get(r2dbDatasourceExpressionOf(datasource, DIALECT)));
+        String dialect = String.valueOf(requestedProperties.get(r2dbDatasourceExpressionOf(datasource, DIALECT)));
         if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {
             return true;
         }
@@ -127,7 +127,7 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
     }
 
     @Override
-    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties) {
+    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
         String name = removeR2dbPrefixFrom(propertyName);
         if (properties.containsKey(name)) {
             return resolveUsingExistingContainer(propertyName, properties, name);

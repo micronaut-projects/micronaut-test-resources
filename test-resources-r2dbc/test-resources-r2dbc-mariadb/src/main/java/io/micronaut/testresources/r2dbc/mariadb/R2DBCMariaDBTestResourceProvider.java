@@ -49,7 +49,7 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
     }
 
     @Override
-    protected MariaDBContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties) {
+    protected MariaDBContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
         return new MariaDBContainer<>(imageName);
     }
 

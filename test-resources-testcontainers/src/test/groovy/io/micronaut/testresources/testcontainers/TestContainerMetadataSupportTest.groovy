@@ -123,7 +123,7 @@ class TestContainerMetadataSupportTest extends Specification {
         then:
         md.present
         md.get().with {
-            assert it.command.get() == "./gradlew run"
+            assert it.command == ["./gradlew run"]
         }
     }
 
@@ -300,6 +300,37 @@ class TestContainerMetadataSupportTest extends Specification {
         '2g'    | 2147483648L
         '2.5G'  | 2684354560L
     }
+
+    def "reads networks"() {
+        def config = """
+                containers:
+                    foo:
+                        network: first
+                        network-aliases: main
+                    bar:
+                        network: second
+                        network-aliases:
+                            - tarzan
+                            - jane
+        """
+
+        when:
+        def md1 = metadataFrom(config, "foo")
+        def md2 = metadataFrom(config, "bar")
+
+        then:
+        md1.present
+        md1.get().with {
+            assert it.network.get() == 'first'
+            assert it.networkAliases == ['main'] as Set
+        }
+        md2.present
+        md2.get().with {
+            assert it.network.get() == 'second'
+            assert it.networkAliases == ['tarzan', 'jane'] as Set
+        }
+    }
+
 
     private static Optional<TestContainerMetadata> metadataFrom(String yaml, String key) {
         def asMap = convert(yaml)

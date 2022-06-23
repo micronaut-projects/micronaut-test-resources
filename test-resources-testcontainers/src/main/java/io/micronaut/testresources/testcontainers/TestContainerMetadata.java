@@ -32,7 +32,7 @@ final class TestContainerMetadata {
 
     private final Map<String, String> rwFsBinds;
     private final Map<String, String> roFsBinds;
-    private final String command;
+    private final List<String> command;
     private final String workingDirectory;
     private final Map<String, String> env;
     private final Map<String, String> labels;
@@ -41,6 +41,8 @@ final class TestContainerMetadata {
     private final Long memory;
     private final Long swapMemory;
     private final Long sharedMemory;
+    private final String network;
+    private final Set<String> networkAliases;
 
     @SuppressWarnings("checkstyle:ParameterNumber")
     TestContainerMetadata(String id,
@@ -50,7 +52,7 @@ final class TestContainerMetadata {
                           Set<String> hostNames,
                           Map<String, String> rwFsBinds,
                           Map<String, String> roFsBinds,
-                          String command,
+                          List<String> command,
                           String workingDirectory,
                           Map<String, String> env,
                           Map<String, String> labels,
@@ -58,7 +60,7 @@ final class TestContainerMetadata {
                           List<CopyFileToContainer> fileCopies,
                           Long memory,
                           Long swapMemory,
-                          Long sharedMemory) {
+                          Long sharedMemory, String network, Set<String> networkAliases) {
         this.id = id;
         this.imageName = imageName;
         this.imageTag = imageTag;
@@ -75,6 +77,8 @@ final class TestContainerMetadata {
         this.memory = memory;
         this.swapMemory = swapMemory;
         this.sharedMemory = sharedMemory;
+        this.network = network;
+        this.networkAliases = networkAliases;
     }
 
     public String getId() {
@@ -105,8 +109,8 @@ final class TestContainerMetadata {
         return roFsBinds;
     }
 
-    public Optional<String> getCommand() {
-        return Optional.ofNullable(command);
+    public List<String> getCommand() {
+        return command;
     }
 
     public Optional<String> getWorkingDirectory() {
@@ -139,6 +143,14 @@ final class TestContainerMetadata {
 
     public Optional<Long> getSharedMemory() {
         return Optional.ofNullable(sharedMemory);
+    }
+
+    public Optional<String> getNetwork() {
+        return Optional.ofNullable(network);
+    }
+
+    public Set<String> getNetworkAliases() {
+        return networkAliases;
     }
 
     public static final class CopyFileToContainer {

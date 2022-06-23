@@ -19,5 +19,4 @@ class VaultStartedTest extends AbstractTestContainersSpec {
         expect:
         listContainers().collectMany { it.ports as List }.any { uri == "http://localhost:$it.publicPort" }
     }
-
 }

@@ -34,7 +34,7 @@ public class VaultTestResourceProvider extends AbstractTestContainersProvider<Va
     public static final String VAULT_CLIENT_TOKEN_PROPERTY = "vault.client.token";
     public static final String VAULT_CLIENT_TOKEN_VALUE = "vault-token";
     public static final String DEFAULT_IMAGE = "vault";
-    public static final String SIMPLE_NAME = "vault";
+    public static final String SIMPLE_NAME = "hashicorp-vault";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

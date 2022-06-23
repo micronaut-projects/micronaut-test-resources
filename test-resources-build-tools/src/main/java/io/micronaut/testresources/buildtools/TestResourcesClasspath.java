@@ -43,6 +43,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_MQTT = "micronaut-mqtt";
     private static final String MICRONAUT_RABBITMQ = "micronaut-rabbitmq";
     private static final String MICRONAUT_REDIS = "micronaut-redis-lettuce";
+    private static final String MICRONAUT_DISCOVERY_CLIENT = "micronaut-discovery-client";
 
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
@@ -90,6 +91,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String REACTIVE_MARIADB_MODULE = "r2dbc-mariadb";
     private static final String MSSQL_MODULE = "jdbc-mssql";
     private static final String REACTIVE_MSSQL_MODULE = "r2dbc-mssql";
+    private static final String HASHICORP_VAULT_MODULE = "hashicorp-vault";
 
     private TestResourcesClasspath() {
 
@@ -133,6 +135,7 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
             m.onArtifact(MICRONAUT_RABBITMQ, RABBITMQ_MODULE);
             m.onArtifact(MICRONAUT_REDIS, REDIS_MODULE);
+            m.onArtifact(MICRONAUT_DISCOVERY_CLIENT, HASHICORP_VAULT_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_NEO4J), deps -> true, NEO4J_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(artifactEquals(MYSQL_CONNECTOR_JAVA)), MYSQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL_DRIVER)), POSTGRESQL_MODULE);

@@ -25,6 +25,8 @@ modules:
     title: RabbitMQ
   modules-redis:
     title: Redis
+  modules-hashicorp-vault:
+    title: Hashicorp Vault
   modules-testcontainers:
     title: Generic Testcontainers support
 architecture:

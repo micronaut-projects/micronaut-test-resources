@@ -35,6 +35,9 @@ public class VaultTestResourceProvider extends AbstractTestContainersProvider<Va
     public static final String VAULT_CLIENT_TOKEN_VALUE = "vault-token";
     public static final String DEFAULT_IMAGE = "vault";
     public static final String SIMPLE_NAME = "hashicorp-vault";
+    public static final String TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_TOKEN_KEY = "test-resources.containers.hashicorp-vault.token";
+    public static final String TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_PATH_KEY = "test-resources.containers.hashicorp-vault.path";
+    public static final String TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_SECRETS_KEY = "test-resources.containers.hashicorp-vault.secrets";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -57,12 +60,12 @@ public class VaultTestResourceProvider extends AbstractTestContainersProvider<Va
     @Override
     protected VaultContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties) {
         VaultContainer<?> container = new VaultContainer<>(imageName);
-        container.withVaultToken(properties.getOrDefault("test-resources.containers.vault.token", VAULT_CLIENT_TOKEN_VALUE).toString());
+        container.withVaultToken(properties.getOrDefault(TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_TOKEN_KEY, VAULT_CLIENT_TOKEN_VALUE).toString());
 
-        if (properties.containsKey("test-resources.containers.vault.path") && properties.containsKey("test-resources.containers.vault.secrets")) {
-            List<String> secrets = (List<String>) properties.get("test-resources.containers.vault.secrets");
+        if (properties.containsKey(TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_PATH_KEY) && properties.containsKey(TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_SECRETS_KEY)) {
+            List<String> secrets = (List<String>) properties.get(TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_SECRETS_KEY);
             container.withSecretInVault(
-                properties.get("test-resources.containers.vault.path").toString(),
+                properties.get(TEST_RESOURCES_CONTAINERS_HASHICORP_VAULT_PATH_KEY).toString(),
                 secrets.get(0),
                 secrets.subList(1, secrets.size()).toArray(new String[0])
             );

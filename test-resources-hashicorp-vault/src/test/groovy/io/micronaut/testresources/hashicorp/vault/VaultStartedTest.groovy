@@ -6,6 +6,7 @@ import io.micronaut.security.oauth2.configuration.OauthClientConfiguration
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 import jakarta.inject.Inject
+import jakarta.inject.Named
 
 @MicronautTest
 class VaultStartedTest extends AbstractTestContainersSpec {
@@ -14,6 +15,7 @@ class VaultStartedTest extends AbstractTestContainersSpec {
     String uri
 
     @Inject
+    @Named("test")
     OauthClientConfiguration oauthClientConfiguration
 
     @Override
@@ -28,7 +30,7 @@ class VaultStartedTest extends AbstractTestContainersSpec {
 
     def "secretsAreUsedForConfiguration"() {
         expect:
-        oauthClientConfiguration.clientId == 'XXX'
-        oauthClientConfiguration.clientSecret == 'YYY'
+        oauthClientConfiguration.clientId == 'hello'
+        oauthClientConfiguration.clientSecret == 'world'
     }
 }

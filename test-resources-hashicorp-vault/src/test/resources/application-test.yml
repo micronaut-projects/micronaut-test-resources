@@ -1,0 +1,14 @@
+micronaut:
+  security:
+    oauth2:
+      clients:
+        default:
+          client-id: ${OAUTH_CLIENT_ID:XXX}
+          client-secret: ${OAUTH_CLIENT_SECRET:YYY}
+test-resources:
+  containers:
+    hashicorp-vault:
+      path: 'secret/my-path'
+      secrets:
+        - "key1=value1"
+        - "key2=value2"

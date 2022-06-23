@@ -1,0 +1,8 @@
+micronaut:
+  config-client:
+    enabled: true
+vault:
+  client:
+    config:
+      enabled: true
+    kv-version: "V2"

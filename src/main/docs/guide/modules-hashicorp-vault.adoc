@@ -2,7 +2,7 @@ Vault support will automatically start a https://www.vaultproject.io/[Hashicorp 
 
 - The default image can be overwritten by setting the `test-resources.containers.vault.image-name` property.
 - The default Vault access token is `vault-token` but this can be overridden by setting the `test-resources.containers.vault.token` property.
-- Secrets can be inserted into Vault at startup by adding the config:
+- Secrets should be inserted into Hashicorp Vault at startup by adding the config:
 
 [source, yaml]
 ----

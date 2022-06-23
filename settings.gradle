@@ -42,6 +42,7 @@ include 'test-resources-redis'
 include 'test-resources-rabbitmq'
 include 'test-resources-server'
 include 'test-resources-testcontainers'
+include 'test-resources-vault'
 
 jdbcModules.each {
     String projectName = "test-resources-jdbc-$it"

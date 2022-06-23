@@ -1,0 +1,14 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching a MongoDB test container.
+"""
+
+dependencies {
+    implementation(libs.testcontainers.vault)
+
+    testImplementation(testFixtures(project(":test-resources-testcontainers")))
+    testImplementation(mn.micronaut.discovery)
+}

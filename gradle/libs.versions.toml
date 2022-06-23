@@ -43,6 +43,7 @@ testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version = 
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
 testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version = "" }
 testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version = "" }
+testcontainers-vault = { module = "org.testcontainers:vault", version = "" }
 
 mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version = "" }
 mongodb = { module = "org.mongodb:mongodb-driver-sync", version = "" }

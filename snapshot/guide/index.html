@@ -138,7 +138,7 @@
         <h1>Micronaut Test Resources</h1>
         <p></p>
         <p>Test resources integration (like Testcontainers) for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M3/guide/index.html'>1.0.0-M3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M2/guide/index.html'>1.0.0-M2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M1/guide/index.html'>1.0.0-M1</option></select> </p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M4/guide/index.html'>1.0.0-M4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M3/guide/index.html'>1.0.0-M3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M2/guide/index.html'>1.0.0-M2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M1/guide/index.html'>1.0.0-M1</option></select> </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -803,6 +803,40 @@ public class JavamailSessionProvider implements SessionProvider {
 </div>
 <div class="paragraph">
 <p>Please refer to the <a href="configurationreference.html#io.micronaut.testresources.testcontainers.TestContainersConfiguration">configuration properties reference</a> for details.</p>
+</div>
+<div class="sect1">
+<h2 id="_advanced_networking">Advanced networking</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, each container is spawned in its own network.
+It is possible to let containers communicate with each other by declaring the network they belong to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    producer:
+      image-name: alpine:3.14
+      command:
+        - /bin/sh
+        - "-c"
+        - "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"
+      network: custom
+      network-aliases: bob
+      hostnames: producer.host
+    consumer:
+      image-name: alpine:3.14
+      command: top
+      network: custom
+      network-aliases: alice
+      hostnames: consumer.host</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>network</code> key is used to declare the network containers use.
+The <code>network-aliases</code> can be used to assign host names to the containers.</p>
+</div>
+</div>
 </div>
 
 <h1 id="architecture"><a class="anchor" href="#architecture"></a>5 Architecture</h1>

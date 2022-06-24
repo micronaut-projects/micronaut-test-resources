@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
+import java.time.Duration;
 import java.util.Arrays;
 
 /**
@@ -36,6 +37,7 @@ public class Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
+        long sd = System.nanoTime();
         ApplicationContext context = Micronaut.run(Application.class, args);
         Arrays.stream(args)
             .filter(arg -> arg.startsWith("--port-file="))
@@ -51,6 +53,8 @@ public class Application {
                     throw new RuntimeException(e);
                 }
             });
+        long dur = System.nanoTime() - sd;
+        LOGGER.info("A Micronaut Test Resources server is listening on port {}, started in {}ms", context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
     }
 
     /**

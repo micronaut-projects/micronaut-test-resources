@@ -127,14 +127,16 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.ro-fs-bind</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A map where the key is a path in the host filesystem and the value is
- a path in the container filesystem.
+ a path in the container filesystem. If the host path starts with "classpath:"
+ then the path refers to an entry on classpath.
  The path will be mounted read-only.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.rw-fs-bind</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A map where the key is a path in the host filesystem and the value is
- a path in the container filesystem.
+ a path in the container filesystem. If the host path starts with "classpath:"
+ then the path refers to an entry on classpath.
  The path will be mounted read-write.</p></td>
 </tr>
 <tr>

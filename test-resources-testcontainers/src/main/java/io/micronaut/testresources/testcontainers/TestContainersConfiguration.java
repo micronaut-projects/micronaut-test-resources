@@ -132,7 +132,8 @@ final class TestContainersConfiguration {
 
     /**
      * A map where the key is a path in the host filesystem and the value is
-     * a path in the container filesystem.
+     * a path in the container filesystem. If the host path starts with "classpath:"
+     * then the path refers to an entry on classpath.
      * The path will be mounted read-only.
      * @param roFwBind the map of read-only fs bindings.
      */
@@ -150,7 +151,8 @@ final class TestContainersConfiguration {
 
     /**
      * A map where the key is a path in the host filesystem and the value is
-     * a path in the container filesystem.
+     * a path in the container filesystem. If the host path starts with "classpath:"
+     * then the path refers to an entry on classpath.
      * The path will be mounted read-write.
      * @param rwFsBind the map of read-write fs bindings.
      */

@@ -230,8 +230,8 @@ final class TestContainerMetadataSupport {
         if (!exposedPorts.isEmpty()) {
             container.withExposedPorts(exposedPorts.toArray(new Integer[0]));
         }
-        md.getRwFsBinds().forEach(container::withFileSystemBind);
-        md.getRoFsBinds().forEach((hostPath, containerPath) -> container.withFileSystemBind(hostPath, containerPath, BindMode.READ_ONLY));
+        md.getRwFsBinds().forEach((hostPath, containerPath) -> applyFsBind(container, hostPath, containerPath, BindMode.READ_WRITE));
+        md.getRoFsBinds().forEach((hostPath, containerPath) -> applyFsBind(container, hostPath, containerPath, BindMode.READ_ONLY));
         if (!md.getCommand().isEmpty()) {
             container.withCommand(md.getCommand().toArray(new String[0]));
         }
@@ -247,5 +247,13 @@ final class TestContainerMetadataSupport {
             container.withNetworkAliases(md.getNetworkAliases().toArray(new String[0]));
         }
         return container;
+    }
+
+    static void applyFsBind(GenericContainer<?> container, String hostPath, String containerPath, BindMode bindMode) {
+        if (hostPath.startsWith(CLASSPATH_PREFIX)) {
+            container.withClasspathResourceMapping(hostPath.substring(CLASSPATH_PREFIX.length()), containerPath, bindMode);
+        } else {
+            container.withFileSystemBind(hostPath, containerPath, bindMode);
+        }
     }
 }

@@ -94,9 +94,11 @@ class TestContainerMetadataSupportTest extends Specification {
                     foo:
                         ro-fs-bind:
                           - /some/path: /some/container/path
+                          - classpath:/some/file.txt: /some/container/file.txt
                         rw-fs-bind:
                           - /some/other/path: /some/other/container/path
                           - "../relative": /absolute/path
+                          - classpath:/some/other-file.txt: /some/container/other-file.txt
         """
 
         when:
@@ -105,8 +107,8 @@ class TestContainerMetadataSupportTest extends Specification {
         then:
         md.present
         md.get().with {
-            assert it.roFsBinds == ['/some/path': '/some/container/path']
-            assert it.rwFsBinds == ['/some/other/path': '/some/other/container/path', '../relative': '/absolute/path']
+            assert it.roFsBinds == ['/some/path': '/some/container/path', 'classpath:/some/file.txt': '/some/container/file.txt']
+            assert it.rwFsBinds == ['/some/other/path': '/some/other/container/path', '../relative': '/absolute/path', 'classpath:/some/other-file.txt': '/some/container/other-file.txt']
         }
     }
 

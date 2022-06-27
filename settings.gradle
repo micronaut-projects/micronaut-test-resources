@@ -25,7 +25,8 @@ def r2dbcModules = [
         'mysql',
         'oracle-xe',
         'postgresql',
-        'mssql'
+        'mssql',
+        'pool'
 ]
 
 include 'test-resources-bom'

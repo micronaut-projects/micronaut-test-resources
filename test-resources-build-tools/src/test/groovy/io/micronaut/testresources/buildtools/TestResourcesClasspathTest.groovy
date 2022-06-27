@@ -46,26 +46,28 @@ class TestResourcesClasspathTest extends Specification {
         inferredClasspathEquals(
                 'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
                 'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
-                "$driver:1.0"
+                "$driver:1.0",
+                *extra
         )
 
         where:
-        driver << [
-                'mysql:mysql-connector-java',
-                'org.postgresql:postgresql',
-                'org.mariadb.jdbc:mariadb-java-client',
-                'com.oracle.database.jdbc:ojdbc5',
-                'com.oracle.database.jdbc:ojdbc6',
-                'com.oracle.database.jdbc:ojdbc8',
-                'com.oracle.database.jdbc:ojdbc10',
-                'com.oracle.database.jdbc:ojdbc11',
-                'dev.miku:r2dbc-mysql',
-                'org.mariadb:r2dbc-mariadb',
-                'org.postgresql:r2dbc-postgresql',
-                'com.oracle.database.r2dbc:oracle-r2dbc',
-                'com.microsoft.sqlserver:mssql-jdbc',
-                'io.r2dbc:r2dbc-mssql'
-        ]
+        driver                                   | extra
+        'mysql:mysql-connector-java'             | []
+        'org.postgresql:postgresql'              | []
+        'org.mariadb.jdbc:mariadb-java-client'   | []
+        'com.oracle.database.jdbc:ojdbc5'        | []
+        'com.oracle.database.jdbc:ojdbc6'        | []
+        'com.oracle.database.jdbc:ojdbc8'        | []
+        'com.oracle.database.jdbc:ojdbc10'       | []
+        'com.oracle.database.jdbc:ojdbc11'       | []
+        'dev.miku:r2dbc-mysql'                   | []
+        'org.mariadb:r2dbc-mariadb'              | []
+        'org.postgresql:r2dbc-postgresql'        | []
+        'com.oracle.database.r2dbc:oracle-r2dbc' | []
+        'com.microsoft.sqlserver:mssql-jdbc'     | []
+        'io.r2dbc:r2dbc-mssql'                   | []
+        'io.r2dbc:r2dbc-pool'                    | ['io.micronaut.testresources:micronaut-test-resources-r2dbc-pool:1.0.34']
+
     }
 
     def "infers Micronaut Data module"() {
@@ -129,6 +131,7 @@ class TestResourcesClasspathTest extends Specification {
         'org.postgresql:r2dbc-postgresql'        | 'postgresql'
         'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-xe'
         'io.r2dbc:r2dbc-mssql'                   | 'mssql'
+        'io.r2dbc:r2dbc-pool'                    | 'pool'
     }
 
     private void inferredClasspathEquals(String... dependencies) {

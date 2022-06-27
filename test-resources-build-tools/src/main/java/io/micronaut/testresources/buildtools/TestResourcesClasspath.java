@@ -73,6 +73,7 @@ public final class TestResourcesClasspath implements KnownModules {
         ORACLE_DRIVER_11
     );
     private static final String REACTIVE_ORACLE_DRIVER = "com.oracle.database.r2dbc:oracle-r2dbc";
+    private static final String REACTIVE_POOL_DRIVER = "io.r2dbc:r2dbc-pool";
 
     private static final String ELASTICSEARCH_MODULE = "elasticsearch";
     private static final String KAFKA_MODULE = "kafka";
@@ -92,6 +93,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MSSQL_MODULE = "jdbc-mssql";
     private static final String REACTIVE_MSSQL_MODULE = "r2dbc-mssql";
     private static final String HASHICORP_VAULT_MODULE = "hashicorp-vault";
+    private static final String REACTIVE_POOL_MODULE = "r2dbc-pool";
 
     private TestResourcesClasspath() {
 
@@ -136,6 +138,7 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(MICRONAUT_RABBITMQ, RABBITMQ_MODULE);
             m.onArtifact(MICRONAUT_REDIS, REDIS_MODULE);
             m.onArtifact(MICRONAUT_DISCOVERY_CLIENT, HASHICORP_VAULT_MODULE);
+            m.onModule(REACTIVE_POOL_DRIVER, REACTIVE_POOL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_NEO4J), deps -> true, NEO4J_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(artifactEquals(MYSQL_CONNECTOR_JAVA)), MYSQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL_DRIVER)), POSTGRESQL_MODULE);
@@ -159,7 +162,8 @@ public final class TestResourcesClasspath implements KnownModules {
                 REACTIVE_POSTGRESQL_DRIVER,
                 REACTIVE_ORACLE_DRIVER,
                 MSSQL_DRIVER,
-                REACTIVE_MSSQL_DRIVER
+                REACTIVE_MSSQL_DRIVER,
+                REACTIVE_POOL_DRIVER
             );
         });
     }
@@ -206,8 +210,18 @@ public final class TestResourcesClasspath implements KnownModules {
             onArtifact(name, testResource(moduleId));
         }
 
+        public void onModule(String module, String moduleId) {
+            onModule(module, testResource(moduleId));
+        }
+
         public void onArtifact(String name, Supplier<Stream<MavenDependency>> supplier) {
             if (input.getArtifact().equals(name)) {
+                output = Stream.concat(output, supplier.get());
+            }
+        }
+
+        public void onModule(String module, Supplier<Stream<MavenDependency>> supplier) {
+            if (input.getModule().equals(module)) {
                 output = Stream.concat(output, supplier.get());
             }
         }

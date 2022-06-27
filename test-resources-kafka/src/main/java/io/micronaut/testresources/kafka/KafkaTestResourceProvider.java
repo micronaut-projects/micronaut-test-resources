@@ -31,7 +31,7 @@ import java.util.Optional;
 public class KafkaTestResourceProvider extends AbstractTestContainersProvider<KafkaContainer> {
 
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
-    public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:6.2.1";
+    public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:7.0.4";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

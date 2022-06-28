@@ -1,0 +1,14 @@
+plugins {
+    id 'io.micronaut.build.internal.r2dbc-module'
+}
+
+description = """
+Provides support for R2DBC pool resources.
+"""
+
+dependencies {
+    testRuntimeOnly(project(":test-resources-r2dbc-postgresql"))
+    testRuntimeOnly(libs.reactive.postgres)
+    testImplementation(libs.reactive.pool)
+    testRuntimeOnly(libs.postgres)
+}

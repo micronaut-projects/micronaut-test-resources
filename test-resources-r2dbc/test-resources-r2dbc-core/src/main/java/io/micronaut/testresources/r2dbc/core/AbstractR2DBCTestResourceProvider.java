@@ -25,13 +25,10 @@ import org.testcontainers.containers.GenericContainer;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Base class for R2DBC test resources. Unlike JDBC test resources, this
@@ -47,9 +44,6 @@ import java.util.stream.Stream;
 public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContainer<? extends T>> extends AbstractTestContainersProvider<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractR2DBCTestResourceProvider.class);
 
-    private static final String DATASOURCES = "datasources";
-    private static final String R2DBC_PREFIX = "r2dbc.";
-    private static final String R2DBC_DATASOURCES = R2DBC_PREFIX + DATASOURCES;
     private static final String URL = "url";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -59,67 +53,37 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         PASSWORD
     );
 
-    private static final String DIALECT = "dialect";
-    private static final String DRIVER = "driverClassName";
-    private static final String TYPE = "db-type";
-    private static final List<String> REQUIRED_PROPERTIES = Arrays.asList(
-        DIALECT,
-        DRIVER,
-        TYPE
-    );
-
     @Override
     public List<String> getRequiredPropertyEntries() {
-        return Arrays.asList(R2DBC_DATASOURCES, DATASOURCES);
+        return R2dbcSupport.REQUIRED_PROPERTY_ENTRIES_LIST;
     }
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        if (expression.startsWith(R2DBC_DATASOURCES)) {
-            // If we resolve r2dbc.datasources.default.url, we will
-            // try to find a regular datasource with the same name
-            // and reuse it if it exists.
-            String regularDatasource = removeR2dbPrefixFrom(expression);
-            String datasourceName = datasourceNameFrom(regularDatasource);
-            List<String> requiredProperties = Stream.concat(
-                Stream.of(regularDatasource),
-                REQUIRED_PROPERTIES.stream().map(k -> r2dbDatasourceExpressionOf(datasourceName, k))
-            ).collect(Collectors.toList());
-
-            LOGGER.debug("Required properties: {}", requiredProperties);
-            return requiredProperties;
-        }
-        return Collections.emptyList();
+        return R2dbcSupport.findRequiredProperties(expression);
     }
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        Collection<String> r2dbcDatasources = propertyEntries.getOrDefault(R2DBC_DATASOURCES, Collections.emptyList());
-        Collection<String> datasources = propertyEntries.getOrDefault(DATASOURCES, Collections.emptyList());
-        List<String> properties = Stream.concat(r2dbcDatasources.stream(), datasources.stream())
-            .flatMap(name -> RESOLVABLE_KEYS.stream().map(key -> R2DBC_DATASOURCES + "." + name + "." + key))
-            .distinct()
-            .collect(Collectors.toList());
-        LOGGER.debug("Resolvable properties: {}", properties);
-        return properties;
+        return R2dbcSupport.findResolvableProperties(propertyEntries, RESOLVABLE_KEYS);
     }
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        if (!propertyName.startsWith(R2DBC_PREFIX)) {
+        if (!propertyName.startsWith(R2dbcSupport.R2DBC_PREFIX)) {
             return false;
         }
-        String baseDatasourceExpression = removeR2dbPrefixFrom(propertyName);
-        String datasource = datasourceNameFrom(baseDatasourceExpression);
-        String type = String.valueOf(requestedProperties.get(r2dbDatasourceExpressionOf(datasource, TYPE)));
+        String baseDatasourceExpression = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
+        String datasource = R2dbcSupport.datasourceNameFrom(baseDatasourceExpression);
+        String type = String.valueOf(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.TYPE)));
         if (type != null && type.equalsIgnoreCase(getSimpleName())) {
             return true;
         }
-        String driver = String.valueOf(requestedProperties.get(r2dbDatasourceExpressionOf(datasource, DRIVER)));
+        String driver = String.valueOf(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DRIVER)));
         if (driver != null && driver.toLowerCase(Locale.US).contains(getSimpleName())) {
             return true;
         }
-        String dialect = String.valueOf(requestedProperties.get(r2dbDatasourceExpressionOf(datasource, DIALECT)));
+        String dialect = String.valueOf(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DIALECT)));
         if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {
             return true;
         }
@@ -128,7 +92,7 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
-        String name = removeR2dbPrefixFrom(propertyName);
+        String name = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
         if (properties.containsKey(name)) {
             return resolveUsingExistingContainer(propertyName, properties, name);
         }
@@ -143,10 +107,6 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
             return Optional.ofNullable(resolveFromConnectionOptions(propertyName, options.get()));
         }
         return Optional.empty();
-    }
-
-    private static String removeR2dbPrefixFrom(String propertyName) {
-        return propertyName.substring(R2DBC_PREFIX.length());
     }
 
     private Optional<String> resolveUsingExistingContainer(String propertyName, Map<String, Object> properties, String name) {
@@ -198,12 +158,4 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
 
     protected abstract Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container);
 
-    protected static String datasourceNameFrom(String expression) {
-        String remainder = expression.substring(1 + expression.indexOf('.'));
-        return remainder.substring(0, remainder.indexOf("."));
-    }
-
-    protected static String r2dbDatasourceExpressionOf(String datasource, String property) {
-        return R2DBC_DATASOURCES + "." + datasource + "." + property;
-    }
 }

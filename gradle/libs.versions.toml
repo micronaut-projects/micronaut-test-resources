@@ -56,6 +56,7 @@ reactive-mariadb = { module = "org.mariadb:r2dbc-mariadb", version = "" }
 reactive-mssql = { module = "io.r2dbc:r2dbc-mssql", version = "" }
 reactive-mysql = { module = "dev.miku:r2dbc-mysql", version = "" }
 reactive-oracle-xe = { module = "com.oracle.database.r2dbc:oracle-r2dbc", version = "" }
+reactive-pool = { module = "io.r2dbc:r2dbc-pool", version = "" }
 reactive-postgres = { module = "org.postgresql:r2dbc-postgresql", version = "" }
 
 #

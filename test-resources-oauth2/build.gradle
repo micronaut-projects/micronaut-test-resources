@@ -1,0 +1,17 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for OAuth2 test containers.
+"""
+
+dependencies {
+    implementation libs.testcontainers.oauth2.keycloak
+
+    testImplementation mn.micronaut.security
+    testImplementation mn.micronaut.http.server.netty
+    testImplementation mn.micronaut.http.client
+
+    testRuntimeOnly mn.micronaut.security.oauth2
+}

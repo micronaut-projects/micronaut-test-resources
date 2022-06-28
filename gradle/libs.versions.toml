@@ -22,6 +22,7 @@ micronaut-test = "3.1.1"
 micronaut-gradle-plugin = "3.4.1"
 groovy = "3.0.10"
 spock = "2.1-groovy-3.0"
+testcontainers-oauth2-keycloak = "2.2.2"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.17.2"
@@ -39,6 +40,7 @@ testcontainers-mongodb = { module = "org.testcontainers:mongodb", version = "" }
 testcontainers-mssql = { module = "org.testcontainers:mssqlserver", version = "" }
 testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
 testcontainers-neo4j = { module = "org.testcontainers:neo4j", version = "" }
+testcontainers-oauth2-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version.ref = "testcontainers-oauth2-keycloak"}
 testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version = "" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
 testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version = "" }

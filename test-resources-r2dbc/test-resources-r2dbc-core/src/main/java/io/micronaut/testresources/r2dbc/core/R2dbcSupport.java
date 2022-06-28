@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 /**
  * Provides constants and helper methods used by several test resources.
  */
-public class R2dbcSupport {
+public final class R2dbcSupport {
     public static final String DATASOURCES = "datasources";
     public static final String R2DBC_PREFIX = "r2dbc.";
     public static final String R2DBC_DATASOURCES = R2DBC_PREFIX + DATASOURCES;

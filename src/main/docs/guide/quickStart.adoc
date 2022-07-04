@@ -13,14 +13,6 @@ plugins {
 
 Please refer to the https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/[Gradle plugin documentation] for more information about configuring the test resources plugin.
 
-For Maven, you can enable test resources support by adding the following configuration:
+Maven support is coming soon.
 
-.Maven
-[source,xml,subs="verbatim,attributes"]
-----
-<configuration>
-    <TODO/>
-</configuration>
-----
-
-Please refer to the https://micronaut-projects.github.io/micronaut-maven-plugin/latest/[Maven plugin documentation] for more information about configuring the test resources plugin.
+Please refer to the https://micronaut-projects.github.io/micronaut-maven-plugin/latest/[Maven plugin documentation] for more information.

@@ -197,7 +197,10 @@ If that property is set, then the test resource will not be used.</p>
 <p>Micronaut Test Resources are integrated via build plugins.</p>
 </div>
 <div class="paragraph">
-<p>For Gradle, you can use the <code>micronaut-test-resources</code> plugin:</p>
+<p>The recommended approach to get started is to use <a href="https://micronaut.io/launch">Micronaut Launch</a> and select the <code>test-resources</code> feature.</p>
+</div>
+<div class="paragraph">
+<p>If you wanted to integrate it manually, for Gradle you can use the <code>micronaut-test-resources</code> plugin:</p>
 </div>
 <div class="listingblock">
 <div class="title">Gradle</div>
@@ -212,14 +215,23 @@ If that property is set, then the test resource will not be used.</p>
 <p>Please refer to the <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/">Gradle plugin documentation</a> for more information about configuring the test resources plugin.</p>
 </div>
 <div class="paragraph">
-<p>For Maven, you can enable test resources support by adding the following configuration:</p>
+<p>In the case of Maven, you can enable test resources support by adding the following elements to your <code>pom.xml</code>:</p>
 </div>
 <div class="listingblock">
 <div class="title">Maven</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
-    &lt;TODO/&gt;
-&lt;/configuration&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;project&gt;
+    &lt;properties&gt;
+        &lt;micronaut.test.resources.enabled&gt;true&lt;/micronaut.test.resources.enabled&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;io.micronaut.testresources&lt;/groupId&gt;
+            &lt;artifactId&gt;micronaut-test-resources-client&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">

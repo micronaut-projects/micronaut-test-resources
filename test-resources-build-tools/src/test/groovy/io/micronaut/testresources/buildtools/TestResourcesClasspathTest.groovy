@@ -36,6 +36,7 @@ class TestResourcesClasspathTest extends Specification {
         'redis-lettuce'    | 'redis'
         'elasticsearch'    | 'elasticsearch'
         'discovery-client' | 'hashicorp-vault'
+        'security-oauth2'  | 'oauth2'
     }
 
     def "passes through driver #driver"() {

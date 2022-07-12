@@ -62,10 +62,13 @@ r2dbcModules.each {
     include projectName
     project(":test-resources-r2dbc-$it").projectDir = file("test-resources-r2dbc/$projectName")
 }
-hibernateReactiveModules.each {
-    String projectName = "test-resources-hibernate-reactive-$it"
-    include projectName
-    project(":test-resources-hibernate-reactive-$it").projectDir = file("test-resources-hibernate-reactive/$projectName")
+
+if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+    hibernateReactiveModules.each {
+        String projectName = "test-resources-hibernate-reactive-$it"
+        include projectName
+        project(":test-resources-hibernate-reactive-$it").projectDir = file("test-resources-hibernate-reactive/$projectName")
+    }
 }
 
 micronautBuild {

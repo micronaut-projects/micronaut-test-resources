@@ -16,18 +16,23 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "3.5.1"
+micronaut = "3.5.2"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.1.1"
-micronaut-gradle-plugin = "3.5.0"
+micronaut-gradle-plugin = "3.5.1"
+micronaut-sql-hibernate-reactive = "4.5.1"
 groovy = "3.0.10"
 spock = "2.1-groovy-3.0"
+vertx-client = "4.3.2"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.17.3"
 
 [libraries]
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
+
+micronaut-data-hibernate-reactive = { module = "io.micronaut.data:micronaut-data-hibernate-reactive", version = "" }
+micronaut-sql-hibernate-reactive = { module = "io.micronaut.sql:micronaut-hibernate-reactive", version.ref = "micronaut-sql-hibernate-reactive" }
 
 testcontainers-core = { module = "org.testcontainers:testcontainers", version = "" }
 testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version = "" }
@@ -59,6 +64,12 @@ reactive-oracle-xe = { module = "com.oracle.database.r2dbc:oracle-r2dbc", versio
 reactive-pool = { module = "io.r2dbc:r2dbc-pool", version = "" }
 reactive-postgres = { module = "org.postgresql:r2dbc-postgresql", version = "" }
 
+vertx-mysql = { module = "io.vertx:vertx-mysql-client", version.ref = "vertx.client" }
+vertx-mssql = { module = "io.vertx:vertx-mssql-client", version.ref = "vertx.client" }
+vertx-postgres = { module = "io.vertx:vertx-pg-client", version.ref = "vertx.client" }
+vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.client" }
+scram = { module = "com.ongres.scram:client", version = "2.1" }
+
 #
 # Managed dependencies appear in the BOM
 #
@@ -77,5 +88,5 @@ reactive-postgres = { module = "org.postgresql:r2dbc-postgresql", version = "" }
 [bundles]
 
 [plugins]
-micronaut-miniapp = { id="io.micronaut.minimal.application", version.ref = "micronaut-gradle-plugin" }
-micronaut-aot = { id="io.micronaut.aot", version.ref = "micronaut-gradle-plugin" }
+micronaut-miniapp = { id = "io.micronaut.minimal.application", version.ref = "micronaut-gradle-plugin" }
+micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut-gradle-plugin" }

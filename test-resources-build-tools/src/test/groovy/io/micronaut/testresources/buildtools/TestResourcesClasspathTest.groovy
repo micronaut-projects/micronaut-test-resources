@@ -91,9 +91,9 @@ class TestResourcesClasspathTest extends Specification {
         'com.microsoft.sqlserver:mssql-jdbc'   | 'mssql'
     }
 
-    def "infers Micronaut Data Mongo"() {
+    def "infers Micronaut Mongo"() {
         when:
-        infer 'io.micronaut.data:micronaut-data-mongodb:1.0', "$driver:1.0"
+        infer "$module:1.0", "$driver:1.0"
 
         then:
         inferredClasspathEquals(
@@ -104,11 +104,15 @@ class TestResourcesClasspathTest extends Specification {
         )
 
         where:
-        driver << [
-                "org.mongodb:mongodb-driver-async",
-                "org.mongodb:mongodb-driver-sync",
-                "org.mongodb:mongodb-driver-reactivestreams"
-        ]
+        [module, driver] << [["io.micronaut.data:micronaut-data-mongodb",
+                              "io.micronaut.mongodb:micronaut-mongo-sync",
+                              "io.micronaut.mongodb:micronaut-mongo-reactive"
+                             ],
+                             [
+                                     "org.mongodb:mongodb-driver-async",
+                                     "org.mongodb:mongodb-driver-sync",
+                                     "org.mongodb:mongodb-driver-reactivestreams"
+                             ]].combinations()
 
     }
 

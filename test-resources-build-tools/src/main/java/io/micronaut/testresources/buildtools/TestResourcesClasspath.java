@@ -44,6 +44,8 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_RABBITMQ = "micronaut-rabbitmq";
     private static final String MICRONAUT_REDIS = "micronaut-redis-lettuce";
     private static final String MICRONAUT_DISCOVERY_CLIENT = "micronaut-discovery-client";
+    private static final String MICRONAUT_MONGO_SYNC = "io.micronaut.mongodb:micronaut-mongo-sync";
+    private static final String MICRONAUT_MONGO_REACTIVE = "io.micronaut.mongodb:micronaut-mongo-reactive";
 
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
@@ -135,6 +137,8 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(MICRONAUT_KAFKA, KAFKA_MODULE);
             m.onArtifact(MICRONAUT_MQTT, HIVEMQ_MODULE);
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
+            m.onModule(MICRONAUT_MONGO_SYNC, MONGODB_MODULE);
+            m.onModule(MICRONAUT_MONGO_REACTIVE, MONGODB_MODULE);
             m.onArtifact(MICRONAUT_RABBITMQ, RABBITMQ_MODULE);
             m.onArtifact(MICRONAUT_REDIS, REDIS_MODULE);
             m.onArtifact(MICRONAUT_DISCOVERY_CLIENT, HASHICORP_VAULT_MODULE);

@@ -3,6 +3,7 @@ The following properties will automatically be set when using a JDBC database:
 - `datasources.*.url`
 - `datasources.*.username`
 - `datasources.*.password`
+- `datasources.*.dialect`
 
 In order for the database to be properly detected, _one of_ the following properties has to be set:
 

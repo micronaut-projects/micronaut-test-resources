@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.r2dbc.mssql;
 
+import io.micronaut.testresources.mssql.MSSQLTestResourceProvider;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
@@ -37,7 +38,7 @@ public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourcePro
 
     @Override
     protected String getDefaultImageName() {
-        return "mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04";
+        return MSSQLTestResourceProvider.DEFAULT_IMAGE_NAME;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourcePro
 
     @Override
     protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        return new MSSQLServerContainer<>(imageName);
+        return MSSQLTestResourceProvider.createMSSQLContainer(imageName, getSimpleName(), testResourcesConfiguration);
     }
 
 }

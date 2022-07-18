@@ -340,6 +340,28 @@ It is possible to override the default image of the container by setting the fol
 <div class="paragraph">
 <p>The <code>db-type</code> property value can be found in the table above.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Using the Microsoft SQL Server container will require you to accept its license. In order to do this, you must set the <code>test-resources.containers.mssql.accept-license</code> property to true:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mssql:
+      accept-license: true</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 
@@ -365,6 +387,9 @@ It is possible to override the default image of the container by setting the fol
 </li>
 <li>
 <p><code>datasources.*.password</code></p>
+</li>
+<li>
+<p><code>datasources.*.dialect</code></p>
 </li>
 </ul>
 </div>

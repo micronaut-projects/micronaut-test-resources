@@ -1,3 +1,4 @@
+test-resources.containers.mssql.accept-license: true
 r2dbc:
   datasources:
     default:

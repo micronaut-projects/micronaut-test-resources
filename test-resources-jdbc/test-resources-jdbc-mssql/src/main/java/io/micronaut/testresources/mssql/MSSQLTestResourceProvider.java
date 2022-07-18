@@ -18,6 +18,7 @@ package io.micronaut.testresources.mssql;
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.LicenseAcceptance;
 
 import java.util.Map;
 
@@ -26,6 +27,8 @@ import java.util.Map;
  */
 public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<MSSQLServerContainer<?>> {
 
+    public static final String DEFAULT_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04";
+
     @Override
     protected String getSimpleName() {
         return "mssql";
@@ -33,12 +36,28 @@ public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
 
     @Override
     protected String getDefaultImageName() {
-        return "mcr.microsoft.com/mssql/server:2017-CU12";
+        return DEFAULT_IMAGE_NAME;
     }
 
     @Override
     protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        return new MSSQLServerContainer<>(imageName);
+        return createMSSQLContainer(imageName, getSimpleName(), testResourcesConfiguration);
+    }
+
+    public static MSSQLServerContainer<?> createMSSQLContainer(DockerImageName imageName, String simpleName, Map<String, Object> testResourcesConfiguration) {
+        MSSQLServerContainer<?> container = new MSSQLServerContainer<>(imageName);
+        String licenseKey = "containers." + simpleName + ".accept-license";
+        Boolean acceptLicense = (Boolean) testResourcesConfiguration.get(licenseKey);
+        if (Boolean.TRUE.equals(acceptLicense)) {
+            container.acceptLicense();
+        } else {
+            try {
+                LicenseAcceptance.assertLicenseAccepted(imageName.toString());
+            } catch (IllegalStateException ex) {
+                throw new IllegalStateException("You must set the property 'test-resources." + licenseKey + "' to true in order to use a Microsoft SQL Server test container", ex);
+            }
+        }
+        return container;
     }
 
 }

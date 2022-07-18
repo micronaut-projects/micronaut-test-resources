@@ -37,7 +37,7 @@ public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourcePro
 
     @Override
     protected String getDefaultImageName() {
-        return "mcr.microsoft.com/mssql/server:2019-CU4-ubuntu-16.04";
+        return "mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04";
     }
 
     @Override

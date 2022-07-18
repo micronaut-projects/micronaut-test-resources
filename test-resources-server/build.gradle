@@ -43,3 +43,10 @@ micronaut {
         replaceLogbackXml.set(true)
     }
 }
+
+micronautBuild {
+    binaryCompatibility {
+        // binary checks work on the wrong jar file
+        enabled = false
+    }
+}

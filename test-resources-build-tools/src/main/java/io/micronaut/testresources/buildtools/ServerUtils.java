@@ -27,9 +27,12 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -37,10 +40,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Utilities used to manage the lifecycle of a server process from build tools.
@@ -57,6 +66,9 @@ public class ServerUtils {
     private static final String SERVER_ENTRY_POINT = "io.micronaut.testresources.server.Application";
     private static final String MICRONAUT_SERVER_PORT = "micronaut.server.port";
     private static final String JMX_SYSTEM_PROPERTY = "com.sun.management.jmxremote";
+    private static final String CDS_HASH = "cds.bin";
+    private static final String CDS_FILE = "cds.jsa";
+    private static final String CDS_CLASS_LST = "cds.classlist";
 
     /**
      * Writes the server settings in an output directory.
@@ -77,6 +89,7 @@ public class ServerUtils {
 
     /**
      * Reads the server settings from an input directory.
+     *
      * @param settingsDirectory the settings directory
      * @return the server settings, if any
      */
@@ -102,6 +115,7 @@ public class ServerUtils {
 
     /**
      * Determines if a server is already started at the given port.
+     *
      * @param port the port to check
      * @return true if the port is already bound
      */
@@ -119,10 +133,12 @@ public class ServerUtils {
     /**
      * Starts a server at the given port, or connects to an existing server running
      * at the given port.
+     *
      * @param explicitPort the explicit port to connect to, if it exists.
      * @param portFilePath the path to the port file, where the port will be written.
      * @param serverSettingsDirectory the server settings directory, will be written.
      * @param accessToken the access token, if any
+     * @param cdsDirectory the CDS directory. If not null, class data sharing will be enabled
      * @param serverClasspath the server classpath
      * @param clientTimeoutMs the client timeout
      * @param serverFactory the server factory, responsible for forking a process
@@ -133,6 +149,7 @@ public class ServerUtils {
                                                                 Path portFilePath,
                                                                 Path serverSettingsDirectory,
                                                                 String accessToken,
+                                                                Path cdsDirectory,
                                                                 Collection<File> serverClasspath,
                                                                 Integer clientTimeoutMs,
                                                                 ServerFactory serverFactory) throws IOException {
@@ -155,7 +172,7 @@ public class ServerUtils {
         }
 
         Files.createDirectories(portFilePath.getParent());
-        startAndWait(serverFactory, explicitPort, portFilePath, accessToken, serverClasspath);
+        startAndWait(serverFactory, explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
         int port;
         if (explicitPort == null) {
             port = Integer.parseInt(Files.readAllLines(portFilePath).get(0));
@@ -168,8 +185,42 @@ public class ServerUtils {
     }
 
     /**
+     * Starts a server at the given port, or connects to an existing server running
+     * at the given port.
+     *
+     * @param explicitPort the explicit port to connect to, if it exists.
+     * @param portFilePath the path to the port file, where the port will be written.
+     * @param serverSettingsDirectory the server settings directory, will be written.
+     * @param accessToken the access token, if any
+     * @param serverClasspath the server classpath
+     * @param clientTimeoutMs the client timeout
+     * @param serverFactory the server factory, responsible for forking a process
+     * @return the server settings once the server is started
+     * @throws IOException if an error occurs
+     */
+    public static ServerSettings startOrConnectToExistingServer(Integer explicitPort,
+                                                                Path portFilePath,
+                                                                Path serverSettingsDirectory,
+                                                                String accessToken,
+                                                                Collection<File> serverClasspath,
+                                                                Integer clientTimeoutMs,
+                                                                ServerFactory serverFactory) throws IOException {
+        return startOrConnectToExistingServer(
+            explicitPort,
+            portFilePath,
+            serverSettingsDirectory,
+            accessToken,
+            null,
+            serverClasspath,
+            clientTimeoutMs,
+            serverFactory
+        );
+    }
+
+    /**
      * Stops a running server. The server will be contacted thanks
      * to the settings in the given directory.
+     *
      * @param serverSettingsDirectory the settings directory
      * @throws IOException if an error occurs
      */
@@ -191,6 +242,7 @@ public class ServerUtils {
     /**
      * Returns the default path to the settings directory for the test
      * resources server in case it needs to be shared between builds.
+     *
      * @return the default path to the settings directory
      */
     public static Path getDefaultSharedSettingsPath() {
@@ -201,11 +253,41 @@ public class ServerUtils {
                                      Integer explicitPort,
                                      Path portFilePath,
                                      String accessToken,
-                                     Collection<File> serverClasspath) throws IOException {
-        serverFactory.startServer(new ProcessParameters() {
+                                     Collection<File> serverClasspath,
+                                     Path cdsDirectory) throws IOException {
+        ProcessParameters processParameters = createProcessParameters(explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
+        serverFactory.startServer(processParameters);
+        // If the call is a CDS dump, we need to perform a second invocation
+        // which doesn't dump
+        if (processParameters.isCDSDumpInvocation()) {
+            startAndWait(serverFactory, explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
+            return;
+        }
+        while (!Files.exists(portFilePath)) {
+            try {
+                serverFactory.waitFor(Duration.of(STARTUP_TIME_WAIT_MS, ChronoUnit.MILLIS));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private static ProcessParameters createProcessParameters(Integer explicitPort, Path portFilePath, String accessToken, Collection<File> serverClasspath, Path cdsDirectory) {
+        return new ProcessParameters() {
+            private List<String> jvmArgs;
+            private List<File> classpath;
+            private File flatDirsJar;
+
             @Override
             public String getMainClass() {
                 return SERVER_ENTRY_POINT;
+            }
+
+            @Override
+            public boolean isCDSDumpInvocation() {
+                return getJvmArguments()
+                    .stream()
+                    .anyMatch(arg -> arg.contains("-Xshare:dump"));
             }
 
             @Override
@@ -223,7 +305,79 @@ public class ServerUtils {
 
             @Override
             public List<File> getClasspath() {
-                return Collections.unmodifiableList(new ArrayList<>(serverClasspath));
+                if (classpath != null) {
+                    return classpath;
+                }
+                if (cdsDirectory != null && serverClasspath.stream().anyMatch(File::isDirectory)) {
+                    // CDS doesn't support directories, so we have to create an arbitrary jar
+                    flatDirsJar = cdsDirectory.resolve("flat.jar").toFile();
+                    buildFlatJar();
+                    classpath = Stream.concat(
+                        Stream.of(flatDirsJar),
+                        serverClasspath.stream().filter(File::isFile)
+                    ).collect(Collectors.toList());
+                } else {
+                    classpath = Collections.unmodifiableList(new ArrayList<>(serverClasspath));
+                }
+                return classpath;
+            }
+
+            /**
+             * AppCDS doesn't support directories, so if we find some on classpath, we
+             * build a jar out of them. That jar must be updated if there's any change,
+             * so we also build a hash of its contents.
+             */
+            private void buildFlatJar() {
+                byte[] hash = computeClasspathHash(
+                    serverClasspath.stream()
+                        .filter(File::isDirectory)
+                        .map(File::toPath)
+                        .flatMap(path -> {
+                            try (Stream<Path> files = Files.walk(path)) {
+                                // Need to go with intermediate list in order to avoid illegal state
+                                return files.map(Path::toFile).collect(Collectors.toList()).stream();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                );
+                File hashFile = new File(flatDirsJar.getParentFile(), flatDirsJar.getName() + ".bin");
+                if (flatDirsJar.exists()) {
+                    try {
+                        if (hashFile.exists() && Arrays.equals(Files.readAllBytes(hashFile.toPath()), hash)) {
+                            return;
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException("Cannot read hash file", e);
+                    }
+                    if (!flatDirsJar.delete()) {
+                        throw new RuntimeException("Cannot delete jar file " + flatDirsJar);
+                    }
+                }
+                try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(flatDirsJar.toPath()))) {
+                    Files.write(hashFile.toPath(), hash);
+                    Set<String> addedEntries = new HashSet<>();
+                    for (File dir : serverClasspath) {
+                        if (dir.isDirectory()) {
+                            Path rootDir = dir.toPath();
+                            try (Stream<Path> stream = Files.walk(rootDir)) {
+                                List<Path> allpaths = stream.collect(Collectors.toList());
+                                for (Path sourcePath : allpaths) {
+                                    if (!sourcePath.equals(rootDir)) {
+                                        String zipFsPath = rootDir.relativize(sourcePath).toString();
+                                        JarEntry ze = new JarEntry(zipFsPath);
+                                        if (Files.isRegularFile(sourcePath) && addedEntries.add(zipFsPath)) {
+                                            jos.putNextEntry(ze);
+                                            Files.copy(sourcePath, jos);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             @Override
@@ -236,18 +390,98 @@ public class ServerUtils {
 
             @Override
             public List<String> getJvmArguments() {
-                return Collections.unmodifiableList(Arrays.asList(
-                    "-XX:+TieredCompilation",
-                    "-XX:TieredStopAtLevel=1"
-                ));
+                if (jvmArgs != null) {
+                    return jvmArgs;
+                }
+                List<String> jvmArguments = new ArrayList<>();
+                jvmArguments.add("-XX:+TieredCompilation");
+                jvmArguments.add("-XX:TieredStopAtLevel=1");
+                if (cdsDirectory != null) {
+                    File cdsDir = cdsDirectory.toFile();
+                    boolean useCDS = cdsDir.isDirectory() || cdsDir.mkdirs();
+                    if (useCDS) {
+                        File cdsFile = new File(cdsDir, CDS_FILE);
+                        File cdsClassList = new File(cdsDir, CDS_CLASS_LST);
+                        File cdsHashFile = new File(cdsDir, CDS_HASH);
+                        configureCdsOptions(jvmArguments, cdsFile, cdsClassList, cdsHashFile);
+                    }
+                }
+                jvmArgs = Collections.unmodifiableList(jvmArguments);
+                return jvmArgs;
             }
-        });
-        while (!Files.exists(portFilePath)) {
-            try {
-                serverFactory.waitFor(Duration.of(STARTUP_TIME_WAIT_MS, ChronoUnit.MILLIS));
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+
+            private void configureCdsOptions(List<String> jvmArguments, File cdsFile, File
+                cdsClassList, File cdsHashFile) {
+                if (cdsClassList.exists()) {
+                    try {
+                        byte[] actualHash = computeClasspathHash(getClasspath().stream());
+                        if (cdsHashFile.exists()) {
+                            byte[] cdsHash = Files.readAllBytes(cdsHashFile.toPath());
+                            if (!Arrays.equals(actualHash, cdsHash)) {
+                                // Classpath changed, invalidate CDS cache
+                                deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
+                            }
+                        } else {
+                            Files.write(cdsHashFile.toPath(), actualHash);
+                        }
+                    } catch (IOException e) {
+                        deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
+                    }
+                }
+                if (cdsClassList.exists()) {
+                    if (!cdsFile.exists()) {
+                        configureCdsDump(jvmArguments, cdsFile, cdsClassList);
+                    } else {
+                        jvmArguments.add("-XX:SharedArchiveFile=" + cdsFile);
+                    }
+                } else {
+                    configureExportCdsClassList(jvmArguments, cdsClassList);
+                }
             }
+
+            private void deleteCdsFiles(File cdsFile, File cdsClassList, File cdsHashFile) {
+                if (!cdsClassList.delete() || !cdsFile.delete() || !cdsHashFile.delete()) {
+                    LOGGER.warn("Unable to delete CDS files");
+                }
+            }
+
+        };
+
+    }
+
+    private static void configureExportCdsClassList(List<String> jvmArguments, File cdsClassList) {
+        jvmArguments.add("-Xshare:off");
+        jvmArguments.add("-XX:DumpLoadedClassList=" + cdsClassList);
+    }
+
+    private static void configureCdsDump(List<String> jvmArguments, File cdsFile, File cdsClassList) {
+        try {
+            Path cdsListPath = cdsClassList.toPath();
+            List<String> fileContent = new ArrayList<>(Files.readAllLines(cdsListPath, StandardCharsets.UTF_8));
+            // Workaround for https://bugs.openjdk.org/browse/JDK-8290417
+            fileContent.removeIf(content ->
+                content.contains("SingleThreadedBufferingProcessor") ||
+                    content.contains("org/testcontainers") ||
+                    content.contains("org/graalvm") ||
+                    content.contains("io/netty/handler") ||
+                    content.contains("jdk/proxy"));
+            Files.write(cdsListPath, fileContent, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            // ignore
+        }
+        jvmArguments.add("-Xshare:dump");
+        jvmArguments.add("-XX:SharedClassListFile=" + cdsClassList);
+        jvmArguments.add("-XX:SharedArchiveFile=" + cdsFile);
+    }
+
+    private static byte[] computeClasspathHash(Stream<File> files) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA1");
+            files.map(file -> file.getAbsolutePath() + ":" + file.length() + ":" + file.lastModified())
+                .forEachOrdered(line -> digest.update(line.getBytes(StandardCharsets.UTF_8)));
+            return digest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            return new byte[0];
         }
     }
 
@@ -285,8 +519,13 @@ public class ServerUtils {
 
         /**
          * The JVM process arguments.
+         *
          * @return the JVM process arguments.
          */
         List<String> getJvmArguments();
+
+        default boolean isCDSDumpInvocation() {
+            return false;
+        }
     }
 }

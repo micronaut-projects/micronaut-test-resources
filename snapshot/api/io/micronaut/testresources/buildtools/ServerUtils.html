@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -218,12 +218,26 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../io/micronaut/testresources/buildtools/ServerSettings.html" title="class in io.micronaut.testresources.buildtools">ServerSettings</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/buildtools/ServerUtils.html#startOrConnectToExistingServer-java.lang.Integer-java.nio.file.Path-java.nio.file.Path-java.lang.String-java.nio.file.Path-java.util.Collection-java.lang.Integer-io.micronaut.testresources.buildtools.ServerFactory-">startOrConnectToExistingServer</a></span>(java.lang.Integer&nbsp;explicitPort,
+                              java.nio.file.Path&nbsp;portFilePath,
+                              java.nio.file.Path&nbsp;serverSettingsDirectory,
+                              java.lang.String&nbsp;accessToken,
+                              java.nio.file.Path&nbsp;cdsDirectory,
+                              java.util.Collection&lt;java.io.File&gt;&nbsp;serverClasspath,
+                              java.lang.Integer&nbsp;clientTimeoutMs,
+                              <a href="../../../../io/micronaut/testresources/buildtools/ServerFactory.html" title="interface in io.micronaut.testresources.buildtools">ServerFactory</a>&nbsp;serverFactory)</code>
+<div class="block">Starts a server at the given port, or connects to an existing server running
+ at the given port.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/buildtools/ServerUtils.html#stopServer-java.nio.file.Path-">stopServer</a></span>(java.nio.file.Path&nbsp;serverSettingsDirectory)</code>
 <div class="block">Stops a running server.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/buildtools/ServerUtils.html#writeServerSettings-java.nio.file.Path-io.micronaut.testresources.buildtools.ServerSettings-">writeServerSettings</a></span>(java.nio.file.Path&nbsp;destinationDirectory,
                    <a href="../../../../io/micronaut/testresources/buildtools/ServerSettings.html" title="class in io.micronaut.testresources.buildtools">ServerSettings</a>&nbsp;settings)</code>
@@ -338,6 +352,40 @@ extends java.lang.Object</pre>
 <dd><code>port</code> - the port to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the port is already bound</dd>
+</dl>
+</li>
+</ul>
+<a name="startOrConnectToExistingServer-java.lang.Integer-java.nio.file.Path-java.nio.file.Path-java.lang.String-java.nio.file.Path-java.util.Collection-java.lang.Integer-io.micronaut.testresources.buildtools.ServerFactory-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>startOrConnectToExistingServer</h4>
+<pre>public static&nbsp;<a href="../../../../io/micronaut/testresources/buildtools/ServerSettings.html" title="class in io.micronaut.testresources.buildtools">ServerSettings</a>&nbsp;startOrConnectToExistingServer(java.lang.Integer&nbsp;explicitPort,
+                                                            java.nio.file.Path&nbsp;portFilePath,
+                                                            java.nio.file.Path&nbsp;serverSettingsDirectory,
+                                                            java.lang.String&nbsp;accessToken,
+                                                            java.nio.file.Path&nbsp;cdsDirectory,
+                                                            java.util.Collection&lt;java.io.File&gt;&nbsp;serverClasspath,
+                                                            java.lang.Integer&nbsp;clientTimeoutMs,
+                                                            <a href="../../../../io/micronaut/testresources/buildtools/ServerFactory.html" title="interface in io.micronaut.testresources.buildtools">ServerFactory</a>&nbsp;serverFactory)
+                                                     throws java.io.IOException</pre>
+<div class="block">Starts a server at the given port, or connects to an existing server running
+ at the given port.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>explicitPort</code> - the explicit port to connect to, if it exists.</dd>
+<dd><code>portFilePath</code> - the path to the port file, where the port will be written.</dd>
+<dd><code>serverSettingsDirectory</code> - the server settings directory, will be written.</dd>
+<dd><code>accessToken</code> - the access token, if any</dd>
+<dd><code>cdsDirectory</code> - the CDS directory. If not null, class data sharing will be enabled</dd>
+<dd><code>serverClasspath</code> - the server classpath</dd>
+<dd><code>clientTimeoutMs</code> - the client timeout</dd>
+<dd><code>serverFactory</code> - the server factory, responsible for forking a process</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the server settings once the server is started</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.io.IOException</code> - if an error occurs</dd>
 </dl>
 </li>
 </ul>

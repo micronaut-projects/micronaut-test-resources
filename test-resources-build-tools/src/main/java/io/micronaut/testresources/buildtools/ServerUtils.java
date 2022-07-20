@@ -278,42 +278,6 @@ public class ServerUtils {
 
     }
 
-    private static void configureExportCdsClassList(List<String> jvmArguments, File cdsClassList) {
-        jvmArguments.add("-Xshare:off");
-        jvmArguments.add("-XX:DumpLoadedClassList=" + cdsClassList);
-    }
-
-    private static void configureCdsDump(List<String> jvmArguments, File cdsFile, File cdsClassList) {
-        try {
-            Path cdsListPath = cdsClassList.toPath();
-            List<String> fileContent = new ArrayList<>(Files.readAllLines(cdsListPath, StandardCharsets.UTF_8));
-            // Workaround for https://bugs.openjdk.org/browse/JDK-8290417
-            fileContent.removeIf(content ->
-                content.contains("SingleThreadedBufferingProcessor") ||
-                    content.contains("org/testcontainers") ||
-                    content.contains("org/graalvm") ||
-                    content.contains("io/netty/handler") ||
-                    content.contains("jdk/proxy"));
-            Files.write(cdsListPath, fileContent, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            // ignore
-        }
-        jvmArguments.add("-Xshare:dump");
-        jvmArguments.add("-XX:SharedClassListFile=" + cdsClassList);
-        jvmArguments.add("-XX:SharedArchiveFile=" + cdsFile);
-    }
-
-    private static byte[] computeClasspathHash(Stream<File> files) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA1");
-            files.map(file -> file.getAbsolutePath() + ":" + file.length() + ":" + file.lastModified())
-                .forEachOrdered(line -> digest.update(line.getBytes(StandardCharsets.UTF_8)));
-            return digest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            return new byte[0];
-        }
-    }
-
     /**
      * Forking process parameters.
      */
@@ -549,7 +513,7 @@ public class ServerUtils {
             }
         }
 
-        private void deleteCdsFiles(File... cdsFiles) {
+        private static void deleteCdsFiles(File... cdsFiles) {
             for (File cdsFile : cdsFiles) {
                 try {
                     Files.deleteIfExists(cdsFile.toPath());
@@ -559,5 +523,40 @@ public class ServerUtils {
             }
         }
 
+        private static void configureExportCdsClassList(List<String> jvmArguments, File cdsClassList) {
+            jvmArguments.add("-Xshare:off");
+            jvmArguments.add("-XX:DumpLoadedClassList=" + cdsClassList);
+        }
+
+        private static void configureCdsDump(List<String> jvmArguments, File cdsFile, File cdsClassList) {
+            try {
+                Path cdsListPath = cdsClassList.toPath();
+                List<String> fileContent = new ArrayList<>(Files.readAllLines(cdsListPath, StandardCharsets.UTF_8));
+                // Workaround for https://bugs.openjdk.org/browse/JDK-8290417
+                fileContent.removeIf(content ->
+                    content.contains("SingleThreadedBufferingProcessor") ||
+                        content.contains("org/testcontainers") ||
+                        content.contains("org/graalvm") ||
+                        content.contains("io/netty/handler") ||
+                        content.contains("jdk/proxy"));
+                Files.write(cdsListPath, fileContent, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                // ignore
+            }
+            jvmArguments.add("-Xshare:dump");
+            jvmArguments.add("-XX:SharedClassListFile=" + cdsClassList);
+            jvmArguments.add("-XX:SharedArchiveFile=" + cdsFile);
+        }
+
+        private static byte[] computeClasspathHash(Stream<File> files) {
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA1");
+                files.map(file -> file.getAbsolutePath() + ":" + file.length() + ":" + file.lastModified())
+                    .forEachOrdered(line -> digest.update(line.getBytes(StandardCharsets.UTF_8)));
+                return digest.digest();
+            } catch (NoSuchAlgorithmException e) {
+                return new byte[0];
+            }
+        }
     }
 }

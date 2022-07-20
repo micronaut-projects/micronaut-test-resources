@@ -69,6 +69,7 @@ public class ServerUtils {
     private static final String CDS_HASH = "cds.bin";
     private static final String CDS_FILE = "cds.jsa";
     private static final String CDS_CLASS_LST = "cds.classlist";
+    public static final String FLAT_JAR = "flat.jar";
 
     /**
      * Writes the server settings in an output directory.
@@ -407,7 +408,7 @@ public class ServerUtils {
             }
             if (cdsDirectory != null && serverClasspath.stream().anyMatch(File::isDirectory)) {
                 // CDS doesn't support directories, so we have to create an arbitrary jar
-                flatDirsJar = cdsDirectory.resolve("flat.jar").toFile();
+                flatDirsJar = cdsDirectory.resolve(FLAT_JAR).toFile();
                 buildFlatJar();
                 classpath = Stream.concat(
                     Stream.of(flatDirsJar),
@@ -508,15 +509,19 @@ public class ServerUtils {
                     File cdsFile = new File(cdsDir, CDS_FILE);
                     File cdsClassList = new File(cdsDir, CDS_CLASS_LST);
                     File cdsHashFile = new File(cdsDir, CDS_HASH);
-                    configureCdsOptions(jvmArguments, cdsFile, cdsClassList, cdsHashFile);
+                    File cdsFlatJar = new File(cdsDir, FLAT_JAR);
+                    configureCdsOptions(jvmArguments, cdsFile, cdsClassList, cdsHashFile, cdsFlatJar);
                 }
             }
             jvmArgs = Collections.unmodifiableList(jvmArguments);
             return jvmArgs;
         }
 
-        private void configureCdsOptions(List<String> jvmArguments, File cdsFile, File
-            cdsClassList, File cdsHashFile) {
+        private void configureCdsOptions(List<String> jvmArguments,
+                                         File cdsFile,
+                                         File cdsClassList,
+                                         File cdsHashFile,
+                                         File cdsFlatJar) {
             if (cdsClassList.exists()) {
                 try {
                     byte[] actualHash = computeClasspathHash(getClasspath().stream());
@@ -524,13 +529,13 @@ public class ServerUtils {
                         byte[] cdsHash = Files.readAllBytes(cdsHashFile.toPath());
                         if (!Arrays.equals(actualHash, cdsHash)) {
                             // Classpath changed, invalidate CDS cache
-                            deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
+                            deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile, cdsFlatJar);
                         }
                     } else {
                         Files.write(cdsHashFile.toPath(), actualHash);
                     }
                 } catch (IOException e) {
-                    deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
+                    deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile, cdsFlatJar);
                 }
             }
             if (cdsClassList.exists()) {
@@ -544,9 +549,13 @@ public class ServerUtils {
             }
         }
 
-        private void deleteCdsFiles(File cdsFile, File cdsClassList, File cdsHashFile) {
-            if (!cdsClassList.delete() || !cdsFile.delete() || !cdsHashFile.delete()) {
-                LOGGER.warn("Unable to delete CDS files");
+        private void deleteCdsFiles(File... cdsFiles) {
+            for (File cdsFile : cdsFiles) {
+                try {
+                    Files.deleteIfExists(cdsFile.toPath());
+                } catch (IOException e) {
+                    throw new ClassDataSharingException(e);
+                }
             }
         }
 

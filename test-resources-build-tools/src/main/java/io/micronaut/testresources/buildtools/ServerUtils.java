@@ -69,7 +69,7 @@ public class ServerUtils {
     private static final String CDS_HASH = "cds.bin";
     private static final String CDS_FILE = "cds.jsa";
     private static final String CDS_CLASS_LST = "cds.classlist";
-    public static final String FLAT_JAR = "flat.jar";
+    private static final String FLAT_JAR = "flat.jar";
 
     /**
      * Writes the server settings in an output directory.
@@ -412,9 +412,7 @@ public class ServerUtils {
                 } catch (IOException e) {
                     throw new ClassDataSharingException("Cannot read hash file", e);
                 }
-                if (!flatDirsJar.delete()) {
-                    throw new ClassDataSharingException("Cannot delete jar file " + flatDirsJar);
-                }
+                deleteCdsFiles(flatDirsJar);
             }
             createFlatJarArchiveFile(hash, hashFile);
         }

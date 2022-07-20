@@ -273,179 +273,7 @@ public class ServerUtils {
     }
 
     private static ProcessParameters createProcessParameters(Integer explicitPort, Path portFilePath, String accessToken, Collection<File> serverClasspath, Path cdsDirectory) {
-        return new ProcessParameters() {
-            private List<String> jvmArgs;
-            private List<File> classpath;
-            private File flatDirsJar;
-
-            @Override
-            public String getMainClass() {
-                return SERVER_ENTRY_POINT;
-            }
-
-            @Override
-            public boolean isCDSDumpInvocation() {
-                return getJvmArguments()
-                    .stream()
-                    .anyMatch(arg -> arg.contains("-Xshare:dump"));
-            }
-
-            @Override
-            public Map<String, String> getSystemProperties() {
-                Map<String, String> systemProperties = new HashMap<>();
-                systemProperties.put(JMX_SYSTEM_PROPERTY, null);
-                if (explicitPort != null) {
-                    systemProperties.put(MICRONAUT_SERVER_PORT, String.valueOf(explicitPort));
-                }
-                if (accessToken != null) {
-                    systemProperties.put(SERVER_ACCESS_TOKEN, accessToken);
-                }
-                return systemProperties;
-            }
-
-            @Override
-            public List<File> getClasspath() {
-                if (classpath != null) {
-                    return classpath;
-                }
-                if (cdsDirectory != null && serverClasspath.stream().anyMatch(File::isDirectory)) {
-                    // CDS doesn't support directories, so we have to create an arbitrary jar
-                    flatDirsJar = cdsDirectory.resolve("flat.jar").toFile();
-                    buildFlatJar();
-                    classpath = Stream.concat(
-                        Stream.of(flatDirsJar),
-                        serverClasspath.stream().filter(File::isFile)
-                    ).collect(Collectors.toList());
-                } else {
-                    classpath = Collections.unmodifiableList(new ArrayList<>(serverClasspath));
-                }
-                return classpath;
-            }
-
-            /**
-             * AppCDS doesn't support directories, so if we find some on classpath, we
-             * build a jar out of them. That jar must be updated if there's any change,
-             * so we also build a hash of its contents.
-             */
-            private void buildFlatJar() {
-                byte[] hash = computeClasspathHash(
-                    serverClasspath.stream()
-                        .filter(File::isDirectory)
-                        .map(File::toPath)
-                        .flatMap(path -> {
-                            try (Stream<Path> files = Files.walk(path)) {
-                                // Need to go with intermediate list in order to avoid illegal state
-                                return files.map(Path::toFile).collect(Collectors.toList()).stream();
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                );
-                File hashFile = new File(flatDirsJar.getParentFile(), flatDirsJar.getName() + ".bin");
-                if (flatDirsJar.exists()) {
-                    try {
-                        if (hashFile.exists() && Arrays.equals(Files.readAllBytes(hashFile.toPath()), hash)) {
-                            return;
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException("Cannot read hash file", e);
-                    }
-                    if (!flatDirsJar.delete()) {
-                        throw new RuntimeException("Cannot delete jar file " + flatDirsJar);
-                    }
-                }
-                try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(flatDirsJar.toPath()))) {
-                    Files.write(hashFile.toPath(), hash);
-                    Set<String> addedEntries = new HashSet<>();
-                    for (File dir : serverClasspath) {
-                        if (dir.isDirectory()) {
-                            Path rootDir = dir.toPath();
-                            try (Stream<Path> stream = Files.walk(rootDir)) {
-                                List<Path> allpaths = stream.collect(Collectors.toList());
-                                for (Path sourcePath : allpaths) {
-                                    if (!sourcePath.equals(rootDir)) {
-                                        String zipFsPath = rootDir.relativize(sourcePath).toString();
-                                        JarEntry ze = new JarEntry(zipFsPath);
-                                        if (Files.isRegularFile(sourcePath) && addedEntries.add(zipFsPath)) {
-                                            jos.putNextEntry(ze);
-                                            Files.copy(sourcePath, jos);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public List<String> getArguments() {
-                if (explicitPort == null) {
-                    return Collections.singletonList("--port-file=" + portFilePath.toAbsolutePath());
-                }
-                return Collections.emptyList();
-            }
-
-            @Override
-            public List<String> getJvmArguments() {
-                if (jvmArgs != null) {
-                    return jvmArgs;
-                }
-                List<String> jvmArguments = new ArrayList<>();
-                jvmArguments.add("-XX:+TieredCompilation");
-                jvmArguments.add("-XX:TieredStopAtLevel=1");
-                if (cdsDirectory != null) {
-                    File cdsDir = cdsDirectory.toFile();
-                    boolean useCDS = cdsDir.isDirectory() || cdsDir.mkdirs();
-                    if (useCDS) {
-                        File cdsFile = new File(cdsDir, CDS_FILE);
-                        File cdsClassList = new File(cdsDir, CDS_CLASS_LST);
-                        File cdsHashFile = new File(cdsDir, CDS_HASH);
-                        configureCdsOptions(jvmArguments, cdsFile, cdsClassList, cdsHashFile);
-                    }
-                }
-                jvmArgs = Collections.unmodifiableList(jvmArguments);
-                return jvmArgs;
-            }
-
-            private void configureCdsOptions(List<String> jvmArguments, File cdsFile, File
-                cdsClassList, File cdsHashFile) {
-                if (cdsClassList.exists()) {
-                    try {
-                        byte[] actualHash = computeClasspathHash(getClasspath().stream());
-                        if (cdsHashFile.exists()) {
-                            byte[] cdsHash = Files.readAllBytes(cdsHashFile.toPath());
-                            if (!Arrays.equals(actualHash, cdsHash)) {
-                                // Classpath changed, invalidate CDS cache
-                                deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
-                            }
-                        } else {
-                            Files.write(cdsHashFile.toPath(), actualHash);
-                        }
-                    } catch (IOException e) {
-                        deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
-                    }
-                }
-                if (cdsClassList.exists()) {
-                    if (!cdsFile.exists()) {
-                        configureCdsDump(jvmArguments, cdsFile, cdsClassList);
-                    } else {
-                        jvmArguments.add("-XX:SharedArchiveFile=" + cdsFile);
-                    }
-                } else {
-                    configureExportCdsClassList(jvmArguments, cdsClassList);
-                }
-            }
-
-            private void deleteCdsFiles(File cdsFile, File cdsClassList, File cdsHashFile) {
-                if (!cdsClassList.delete() || !cdsFile.delete() || !cdsHashFile.delete()) {
-                    LOGGER.warn("Unable to delete CDS files");
-                }
-            }
-
-        };
+        return new DefaultProcessParameters(explicitPort, accessToken, cdsDirectory, serverClasspath, portFilePath);
 
     }
 
@@ -527,5 +355,200 @@ public class ServerUtils {
         default boolean isCDSDumpInvocation() {
             return false;
         }
+    }
+
+    private static class DefaultProcessParameters implements ProcessParameters {
+        private final Integer explicitPort;
+        private final String accessToken;
+        private final Path cdsDirectory;
+        private final Collection<File> serverClasspath;
+        private final Path portFilePath;
+        private List<String> jvmArgs;
+        private List<File> classpath;
+        private File flatDirsJar;
+
+        public DefaultProcessParameters(Integer explicitPort, String accessToken, Path cdsDirectory, Collection<File> serverClasspath, Path portFilePath) {
+            this.explicitPort = explicitPort;
+            this.accessToken = accessToken;
+            this.cdsDirectory = cdsDirectory;
+            this.serverClasspath = serverClasspath;
+            this.portFilePath = portFilePath;
+        }
+
+        @Override
+        public String getMainClass() {
+            return SERVER_ENTRY_POINT;
+        }
+
+        @Override
+        public boolean isCDSDumpInvocation() {
+            return getJvmArguments()
+                .stream()
+                .anyMatch(arg -> arg.contains("-Xshare:dump"));
+        }
+
+        @Override
+        public Map<String, String> getSystemProperties() {
+            Map<String, String> systemProperties = new HashMap<>();
+            systemProperties.put(JMX_SYSTEM_PROPERTY, null);
+            if (explicitPort != null) {
+                systemProperties.put(MICRONAUT_SERVER_PORT, String.valueOf(explicitPort));
+            }
+            if (accessToken != null) {
+                systemProperties.put(SERVER_ACCESS_TOKEN, accessToken);
+            }
+            return systemProperties;
+        }
+
+        @Override
+        public List<File> getClasspath() {
+            if (classpath != null) {
+                return classpath;
+            }
+            if (cdsDirectory != null && serverClasspath.stream().anyMatch(File::isDirectory)) {
+                // CDS doesn't support directories, so we have to create an arbitrary jar
+                flatDirsJar = cdsDirectory.resolve("flat.jar").toFile();
+                buildFlatJar();
+                classpath = Stream.concat(
+                    Stream.of(flatDirsJar),
+                    serverClasspath.stream().filter(File::isFile)
+                ).collect(Collectors.toList());
+            } else {
+                classpath = Collections.unmodifiableList(new ArrayList<>(serverClasspath));
+            }
+            return classpath;
+        }
+
+        /**
+         * AppCDS doesn't support directories, so if we find some on classpath, we
+         * build a jar out of them. That jar must be updated if there's any change,
+         * so we also build a hash of its contents.
+         */
+        private void buildFlatJar() {
+            byte[] hash = computeClasspathHash(
+                serverClasspath.stream()
+                    .filter(File::isDirectory)
+                    .map(File::toPath)
+                    .flatMap(path -> {
+                        try (Stream<Path> files = Files.walk(path)) {
+                            // Need to go with intermediate list in order to avoid illegal state
+                            return files.map(Path::toFile).collect(Collectors.toList()).stream();
+                        } catch (IOException e) {
+                            throw new ClassDataSharingException(e);
+                        }
+                    })
+            );
+            File hashFile = new File(flatDirsJar.getParentFile(), flatDirsJar.getName() + ".bin");
+            if (flatDirsJar.exists()) {
+                try {
+                    if (hashFile.exists() && Arrays.equals(Files.readAllBytes(hashFile.toPath()), hash)) {
+                        return;
+                    }
+                } catch (IOException e) {
+                    throw new ClassDataSharingException("Cannot read hash file", e);
+                }
+                if (!flatDirsJar.delete()) {
+                    throw new ClassDataSharingException("Cannot delete jar file " + flatDirsJar);
+                }
+            }
+            createFlatJarArchiveFile(hash, hashFile);
+        }
+
+        private void createFlatJarArchiveFile(byte[] hash, File hashFile) {
+            try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(flatDirsJar.toPath()))) {
+                Files.write(hashFile.toPath(), hash);
+                Set<String> addedEntries = new HashSet<>();
+                for (File dir : serverClasspath) {
+                    if (dir.isDirectory()) {
+                        Path rootDir = dir.toPath();
+                        compressDirectory(jos, addedEntries, rootDir);
+                    }
+                }
+            } catch (IOException e) {
+                throw new ClassDataSharingException(e);
+            }
+        }
+
+        private void compressDirectory(JarOutputStream jos, Set<String> addedEntries, Path rootDir) throws IOException {
+            try (Stream<Path> stream = Files.walk(rootDir)) {
+                List<Path> allpaths = stream.collect(Collectors.toList());
+                for (Path sourcePath : allpaths) {
+                    if (!sourcePath.equals(rootDir)) {
+                        String zipFsPath = rootDir.relativize(sourcePath).toString();
+                        JarEntry ze = new JarEntry(zipFsPath);
+                        if (Files.isRegularFile(sourcePath) && addedEntries.add(zipFsPath)) {
+                            jos.putNextEntry(ze);
+                            Files.copy(sourcePath, jos);
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public List<String> getArguments() {
+            if (explicitPort == null) {
+                return Collections.singletonList("--port-file=" + portFilePath.toAbsolutePath());
+            }
+            return Collections.emptyList();
+        }
+
+        @Override
+        public List<String> getJvmArguments() {
+            if (jvmArgs != null) {
+                return jvmArgs;
+            }
+            List<String> jvmArguments = new ArrayList<>();
+            jvmArguments.add("-XX:+TieredCompilation");
+            jvmArguments.add("-XX:TieredStopAtLevel=1");
+            if (cdsDirectory != null) {
+                File cdsDir = cdsDirectory.toFile();
+                boolean useCDS = cdsDir.isDirectory() || cdsDir.mkdirs();
+                if (useCDS) {
+                    File cdsFile = new File(cdsDir, CDS_FILE);
+                    File cdsClassList = new File(cdsDir, CDS_CLASS_LST);
+                    File cdsHashFile = new File(cdsDir, CDS_HASH);
+                    configureCdsOptions(jvmArguments, cdsFile, cdsClassList, cdsHashFile);
+                }
+            }
+            jvmArgs = Collections.unmodifiableList(jvmArguments);
+            return jvmArgs;
+        }
+
+        private void configureCdsOptions(List<String> jvmArguments, File cdsFile, File
+            cdsClassList, File cdsHashFile) {
+            if (cdsClassList.exists()) {
+                try {
+                    byte[] actualHash = computeClasspathHash(getClasspath().stream());
+                    if (cdsHashFile.exists()) {
+                        byte[] cdsHash = Files.readAllBytes(cdsHashFile.toPath());
+                        if (!Arrays.equals(actualHash, cdsHash)) {
+                            // Classpath changed, invalidate CDS cache
+                            deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
+                        }
+                    } else {
+                        Files.write(cdsHashFile.toPath(), actualHash);
+                    }
+                } catch (IOException e) {
+                    deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
+                }
+            }
+            if (cdsClassList.exists()) {
+                if (!cdsFile.exists()) {
+                    configureCdsDump(jvmArguments, cdsFile, cdsClassList);
+                } else {
+                    jvmArguments.add("-XX:SharedArchiveFile=" + cdsFile);
+                }
+            } else {
+                configureExportCdsClassList(jvmArguments, cdsClassList);
+            }
+        }
+
+        private void deleteCdsFiles(File cdsFile, File cdsClassList, File cdsHashFile) {
+            if (!cdsClassList.delete() || !cdsFile.delete() || !cdsHashFile.delete()) {
+                LOGGER.warn("Unable to delete CDS files");
+            }
+        }
+
     }
 }

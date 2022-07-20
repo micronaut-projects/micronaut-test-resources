@@ -113,6 +113,103 @@ class ServerUtilsTest extends Specification {
         then:
         0 * factory.startServer(_)
         0 * factory.waitFor(_)
+
+        cleanup:
+        applicationContext.stop()
+    }
+
+    def "supports class data sharing"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def cdsDir = tmpDir.resolve("cds-dir")
+        def cdsClasspathDir = tmpDir.resolve("some-classes")
+        Files.createDirectory(cdsClasspathDir)
+        Files.write(cdsClasspathDir.resolve("some.class"), [1, 2, 3] as byte[])
+        def cdsClassList = cdsDir.resolve("cds.classlist")
+        def cdsArchiveFile = cdsDir.resolve("cds.jsa")
+        def cdsFlatJar = cdsDir.resolve("flat.jar")
+        String cdsClassListOption = "-XX:DumpLoadedClassList=${cdsClassList.toAbsolutePath()}"
+        String cdsSharedClassListOption = "-XX:SharedClassListFile=${cdsClassList.toAbsolutePath()}"
+        String cdsSharedArchiveFileOption = "-XX:SharedArchiveFile=${cdsArchiveFile.toAbsolutePath()}"
+        def factory = Mock(ServerFactory)
+        def applicationContext = ApplicationContext.builder().start()
+        def embeddedServer = applicationContext.getBean(EmbeddedServer)
+        embeddedServer.start()
+
+        when: "first call with CDS support enabled"
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+            def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains("-Xshare:off")
+            assert jvmArgs.contains(cdsClassListOption)
+            assert params.classpath.contains(cdsFlatJar.toFile())
+            assert Files.exists(cdsFlatJar)
+            Files.write(cdsClassList, "test".getBytes())
+        }
+        1 * factory.waitFor(_) >> {
+            portFile.toFile().text = "${embeddedServer.port}"
+        }
+        settingsDir.toFile().deleteDir()
+
+        when: "second call dumps CDS then starts server"
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+            def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains("-Xshare:dump")
+            assert jvmArgs.contains(cdsSharedClassListOption)
+            assert jvmArgs.contains(cdsSharedArchiveFileOption)
+            Files.write(cdsArchiveFile, "test".getBytes())
+        }
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+            def jvmArgs = params.jvmArguments
+            assert !jvmArgs.contains("-Xshare:dump")
+            assert !jvmArgs.contains(cdsSharedClassListOption)
+            assert jvmArgs.contains(cdsSharedArchiveFileOption)
+        }
+        1 * factory.waitFor(_) >> {
+            portFile.toFile().text = "${embeddedServer.port}"
+        }
+
+        settingsDir.toFile().deleteDir()
+
+        when: "third call starts server with CDS"
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+            def jvmArgs = params.jvmArguments
+            assert !jvmArgs.contains("-Xshare:dump")
+            assert !jvmArgs.contains(cdsSharedClassListOption)
+            assert jvmArgs.contains(cdsSharedArchiveFileOption)
+        }
+        1 * factory.waitFor(_) >> {
+            portFile.toFile().text = "${embeddedServer.port}"
+        }
+
+        settingsDir.toFile().deleteDir()
+
+        when: "removes CDS files if classpath changes"
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [], null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+            def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains("-Xshare:off")
+            assert jvmArgs.contains(cdsClassListOption)
+            assert params.classpath == []
+            assert !Files.exists(cdsFlatJar)
+            Files.write(cdsClassList, "test".getBytes())
+        }
+        1 * factory.waitFor(_) >> {
+            portFile.toFile().text = "${embeddedServer.port}"
+        }
+
+        cleanup:
+        applicationContext.stop()
     }
 
     @Controller

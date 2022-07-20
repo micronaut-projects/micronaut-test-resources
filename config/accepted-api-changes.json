@@ -1,0 +1,12 @@
+[
+  {
+    "type": "io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters",
+    "member": "Class io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters",
+    "reason": "Added default method"
+  },
+  {
+    "type": "io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters",
+    "member": "Method io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters.isCDSDumpInvocation()",
+    "reason": "Default method wasn't implemented by consumers"
+  }
+]

@@ -25,7 +25,7 @@ dependencies {
 
     // For logback conversion
     aotPlugins("ch.qos.logback:logback-classic:1.3.0-alpha14")
-    aotPlugins("org.fusesource.jansi:jansi:1.18")
+    aotPlugins("org.fusesource.jansi:jansi:2.4.0")
 }
 
 application {

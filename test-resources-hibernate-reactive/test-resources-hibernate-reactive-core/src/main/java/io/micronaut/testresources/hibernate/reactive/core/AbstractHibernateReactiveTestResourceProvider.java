@@ -16,8 +16,6 @@
 package io.micronaut.testresources.hibernate.reactive.core;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
 import java.util.Collection;
@@ -51,7 +49,6 @@ import static io.micronaut.testresources.hibernate.reactive.core.HibernateReacti
  * @param <T> the container type
  */
 public abstract class AbstractHibernateReactiveTestResourceProvider<T extends JdbcDatabaseContainer<? extends T>> extends AbstractTestContainersProvider<T> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHibernateReactiveTestResourceProvider.class);
 
     @Override
     public List<String> getRequiredPropertyEntries() {
@@ -119,6 +116,5 @@ public abstract class AbstractHibernateReactiveTestResourceProvider<T extends Jd
         }
         return Optional.empty();
     }
-
 
 }

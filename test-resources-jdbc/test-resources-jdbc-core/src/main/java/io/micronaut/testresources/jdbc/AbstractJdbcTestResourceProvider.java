@@ -77,11 +77,11 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
             return false;
         }
         String datasource = datasourceNameFrom(propertyName);
-        String type = String.valueOf(requestedProperties.get(datasourceExpressionOf(datasource, TYPE)));
+        String type = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, TYPE)));
         if (type != null && type.equalsIgnoreCase(getSimpleName())) {
             return true;
         }
-        String dialect = String.valueOf(requestedProperties.get(datasourceExpressionOf(datasource, DIALECT)));
+        String dialect = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, DIALECT)));
         if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {
             return true;
         }

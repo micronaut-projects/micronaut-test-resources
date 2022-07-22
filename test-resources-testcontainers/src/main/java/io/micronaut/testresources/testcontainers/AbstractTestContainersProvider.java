@@ -121,4 +121,10 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
 
     protected abstract Optional<String> resolveProperty(String propertyName, T container);
 
+    protected final String stringOrNull(Object value) {
+        if (value == null) {
+            return null;
+        }
+        return String.valueOf(value);
+    }
 }

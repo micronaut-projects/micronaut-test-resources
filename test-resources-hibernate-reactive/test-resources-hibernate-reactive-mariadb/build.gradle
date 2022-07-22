@@ -1,0 +1,15 @@
+plugins {
+    id 'io.micronaut.build.internal.hibernate-reactive-module'
+}
+
+description = """
+Provides support for launching a MariaDB test container for Hibernate Reactive.
+"""
+
+dependencies {
+    implementation(libs.testcontainers.mariadb)
+    runtimeOnly(project(":test-resources-jdbc-mariadb"))
+
+    testRuntimeOnly(libs.mariadb)
+    testRuntimeOnly(libs.vertx.mysql)
+}

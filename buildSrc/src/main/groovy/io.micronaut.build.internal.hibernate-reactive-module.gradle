@@ -5,6 +5,7 @@ plugins {
 micronautBuild {
     sourceCompatibility = "11"
     targetCompatibility = "11"
+    binaryCompatibility.enabled = false
 }
 
 dependencies {

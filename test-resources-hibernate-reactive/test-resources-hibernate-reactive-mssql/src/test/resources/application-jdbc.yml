@@ -12,3 +12,7 @@ jpa:
       hibernate:
         hbm2ddl:
           auto: update
+test-resources:
+  containers:
+    mssql:
+      accept-license: true

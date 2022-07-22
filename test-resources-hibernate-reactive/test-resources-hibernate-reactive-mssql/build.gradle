@@ -8,7 +8,7 @@ Provides support for launching a MSSQL test container for Hibernate Reactive.
 
 dependencies {
     implementation(libs.testcontainers.mssql)
-    runtimeOnly(project(":test-resources-jdbc-mssql"))
+    implementation(project(":test-resources-jdbc-mssql"))
 
     testRuntimeOnly(libs.mssql)
     testRuntimeOnly(libs.vertx.mssql)

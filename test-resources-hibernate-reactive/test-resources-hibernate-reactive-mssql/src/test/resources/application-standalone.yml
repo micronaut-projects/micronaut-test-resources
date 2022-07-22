@@ -9,3 +9,7 @@ jpa:
           db-type: mssql
         hbm2ddl:
           auto: update
+test-resources:
+  containers:
+    mssql:
+      accept-license: true

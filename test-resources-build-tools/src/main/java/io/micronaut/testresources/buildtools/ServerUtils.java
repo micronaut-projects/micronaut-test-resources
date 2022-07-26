@@ -59,6 +59,7 @@ public class ServerUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerUtils.class.getName());
     private static final int STARTUP_TIME_WAIT_MS = 200;
+    private static final int MAX_READS = 10;
 
     private static final String SERVER_URI = "server.uri";
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
@@ -176,7 +177,22 @@ public class ServerUtils {
         startAndWait(serverFactory, explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
         int port;
         if (explicitPort == null) {
-            port = Integer.parseInt(Files.readAllLines(portFilePath).get(0));
+            List<String> lines = Files.readAllLines(portFilePath);
+            int attempts = 1;
+            while (lines.isEmpty()) {
+                if (attempts == MAX_READS) {
+                    throw new IllegalStateException("Unable to read port file " + portFilePath + ": file is empty");
+                }
+                // It is still possible to see the file, but that its contents isn't flushed yet
+                try {
+                    serverFactory.waitFor(Duration.of(STARTUP_TIME_WAIT_MS, ChronoUnit.MILLIS));
+                    lines = Files.readAllLines(portFilePath);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                attempts++;
+            }
+            port = Integer.parseInt(lines.get(0));
         } else {
             port = explicitPort;
         }

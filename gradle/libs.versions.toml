@@ -91,8 +91,10 @@ spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
 
 micronaut-aws-sdk-v1 = { module = "io.micronaut.aws:micronaut-aws-sdk-v1", version.ref = "micronaut-aws"}
 micronaut-aws-sdk-v2 = { module = "io.micronaut.aws:micronaut-aws-sdk-v2", version.ref = "micronaut-aws"}
-amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "aws-sdk-v1"}
-amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "aws-sdk-v2"}
+amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1"}
+amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1"}
+amazon-awssdk-v2-dynamodb = { module = "software.amazon.awssdk:dynamodb", version.ref = "amazon-awssdk-v2"}
+amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "amazon-awssdk-v2"}
 #
 # Managed dependencies appear in the BOM
 #

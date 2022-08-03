@@ -38,7 +38,8 @@ def hibernateReactiveModules = [
 
 def localstackModules = [
         'core',
-        's3'
+        's3',
+        'dynamodb'
 ]
 
 include 'test-resources-bom'

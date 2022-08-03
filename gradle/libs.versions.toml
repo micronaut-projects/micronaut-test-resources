@@ -63,7 +63,9 @@ reactive-oracle-xe = { module = "com.oracle.database.r2dbc:oracle-r2dbc", versio
 reactive-pool = { module = "io.r2dbc:r2dbc-pool", version = "" }
 reactive-postgres = { module = "org.postgresql:r2dbc-postgresql", version = "" }
 
+amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1"}
 amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1"}
+amazon-awssdk-v2-dynamodb = { module = "software.amazon.awssdk:dynamodb", version.ref = "amazon-awssdk-v2"}
 amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "amazon-awssdk-v2"}
 
 #

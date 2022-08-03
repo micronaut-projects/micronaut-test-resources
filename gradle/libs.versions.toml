@@ -20,6 +20,9 @@ micronaut = "3.5.1"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.1.1"
 micronaut-gradle-plugin = "3.5.1"
+
+amazon-awssdk-v1 = "1.12.274"
+amazon-awssdk-v2 = "2.17.245"
 groovy = "3.0.10"
 spock = "2.1-groovy-3.0"
 
@@ -34,6 +37,7 @@ testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", ve
 testcontainers-jdbc = { module = "org.testcontainers:jdbc", version = "" }
 testcontainers-hivemq = { module = "org.testcontainers:hivemq", version = "" }
 testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }
+testcontainers-localstack = { module = "org.testcontainers:localstack", version = "" }
 testcontainers-mariadb = { module = "org.testcontainers:mariadb", version = "" }
 testcontainers-mongodb = { module = "org.testcontainers:mongodb", version = "" }
 testcontainers-mssql = { module = "org.testcontainers:mssqlserver", version = "" }
@@ -58,6 +62,9 @@ reactive-mysql = { module = "dev.miku:r2dbc-mysql", version = "" }
 reactive-oracle-xe = { module = "com.oracle.database.r2dbc:oracle-r2dbc", version = "" }
 reactive-pool = { module = "io.r2dbc:r2dbc-pool", version = "" }
 reactive-postgres = { module = "org.postgresql:r2dbc-postgresql", version = "" }
+
+amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1"}
+amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "amazon-awssdk-v2"}
 
 #
 # Managed dependencies appear in the BOM

@@ -1,0 +1,21 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+    id 'java-test-fixtures'
+}
+
+description = """
+Provides core support for launching Localstack test containers.
+"""
+
+dependencies {
+    api(libs.testcontainers.localstack)
+    testFixturesApi(platform(mn.micronaut.bom))
+    testFixturesImplementation(mn.groovy)
+    testFixturesImplementation(mn.spock)
+    testFixturesApi(testFixtures(project(":test-resources-testcontainers"))) {
+        because "exposes AbstractTestContainersSpec"
+    }
+}
+
+// TODO: enable once first release of Localstack support is available
+micronautBuild.binaryCompatibility.enabled = false

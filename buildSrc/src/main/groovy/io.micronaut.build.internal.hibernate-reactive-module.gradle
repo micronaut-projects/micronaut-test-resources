@@ -14,15 +14,6 @@ dependencies {
     testImplementation(testFixtures(project(':test-resources-hibernate-reactive-core')))
     testCompileOnly(mn.micronaut.data.processor)
     testCompileOnly(mn.micronaut.inject.groovy)
-    testRuntimeOnly(libs.micronaut.sql.hibernate.reactive)
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'io.micronaut.data') {
-            details.useVersion "3.5.0"
-        }
-    }
 }
 
 repositories {

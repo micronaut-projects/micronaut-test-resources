@@ -21,19 +21,11 @@ dependencies {
     testFixturesCompileOnly(mn.micronaut.inject.groovy)
     testFixturesImplementation(mn.spock)
     testFixturesImplementation(mn.micronaut.data.hibernate.jpa)
-    testFixturesImplementation(libs.micronaut.data.hibernate.reactive)
+    testFixturesImplementation(mn.micronaut.data.hibernate.reactive)
     testFixturesImplementation(mn.reactor) {
         because "Groovy will fail compiling if this dependency is missing"
     }
     testFixturesRuntimeOnly(mn.micronaut.jdbc.hikari)
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'io.micronaut.data') {
-            details.useVersion "3.5.0"
-        }
-    }
 }
 
 repositories {

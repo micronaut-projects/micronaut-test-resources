@@ -212,6 +212,60 @@ class ServerUtilsTest extends Specification {
         applicationContext.stop()
     }
 
+    def "waits for port file to have contents"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def applicationContext = ApplicationContext.builder().start()
+        def embeddedServer = applicationContext.getBean(EmbeddedServer)
+        embeddedServer.start()
+
+        when:
+        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+
+        }
+        1 * factory.waitFor(_) >> {
+            portFile.toFile().text = ""
+            println "Waiting to write the contents of the port file"
+        }
+        1 * factory.waitFor(_) >> {
+            portFile.toFile().text = "${embeddedServer.port}"
+        }
+
+        cleanup:
+        applicationContext.stop()
+    }
+
+    def "reasonable error message if port file can never be read"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def applicationContext = ApplicationContext.builder().start()
+        def embeddedServer = applicationContext.getBean(EmbeddedServer)
+        embeddedServer.start()
+
+        when:
+        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+
+        }
+        10 * factory.waitFor(_) >> {
+            portFile.toFile().text = ""
+            println "Waiting to write the contents of the port file"
+        }
+        IllegalStateException ex = thrown()
+        ex.message == "Unable to read port file ${portFile}: file is empty"
+
+        cleanup:
+        applicationContext.stop()
+    }
+
+
     @Controller
     static class ServerMock {
 

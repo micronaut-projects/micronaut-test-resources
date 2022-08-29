@@ -815,10 +815,10 @@ public class JavamailSessionProvider implements SessionProvider {
       exposed-ports:
         - my.service.port: 1883
       command: "some.sh"
-        env:
-          - MY_ENV_VAR: "my value"
-        labels:
-          - my.label: "my value"
+      env:
+        - MY_ENV_VAR: "my value"
+      labels:
+        - my.label: "my value"
       startup-timeout: 120s</code></pre>
 </div>
 </div>

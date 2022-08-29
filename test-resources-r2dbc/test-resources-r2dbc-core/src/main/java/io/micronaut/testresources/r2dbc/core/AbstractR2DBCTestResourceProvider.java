@@ -75,15 +75,15 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         }
         String baseDatasourceExpression = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
         String datasource = R2dbcSupport.datasourceNameFrom(baseDatasourceExpression);
-        String type = String.valueOf(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.TYPE)));
+        String type = stringOrNull(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.TYPE)));
         if (type != null && type.equalsIgnoreCase(getSimpleName())) {
             return true;
         }
-        String driver = String.valueOf(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DRIVER)));
+        String driver = stringOrNull(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DRIVER)));
         if (driver != null && driver.toLowerCase(Locale.US).contains(getSimpleName())) {
             return true;
         }
-        String dialect = String.valueOf(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DIALECT)));
+        String dialect = stringOrNull(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DIALECT)));
         if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {
             return true;
         }

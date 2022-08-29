@@ -8,7 +8,6 @@ pluginManagement {
 plugins {
     id 'io.micronaut.build.shared.settings' version '5.3.14'
 }
-
 rootProject.name = 'testresources-parent'
 
 def jdbcModules = [
@@ -27,6 +26,14 @@ def r2dbcModules = [
         'postgresql',
         'mssql',
         'pool'
+]
+def hibernateReactiveModules = [
+        'core',
+        'mariadb',
+        'mssql',
+        'mysql',
+        'postgresql',
+        'oracle-xe'
 ]
 
 include 'test-resources-bom'
@@ -54,6 +61,14 @@ r2dbcModules.each {
     String projectName = "test-resources-r2dbc-$it"
     include projectName
     project(":test-resources-r2dbc-$it").projectDir = file("test-resources-r2dbc/$projectName")
+}
+
+if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+    hibernateReactiveModules.each {
+        String projectName = "test-resources-hibernate-reactive-$it"
+        include projectName
+        project(":test-resources-hibernate-reactive-$it").projectDir = file("test-resources-hibernate-reactive/$projectName")
+    }
 }
 
 micronautBuild {

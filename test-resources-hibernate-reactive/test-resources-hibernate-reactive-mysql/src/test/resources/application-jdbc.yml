@@ -1,0 +1,13 @@
+datasources:
+  default:
+    db-type: mysql
+    schema-generate: CREATE_DROP
+jpa:
+  default:
+    reactive: true
+    entity-scan:
+      packages: io.micronaut.testresources.hibernate.reactive.core
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update

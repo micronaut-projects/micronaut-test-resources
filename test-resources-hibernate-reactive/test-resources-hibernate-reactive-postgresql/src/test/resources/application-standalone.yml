@@ -1,0 +1,11 @@
+jpa:
+  default:
+    reactive: true
+    entity-scan:
+      packages: io.micronaut.testresources.hibernate.reactive.core
+    properties:
+      hibernate:
+        connection:
+          db-type: postgres
+        hbm2ddl:
+          auto: update

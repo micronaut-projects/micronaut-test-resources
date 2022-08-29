@@ -1,0 +1,14 @@
+plugins {
+    id 'io.micronaut.build.internal.hibernate-reactive-module'
+}
+
+description = """
+Provides support for launching an Oracle XE test container for Hibernate Reactive.
+"""
+
+dependencies {
+    implementation(libs.testcontainers.oracle.xe)
+    runtimeOnly(project(":test-resources-jdbc-oracle-xe"))
+
+    testRuntimeOnly(libs.vertx.oracle)
+}

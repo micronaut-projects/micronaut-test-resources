@@ -1,0 +1,11 @@
+jpa:
+  default:
+    reactive: true
+    entity-scan:
+      packages: io.micronaut.testresources.hibernate.reactive.core
+    properties:
+      hibernate:
+        connection:
+          db-type: mysql
+        hbm2ddl:
+          auto: update

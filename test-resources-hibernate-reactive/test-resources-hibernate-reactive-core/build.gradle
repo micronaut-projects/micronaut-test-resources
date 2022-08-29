@@ -1,0 +1,33 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+    id 'java-test-fixtures'
+}
+
+description = """
+Provides core support for Hibernate Reactive test resources.
+"""
+
+micronautBuild {
+    sourceCompatibility = "11"
+    targetCompatibility = "11"
+    binaryCompatibility.enabled = false
+}
+
+dependencies {
+    api(libs.testcontainers.jdbc)
+    testFixturesApi(platform(mn.micronaut.bom))
+    testFixturesApi(platform(mn.micronaut.sql.bom))
+    testFixturesCompileOnly(mn.micronaut.data.processor)
+    testFixturesCompileOnly(mn.micronaut.inject.groovy)
+    testFixturesImplementation(mn.spock)
+    testFixturesImplementation(mn.micronaut.data.hibernate.jpa)
+    testFixturesImplementation(mn.micronaut.data.hibernate.reactive)
+    testFixturesImplementation(mn.reactor) {
+        because "Groovy will fail compiling if this dependency is missing"
+    }
+    testFixturesRuntimeOnly(mn.micronaut.jdbc.hikari)
+}
+
+repositories {
+    mavenCentral()
+}

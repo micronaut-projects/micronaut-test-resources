@@ -1,0 +1,16 @@
+plugins {
+    id 'io.micronaut.build.internal.hibernate-reactive-module'
+}
+
+description = """
+Provides support for launching a PostgreSQL test container for Hibernate Reactive.
+"""
+
+dependencies {
+    implementation(libs.testcontainers.postgres)
+    runtimeOnly(project(":test-resources-jdbc-postgresql"))
+
+    testRuntimeOnly(libs.postgres)
+    testRuntimeOnly(libs.vertx.postgres)
+    testRuntimeOnly(libs.scram)
+}

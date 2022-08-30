@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -120,6 +121,22 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
      */
     protected String resolveDbSpecificProperty(String propertyName, JdbcDatabaseContainer<?> container) {
         return null;
+    }
+
+    @Override
+    protected void configureContainer(T container, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+        super.configureContainer(container, properties, testResourcesConfiguration);
+        ifPresent("init-script-path", testResourcesConfiguration, container::withInitScript);
+        ifPresent("username", testResourcesConfiguration, container::withUsername);
+        ifPresent("password", testResourcesConfiguration, container::withPassword);
+        ifPresent("db-name", testResourcesConfiguration, container::withDatabaseName);
+    }
+
+    private void ifPresent(String key, Map<String, Object> testResourcesConfiguration, Consumer<String> consumer) {
+        Object value = testResourcesConfiguration.get("containers." + getSimpleName() + "." + key);
+        if (value != null) {
+            consumer.accept(value.toString());
+        }
     }
 
     protected static String datasourceNameFrom(String expression) {

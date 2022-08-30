@@ -112,11 +112,15 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                         }
                     }
                     T container = createContainer(imageName, properties, testResourcesConfiguration);
+                    configureContainer(container, properties, testResourcesConfiguration);
                     metadata.ifPresent(md -> TestContainerMetadataSupport.applyMetadata(md, container));
                     return container;
                 }));
         }
         return Optional.empty();
+    }
+
+    protected void configureContainer(T container, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
     }
 
     protected abstract Optional<String> resolveProperty(String propertyName, T container);

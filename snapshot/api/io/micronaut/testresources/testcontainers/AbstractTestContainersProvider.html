@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":10,"i3":6,"i4":10,"i5":6,"i6":10,"i7":10};
+var methods = {"i0":6,"i1":6,"i2":10,"i3":6,"i4":10,"i5":6,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -115,7 +115,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/elasticsearch/ElasticsearchTestResourceProvider.html" title="class in io.micronaut.testresources.elasticsearch">ElasticsearchTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/hivemq/HiveMQTestResourceProvider.html" title="class in io.micronaut.testresources.hivemq">HiveMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/kafka/KafkaTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/rabbitmq/RabbitMQTestResourceProvider.html" title="class in io.micronaut.testresources.rabbitmq">RabbitMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/redis/RedisTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/hashicorp/vault/VaultTestResourceProvider.html" title="class in io.micronaut.testresources.hashicorp.vault">VaultTestResourceProvider</a></dd>
+<dd><a href="../../../../io/micronaut/testresources/hibernate/reactive/core/AbstractHibernateReactiveTestResourceProvider.html" title="class in io.micronaut.testresources.hibernate.reactive.core">AbstractHibernateReactiveTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/elasticsearch/ElasticsearchTestResourceProvider.html" title="class in io.micronaut.testresources.elasticsearch">ElasticsearchTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/hivemq/HiveMQTestResourceProvider.html" title="class in io.micronaut.testresources.hivemq">HiveMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/kafka/KafkaTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/rabbitmq/RabbitMQTestResourceProvider.html" title="class in io.micronaut.testresources.rabbitmq">RabbitMQTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/redis/RedisTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisTestResourceProvider</a>, <a href="../../../../io/micronaut/testresources/hashicorp/vault/VaultTestResourceProvider.html" title="class in io.micronaut.testresources.hashicorp.vault">VaultTestResourceProvider</a></dd>
 </dl>
 <hr>
 <br>
@@ -233,6 +233,10 @@ implements <a href="../../../../io/micronaut/testresources/core/TestResourcesRes
             java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfiguration)</code>
 <div class="block">Determines if this resolver can resolve the requested property.</div>
 </td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>protected java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html#stringOrNull-java.lang.Object-">stringOrNull</a></span>(java.lang.Object&nbsp;value)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -414,11 +418,20 @@ implements <a href="../../../../io/micronaut/testresources/core/TestResourcesRes
 </a><a name="resolveProperty-java.lang.String-T-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>resolveProperty</h4>
 <pre>protected abstract&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;resolveProperty(java.lang.String&nbsp;propertyName,
                                                                         <a href="../../../../io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html" title="type parameter in AbstractTestContainersProvider">T</a>&nbsp;container)</pre>
+</li>
+</ul>
+<a name="stringOrNull-java.lang.Object-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>stringOrNull</h4>
+<pre>protected final&nbsp;java.lang.String&nbsp;stringOrNull(java.lang.Object&nbsp;value)</pre>
 </li>
 </ul>
 </li>

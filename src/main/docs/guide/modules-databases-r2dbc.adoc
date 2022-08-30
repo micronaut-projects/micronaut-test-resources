@@ -17,6 +17,10 @@ In addition, R2DBC databases can be configured simply by reading the traditional
 - `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `postgresql`)
 - `datasources.*.driverClassName`: the class name of the driver (fallback)
 - `datasources.*.dialect`: the dialect to use for the database (fallback)
+- `datasources.*.db-name`: overrides the default test database name
+- `datasources.*.username`: overrides the default test user
+- `datasources.*.password`: overrides the default test password
+- `datasources.*.init-script-path`: a path to a SQL file on classpath, which will be executed at container startup
 
 In which case, the name of the datasource must match the name of the R2DBC datasource.
 This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.

@@ -1,0 +1,12 @@
+datasources:
+  default:
+    db-type: mariadb
+    schema-generate: NONE
+    dialect: MYSQL
+test-resources:
+  containers:
+    mariadb:
+      init-script-path: init.sql
+      username: sherlock
+      password: holmes
+      db-name: howdy

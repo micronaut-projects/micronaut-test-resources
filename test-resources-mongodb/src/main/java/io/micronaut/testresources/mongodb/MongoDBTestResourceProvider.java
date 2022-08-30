@@ -31,7 +31,11 @@ import java.util.Optional;
 public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<MongoDBContainer> {
 
     public static final String MONGODB_SERVER_URI = "mongodb.uri";
-    public static final String DEFAULT_IMAGE = "mongo";
+    public static final String DEFAULT_IMAGE = "mongo:5";
+    public static final String SIMPLE_NAME = "mongodb";
+    public static final String DB_NAME = "containers." + SIMPLE_NAME + ".db-name";
+
+    private String dbName;
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -40,7 +44,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
 
     @Override
     protected String getSimpleName() {
-        return "mongodb";
+        return SIMPLE_NAME;
     }
 
     @Override
@@ -50,12 +54,17 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
 
     @Override
     protected MongoDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+        Object configuredDbName = testResourcesConfiguration.get(DB_NAME);
+        if (configuredDbName != null) {
+            this.dbName = configuredDbName.toString();
+        }
         return new MongoDBContainer(imageName);
     }
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, MongoDBContainer container) {
-        return Optional.of(container.getReplicaSetUrl());
+        String url = dbName == null ? container.getReplicaSetUrl() : container.getReplicaSetUrl(dbName);
+        return Optional.of(url);
     }
 
     @Override

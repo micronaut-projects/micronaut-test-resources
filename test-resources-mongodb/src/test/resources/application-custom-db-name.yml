@@ -1,0 +1,4 @@
+test-resources:
+  containers:
+    mongodb:
+      db-name: custom-db-name

@@ -40,6 +40,8 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     private static final String PASSWORD = "password";
     private static final String DIALECT = "dialect";
     private static final String DRIVER = "driverClassName";
+    private static final String DB_NAME = "db-name";
+    private static final String INIT_SCRIPT = "init-script-path";
 
     private static final String TYPE = "db-type";
 
@@ -126,10 +128,10 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     @Override
     protected void configureContainer(T container, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
         super.configureContainer(container, properties, testResourcesConfiguration);
-        ifPresent("init-script-path", testResourcesConfiguration, container::withInitScript);
-        ifPresent("username", testResourcesConfiguration, container::withUsername);
-        ifPresent("password", testResourcesConfiguration, container::withPassword);
-        ifPresent("db-name", testResourcesConfiguration, container::withDatabaseName);
+        ifPresent(INIT_SCRIPT, testResourcesConfiguration, container::withInitScript);
+        ifPresent(USERNAME, testResourcesConfiguration, container::withUsername);
+        ifPresent(PASSWORD, testResourcesConfiguration, container::withPassword);
+        ifPresent(DB_NAME, testResourcesConfiguration, container::withDatabaseName);
     }
 
     private void ifPresent(String key, Map<String, Object> testResourcesConfiguration, Consumer<String> consumer) {

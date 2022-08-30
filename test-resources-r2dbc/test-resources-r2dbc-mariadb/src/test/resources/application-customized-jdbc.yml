@@ -1,0 +1,16 @@
+datasources:
+  default:
+    db-type: mariadb
+    dialect: MYSQL
+r2dbc:
+  datasources:
+    default:
+      db-type: mariadb
+      dialect: MYSQL
+test-resources:
+  containers:
+    mariadb:
+      init-script-path: init.sql
+      username: sherlock
+      password: holmes
+      db-name: howdy

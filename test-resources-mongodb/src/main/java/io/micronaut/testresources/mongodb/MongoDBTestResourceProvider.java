@@ -31,7 +31,7 @@ import java.util.Optional;
 public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<MongoDBContainer> {
 
     public static final String MONGODB_SERVER_URI = "mongodb.uri";
-    public static final String DEFAULT_IMAGE = "mongo";
+    public static final String DEFAULT_IMAGE = "mongo:5";
     public static final String SIMPLE_NAME = "mongodb";
     public static final String DB_NAME = "containers." + SIMPLE_NAME + ".db-name";
 

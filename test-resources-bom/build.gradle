@@ -2,3 +2,9 @@ plugins {
     id 'io.micronaut.build.internal.test-resources-base'
     id "io.micronaut.build.internal.bom"
 }
+
+tasks.named("checkVersionCatalogCompatibility") {
+    onlyIf {
+        JavaVersion.current().isJava11Compatible()
+    }
+}

@@ -135,7 +135,7 @@ public final class TestResourcesClasspath implements KnownModules {
         return Matcher.match(input, allDependencies, testResourcesVersion, m -> {
             m.onArtifact(MICRONAUT_ELASTICSEARCH, ELASTICSEARCH_MODULE);
             m.onArtifact(MICRONAUT_KAFKA, KAFKA_MODULE);
-            m.onArtifact(MICRONAUT_MQTT, HIVEMQ_MODULE);
+            m.onArtifact(name -> name.startsWith(MICRONAUT_MQTT), deps -> true, HIVEMQ_MODULE);
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
             m.onModule(MICRONAUT_MONGO_SYNC, MONGODB_MODULE);
             m.onModule(MICRONAUT_MONGO_REACTIVE, MONGODB_MODULE);

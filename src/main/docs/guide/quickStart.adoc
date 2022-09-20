@@ -13,9 +13,9 @@ plugins {
 }
 ----
 
-Please refer to the https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/[Gradle plugin documentation] for more information about configuring the test resources plugin.
+Please refer to the (https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#test-resources)[Gradle plugin's Test Resources documentation] for more information about configuring the test resources plugin.
 
 In the case of Maven, you can enable test resources support simply by setting the property `micronaut.test.resources.enabled` (either in your
 POM or via the command-line).
 
-Please refer to the https://micronaut-projects.github.io/micronaut-maven-plugin/latest/[Maven plugin documentation] for more information about configuring the test resources plugin.
+Please refer to the (https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/test-resources.html)[Maven plugin's Test Resources documentation] for more information about configuring the test resources plugin.

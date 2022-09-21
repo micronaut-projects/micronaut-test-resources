@@ -265,6 +265,16 @@ class ServerUtilsTest extends Specification {
         applicationContext.stop()
     }
 
+    def "can configure a namespace for the default shared settings"() {
+        def withoutNamespace = ServerUtils.getDefaultSharedSettingsPath()
+        def withNamespace = ServerUtils.getDefaultSharedSettingsPath("custom")
+
+        expect:
+        withoutNamespace == ServerUtils.getDefaultSharedSettingsPath(null)
+        withNamespace.parent == withoutNamespace.parent
+        withNamespace.parent.resolve("test-resources-custom") == withNamespace
+    }
+
 
     @Controller
     static class ServerMock {

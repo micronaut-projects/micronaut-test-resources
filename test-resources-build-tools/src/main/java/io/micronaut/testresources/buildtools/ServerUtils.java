@@ -259,11 +259,25 @@ public class ServerUtils {
     /**
      * Returns the default path to the settings directory for the test
      * resources server in case it needs to be shared between builds.
+     * Equivalent to calling {@link #getDefaultSharedSettingsPath(String)}
+     * without a namespace.
      *
      * @return the default path to the settings directory
      */
     public static Path getDefaultSharedSettingsPath() {
-        return Paths.get(System.getProperty("user.home"), ".micronaut/test-resources");
+        return getDefaultSharedSettingsPath(null);
+    }
+
+    /**
+     * Returns the default path to the settings directory for the test
+     * resources server in case it needs to be shared between builds.
+     *
+     * @param namespace the namespace of the shared settings
+     * @return the default path to the settings directory
+     */
+    public static Path getDefaultSharedSettingsPath(String namespace) {
+        String ns = namespace == null ? "test-resources" : "test-resources-" + namespace;
+        return Paths.get(System.getProperty("user.home"), ".micronaut/" + ns);
     }
 
     private static void startAndWait(ServerFactory serverFactory,

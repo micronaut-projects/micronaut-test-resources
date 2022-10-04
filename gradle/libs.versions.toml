@@ -19,7 +19,7 @@
 micronaut = "3.6.0"
 micronaut-docs = "2.0.0"
 micronaut-test = "3.1.1"
-micronaut-gradle-plugin = "3.6.0"
+micronaut-gradle-plugin = "3.6.2"
 groovy = "3.0.10"
 spock = "2.1-groovy-3.0"
 vertx-client = "4.3.2"

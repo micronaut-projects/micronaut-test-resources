@@ -16,13 +16,20 @@
 package io.micronaut.testresources.r2dbc.oracle;
 
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
+import io.micronaut.testresources.r2dbc.core.R2dbcSupport;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static io.micronaut.testresources.r2dbc.core.R2dbcSupport.datasourceNameFrom;
+import static io.micronaut.testresources.r2dbc.core.R2dbcSupport.r2dbDatasourceExpressionOf;
 
 /**
  * A test resource provider which will spawn an Oracle XE reactive test container.
@@ -30,6 +37,34 @@ import java.util.Optional;
 public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResourceProvider<OracleContainer> {
 
     private static final String R2DBC_ORACLE_DRIVER = "oracle";
+    private static final String OCID = "ocid";
+
+    @Override
+    public List<String> getRequiredProperties(String expression) {
+        List<String> requiredProperties = super.getRequiredProperties(expression);
+        String baseDatasourceExpression = R2dbcSupport.removeR2dbPrefixFrom(expression);
+        String datasource = datasourceNameFrom(baseDatasourceExpression);
+        return Stream.concat(
+            requiredProperties.stream(),
+            Stream.of(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, OCID))
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+        boolean shouldAnswer = super.shouldAnswer(propertyName, requestedProperties, testResourcesConfiguration);
+        if (shouldAnswer) {
+            String baseDatasourceExpression = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
+            String datasource = datasourceNameFrom(baseDatasourceExpression);
+            String ocid = stringOrNull(requestedProperties.get(r2dbDatasourceExpressionOf(datasource, OCID)));
+            if (ocid != null) {
+                // https://github.com/micronaut-projects/micronaut-test-resources/issues/104
+                // if the OCID property is set, then we're in a production environment
+                return false;
+            }
+        }
+        return shouldAnswer;
+    }
 
     @Override
     protected String getSimpleName() {

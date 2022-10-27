@@ -19,12 +19,41 @@ import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A test resource provider which will spawn an Oracle XE test container.
  */
 public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvider<OracleContainer> {
+    private static final String OCID = "ocid";
+
+    @Override
+    public List<String> getRequiredProperties(String expression) {
+        List<String> requiredProperties = super.getRequiredProperties(expression);
+        String datasource = datasourceNameFrom(expression);
+        return Stream.concat(
+            requiredProperties.stream(),
+            Stream.of(datasourceExpressionOf(datasource, OCID))
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+        boolean shouldAnswer = super.shouldAnswer(propertyName, requestedProperties, testResourcesConfiguration);
+        if (shouldAnswer) {
+            String datasource = datasourceNameFrom(propertyName);
+            String ocid = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, OCID)));
+            if (ocid != null) {
+                // https://github.com/micronaut-projects/micronaut-test-resources/issues/104
+                // if the OCID property is set, then we're in a production environment
+                return false;
+            }
+        }
+        return shouldAnswer;
+    }
 
     @Override
     protected String getSimpleName() {

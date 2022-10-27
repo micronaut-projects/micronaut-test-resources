@@ -33,12 +33,12 @@ import java.util.Arrays;
  * Main entry point for the server.
  */
 @Singleton
-public class Application {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
+public class TestResourcesService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesService.class);
 
     public static void main(String[] args) {
         long sd = System.nanoTime();
-        ApplicationContext context = Micronaut.run(Application.class, args);
+        ApplicationContext context = Micronaut.run(TestResourcesService.class, args);
         Arrays.stream(args)
             .filter(arg -> arg.startsWith("--port-file="))
             .findFirst()

@@ -8,5 +8,10 @@
     "type": "io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters",
     "member": "Method io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters.isCDSDumpInvocation()",
     "reason": "Default method wasn't implemented by consumers"
+  },
+  {
+    "type": "io.micronaut.testresources.elasticsearch.ElasticsearchTestResourceProvider",
+    "member": "Field DEFAULT_MEMORY",
+    "reason": "Field should have been private in the first place"
   }
 ]

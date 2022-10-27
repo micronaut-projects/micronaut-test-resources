@@ -16,7 +16,6 @@
 package io.micronaut.testresources.elasticsearch;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -34,8 +33,7 @@ public class ElasticsearchTestResourceProvider extends AbstractTestContainersPro
     public static final String ELASTICSEARCH_HOSTS = "elasticsearch.httpHosts";
     public static final String SIMPLE_NAME = "elasticsearch";
     public static final String DEFAULT_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch";
-    public static final String DEFAULT_TAG = "8.2.3";
-    public static final long DEFAULT_MEMORY = 1L * 1024 * 1024 * 1024;
+    public static final String DEFAULT_TAG = "8.4.3";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -59,9 +57,7 @@ public class ElasticsearchTestResourceProvider extends AbstractTestContainersPro
             imageName = imageName.withTag(DEFAULT_TAG);
         }
         ElasticsearchContainer elasticsearchContainer = new ElasticsearchContainer(imageName);
-        elasticsearchContainer.withEnv("xpack.security.enabled", "false")
-            .waitingFor(new LogMessageWaitStrategy().withRegEx(".*\"message\":\"started\".*"));
-        elasticsearchContainer.withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withMemory(DEFAULT_MEMORY));
+        elasticsearchContainer.withEnv("xpack.security.enabled", "false");
         return elasticsearchContainer;
     }
 

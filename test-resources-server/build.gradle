@@ -19,6 +19,7 @@ dependencies {
     implementation(project(':test-resources-testcontainers'))
     runtimeOnly(mn.logback)
     runtimeOnly(mn.micronaut.management)
+    runtimeOnly(mn.micronaut.serde.jackson)
 
     testImplementation(project(':test-resources-client'))
     testRuntimeOnly(project(':test-resources-kafka'))

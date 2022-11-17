@@ -10,4 +10,5 @@ dependencies {
     implementation(libs.testcontainers.elasticsearch)
 
     testImplementation(mn.micronaut.elasticsearch)
+    testRuntimeOnly(mn.micronaut.jackson.databind)
 }

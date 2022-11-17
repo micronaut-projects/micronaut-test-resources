@@ -16,6 +16,7 @@
 package io.micronaut.testresources.client;
 
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.BlockingHttpClient;
@@ -45,6 +46,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     private static final URI CLOSE_ALL_URI = UriBuilder.of("/").path("/close/all").build();
     private static final URI CLOSE_URI = UriBuilder.of("/").path("/close").build();
     private static final URI RESOLVE_URI = UriBuilder.of("/").path("/resolve").build();
+    private static final Argument<List<String>> LIST_OF_STRING = Argument.listOf(String.class);
 
     private final BlockingHttpClient client;
 
@@ -62,7 +64,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         properties.put("propertyEntries", propertyEntries);
         properties.put("testResourcesConfig", testResourcesConfig);
         HttpRequest<?> req = configure(HttpRequest.POST(RESOLVABLE_PROPERTIES_URI, properties));
-        return client.retrieve(req, List.class);
+        return client.retrieve(req, LIST_OF_STRING);
     }
 
     @Override
@@ -77,25 +79,25 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        return doGet(REQUIRED_PROPERTIES_URI, List.class, expression);
+        return doGet(REQUIRED_PROPERTIES_URI, LIST_OF_STRING, expression);
     }
 
     @Override
     public List<String> getRequiredPropertyEntries() {
-        return doGet(REQUIRED_PROPERTY_ENTRIES_URI, List.class);
+        return doGet(REQUIRED_PROPERTY_ENTRIES_URI, LIST_OF_STRING);
     }
 
     @Override
     public void closeAll() {
-        doGet(CLOSE_ALL_URI, String.class);
+        doGet(CLOSE_ALL_URI, Argument.STRING);
     }
 
     @Override
     public void closeScope(@Nullable String id) {
-        doGet(CLOSE_URI, String.class, id);
+        doGet(CLOSE_URI, Argument.STRING, id);
     }
 
-    private <T> T doGet(URI uri, Class<T> clazz, String... pathElements) {
+    private <T> T doGet(URI uri, Argument<T> clazz, String... pathElements) {
         UriBuilder builder = UriBuilder.of(uri);
         for (String param : pathElements) {
             builder = builder.path(param);

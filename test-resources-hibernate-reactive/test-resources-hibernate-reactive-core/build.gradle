@@ -8,8 +8,6 @@ Provides core support for Hibernate Reactive test resources.
 """
 
 micronautBuild {
-    sourceCompatibility = "11"
-    targetCompatibility = "11"
     binaryCompatibility.enabled = false
 }
 

@@ -16,6 +16,7 @@
 package io.micronaut.testresources.server;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Nullable;
 
 /**
  * Stores metadata about a running test container.
@@ -28,7 +29,7 @@ public final class TestContainer {
 
     private final String scope;
 
-    public TestContainer(String name, String imageName, String id, String scope) {
+    public TestContainer(String name, String imageName, String id, @Nullable String scope) {
         this.name = name;
         this.imageName = imageName;
         this.id = id;
@@ -63,6 +64,7 @@ public final class TestContainer {
      * Returns the scope for which this container is defined.
      * @return the scope
      */
+    @Nullable
     public String getScope() {
         return scope;
     }

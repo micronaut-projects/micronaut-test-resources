@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.server;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
@@ -101,7 +102,7 @@ public final class TestResourcesController implements TestResourcesResolver {
     }
 
     @Get("/close/{id}")
-    public void closeScope(String id) {
+    public void closeScope(@Nullable String id) {
         TestContainers.closeScope(id);
     }
 
@@ -111,7 +112,7 @@ public final class TestResourcesController implements TestResourcesResolver {
     }
 
     @Get("/testcontainers/{scope}")
-    public List<TestContainer> listContainersByScope(String scope) {
+    public List<TestContainer> listContainersByScope(@Nullable String scope) {
         return TestContainers.listByScope(scope)
             .entrySet()
             .stream()

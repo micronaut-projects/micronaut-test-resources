@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.client;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.BlockingHttpClient;
@@ -90,7 +91,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public void closeScope(String id) {
+    public void closeScope(@Nullable String id) {
         doGet(CLOSE_URI, String.class, id);
     }
 

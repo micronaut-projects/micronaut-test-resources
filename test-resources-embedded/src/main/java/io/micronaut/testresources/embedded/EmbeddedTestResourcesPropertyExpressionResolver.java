@@ -47,7 +47,7 @@ public class EmbeddedTestResourcesPropertyExpressionResolver extends LazyTestRes
 
         @Override
         public <T> Optional<T> resolve(PropertyResolver propertyResolver,
-                                       ConversionService<?> conversionService,
+                                       ConversionService conversionService,
                                        String expression,
                                        Class<T> requiredType) {
             List<TestResourcesResolver> resolvers = loader.getResolvers();

@@ -57,4 +57,5 @@ dependencies {
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(mn.spock)
+    testRuntimeOnly(mn.micronaut.serde.jackson)
 }

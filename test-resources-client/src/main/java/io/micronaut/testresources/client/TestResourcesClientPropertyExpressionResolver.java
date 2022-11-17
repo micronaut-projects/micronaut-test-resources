@@ -17,6 +17,7 @@ package io.micronaut.testresources.client;
 
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.PropertyExpressionResolver;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
@@ -84,7 +85,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         @Override
-        public void closeScope(String id) {
+        public void closeScope(@Nullable String id) {
         }
     }
 
@@ -93,7 +94,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
 
         @Override
         public <T> Optional<T> resolve(PropertyResolver propertyResolver,
-                                       ConversionService<?> conversionService,
+                                       ConversionService conversionService,
                                        String expression,
                                        Class<T> requiredType) {
             if (propertyResolver instanceof Environment) {

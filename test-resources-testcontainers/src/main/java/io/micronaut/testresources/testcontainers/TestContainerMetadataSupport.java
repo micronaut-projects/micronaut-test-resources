@@ -15,7 +15,9 @@
  */
 package io.micronaut.testresources.testcontainers;
 
-import io.micronaut.core.convert.DefaultConversionService;
+import io.micronaut.core.convert.ConversionService;
+import io.micronaut.core.convert.DefaultMutableConversionService;
+import io.micronaut.core.convert.MutableConversionService;
 import io.micronaut.runtime.converters.time.TimeConverterRegistrar;
 import org.jetbrains.annotations.Nullable;
 import org.testcontainers.containers.BindMode;
@@ -51,13 +53,14 @@ final class TestContainerMetadataSupport {
     static final int GENERIC_ORDER = 1000;
     static final int SPECIFIC_ORDER = 0;
 
-    private static final DefaultConversionService CONVERSION_SERVICE;
+    private static final ConversionService CONVERSION_SERVICE;
     private static final String CLASSPATH_PREFIX = "classpath:";
 
     static {
-        CONVERSION_SERVICE = new DefaultConversionService();
+        MutableConversionService mcs = new DefaultMutableConversionService();
         TimeConverterRegistrar registrar = new TimeConverterRegistrar();
-        registrar.register(CONVERSION_SERVICE);
+        registrar.register(mcs);
+        CONVERSION_SERVICE = mcs;
     }
 
     private TestContainerMetadataSupport() {

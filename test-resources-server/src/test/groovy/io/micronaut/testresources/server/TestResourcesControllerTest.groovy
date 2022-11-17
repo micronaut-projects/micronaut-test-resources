@@ -1,7 +1,9 @@
 package io.micronaut.testresources.server
 
 import io.micronaut.context.annotation.Property
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.client.TestResourcesClient
@@ -40,5 +42,30 @@ class TestResourcesControllerTest extends Specification {
     static interface DiagnosticsClient extends TestResourcesClient {
         @Get("/testcontainers")
         List<TestContainer> listContainers();
+
+        @Override
+        @Post("/list")
+        List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
+
+        @Override
+        @Post("/resolve")
+        Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration);
+
+        @Override
+        @Get("/requirements/expr/{expression}")
+        List<String> getRequiredProperties(String expression);
+
+        @Override
+        @Get("/requirements/entries")
+        List<String> getRequiredPropertyEntries();
+
+        /**
+         * Closes all test resources.
+         */
+        @Get("/close/all")
+        void closeAll();
+
+        @Get("/close/{id}")
+        void closeScope(@Nullable String id);
     }
 }

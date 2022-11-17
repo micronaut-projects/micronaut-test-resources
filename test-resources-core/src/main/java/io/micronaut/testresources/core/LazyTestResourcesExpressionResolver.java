@@ -37,7 +37,7 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
 
     @Override
     public <T> Optional<T> resolve(PropertyResolver propertyResolver,
-                                   ConversionService<?> conversionService,
+                                   ConversionService conversionService,
                                    String expression,
                                    Class<T> requiredType) {
         if (expression.startsWith(PLACEHOLDER_PREFIX)) {

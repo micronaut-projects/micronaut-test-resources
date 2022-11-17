@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.client;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.testresources.core.TestResourcesResolver;
@@ -62,5 +63,5 @@ public interface TestResourcesClient extends TestResourcesResolver {
     void closeAll();
 
     @Get("/close/{id}")
-    void closeScope(String id);
+    void closeScope(@Nullable String id);
 }

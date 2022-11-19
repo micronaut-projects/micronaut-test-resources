@@ -25,7 +25,7 @@ spock = "2.1-groovy-3.0"
 vertx-client = "4.3.2"
 
 # Managed versions appear in the BOM
-managed-testcontainers = "1.17.5"
+managed-testcontainers = "1.17.6"
 
 [libraries]
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }

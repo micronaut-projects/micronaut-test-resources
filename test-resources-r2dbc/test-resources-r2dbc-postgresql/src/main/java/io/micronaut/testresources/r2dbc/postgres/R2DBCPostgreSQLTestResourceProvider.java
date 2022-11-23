@@ -22,6 +22,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.PostgreSQLR2DBCDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,6 +32,9 @@ import java.util.Optional;
  * A test resource provider for reactive PostgreSQL.
  */
 public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<PostgreSQLContainer<?>> {
+    private static final List<String> SUPPORTED_DB_TYPES = Collections.unmodifiableList(
+        Arrays.asList("postgresql", "postgres", "pg")
+    );
 
     @Override
     protected String getSimpleName() {
@@ -38,6 +44,11 @@ public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResour
     @Override
     protected String getDefaultImageName() {
         return "postgres";
+    }
+
+    @Override
+    protected List<String> getDbTypes() {
+        return SUPPORTED_DB_TYPES;
     }
 
     @Override

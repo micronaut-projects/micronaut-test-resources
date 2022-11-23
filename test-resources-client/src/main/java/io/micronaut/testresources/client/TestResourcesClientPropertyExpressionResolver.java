@@ -19,6 +19,7 @@ import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
@@ -96,7 +97,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
                 TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
                 Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
                 Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
-                Optional<String> resolved = client.resolve(expression, props, properties);
+                Optional<String> resolved = callClient(expression, client, props, properties);
                 if (resolved.isPresent()) {
                     String resolvedValue = resolved.get();
                     LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
@@ -106,6 +107,15 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
                 }
             }
             return Optional.empty();
+        }
+
+        private static Optional<String> callClient(String expression, TestResourcesClient client, Map<String, Object> props, Map<String, Object> properties) {
+            try {
+                return client.resolve(expression, props, properties);
+            } catch (HttpClientResponseException ex) {
+                LOGGER.debug("Test resources client failed to resolve expression '{}'", expression, ex);
+                return Optional.empty();
+            }
         }
 
         @Override

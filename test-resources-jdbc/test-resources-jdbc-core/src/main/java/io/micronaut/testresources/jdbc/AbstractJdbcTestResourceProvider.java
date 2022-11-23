@@ -49,6 +49,14 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         Arrays.asList(URL, USERNAME, PASSWORD, DRIVER)
     );
 
+    /**
+     * Returns the list of db-types supported by this provider.
+     * @return the list of db types
+     */
+    protected List<String> getDbTypes() {
+        return Collections.singletonList(getSimpleName());
+    }
+
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         Collection<String> datasources = propertyEntries.getOrDefault(PREFIX, Collections.emptyList());
@@ -81,7 +89,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         }
         String datasource = datasourceNameFrom(propertyName);
         String type = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, TYPE)));
-        if (type != null && type.equalsIgnoreCase(getSimpleName())) {
+        if (type != null && getDbTypes().stream().anyMatch(type::equalsIgnoreCase)) {
             return true;
         }
         String dialect = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, DIALECT)));

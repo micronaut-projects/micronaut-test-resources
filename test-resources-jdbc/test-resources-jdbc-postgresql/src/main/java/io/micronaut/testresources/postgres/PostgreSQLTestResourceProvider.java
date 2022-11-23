@@ -19,12 +19,18 @@ import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
  * A test resource provider which will spawn a MySQL test container.
  */
 public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<PostgreSQLContainer<?>> {
+    private static final List<String> SUPPORTED_DB_TYPES = Collections.unmodifiableList(
+        Arrays.asList("postgresql", "postgres", "pg")
+    );
 
     @Override
     protected String getSimpleName() {
@@ -34,6 +40,11 @@ public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProv
     @Override
     protected String getDefaultImageName() {
         return "postgres";
+    }
+
+    @Override
+    protected List<String> getDbTypes() {
+        return SUPPORTED_DB_TYPES;
     }
 
     @Override

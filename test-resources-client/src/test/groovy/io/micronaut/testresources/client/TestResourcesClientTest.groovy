@@ -2,6 +2,7 @@ package io.micronaut.testresources.client
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
+import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
@@ -30,8 +31,12 @@ class TestResourcesClientTest extends Specification {
         app.getProperty("dummy1", String).get() == 'value for dummy1'
         app.getProperty("dummy2", String).get() == 'value for dummy2'
 
-        cleanup:
-        app.close()
+        when:
+        app.getProperty("missing", String).empty
+
+        then:
+        ConfigurationException e = thrown()
+        e.message == 'Could not resolve placeholder ${auto.test.resources.missing}'
     }
 
     private ApplicationContext createApplication() {
@@ -64,7 +69,7 @@ class TestResourcesClientTest extends Specification {
         @Override
         @Post("/list")
         List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-            ["dummy1", "dummy2"]
+            ["dummy1", "dummy2", "missing"]
         }
 
         @Override
@@ -82,6 +87,9 @@ class TestResourcesClientTest extends Specification {
         @Override
         @Post('/resolve')
         Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+            if ("missing" == name) {
+                return Optional.empty()
+            }
             Optional.of("value for $name".toString())
         }
 

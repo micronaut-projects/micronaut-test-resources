@@ -25,6 +25,7 @@ import org.testcontainers.containers.GenericContainer;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -53,6 +54,14 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         PASSWORD
     );
 
+    /**
+     * Returns the list of db-types supported by this provider.
+     * @return the list of db types
+     */
+    protected List<String> getDbTypes() {
+        return Collections.singletonList(getSimpleName());
+    }
+
     @Override
     public List<String> getRequiredPropertyEntries() {
         return R2dbcSupport.REQUIRED_PROPERTY_ENTRIES_LIST;
@@ -76,7 +85,7 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         String baseDatasourceExpression = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
         String datasource = R2dbcSupport.datasourceNameFrom(baseDatasourceExpression);
         String type = stringOrNull(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.TYPE)));
-        if (type != null && type.equalsIgnoreCase(getSimpleName())) {
+        if (type != null && getDbTypes().stream().anyMatch(type::equalsIgnoreCase)) {
             return true;
         }
         String driver = stringOrNull(requestedProperties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DRIVER)));

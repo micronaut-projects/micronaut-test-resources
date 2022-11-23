@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -204,6 +204,12 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#datasourcePropertyFrom-java.lang.String-">datasourcePropertyFrom</a></span>(java.lang.String&nbsp;expression)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>protected java.util.List&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getDbTypes--">getDbTypes</a></span>()</code>
+<div class="block">Returns the list of db-types supported by this provider.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredProperties-java.lang.String-">getRequiredProperties</a></span>(java.lang.String&nbsp;expression)</code>
 <div class="block">Returns the list of properties which should be read
@@ -211,11 +217,11 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
  itself needs some configuration properties.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredPropertyEntries--">getRequiredPropertyEntries</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getResolvableProperties-java.util.Map-java.util.Map-">getResolvableProperties</a></span>(java.util.Map&lt;java.lang.String,java.util.Collection&lt;java.lang.String&gt;&gt;&nbsp;propertyEntries,
                        java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;testResourcesConfig)</code>
@@ -223,7 +229,7 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
  is able to support.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#resolveDbSpecificProperty-java.lang.String-org.testcontainers.containers.JdbcDatabaseContainer-">resolveDbSpecificProperty</a></span>(java.lang.String&nbsp;propertyName,
                          org.testcontainers.containers.JdbcDatabaseContainer&lt;?&gt;&nbsp;container)</code>
@@ -231,12 +237,12 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
  a particular JDBC implementation.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#resolveProperty-java.lang.String-T-">resolveProperty</a></span>(java.lang.String&nbsp;expression,
                <a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="type parameter in AbstractJdbcTestResourceProvider">T</a>&nbsp;container)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#shouldAnswer-java.lang.String-java.util.Map-java.util.Map-">shouldAnswer</a></span>(java.lang.String&nbsp;propertyName,
             java.util.Map&lt;java.lang.String,java.lang.Object&gt;&nbsp;requestedProperties,
@@ -290,6 +296,20 @@ extends <a href="../../../../io/micronaut/testresources/testcontainers/AbstractT
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getDbTypes--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDbTypes</h4>
+<pre>protected&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;getDbTypes()</pre>
+<div class="block">Returns the list of db-types supported by this provider.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the list of db types</dd>
+</dl>
+</li>
+</ul>
 <a name="getResolvableProperties-java.util.Map-java.util.Map-">
 <!--   -->
 </a>

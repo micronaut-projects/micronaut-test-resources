@@ -21,8 +21,13 @@ import java.net.URL;
 import java.util.Optional;
 
 final class ConfigFinder {
+    public static final String SYSTEM_PROP_PREFIX = "micronaut.test.resources";
 
     public static final String TEST_RESOURCES_PROPERTIES = "/test-resources.properties";
+
+    private ConfigFinder() {
+
+    }
 
     static Optional<URL> findConfiguration(ResourceLoader loader) {
         Optional<URL> resource = Optional.empty();
@@ -33,5 +38,9 @@ final class ConfigFinder {
             resource = Optional.ofNullable(ConfigFinder.class.getResource(TEST_RESOURCES_PROPERTIES));
         }
         return resource;
+    }
+
+    static String systemPropertyNameOf(String propertyName) {
+        return SYSTEM_PROP_PREFIX + "." + propertyName;
     }
 }

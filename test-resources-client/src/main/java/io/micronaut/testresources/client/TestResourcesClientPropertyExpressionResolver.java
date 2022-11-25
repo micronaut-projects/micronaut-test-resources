@@ -49,8 +49,11 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
 
     private static TestResourcesClient createClient(Environment env) {
         Optional<URL> config = findConfiguration(env);
-        return config.map(TestResourcesClientFactory::configuredAt)
-            .orElse(NoOpClient.INSTANCE);
+        if (config.isPresent()) {
+            return config.map(TestResourcesClientFactory::configuredAt)
+                .get();
+        }
+        return TestResourcesClientFactory.fromSystemProperties().orElse(NoOpClient.INSTANCE);
     }
 
     private static class NoOpClient implements TestResourcesClient {

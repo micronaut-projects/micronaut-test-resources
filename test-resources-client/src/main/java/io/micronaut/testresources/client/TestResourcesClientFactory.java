@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -35,6 +36,8 @@ import java.util.Properties;
  * context to create the client.
  */
 public final class TestResourcesClientFactory {
+    private static final String DEFAULT_TIMEOUT_SECONDS = "60";
+
     private TestResourcesClientFactory() {
 
     }
@@ -49,7 +52,7 @@ public final class TestResourcesClientFactory {
         try {
             String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
             String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
-            int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, "60"));
+            int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, DEFAULT_TIMEOUT_SECONDS));
             HttpClientConfiguration config = new DefaultHttpClientConfiguration();
             config.setReadTimeout(Duration.of(clientReadTimeout, ChronoUnit.SECONDS));
             HttpClient client = HttpClient.create(new URL(serverUri), config);
@@ -57,5 +60,24 @@ public final class TestResourcesClientFactory {
         } catch (MalformedURLException e) {
             throw new TestResourcesException(e);
         }
+    }
+
+    static Optional<TestResourcesClient> fromSystemProperties() {
+        String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));
+        if (serverUri != null) {
+            String accessToken = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ACCESS_TOKEN));
+            String clientTimeoutString = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.CLIENT_READ_TIMEOUT), DEFAULT_TIMEOUT_SECONDS);
+            int clientReadTimeout = Integer.parseInt(clientTimeoutString);
+            HttpClientConfiguration config = new DefaultHttpClientConfiguration();
+            config.setReadTimeout(Duration.of(clientReadTimeout, ChronoUnit.SECONDS));
+            HttpClient client;
+            try {
+                client = HttpClient.create(new URL(serverUri), config);
+            } catch (MalformedURLException e) {
+                return Optional.empty();
+            }
+            return Optional.of(new DefaultTestResourcesClient(client, accessToken));
+        }
+        return Optional.empty();
     }
 }

@@ -62,7 +62,8 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
             try {
                 if (client == null) {
                     Optional<URL> config = findConfiguration(resourceLoader);
-                    config.ifPresent(url -> client = TestResourcesClientFactory.configuredAt(url));
+                    client = config.map(TestResourcesClientFactory::configuredAt)
+                        .orElseGet(() -> TestResourcesClientFactory.fromSystemProperties().orElse(null));
                 }
                 return Optional.ofNullable(client);
             } finally {

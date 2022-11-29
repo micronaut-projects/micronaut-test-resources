@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.client;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.http.client.DefaultHttpClientConfiguration;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.HttpClientConfiguration;
@@ -79,5 +80,22 @@ public final class TestResourcesClientFactory {
             return Optional.of(new DefaultTestResourcesClient(client, accessToken));
         }
         return Optional.empty();
+    }
+
+    /**
+     * Extracts the {@link TestResourcesClient} from the given {@link ApplicationContext}.
+     * @param context the application context
+     * @return the test resources client
+     */
+    public static TestResourcesClient extractFrom(ApplicationContext context) {
+        return context.getEnvironment()
+            .getPropertySourceLoaders()
+            .stream()
+            .filter(TestResourcesClientPropertySourceLoader.class::isInstance)
+            .map(TestResourcesClientPropertySourceLoader.class::cast)
+            .map(TestResourcesClientPropertySourceLoader::getClient)
+            .findFirst()
+            .orElse(Optional.empty())
+            .orElse(null);
     }
 }

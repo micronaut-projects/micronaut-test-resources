@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
@@ -43,6 +44,7 @@ final class TestContainerMetadata {
     private final Long sharedMemory;
     private final String network;
     private final Set<String> networkAliases;
+    private final WaitStrategy waitStrategy;
 
     @SuppressWarnings("checkstyle:ParameterNumber")
     TestContainerMetadata(String id,
@@ -60,7 +62,10 @@ final class TestContainerMetadata {
                           List<CopyFileToContainer> fileCopies,
                           Long memory,
                           Long swapMemory,
-                          Long sharedMemory, String network, Set<String> networkAliases) {
+                          Long sharedMemory,
+                          String network,
+                          Set<String> networkAliases,
+                          WaitStrategy waitStrategy) {
         this.id = id;
         this.imageName = imageName;
         this.imageTag = imageTag;
@@ -79,6 +84,7 @@ final class TestContainerMetadata {
         this.sharedMemory = sharedMemory;
         this.network = network;
         this.networkAliases = networkAliases;
+        this.waitStrategy = waitStrategy;
     }
 
     public String getId() {
@@ -151,6 +157,10 @@ final class TestContainerMetadata {
 
     public Set<String> getNetworkAliases() {
         return networkAliases;
+    }
+
+    public Optional<WaitStrategy> getWaitStrategy() {
+        return Optional.ofNullable(waitStrategy);
     }
 
     public static final class CopyFileToContainer {

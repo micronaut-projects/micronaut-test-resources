@@ -1,6 +1,9 @@
 package io.micronaut.testresources.testcontainers
 
-
+import org.testcontainers.containers.wait.strategy.DockerHealthcheckWaitStrategy
+import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
+import org.testcontainers.containers.wait.strategy.HttpWaitStrategy
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
@@ -330,6 +333,86 @@ class TestContainerMetadataSupportTest extends Specification {
         md2.get().with {
             assert it.network.get() == 'second'
             assert it.networkAliases == ['tarzan', 'jane'] as Set
+        }
+    }
+
+    def "reads log wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            log:
+                                regex: ".*some log message.*"
+                                times: 4
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof LogMessageWaitStrategy
+        }
+    }
+
+    def "reads http wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            http:
+                                path: /
+                                status-code: 200
+                                port: 8181
+                                tls: true
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof HttpWaitStrategy
+        }
+    }
+
+    def "reads port wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy: port
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof HostPortWaitStrategy
+        }
+    }
+
+    def "reads healthcheck wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy: healthcheck
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof DockerHealthcheckWaitStrategy
         }
     }
 

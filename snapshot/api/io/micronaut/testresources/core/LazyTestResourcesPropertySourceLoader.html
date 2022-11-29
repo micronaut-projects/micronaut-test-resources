@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -156,17 +156,21 @@ implements io.micronaut.context.env.PropertySourceLoader</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../io/micronaut/testresources/core/PropertyExpressionProducer.html" title="interface in io.micronaut.testresources.core">PropertyExpressionProducer</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/core/LazyTestResourcesPropertySourceLoader.html#getProducer--">getProducer</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;io.micronaut.context.env.PropertySource&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/core/LazyTestResourcesPropertySourceLoader.html#load-java.lang.String-io.micronaut.core.io.ResourceLoader-">load</a></span>(java.lang.String&nbsp;resourceName,
     io.micronaut.core.io.ResourceLoader&nbsp;resourceLoader)</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;io.micronaut.context.env.PropertySource&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/core/LazyTestResourcesPropertySourceLoader.html#loadEnv-java.lang.String-io.micronaut.core.io.ResourceLoader-io.micronaut.context.env.ActiveEnvironment-">loadEnv</a></span>(java.lang.String&nbsp;resourceName,
        io.micronaut.core.io.ResourceLoader&nbsp;resourceLoader,
        io.micronaut.context.env.ActiveEnvironment&nbsp;activeEnvironment)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.Object&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/testresources/core/LazyTestResourcesPropertySourceLoader.html#read-java.lang.String-java.io.InputStream-">read</a></span>(java.lang.String&nbsp;name,
     java.io.InputStream&nbsp;input)</code>&nbsp;</td>
@@ -231,6 +235,15 @@ implements io.micronaut.context.env.PropertySourceLoader</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getProducer--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getProducer</h4>
+<pre>protected final&nbsp;<a href="../../../../io/micronaut/testresources/core/PropertyExpressionProducer.html" title="interface in io.micronaut.testresources.core">PropertyExpressionProducer</a>&nbsp;getProducer()</pre>
+</li>
+</ul>
 <a name="load-java.lang.String-io.micronaut.core.io.ResourceLoader-">
 <!--   -->
 </a>

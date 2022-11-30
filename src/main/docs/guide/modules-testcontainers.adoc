@@ -177,3 +177,33 @@ The following wait strategies are supported:
     - `status-code`: the list of expected status codes
 - `port` strategy (this is the default strategy)
 - `healthcheck`: Docker healthcheck strategy
+
+Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):
+
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"
+----
+
+It is possible to configure the `all` strategy itself:
+
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"
+            all:
+              timeout: 120s
+----

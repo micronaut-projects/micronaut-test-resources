@@ -4,6 +4,7 @@ import org.testcontainers.containers.wait.strategy.DockerHealthcheckWaitStrategy
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
+import org.testcontainers.containers.wait.strategy.WaitAllStrategy
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
@@ -414,6 +415,48 @@ class TestContainerMetadataSupportTest extends Specification {
             def strategy = it.waitStrategy.get()
             assert strategy instanceof DockerHealthcheckWaitStrategy
         }
+    }
+
+    def "supports multiple wait strategies"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            healthcheck:
+                            log:
+                                regex: ".*some log message.*"
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof WaitAllStrategy
+        }
+    }
+
+    def "can configure the all strategy when using multiple wait strategies"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            all:
+                                mode: WITH_INDIVIDUAL_TIMEOUTS_ONLY
+                                timeout: 30s
+                            healthcheck:
+                            log:
+                                regex: ".*some log message.*"
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        def ex = thrown(IllegalStateException)
+        ex.message == "Changing startup timeout is not supported with mode WITH_INDIVIDUAL_TIMEOUTS_ONLY"
     }
 
 

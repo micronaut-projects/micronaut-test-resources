@@ -17,21 +17,26 @@ package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.core.convert.DefaultConversionService;
 import io.micronaut.runtime.converters.time.TimeConverterRegistrar;
+import org.jetbrains.annotations.Nullable;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -240,20 +245,86 @@ final class TestContainerMetadataSupport {
 
     private static WaitStrategy extractWaitStrategyFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
         String waitStrategyPrefix = prefix + "wait-strategy.";
-        if (testResourcesConfiguration.keySet().stream().anyMatch(k -> k.startsWith(waitStrategyPrefix + "log"))) {
-            return parseLogStrategy(waitStrategyPrefix + "log.", testResourcesConfiguration);
+        List<WaitStrategy> strategies = new ArrayList<>();
+        Set<String> strategyIds = testResourcesConfiguration.keySet()
+            .stream()
+            .map(k -> determineWaitStrategyIdFor(prefix, testResourcesConfiguration, waitStrategyPrefix, k))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+        for (String strategyId : strategyIds) {
+            switch (strategyId) {
+                case "log":
+                    strategies.add(parseLogStrategy(waitStrategyPrefix + "log.", testResourcesConfiguration));
+                    break;
+                    case "http":
+                        strategies.add(parseHttpStrategy(waitStrategyPrefix + "http.", testResourcesConfiguration));
+                        break;
+                case "port":
+                    assertAllowedKeys(prefix + ".port", testResourcesConfiguration);
+                    strategies.add(Wait.forListeningPort());
+                    break;
+                case "healthcheck":
+                    assertAllowedKeys(prefix + ".healthcheck", testResourcesConfiguration);
+                    strategies.add(Wait.forHealthcheck());
+                    break;
+                case "all":
+                    strategies.add(parseAllStrategy(waitStrategyPrefix + "all.", testResourcesConfiguration));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown wait strategy: " + strategyId);
+            }
         }
-        if (testResourcesConfiguration.keySet().stream().anyMatch(k -> k.startsWith(waitStrategyPrefix + "http"))) {
-            return parseHttpStrategy(waitStrategyPrefix + "http.", testResourcesConfiguration);
+        if (strategies.size() == 1) {
+            return strategies.get(0);
         }
-        String waitStrategy = extractStringParameterFrom(prefix, "wait-strategy", testResourcesConfiguration);
-        if ("port".equals(waitStrategy)) {
-            assertAllowedKeys(prefix + ".port", testResourcesConfiguration);
-            return Wait.forListeningPort();
+        if (strategies.size() > 1) {
+            return buildWaitAllStrategy(strategies);
         }
-        if ("healthcheck".equals(waitStrategy)) {
-            assertAllowedKeys(prefix + ".healthcheck", testResourcesConfiguration);
-            return Wait.forHealthcheck();
+        return null;
+    }
+
+    private static WaitAllStrategy buildWaitAllStrategy(List<WaitStrategy> strategies) {
+        WaitAllStrategy waitAllStrategy = strategies.stream()
+            .filter(WaitAllStrategy.class::isInstance)
+            .map(WaitAllStrategy.class::cast)
+            .findFirst()
+            .orElse(new WaitAllStrategy());
+        for (WaitStrategy strategy : strategies) {
+            if (!(strategy instanceof WaitAllStrategy)) {
+                waitAllStrategy = waitAllStrategy.withStrategy(strategy);
+            }
+        }
+        return waitAllStrategy;
+    }
+
+    private static WaitStrategy parseAllStrategy(String prefix, Map<String, Object> testResourcesConfiguration) {
+        assertAllowedKeys(prefix, testResourcesConfiguration, "mode", "timeout");
+        String modeStr = extractStringParameterFrom(prefix, "mode", testResourcesConfiguration);
+        WaitAllStrategy.Mode mode = WaitAllStrategy.Mode.WITH_OUTER_TIMEOUT;
+        if (modeStr != null) {
+            mode = WaitAllStrategy.Mode.valueOf(modeStr.toUpperCase(Locale.US));
+        }
+        WaitAllStrategy waitAllStrategy = new WaitAllStrategy(mode);
+        String timeoutStr = extractStringParameterFrom(prefix, "timeout", testResourcesConfiguration);
+        if (timeoutStr != null) {
+            Duration startupTimeout = CONVERSION_SERVICE.convert(timeoutStr, Duration.class).orElse(null);
+            waitAllStrategy = waitAllStrategy.withStartupTimeout(startupTimeout);
+        }
+        return waitAllStrategy;
+    }
+
+    @Nullable
+    private static String determineWaitStrategyIdFor(String prefix, Map<String, Object> testResourcesConfiguration, String waitStrategyPrefix, String k) {
+        String simpleWaitStrategyPrefix = prefix + "wait-strategy";
+        if (k.equals(simpleWaitStrategyPrefix)) {
+            return String.valueOf(testResourcesConfiguration.get(simpleWaitStrategyPrefix));
+        }
+        if (k.startsWith(waitStrategyPrefix)) {
+            k = k.substring(waitStrategyPrefix.length());
+            if (k.contains(".")) {
+                return k.substring(0, k.indexOf("."));
+            }
+            return k;
         }
         return null;
     }

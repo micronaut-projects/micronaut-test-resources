@@ -17,15 +17,26 @@ package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.core.convert.DefaultConversionService;
 import io.micronaut.runtime.converters.time.TimeConverterRegistrar;
+import org.jetbrains.annotations.Nullable;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
+import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -79,7 +90,8 @@ final class TestContainerMetadataSupport {
         Long sharedMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "shared-memory");
         String network = extractStringParameterFrom(prefix, "network", testResourcesConfig);
         Set<String> networkAliases = extractSetFrom(prefix, testResourcesConfig, "network-aliases");
-        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases));
+        WaitStrategy waitStrategy = extractWaitStrategyFrom(prefix, testResourcesConfig);
+        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, waitStrategy));
     }
 
     private static Long extractMemoryParameterFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
@@ -134,6 +146,12 @@ final class TestContainerMetadataSupport {
             .orElse(null);
     }
 
+    private static Integer extractIntParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfiguration) {
+        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+            .map(Integer.class::cast)
+            .orElse(null);
+    }
+
     private static Set<String> extractSetFrom(String prefix, Map<String, Object> testResourcesConfiguration, String key) {
         return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
             .map(o -> {
@@ -169,7 +187,7 @@ final class TestContainerMetadataSupport {
     }
 
     private static List<TestContainerMetadata.CopyFileToContainer> extractFileCopiesFrom(String prefix,
-        Map<String, Object> testResourcesConfiguration) {
+                                                                                         Map<String, Object> testResourcesConfiguration) {
         Map<String, String> copyDefinitions = extractMapFrom(prefix, "copy-to-container", testResourcesConfiguration);
         return copyDefinitions.entrySet()
             .stream()
@@ -225,6 +243,148 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptyMap());
     }
 
+    private static WaitStrategy extractWaitStrategyFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
+        String waitStrategyPrefix = prefix + "wait-strategy.";
+        List<WaitStrategy> strategies = new ArrayList<>();
+        Set<String> strategyIds = testResourcesConfiguration.keySet()
+            .stream()
+            .map(k -> determineWaitStrategyIdFor(prefix, testResourcesConfiguration, waitStrategyPrefix, k))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+        for (String strategyId : strategyIds) {
+            switch (strategyId) {
+                case "log":
+                    strategies.add(parseLogStrategy(waitStrategyPrefix + "log.", testResourcesConfiguration));
+                    break;
+                    case "http":
+                        strategies.add(parseHttpStrategy(waitStrategyPrefix + "http.", testResourcesConfiguration));
+                        break;
+                case "port":
+                    assertAllowedKeys(prefix + ".port", testResourcesConfiguration);
+                    strategies.add(Wait.forListeningPort());
+                    break;
+                case "healthcheck":
+                    assertAllowedKeys(prefix + ".healthcheck", testResourcesConfiguration);
+                    strategies.add(Wait.forHealthcheck());
+                    break;
+                case "all":
+                    strategies.add(parseAllStrategy(waitStrategyPrefix + "all.", testResourcesConfiguration));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown wait strategy: " + strategyId);
+            }
+        }
+        if (strategies.size() == 1) {
+            return strategies.get(0);
+        }
+        if (strategies.size() > 1) {
+            return buildWaitAllStrategy(strategies);
+        }
+        return null;
+    }
+
+    private static WaitAllStrategy buildWaitAllStrategy(List<WaitStrategy> strategies) {
+        WaitAllStrategy waitAllStrategy = strategies.stream()
+            .filter(WaitAllStrategy.class::isInstance)
+            .map(WaitAllStrategy.class::cast)
+            .findFirst()
+            .orElse(new WaitAllStrategy());
+        for (WaitStrategy strategy : strategies) {
+            if (!(strategy instanceof WaitAllStrategy)) {
+                waitAllStrategy = waitAllStrategy.withStrategy(strategy);
+            }
+        }
+        return waitAllStrategy;
+    }
+
+    private static WaitStrategy parseAllStrategy(String prefix, Map<String, Object> testResourcesConfiguration) {
+        assertAllowedKeys(prefix, testResourcesConfiguration, "mode", "timeout");
+        String modeStr = extractStringParameterFrom(prefix, "mode", testResourcesConfiguration);
+        WaitAllStrategy.Mode mode = WaitAllStrategy.Mode.WITH_OUTER_TIMEOUT;
+        if (modeStr != null) {
+            mode = WaitAllStrategy.Mode.valueOf(modeStr.toUpperCase(Locale.US));
+        }
+        WaitAllStrategy waitAllStrategy = new WaitAllStrategy(mode);
+        String timeoutStr = extractStringParameterFrom(prefix, "timeout", testResourcesConfiguration);
+        if (timeoutStr != null) {
+            Duration startupTimeout = CONVERSION_SERVICE.convert(timeoutStr, Duration.class).orElse(null);
+            waitAllStrategy = waitAllStrategy.withStartupTimeout(startupTimeout);
+        }
+        return waitAllStrategy;
+    }
+
+    @Nullable
+    private static String determineWaitStrategyIdFor(String prefix, Map<String, Object> testResourcesConfiguration, String waitStrategyPrefix, String k) {
+        String simpleWaitStrategyPrefix = prefix + "wait-strategy";
+        if (k.equals(simpleWaitStrategyPrefix)) {
+            return String.valueOf(testResourcesConfiguration.get(simpleWaitStrategyPrefix));
+        }
+        if (k.startsWith(waitStrategyPrefix)) {
+            k = k.substring(waitStrategyPrefix.length());
+            if (k.contains(".")) {
+                return k.substring(0, k.indexOf("."));
+            }
+            return k;
+        }
+        return null;
+    }
+
+    private static HttpWaitStrategy parseHttpStrategy(String prefix, Map<String, Object> testResourcesConfiguration) {
+        assertAllowedKeys(prefix, testResourcesConfiguration, "path", "port", "tls", "status-code");
+        String path = extractStringParameterFrom(prefix, "path", testResourcesConfiguration);
+        Integer port = extractIntParameterFrom(prefix, "port", testResourcesConfiguration);
+        String tls = extractStringParameterFrom(prefix, "tls", testResourcesConfiguration);
+        List<String> statusCode = extractListFrom(prefix, testResourcesConfiguration, "status-code");
+        HttpWaitStrategy httpWaitStrategy = new HttpWaitStrategy().forPath(path);
+        if (port != null) {
+            httpWaitStrategy = httpWaitStrategy.forPort(port);
+        }
+        if (tls != null && Boolean.TRUE.equals(Boolean.parseBoolean(tls))) {
+            httpWaitStrategy = httpWaitStrategy.usingTls();
+        }
+        if (!statusCode.isEmpty()) {
+            for (String status : statusCode) {
+                httpWaitStrategy = httpWaitStrategy.forStatusCode(Integer.parseInt(status));
+            }
+        }
+        return httpWaitStrategy;
+    }
+
+    private static LogMessageWaitStrategy parseLogStrategy(String prefix, Map<String, Object> testResourcesConfiguration) {
+        assertAllowedKeys(prefix, testResourcesConfiguration, "regex", "times");
+        String regex = extractStringParameterFrom(prefix, "regex", testResourcesConfiguration);
+        Integer times = extractIntParameterFrom(prefix, "times", testResourcesConfiguration);
+        return Wait.forLogMessage(regex, times != null ? times : 1);
+    }
+
+    private static void assertAllowedKeys(String prefix, Map<String, Object> testResourcesConfiguration, String... allowed) {
+        Set<String> allowedKeys = new LinkedHashSet<>(Arrays.asList(allowed));
+        List<String> disallowed = testResourcesConfiguration.keySet()
+            .stream()
+            .filter(k -> k.startsWith(prefix))
+            .map(k -> k.substring(prefix.length()))
+            .map(k -> {
+                if (k.contains(".")) {
+                    return k.substring(0, k.indexOf("."));
+                }
+                return k;
+            })
+            .filter(k -> !allowedKeys.contains(k))
+            .collect(Collectors.toList());
+        if (!disallowed.isEmpty()) {
+            if (allowed.length == 0) {
+                throw new IllegalArgumentException("Wait strategy " + prefix + " is not configurable but the following keys are set: " + disallowed);
+            }
+            if (disallowed.size() == 1) {
+                throw new IllegalArgumentException("Wait strategy " + prefix + " does not support the following key: " + disallowed.get(0)
+                                                   + ". Allowed keys are: " + allowedKeys);
+            }
+            throw new IllegalArgumentException("Wait strategy " + prefix + " does not support the following keys: " + disallowed
+                                               + ". Allowed keys are: " + allowedKeys);
+        }
+
+    }
+
     static GenericContainer<?> applyMetadata(TestContainerMetadata md, GenericContainer<?> container) {
         Collection<Integer> exposedPorts = md.getExposedPorts().values();
         if (!exposedPorts.isEmpty()) {
@@ -246,6 +406,7 @@ final class TestContainerMetadataSupport {
         if (!md.getNetworkAliases().isEmpty()) {
             container.withNetworkAliases(md.getNetworkAliases().toArray(new String[0]));
         }
+        md.getWaitStrategy().ifPresent(container::setWaitStrategy);
         return container;
     }
 

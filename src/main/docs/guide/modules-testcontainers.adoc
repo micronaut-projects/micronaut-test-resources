@@ -147,3 +147,63 @@ test-resources:
 
 The `network` key is used to declare the network containers use.
 The `network-aliases` can be used to assign host names to the containers.
+
+== Wait strategies
+
+Micronaut Test Resources uses the default https://www.testcontainers.org/features/startup_and_waits/[Testcontainers wait strategies].
+
+It is however possible to override the default by configuration.
+
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            log:
+                regex: ".*Started.*"
+----
+
+The following wait strategies are supported:
+
+- `log` strategy with the following properties:
+    - `regex`: the regular expression to match
+    - `times`: the number of times the regex should be matched
+- `http` strategy with the following properties:
+    - `path`: the path to check
+    - `tls`: if TLS should be enabled
+    - `port`: the port to listen on
+    - `status-code`: the list of expected status codes
+- `port` strategy (this is the default strategy)
+- `healthcheck`: Docker healthcheck strategy
+
+Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):
+
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"
+----
+
+It is possible to configure the `all` strategy itself:
+
+[source,yaml,subs="verbatim"]
+----
+test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"
+            all:
+              timeout: 120s
+----

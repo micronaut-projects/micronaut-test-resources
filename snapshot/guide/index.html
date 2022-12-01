@@ -886,6 +886,97 @@ The <code>network-aliases</code> can be used to assign host names to the contain
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_wait_strategies">Wait strategies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Micronaut Test Resources uses the default <a href="https://www.testcontainers.org/features/startup_and_waits/">Testcontainers wait strategies</a>.</p>
+</div>
+<div class="paragraph">
+<p>It is however possible to override the default by configuration.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            log:
+                regex: ".*Started.*"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following wait strategies are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>log</code> strategy with the following properties:</p>
+</li>
+<li>
+<p><code>regex</code>: the regular expression to match</p>
+</li>
+<li>
+<p><code>times</code>: the number of times the regex should be matched</p>
+</li>
+<li>
+<p><code>http</code> strategy with the following properties:</p>
+</li>
+<li>
+<p><code>path</code>: the path to check</p>
+</li>
+<li>
+<p><code>tls</code>: if TLS should be enabled</p>
+</li>
+<li>
+<p><code>port</code>: the port to listen on</p>
+</li>
+<li>
+<p><code>status-code</code>: the list of expected status codes</p>
+</li>
+<li>
+<p><code>port</code> strategy (this is the default strategy)</p>
+</li>
+<li>
+<p><code>healthcheck</code>: Docker healthcheck strategy</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is possible to configure the <code>all</code> strategy itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"
+            all:
+              timeout: 120s</code></pre>
+</div>
+</div>
+</div>
+</div>
 
 <h1 id="architecture"><a class="anchor" href="#architecture"></a>5 Architecture</h1>
 

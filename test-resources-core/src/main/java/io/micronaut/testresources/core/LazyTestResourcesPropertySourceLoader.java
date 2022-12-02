@@ -42,6 +42,10 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
         this.producer = producer;
     }
 
+    protected final PropertyExpressionProducer getProducer() {
+        return producer;
+    }
+
     @Override
     public Optional<PropertySource> load(String resourceName, ResourceLoader resourceLoader) {
         return Optional.of(new LazyPropertySource(resourceLoader));

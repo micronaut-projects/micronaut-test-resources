@@ -1,6 +1,10 @@
 package io.micronaut.testresources.testcontainers
 
-
+import org.testcontainers.containers.wait.strategy.DockerHealthcheckWaitStrategy
+import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
+import org.testcontainers.containers.wait.strategy.HttpWaitStrategy
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
+import org.testcontainers.containers.wait.strategy.WaitAllStrategy
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
@@ -331,6 +335,128 @@ class TestContainerMetadataSupportTest extends Specification {
             assert it.network.get() == 'second'
             assert it.networkAliases == ['tarzan', 'jane'] as Set
         }
+    }
+
+    def "reads log wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            log:
+                                regex: ".*some log message.*"
+                                times: 4
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof LogMessageWaitStrategy
+        }
+    }
+
+    def "reads http wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            http:
+                                path: /
+                                status-code: 200
+                                port: 8181
+                                tls: true
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof HttpWaitStrategy
+        }
+    }
+
+    def "reads port wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy: port
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof HostPortWaitStrategy
+        }
+    }
+
+    def "reads healthcheck wait strategy"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy: healthcheck
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof DockerHealthcheckWaitStrategy
+        }
+    }
+
+    def "supports multiple wait strategies"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            healthcheck:
+                            log:
+                                regex: ".*some log message.*"
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            def strategy = it.waitStrategy.get()
+            assert strategy instanceof WaitAllStrategy
+        }
+    }
+
+    def "can configure the all strategy when using multiple wait strategies"() {
+        def config = """
+                containers:
+                    foo:
+                        wait-strategy:
+                            all:
+                                mode: WITH_INDIVIDUAL_TIMEOUTS_ONLY
+                                timeout: 30s
+                            healthcheck:
+                            log:
+                                regex: ".*some log message.*"
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        def ex = thrown(IllegalStateException)
+        ex.message == "Changing startup timeout is not supported with mode WITH_INDIVIDUAL_TIMEOUTS_ONLY"
     }
 
 

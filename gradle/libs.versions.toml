@@ -17,8 +17,23 @@
 
 [versions]
 micronaut = "4.0.0-SNAPSHOT"
+micronaut-data = "3.8.1"
+micronaut-discovery = "4.0.0-SNAPSHOT"
 micronaut-docs = "2.0.0"
-micronaut-test = "3.1.1"
+micronaut-elasticsearch = "5.0.0-SNAPSHOT"
+micronaut-email = "2.0.0-SNAPSHOT"
+micronaut-kafka = "5.0.0-SNAPSHOT"
+micronaut-mongodb = "5.0.0-SNAPSHOT"
+micronaut-mqtt = "3.0.0-SNAPSHOT"
+micronaut-neo4j = "6.0.0-SNAPSHOT"
+micronaut-rabbitmq = "4.0.0-SNAPSHOT"
+micronaut-r2dbc = "4.0.1-SNAPSHOT"
+micronaut-reactor = "3.0.0-SNAPSHOT"
+micronaut-redis = "6.0.0-SNAPSHOT"
+micronaut-security = "4.0.0-SNAPSHOT"
+micronaut-serde = "2.0.0-SNAPSHOT"
+micronaut-sql = "5.0.0-SNAPSHOT"
+micronaut-test = "4.0.0-SNAPSHOT"
 micronaut-gradle-plugin = "3.6.5"
 groovy = "4.0.6"
 spock = "2.2-groovy-4.0"
@@ -29,6 +44,22 @@ managed-testcontainers = "1.17.6"
 
 [libraries]
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
+
+micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }
+micronaut-discovery = { module = "io.micronaut.discovery:micronaut-discovery-client", version.ref = "micronaut-discovery" }
+micronaut-elasticsearch = { module = "io.micronaut.elasticsearch:micronaut-elasticsearch-bom", version.ref = "micronaut-elasticsearch" }
+micronaut-email = { module = "io.micronaut.email:micronaut-email-bom", version.ref = "micronaut-email" }
+micronaut-kafka = { module = "io.micronaut.kafka:micronaut-kafka-bom", version.ref = "micronaut-kafka" }
+micronaut-mqtt = { module = "io.micronaut.mqtt:micronaut-mqtt-bom", version.ref = "micronaut-mqtt" }
+micronaut-mongodb = { module = "io.micronaut.mongodb:micronaut-mongo-bom", version.ref = "micronaut-mongodb" }
+micronaut-neo4j = { module = "io.micronaut.neo4j:micronaut-neo4j-bom", version.ref = "micronaut-neo4j" }
+micronaut-rabbitmq = { module = "io.micronaut.rabbitmq:micronaut-rabbitmq-bom", version.ref = "micronaut-rabbitmq" }
+micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
+micronaut-redis = { module = "io.micronaut.redis:micronaut-redis-bom", version.ref = "micronaut-redis" }
+micronaut-r2dbc = { module = "io.micronaut.r2dbc:micronaut-r2dbc-bom", version.ref = "micronaut-r2dbc" }
+micronaut-security = { module = "io.micronaut.security:micronaut-security-bom", version.ref = "micronaut-security" }
+micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
+micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
 testcontainers-core = { module = "org.testcontainers:testcontainers", version = "" }
 testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version = "" }
@@ -57,7 +88,6 @@ reactive-mariadb = { module = "org.mariadb:r2dbc-mariadb", version = "" }
 reactive-mssql = { module = "io.r2dbc:r2dbc-mssql", version = "" }
 reactive-mysql = { module = "dev.miku:r2dbc-mysql", version = "" }
 reactive-oracle-xe = { module = "com.oracle.database.r2dbc:oracle-r2dbc", version = "" }
-reactive-pool = { module = "io.r2dbc:r2dbc-pool", version = "" }
 reactive-postgres = { module = "org.postgresql:r2dbc-postgresql", version = "" }
 
 vertx-mysql = { module = "io.vertx:vertx-mysql-client", version.ref = "vertx.client" }
@@ -65,7 +95,7 @@ vertx-mssql = { module = "io.vertx:vertx-mssql-client", version.ref = "vertx.cli
 vertx-postgres = { module = "io.vertx:vertx-pg-client", version.ref = "vertx.client" }
 vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.client" }
 scram = { module = "com.ongres.scram:client", version = "2.1" }
-
+spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
 #
 # Managed dependencies appear in the BOM
 #

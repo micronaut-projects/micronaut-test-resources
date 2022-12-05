@@ -9,7 +9,8 @@ Provides support for launching a MongoDB test container.
 dependencies {
     implementation(libs.testcontainers.mongodb)
 
-    testCompileOnly(mn.micronaut.data.document.processor)
-    testImplementation(mn.micronaut.data.mongodb)
+    testCompileOnly(mnData.micronaut.data.document.processor)
+    testImplementation(platform(mnMongo.micronaut.mongo.bom))
+    testImplementation(mnData.micronaut.data.mongodb)
     testImplementation(libs.mongodb)
 }

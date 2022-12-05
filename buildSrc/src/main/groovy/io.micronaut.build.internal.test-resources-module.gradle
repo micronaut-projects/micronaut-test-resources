@@ -4,5 +4,6 @@ plugins {
 }
 
 dependencies {
-    testRuntimeOnly mn.micronaut.serde.jackson
+    testRuntimeOnly mnSerde.micronaut.serde.jackson
+    testRuntimeOnly mn.snakeyaml
 }

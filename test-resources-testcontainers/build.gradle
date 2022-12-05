@@ -15,14 +15,14 @@ dependencies {
     implementation(mn.micronaut.context)
 
     testImplementation(project(":test-resources-embedded"))
-    testImplementation(mn.micronaut.email)
-    testImplementation(mn.micronaut.email.javamail)
+    testImplementation(mnEmail.micronaut.email)
+    testImplementation(mnEmail.micronaut.email.javamail)
     testImplementation(mn.snakeyaml)
 
-    testFixturesApi(platform(mn.micronaut.bom))
-    testFixturesApi(mn.micronaut.test.core) {
+    testFixturesApi(platform(mn.micronaut.core.bom))
+    testFixturesApi(mnTest.micronaut.test.core) {
         because "exposes TestPropertyProvider"
     }
     testFixturesImplementation(mn.groovy)
-    testFixturesImplementation(mn.spock)
+    testFixturesImplementation(libs.spock)
 }

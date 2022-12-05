@@ -10,6 +10,6 @@ dependencies {
     implementation(libs.testcontainers.vault)
 
     testImplementation(testFixtures(project(":test-resources-testcontainers")))
-    testImplementation(mn.micronaut.discovery)
-    testImplementation(mn.micronaut.security.oauth2)
+    testImplementation(libs.micronaut.discovery)
+    testImplementation(mnSecurity.micronaut.security.oauth2)
 }

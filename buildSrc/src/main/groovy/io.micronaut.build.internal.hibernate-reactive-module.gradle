@@ -10,7 +10,7 @@ dependencies {
     api(project(':test-resources-hibernate-reactive-core'))
 
     testImplementation(testFixtures(project(':test-resources-hibernate-reactive-core')))
-    testCompileOnly(mn.micronaut.data.processor)
+    testCompileOnly(mnData.micronaut.data.processor)
     testCompileOnly(mn.micronaut.inject.groovy)
 }
 

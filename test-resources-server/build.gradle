@@ -17,9 +17,9 @@ dependencies {
     implementation(project(':test-resources-core'))
     implementation(project(':test-resources-embedded'))
     implementation(project(':test-resources-testcontainers'))
-    runtimeOnly(mn.logback)
+    runtimeOnly(mn.logback.classic)
     runtimeOnly(mn.micronaut.management)
-    runtimeOnly(mn.micronaut.serde.jackson)
+    runtimeOnly(mnSerde.micronaut.serde.jackson)
 
     testImplementation(project(':test-resources-client'))
     testRuntimeOnly(project(':test-resources-kafka'))

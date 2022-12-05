@@ -13,17 +13,17 @@ micronautBuild {
 
 dependencies {
     api(libs.testcontainers.jdbc)
-    testFixturesApi(platform(mn.micronaut.bom))
-    testFixturesApi(platform(mn.micronaut.sql.bom))
-    testFixturesCompileOnly(mn.micronaut.data.processor)
+    testFixturesApi(platform(mn.micronaut.core.bom))
+    testFixturesApi(platform(mnSql.micronaut.sql.bom))
+    testFixturesCompileOnly(mnData.micronaut.data.processor)
     testFixturesCompileOnly(mn.micronaut.inject.groovy)
-    testFixturesImplementation(mn.spock)
-    testFixturesImplementation(mn.micronaut.data.hibernate.jpa)
-    testFixturesImplementation(mn.micronaut.data.hibernate.reactive)
+    testFixturesImplementation(libs.spock)
+    testFixturesImplementation(mnData.micronaut.data.hibernate.jpa)
+    testFixturesImplementation(mnData.micronaut.data.hibernate.reactive)
     testFixturesImplementation(mn.reactor) {
         because "Groovy will fail compiling if this dependency is missing"
     }
-    testFixturesRuntimeOnly(mn.micronaut.jdbc.hikari)
+    testFixturesRuntimeOnly(mnSql.micronaut.jdbc.hikari)
 }
 
 repositories {

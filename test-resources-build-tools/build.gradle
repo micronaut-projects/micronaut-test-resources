@@ -52,10 +52,10 @@ def writeModuleList = tasks.register("writeModuleList", WriteModuleList) {
 sourceSets.main.java.srcDirs(writeVersion, writeModuleList)
 
 dependencies {
-    implementation(mn.slf4j)
-    testImplementation(platform(mn.micronaut.bom))
+    implementation(mn.slf4j.api)
+    testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)
-    testImplementation(mn.spock)
-    testRuntimeOnly(mn.micronaut.serde.jackson)
+    testImplementation(libs.spock)
+    testRuntimeOnly(mnSerde.micronaut.serde.jackson)
 }

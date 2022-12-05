@@ -9,6 +9,6 @@ Provides support for launching a HiveMQ test container.
 dependencies {
     implementation(libs.testcontainers.hivemq)
 
-    testImplementation(mn.micronaut.reactor)
-    testImplementation(mn.micronaut.mqttv5)
+    testImplementation(mnReactor.micronaut.reactor)
+    testImplementation(mnMqtt.micronaut.mqttv5)
 }

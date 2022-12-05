@@ -9,6 +9,6 @@ Provides support for launching a Kafka test container.
 dependencies {
     implementation(libs.testcontainers.kafka)
 
-    testImplementation(mn.micronaut.reactor)
-    testImplementation(mn.micronaut.kafka)
+    testImplementation(mnReactor.micronaut.reactor)
+    testImplementation(mnKafka.micronaut.kafka)
 }

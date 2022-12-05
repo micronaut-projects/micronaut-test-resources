@@ -12,5 +12,5 @@ dependencies {
 
     testImplementation(project(":test-resources-embedded"))
     testImplementation(testFixtures(project(":test-resources-testcontainers")))
-    testImplementation(mn.micronaut.redis.lettuce)
+    testImplementation(mnRedis.micronaut.redis.lettuce)
 }

@@ -10,15 +10,15 @@ Provides core support for JDBC test containers.
 dependencies {
     implementation(libs.testcontainers.jdbc)
 
-    testFixturesApi(platform(mn.micronaut.bom))
-    testFixturesApi(mn.micronaut.data.jdbc)
+    testFixturesApi(platform(mn.micronaut.core.bom))
+    testFixturesApi(mnData.micronaut.data.jdbc)
     testFixturesCompileOnly(mn.micronaut.inject.groovy)
-    testFixturesCompileOnly(mn.micronaut.data.processor)
+    testFixturesCompileOnly(mnData.micronaut.data.processor)
     testFixturesImplementation(mn.groovy)
-    testFixturesImplementation(mn.spock)
+    testFixturesImplementation(libs.spock)
     testFixturesApi(testFixtures(project(":test-resources-testcontainers"))) {
         because "exposes AbstractTestContainersSpec"
     }
     testFixturesImplementation(project(":test-resources-embedded"))
-    testFixturesRuntimeOnly(mn.micronaut.jdbc.hikari)
+    testFixturesRuntimeOnly(mnSql.micronaut.jdbc.hikari)
 }

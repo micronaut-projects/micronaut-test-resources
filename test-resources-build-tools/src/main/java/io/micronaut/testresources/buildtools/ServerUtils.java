@@ -501,8 +501,7 @@ public class ServerUtils {
                     File cdsFile = new File(cdsDir, CDS_FILE);
                     File cdsClassList = new File(cdsDir, CDS_CLASS_LST);
                     File cdsHashFile = new File(cdsDir, CDS_HASH);
-                    File cdsFlatJar = new File(cdsDir, FLAT_JAR);
-                    configureCdsOptions(jvmArguments, cdsFile, cdsClassList, cdsHashFile, cdsFlatJar);
+                    configureCdsOptions(jvmArguments, cdsFile, cdsClassList, cdsHashFile);
                 }
             }
             jvmArgs = Collections.unmodifiableList(jvmArguments);
@@ -512,8 +511,7 @@ public class ServerUtils {
         private void configureCdsOptions(List<String> jvmArguments,
                                          File cdsFile,
                                          File cdsClassList,
-                                         File cdsHashFile,
-                                         File cdsFlatJar) {
+                                         File cdsHashFile) {
             if (cdsClassList.exists()) {
                 try {
                     byte[] actualHash = computeClasspathHash(getClasspath().stream());
@@ -521,13 +519,13 @@ public class ServerUtils {
                         byte[] cdsHash = Files.readAllBytes(cdsHashFile.toPath());
                         if (!Arrays.equals(actualHash, cdsHash)) {
                             // Classpath changed, invalidate CDS cache
-                            deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile, cdsFlatJar);
+                            deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
                         }
                     } else {
                         Files.write(cdsHashFile.toPath(), actualHash);
                     }
                 } catch (IOException e) {
-                    deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile, cdsFlatJar);
+                    deleteCdsFiles(cdsFile, cdsClassList, cdsHashFile);
                 }
             }
             if (cdsClassList.exists()) {
@@ -563,10 +561,10 @@ public class ServerUtils {
                 // Workaround for https://bugs.openjdk.org/browse/JDK-8290417
                 fileContent.removeIf(content ->
                     content.contains("SingleThreadedBufferingProcessor") ||
-                        content.contains("org/testcontainers") ||
-                        content.contains("org/graalvm") ||
-                        content.contains("io/netty/handler") ||
-                        content.contains("jdk/proxy"));
+                    content.contains("org/testcontainers") ||
+                    content.contains("org/graalvm") ||
+                    content.contains("io/netty/handler") ||
+                    content.contains("jdk/proxy"));
                 Files.write(cdsListPath, fileContent, StandardCharsets.UTF_8);
             } catch (IOException e) {
                 // ignore
@@ -579,8 +577,16 @@ public class ServerUtils {
         private static byte[] computeClasspathHash(Stream<File> files) {
             try {
                 MessageDigest digest = MessageDigest.getInstance("SHA1");
-                files.map(file -> file.getAbsolutePath() + ":" + file.length() + ":" + file.lastModified())
-                    .forEachOrdered(line -> digest.update(line.getBytes(StandardCharsets.UTF_8)));
+                files.flatMap(fileOrDir -> {
+                    try (Stream<Path> s = Files.walk(fileOrDir.toPath())){
+                        return s.map(p -> {
+                            File file = p.toFile();
+                            return file.getAbsolutePath() + ":" + file.length() + ":" + file.lastModified();
+                        }).collect(Collectors.toList()).stream();
+                    } catch (IOException e) {
+                        return Stream.empty();
+                    }
+                }).forEachOrdered(line -> digest.update(line.getBytes(StandardCharsets.UTF_8)));
                 return digest.digest();
             } catch (NoSuchAlgorithmException e) {
                 return new byte[0];

@@ -201,7 +201,6 @@ class ServerUtilsTest extends Specification {
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
             assert params.classpath == []
-            assert !Files.exists(cdsFlatJar)
             Files.write(cdsClassList, "test".getBytes())
         }
         1 * factory.waitFor(_) >> {

@@ -62,6 +62,7 @@ public class ServerUtils {
     private static final int MAX_READS = 10;
 
     private static final String SERVER_URI = "server.uri";
+    private static final String SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY = "server.access-token";
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
     private static final String SERVER_CLIENT_READ_TIMEOUT = "server.client.read.timeout";
     private static final String SERVER_ENTRY_POINT = "io.micronaut.testresources.server.Application";
@@ -390,7 +391,7 @@ public class ServerUtils {
                 systemProperties.put(MICRONAUT_SERVER_PORT, String.valueOf(explicitPort));
             }
             if (accessToken != null) {
-                systemProperties.put(SERVER_ACCESS_TOKEN, accessToken);
+                systemProperties.put(SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY, accessToken);
             }
             return systemProperties;
         }

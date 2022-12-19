@@ -57,7 +57,7 @@ class ServerUtilsTest extends Specification {
             assert params.classpath == classpath
             def sysProps = ['com.sun.management.jmxremote': null]
             if (token != null) {
-                sysProps["server.access.token"] = token
+                sysProps["server.access-token"] = token
             }
             assert params.systemProperties == sysProps
             assert params.arguments == [

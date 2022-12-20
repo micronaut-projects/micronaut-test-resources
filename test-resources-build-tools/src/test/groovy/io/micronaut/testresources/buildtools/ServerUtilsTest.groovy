@@ -57,7 +57,7 @@ class ServerUtilsTest extends Specification {
             assert params.classpath == classpath
             def sysProps = ['com.sun.management.jmxremote': null]
             if (token != null) {
-                sysProps["server.access.token"] = token
+                sysProps["server.access-token"] = token
             }
             assert params.systemProperties == sysProps
             assert params.arguments == [
@@ -201,7 +201,6 @@ class ServerUtilsTest extends Specification {
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
             assert params.classpath == []
-            assert !Files.exists(cdsFlatJar)
             Files.write(cdsClassList, "test".getBytes())
         }
         1 * factory.waitFor(_) >> {

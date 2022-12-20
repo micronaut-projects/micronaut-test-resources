@@ -34,9 +34,9 @@ micronaut-security = "4.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-sql = "5.0.0-SNAPSHOT"
 micronaut-test = "4.0.0-SNAPSHOT"
-micronaut-gradle-plugin = "3.6.5"
+micronaut-gradle-plugin = "3.6.6"
 groovy = "4.0.6"
-spock = "2.2-groovy-4.0"
+spock = "2.3-groovy-4.0"
 vertx-client = "4.3.2"
 
 # Managed versions appear in the BOM

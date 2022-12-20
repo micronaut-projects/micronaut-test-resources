@@ -9,7 +9,7 @@ Provides support for R2DBC pool resources.
 dependencies {
     testImplementation(platform(mnR2dbc.micronaut.r2dbc.bom))
     testRuntimeOnly(project(":test-resources-r2dbc-postgresql"))
-    testRuntimeOnly(libs.reactive.postgres)
+    testRuntimeOnly(mnR2dbc.r2dbc.postgresql)
     testImplementation(mnR2dbc.r2dbc.pool)
-    testRuntimeOnly(libs.postgres)
+    testRuntimeOnly(mnSql.postgresql)
 }

@@ -20,6 +20,7 @@ dependencies {
     runtimeOnly(mn.logback.classic)
     runtimeOnly(mn.micronaut.management)
     runtimeOnly(mnSerde.micronaut.serde.jackson)
+    runtimeOnly(mn.snakeyaml)
 
     testImplementation(project(':test-resources-client'))
     testRuntimeOnly(project(':test-resources-kafka'))

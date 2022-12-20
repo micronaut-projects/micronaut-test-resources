@@ -10,6 +10,6 @@ dependencies {
     implementation(libs.testcontainers.postgres)
     runtimeOnly(project(":test-resources-jdbc-postgresql"))
 
-    testRuntimeOnly(libs.reactive.postgres)
-    testRuntimeOnly(libs.postgres)
+    testRuntimeOnly(mnR2dbc.r2dbc.postgresql)
+    testRuntimeOnly(mnSql.postgresql)
 }

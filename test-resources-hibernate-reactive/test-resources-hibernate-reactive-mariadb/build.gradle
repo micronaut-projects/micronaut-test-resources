@@ -10,6 +10,6 @@ dependencies {
     implementation(libs.testcontainers.mariadb)
     runtimeOnly(project(":test-resources-jdbc-mariadb"))
 
-    testRuntimeOnly(libs.mariadb)
+    testRuntimeOnly(mnSql.mariadb.java.client)
     testRuntimeOnly(libs.vertx.mysql)
 }

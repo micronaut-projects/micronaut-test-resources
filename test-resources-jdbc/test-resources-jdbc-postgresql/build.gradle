@@ -9,5 +9,5 @@ Provides support for launching a PostgreSQL test container.
 dependencies {
     implementation(libs.testcontainers.postgres)
 
-    testRuntimeOnly(libs.postgres)
+    testRuntimeOnly(mnSql.postgresql)
 }

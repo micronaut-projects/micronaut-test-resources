@@ -10,6 +10,6 @@ dependencies {
     implementation(libs.testcontainers.mysql)
     runtimeOnly(project(":test-resources-jdbc-mysql"))
 
-    testRuntimeOnly(libs.reactive.mysql)
-    testRuntimeOnly(libs.mysql)
+    testRuntimeOnly(mnR2dbc.r2dbc.mysql)
+    testRuntimeOnly(mnSql.mysql.connector.java)
 }

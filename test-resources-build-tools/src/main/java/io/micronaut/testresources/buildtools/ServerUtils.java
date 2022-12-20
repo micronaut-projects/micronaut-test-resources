@@ -579,7 +579,7 @@ public class ServerUtils {
             try {
                 MessageDigest digest = MessageDigest.getInstance("SHA1");
                 files.flatMap(fileOrDir -> {
-                    try (Stream<Path> s = Files.walk(fileOrDir.toPath())){
+                    try (Stream<Path> s = Files.walk(fileOrDir.toPath())) {
                         return s.map(p -> {
                             File file = p.toFile();
                             return file.getAbsolutePath() + ":" + file.length() + ":" + file.lastModified();

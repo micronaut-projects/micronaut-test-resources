@@ -10,5 +10,5 @@ dependencies {
     implementation(libs.testcontainers.oracle.xe)
     runtimeOnly(project(":test-resources-jdbc-oracle-xe"))
 
-    testRuntimeOnly(libs.reactive.oracle.xe)
+    testRuntimeOnly(mnR2dbc.r2dbc.oracle)
 }

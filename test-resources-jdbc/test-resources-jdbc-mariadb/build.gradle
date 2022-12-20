@@ -9,5 +9,5 @@ Provides support for launching a MariaDB test container.
 dependencies {
     implementation(libs.testcontainers.mariadb)
 
-    testRuntimeOnly(libs.mariadb)
+    testRuntimeOnly(mnSql.mariadb.java.client)
 }

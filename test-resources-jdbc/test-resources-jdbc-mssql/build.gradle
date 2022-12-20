@@ -9,5 +9,5 @@ Provides support for launching a MS SQL test container.
 dependencies {
     implementation(libs.testcontainers.mssql)
 
-    testRuntimeOnly(libs.mssql)
+    testRuntimeOnly(mnSql.mssql.jdbc)
 }

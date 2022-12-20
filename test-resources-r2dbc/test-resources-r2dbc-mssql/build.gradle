@@ -10,6 +10,6 @@ dependencies {
     implementation(libs.testcontainers.mssql)
     implementation(project(":test-resources-jdbc-mssql"))
 
-    testRuntimeOnly(libs.reactive.mssql)
-    testRuntimeOnly(libs.mssql)
+    testRuntimeOnly(mnR2dbc.r2dbc.mssql)
+    testRuntimeOnly(mnSql.mssql.jdbc)
 }

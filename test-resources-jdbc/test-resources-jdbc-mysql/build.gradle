@@ -9,5 +9,5 @@ Provides support for launching a MySQL test container.
 dependencies {
     implementation(libs.testcontainers.mysql)
 
-    testRuntimeOnly(libs.mysql)
+    testRuntimeOnly(mnSql.mysql.connector.java)
 }

@@ -12,5 +12,5 @@ dependencies {
     testCompileOnly(mnData.micronaut.data.document.processor)
     testImplementation(platform(mnMongo.micronaut.mongo.bom))
     testImplementation(mnData.micronaut.data.mongodb)
-    testImplementation(libs.mongodb)
+    testImplementation(mnMongo.mongo.driver)
 }

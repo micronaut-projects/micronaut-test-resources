@@ -1,5 +1,9 @@
 repositories {
-//    mavenLocal()
+//    mavenLocal {
+//        content {
+//            includeGroup "io.micronaut"
+//        }
+//    }
     mavenCentral()
     maven {
         url "https://s01.oss.sonatype.org/content/repositories/snapshots"

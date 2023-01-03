@@ -8,7 +8,7 @@ import io.r2dbc.pool.ConnectionPool
 import io.r2dbc.spi.ConnectionFactory
 import jakarta.inject.Inject
 
-@MicronautTest(environments = ["jdbc"] )
+@MicronautTest(environments = ["jdbc"], transactional = false )
 class WithJdbcStartPostgreSQLTest extends AbstractJDBCSpec {
 
     @Inject

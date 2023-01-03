@@ -6,7 +6,7 @@ import io.micronaut.testresources.jdbc.Book
 import jakarta.inject.Inject
 import spock.lang.IgnoreIf
 
-@MicronautTest(environments = ["jdbc"] )
+@MicronautTest(environments = ["jdbc"], transactional = false )
 @IgnoreIf({ !jvm.java11Compatible })
 class WithJdbcStartOracleTest extends AbstractJDBCSpec {
 

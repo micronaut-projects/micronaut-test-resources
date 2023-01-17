@@ -39,8 +39,8 @@ micronaut-gradle-plugin = "3.6.6"
 groovy = "4.0.6"
 spock = "2.3-groovy-4.0"
 vertx-client = "4.3.2"
-aws-sdk-v1 = "1.12.385"
-aws-sdk-v2 = "2.19.17"
+amazon-awssdk-v1 = "1.12.385"
+amazon-awssdk-v2 = "2.19.17"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.17.6"

@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public class LocalStackDynamoDBService implements LocalStackService {
 
-    private static final String AWS_DYNAMODB_ENDPOINT_OVERRIDE = "aws.dynamodb.endpoint-override";
+    private static final String AWS_DYNAMODB_ENDPOINT_OVERRIDE = "aws.dynamodb.services.endpoint-override";
 
     @Override
     public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {

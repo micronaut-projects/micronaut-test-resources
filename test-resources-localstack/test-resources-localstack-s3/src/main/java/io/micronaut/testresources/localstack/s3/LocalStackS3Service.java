@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public class LocalStackS3Service implements LocalStackService {
 
-    private static final String AWS_S3_ENDPOINT_OVERRIDE = "aws.s3.endpoint-override";
+    private static final String AWS_S3_ENDPOINT_OVERRIDE = "aws.s3.services.endpoint-override";
 
     @Override
     public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {

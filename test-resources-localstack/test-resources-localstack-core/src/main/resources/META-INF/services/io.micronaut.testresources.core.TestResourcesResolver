@@ -1,1 +1,1 @@
-io.micronaut.testresources.aws.localstack.LocalStackTestResourceProvider
+io.micronaut.testresources.localstack.LocalStackTestResourceProvider

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.aws.localstack.s3;
+package io.micronaut.testresources.localstack.s3;
 
-import io.micronaut.testresources.aws.localstack.LocalStackService;
+import io.micronaut.testresources.localstack.LocalStackService;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 
 import java.util.Collections;

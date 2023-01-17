@@ -1,4 +1,4 @@
-package io.micronaut.testresources.aws.localstack
+package io.micronaut.testresources.localstack
 
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec

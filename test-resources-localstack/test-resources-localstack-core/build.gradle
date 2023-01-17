@@ -9,9 +9,9 @@ Provides core support for launching Localstack test containers.
 
 dependencies {
     api(libs.testcontainers.localstack)
-    testFixturesApi(platform(mn.micronaut.bom))
+    testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesImplementation(mn.groovy)
-    testFixturesImplementation(mn.spock)
+    testFixturesImplementation(libs.spock)
     testFixturesApi(testFixtures(project(":test-resources-testcontainers"))) {
         because "exposes AbstractTestContainersSpec"
     }

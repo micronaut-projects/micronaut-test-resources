@@ -84,6 +84,7 @@ if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
 micronautBuild {
     addSnapshotRepository()
     importMicronautCatalog()
+    importMicronautCatalog("micronaut-aws")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-elasticsearch")
     importMicronautCatalog("micronaut-email")

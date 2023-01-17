@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.aws.localstack;
+package io.micronaut.testresources.localstack;
 
 import org.testcontainers.containers.localstack.LocalStackContainer;
 

@@ -1,10 +1,10 @@
-package io.micronaut.testresources.aws.localstack.dynamodb
+package io.micronaut.testresources.localstack.dynamodb
 
 
 import io.micronaut.context.annotation.ConfigurationBuilder
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import io.micronaut.testresources.aws.localstack.AbstractLocalStackSpec
+import io.micronaut.testresources.localstack.AbstractLocalStackSpec
 import jakarta.inject.Inject
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
@@ -83,7 +83,7 @@ class LocalStackDynamoDBTest extends AbstractLocalStackSpec {
         String secretKey
         String region
 
-        @ConfigurationBuilder(configurationPrefix = "dynamodb")
+        @ConfigurationBuilder(configurationPrefix = "services.dynamodb")
         final Dynamo dynamodb = new Dynamo()
 
         static class Dynamo {

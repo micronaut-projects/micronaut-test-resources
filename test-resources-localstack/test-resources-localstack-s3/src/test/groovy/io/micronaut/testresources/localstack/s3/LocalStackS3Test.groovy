@@ -59,7 +59,7 @@ class LocalStackS3Test extends AbstractLocalStackSpec {
         String secretKey
         String region
 
-        @ConfigurationBuilder(configurationPrefix = "s3")
+        @ConfigurationBuilder(configurationPrefix = "services.s3")
         final S3 s3 = new S3()
 
         static class S3 {

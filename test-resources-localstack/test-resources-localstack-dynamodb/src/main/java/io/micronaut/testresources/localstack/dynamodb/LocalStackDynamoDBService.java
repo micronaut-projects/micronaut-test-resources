@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.aws.localstack.dynamodb;
+package io.micronaut.testresources.localstack.dynamodb;
 
-import io.micronaut.testresources.aws.localstack.LocalStackService;
+import io.micronaut.testresources.localstack.LocalStackService;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 
 import java.util.Collections;
@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public class LocalStackDynamoDBService implements LocalStackService {
 
-    private static final String AWS_DYNAMODB_ENDPOINT_OVERRIDE = "aws.dynamodb.services.endpoint-override";
+    private static final String AWS_DYNAMODB_ENDPOINT_OVERRIDE = "aws.services.dynamodb.endpoint-override";
 
     @Override
     public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {

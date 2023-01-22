@@ -39,8 +39,8 @@ micronaut-gradle-plugin = "3.6.6"
 groovy = "4.0.6"
 spock = "2.3-groovy-4.0"
 vertx-client = "4.3.2"
-amazon-awssdk-v1 = "1.12.385"
-amazon-awssdk-v2 = "2.19.17"
+amazon-awssdk-v1 = "1.12.389"
+amazon-awssdk-v2 = "2.19.21"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.17.6"
@@ -89,8 +89,6 @@ vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.c
 scram = { module = "com.ongres.scram:client", version = "2.1" }
 spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
 
-micronaut-aws-sdk-v1 = { module = "io.micronaut.aws:micronaut-aws-sdk-v1", version.ref = "micronaut-aws"}
-micronaut-aws-sdk-v2 = { module = "io.micronaut.aws:micronaut-aws-sdk-v2", version.ref = "micronaut-aws"}
 amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1"}
 amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1"}
 amazon-awssdk-v2-dynamodb = { module = "software.amazon.awssdk:dynamodb", version.ref = "amazon-awssdk-v2"}

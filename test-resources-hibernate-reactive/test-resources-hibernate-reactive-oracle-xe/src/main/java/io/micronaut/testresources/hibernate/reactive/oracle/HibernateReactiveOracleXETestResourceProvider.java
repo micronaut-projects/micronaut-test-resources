@@ -33,7 +33,7 @@ public class HibernateReactiveOracleXETestResourceProvider extends AbstractHiber
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe";
+        return "gvenzl/oracle-xe:slim-faststart";
     }
 
     @Override

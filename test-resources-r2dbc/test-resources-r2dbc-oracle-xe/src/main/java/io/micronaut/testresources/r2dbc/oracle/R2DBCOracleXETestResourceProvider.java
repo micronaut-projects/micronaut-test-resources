@@ -73,7 +73,7 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe";
+        return "gvenzl/oracle-xe:slim-faststart";
     }
 
     @Override

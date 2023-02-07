@@ -21,8 +21,7 @@ It is possible to override the default image of the container by setting the fol
 
 For example, you can override the default image of the container for the `MariaDB` database by setting the following property:
 
-.application.yml
-[source,yaml]
+[configuration]
 ----
 test-resources:
   containers:
@@ -35,10 +34,13 @@ The `db-type` property value can be found in the table above.
 [NOTE]
 ====
 Using the Microsoft SQL Server container will require you to accept its license. In order to do this, you must set the `test-resources.containers.mssql.accept-license` property to true:
-```yaml
+
+[configuration]
+----
 test-resources:
   containers:
     mssql:
       accept-license: true
-```
+----
+
 ====

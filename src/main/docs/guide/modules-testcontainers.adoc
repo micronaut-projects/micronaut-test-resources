@@ -6,24 +6,21 @@ Unlike the other resources, this will require adding configuration to your appli
 
 Let's illustrate how we can declare an SMTP test container (here using YAML configuration) for use with https://micronaut-projects.github.io/micronaut-email[Micronaut Email]:
 
-.application.yml
-[source,yaml]
+[configuration]
 ----
 test-resources:
   containers:
-    fakesmtp:                       <1>
-      image-name: ghusta/fakesmtp   <2>
-      hostnames:                    <3>
-        - smtp.host                 <4>
-      exposed-ports:                <5>
-        - smtp.port: 25             <6>
+    fakesmtp:
+      image-name: ghusta/fakesmtp
+      hostnames:
+        - smtp.host
+      exposed-ports:
+        - smtp.port: 25
 ----
-<1> The name of the test container
-<2> The image name to use
-<3> The hostnames declare what properties will be resolved with the value of the container host name
-<4> Declares that the `smtp.host` property will be resolved with the container host name
-<5> Declares what ports the container exposes
-<6> Declares that the property `smtp.port` will be set to the value of the mapped port `25`
+
+- `fakesmtp` names the test container
+- The `hostnames` declare what properties will be resolved with the value of the container host name. The `smtp.host` property will be resolved with the container host name
+- The `exposed-ports` declares what ports the container exposes. `smtp.port` will be set to the value of the mapped port `25`
 
 Then the values `smtp.host` and `smtp.port` can for example be used in a bean configuration:
 
@@ -52,8 +49,7 @@ public class JavamailSessionProvider implements SessionProvider {
 
 In addition, generic containers can bind file system resources (either read-only or read-write):
 
-.application.yml
-[source,yaml,subs="verbatim"]
+[configuration]
 ----
 test-resources:
   containers:
@@ -71,8 +67,7 @@ test-resources:
 
 It is also possible to copy files from the host to the container:
 
-.application.yml
-[source,yaml,subs="verbatim"]
+[configuration]
 ----
 test-resources:
   containers:
@@ -98,8 +93,7 @@ The following properties are also supported:
 
 e.g:
 
-.application.yml
-[source,yaml,subs="verbatim"]
+[configuration]
 ----
 test-resources:
   containers:
@@ -124,7 +118,7 @@ Please refer to the <<configurationreference#io.micronaut.testresources.testcont
 By default, each container is spawned in its own network.
 It is possible to let containers communicate with each other by declaring the network they belong to:
 
-[source,yaml]
+[configuration]
 ----
 test-resources:
   containers:
@@ -154,7 +148,7 @@ Micronaut Test Resources uses the default https://www.testcontainers.org/feature
 
 It is however possible to override the default by configuration.
 
-[source,yaml,subs="verbatim"]
+[configuration]
 ----
 test-resources:
   containers:
@@ -180,7 +174,7 @@ The following wait strategies are supported:
 
 Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):
 
-[source,yaml,subs="verbatim"]
+[configuration]
 ----
 test-resources:
   containers:
@@ -194,7 +188,7 @@ test-resources:
 
 It is possible to configure the `all` strategy itself:
 
-[source,yaml,subs="verbatim"]
+[configuration]
 ----
 test-resources:
   containers:

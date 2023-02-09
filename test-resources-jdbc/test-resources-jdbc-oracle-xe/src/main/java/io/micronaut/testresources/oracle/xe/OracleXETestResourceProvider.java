@@ -62,7 +62,7 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe";
+        return "gvenzl/oracle-xe:slim-faststart";
     }
 
     @Override

@@ -2,15 +2,15 @@
 
 Micronaut Test Resources provides support for the following databases:
 
-[cols="2,1,1,1"]
+[cols="2,1,1,1,1"]
 |===
-|Database | JDBC | R2DBC | Database identifier
+|Database | JDBC | R2DBC | Database identifier | Default image
 
-| https://mariadb.org/[MariaDB] | Yes | Yes | mariadb
-| https://www.mysql.com/[MySQL] | Yes | Yes | mysql
-| https://www.oracle.com/fr/database/technologies/appdev/xe.html[Oracle Express Edition] | Yes | Yes | oracle-xe
-| https://www.postgresql.org/[PostgreSQL] | Yes | Yes | postgres
-| https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | mssql
+| https://mariadb.org/[MariaDB] | Yes | Yes | mariadb | mariadb
+| https://www.mysql.com/[MySQL] | Yes | Yes | mysql | mysql
+| https://www.oracle.com/fr/database/technologies/appdev/xe.html[Oracle Express Edition] | Yes | Yes | oracle-xe | gvenzl/oracle-xe:slim-faststart
+| https://www.postgresql.org/[PostgreSQL] | Yes | Yes | postgres | postgres
+| https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | mssql | mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04
 
 |===
 

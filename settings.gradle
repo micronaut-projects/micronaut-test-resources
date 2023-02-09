@@ -36,6 +36,12 @@ def hibernateReactiveModules = [
         'oracle-xe'
 ]
 
+def localstackModules = [
+        'core',
+        's3',
+        'dynamodb'
+]
+
 include 'test-resources-bom'
 include 'test-resources-build-tools'
 include 'test-resources-core'
@@ -62,6 +68,11 @@ r2dbcModules.each {
     include projectName
     project(":test-resources-r2dbc-$it").projectDir = file("test-resources-r2dbc/$projectName")
 }
+localstackModules.each {
+    String projectName = "test-resources-localstack-$it"
+    include projectName
+    project(":test-resources-localstack-$it").projectDir = file("test-resources-localstack/$projectName")
+}
 
 if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
     hibernateReactiveModules.each {
@@ -74,6 +85,7 @@ if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
 micronautBuild {
     addSnapshotRepository()
     importMicronautCatalog()
+    importMicronautCatalog("micronaut-aws")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-elasticsearch")
     importMicronautCatalog("micronaut-email")

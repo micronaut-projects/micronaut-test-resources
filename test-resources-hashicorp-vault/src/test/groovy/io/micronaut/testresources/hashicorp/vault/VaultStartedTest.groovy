@@ -7,8 +7,10 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 import jakarta.inject.Inject
 import jakarta.inject.Named
+import spock.lang.Ignore
 
 @MicronautTest
+@Ignore("Known issue - https://github.com/micronaut-projects/micronaut-core/issues/8610")
 class VaultStartedTest extends AbstractTestContainersSpec {
 
     @Value('${vault.client.uri}')

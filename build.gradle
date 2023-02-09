@@ -6,3 +6,10 @@ plugins {
 tasks.named("publishGuide") {
     properties['micronautVersion'] = micronautVersion
 }
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+    }
+}

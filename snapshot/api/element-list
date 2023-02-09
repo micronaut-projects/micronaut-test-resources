@@ -13,6 +13,9 @@ io.micronaut.testresources.hibernate.reactive.postgresql
 io.micronaut.testresources.hivemq
 io.micronaut.testresources.jdbc
 io.micronaut.testresources.kafka
+io.micronaut.testresources.localstack
+io.micronaut.testresources.localstack.dynamodb
+io.micronaut.testresources.localstack.s3
 io.micronaut.testresources.mariadb
 io.micronaut.testresources.mongodb
 io.micronaut.testresources.mssql

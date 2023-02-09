@@ -53,7 +53,7 @@ class ServerUtilsTest extends Specification {
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
-            assert params.mainClass == 'io.micronaut.testresources.server.Application'
+            assert params.mainClass == 'io.micronaut.testresources.server.TestResourcesService'
             assert params.classpath == classpath
             def sysProps = ['com.sun.management.jmxremote': null]
             if (token != null) {

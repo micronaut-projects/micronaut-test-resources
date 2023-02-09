@@ -65,7 +65,7 @@ public class ServerUtils {
     private static final String SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY = "server.access-token";
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
     private static final String SERVER_CLIENT_READ_TIMEOUT = "server.client.read.timeout";
-    private static final String SERVER_ENTRY_POINT = "io.micronaut.testresources.server.Application";
+    private static final String SERVER_ENTRY_POINT = "io.micronaut.testresources.server.TestResourcesService";
     private static final String MICRONAUT_SERVER_PORT = "micronaut.server.port";
     private static final String JMX_SYSTEM_PROPERTY = "com.sun.management.jmxremote";
     private static final String CDS_HASH = "cds.bin";

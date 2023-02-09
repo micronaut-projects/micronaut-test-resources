@@ -53,3 +53,13 @@ micronautBuild {
         enabled = false
     }
 }
+
+// This will only be required until we build
+// the test resources server with Micronaut Gradle Plugin 4.0.0
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute platform(module("io.micronaut:micronaut-core-bom")) using platform(module("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.asProvider().get()}"))
+        }
+    }
+}

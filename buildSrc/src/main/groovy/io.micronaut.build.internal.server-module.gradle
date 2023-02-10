@@ -1,48 +1,58 @@
 plugins {
     id 'io.micronaut.build.internal.test-resources-module'
+    id "com.github.johnrengelman.shadow"
 }
 
 afterEvaluate {
+    // The double after evaluate trick is performed by a professional:
+    // It is dangerous to reproduce at home and is here to workaround
+    // ordering of afterEvaluate clauses, which are used by the AOT
+    // plugin in order to create the optimizedJitJarAll task
+    afterEvaluate {
 
-    // For publication, we want the optimized jar instead of the traditional one
-    // so we're creating custom components
-    AdhocComponentWithVariants javaComponent = components.java
-    configurations {
-        [runtimeElements, apiElements].each { cnf ->
-            // We create a new outgoing configuration
-            def optimized = configurations.create("optimized${cnf.name.capitalize()}") {
-                canBeConsumed = true
-                canBeResolved = false
-                // published jar is the optimized jar
-                outgoing.artifact(tasks.named("optimizedJitJar")) {
-                    classifier = ''
+        // For publication, we want the optimized jar instead of the traditional one
+        // so we're creating custom components
+        AdhocComponentWithVariants javaComponent = components.java
+        configurations {
+            [runtimeElements, apiElements].each { cnf ->
+                // We create a new outgoing configuration
+                def optimized = configurations.create("optimized${cnf.name.capitalize()}") {
+                    canBeConsumed = true
+                    canBeResolved = false
+                    // published jar is the optimized jar
+                    outgoing.artifact(tasks.named('optimizedJitJarAll')) {
+                        classifier = ''
+                    }
+
+                    // we use the same attributes at the original configuration
+                    prepareAttributesForPublication(cnf, it)
                 }
-                // we use the same attributes at the original configuration
-                prepareAttributesForPublication(cnf, it)
+                cnf.attributes {
+                    // default configurations are purely internal
+                    attribute(Attribute.of("io.micronaut.aot.optimized", Boolean), false)
+                }
+                // we skip the publication of the default Gradle variants
+                javaComponent.withVariantsFromConfiguration(cnf) {
+                    skip()
+                }
             }
-            cnf.attributes {
-                // default configurations are purely internal
-                attribute(Attribute.of("io.micronaut.aot.optimized", Boolean), false)
-            }
-            // we don't use extendsFrom because we don't want to inherit the artifacts
-            optimized.dependencies.addAll(cnf.allDependencies)
-            // we skip the publication of the default Gradle variants
-            javaComponent.withVariantsFromConfiguration(cnf) {
+            // Exclude the default Shadow variant since we're using our own
+            javaComponent.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
                 skip()
             }
         }
-    }
-    javaComponent.addVariantsFromConfiguration(configurations.optimizedApiElements) {
-        it.mapToMavenScope('compile')
-    }
-    javaComponent.addVariantsFromConfiguration(configurations.optimizedRuntimeElements) {
-        it.mapToMavenScope('runtime')
-    }
+        javaComponent.addVariantsFromConfiguration(configurations.optimizedApiElements) {
+            it.mapToMavenScope('compile')
+        }
+        javaComponent.addVariantsFromConfiguration(configurations.optimizedRuntimeElements) {
+            it.mapToMavenScope('runtime')
+        }
 
-    dependencies {
-        attributesSchema { AttributesSchema schema ->
-            schema.attribute(Attribute.of("io.micronaut.aot.optimized", Boolean)) {
-                disambiguationRules.add(AotOptimizedDisambiguationRule)
+        dependencies {
+            attributesSchema { AttributesSchema schema ->
+                schema.attribute(Attribute.of("io.micronaut.aot.optimized", Boolean)) {
+                    disambiguationRules.add(AotOptimizedDisambiguationRule)
+                }
             }
         }
     }

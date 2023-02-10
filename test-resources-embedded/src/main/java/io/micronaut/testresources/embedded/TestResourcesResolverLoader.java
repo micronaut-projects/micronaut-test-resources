@@ -36,8 +36,17 @@ public final class TestResourcesResolverLoader {
 
     public TestResourcesResolverLoader() {
         SoftServiceLoader<TestResourcesResolver> loader = SoftServiceLoader.load(TestResourcesResolver.class);
-        ArrayList<TestResourcesResolver> values = new ArrayList<>();
+        List<TestResourcesResolver> values = new ArrayList<>();
         loader.collectAll(values);
+        // We need to deduplicate the resolvers because of fat jar
+        // packaging, which can cause the same resolver to be loaded
+        // multiple times
+        values = values.stream()
+            .collect(Collectors.groupingBy(TestResourcesResolver::getClass))
+            .values()
+            .stream()
+            .map(list -> list.get(0))
+            .collect(Collectors.toList());
         resolvers = OrderUtil.sort(values.stream()).collect(Collectors.toList());
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Loaded {} test resources resolvers: {}", resolvers.size(), resolvers.stream().map(Object::getClass).map(Class::getName).collect(Collectors.joining(", ")));

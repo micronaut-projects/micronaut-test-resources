@@ -26,7 +26,7 @@ dependencies {
     testRuntimeOnly(project(':test-resources-kafka'))
 
     // For logback conversion
-    aotPlugins("ch.qos.logback:logback-classic:1.3.0-alpha14")
+    aotPlugins(mn.logback.classic)
     aotPlugins("org.fusesource.jansi:jansi:1.18")
     aotPlugins(mn.snakeyaml)
 }
@@ -37,13 +37,15 @@ application {
 
 micronaut {
     aot {
+        version = '2.0.0-SNAPSHOT'
         cacheEnvironment.set(true)
         optimizeServiceLoading.set(true)
         optimizeClassLoading.set(true)
         convertYamlToJava.set(true)
         precomputeOperations.set(true)
         deduceEnvironment.set(true)
-        replaceLogbackXml.set(true)
+        // Workaround for an AOT conversion bug
+        replaceLogbackXml.set(false)
     }
 }
 
@@ -51,5 +53,15 @@ micronautBuild {
     binaryCompatibility {
         // binary checks work on the wrong jar file
         enabled = false
+    }
+}
+
+// This will only be required until we build
+// the test resources server with Micronaut Gradle Plugin 4.0.0
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute platform(module("io.micronaut:micronaut-bom")) using platform(module("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.asProvider().get()}"))
+        }
     }
 }

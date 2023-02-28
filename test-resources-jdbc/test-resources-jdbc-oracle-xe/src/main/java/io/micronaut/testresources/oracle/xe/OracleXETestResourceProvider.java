@@ -32,6 +32,9 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
 
     @Override
     public List<String> getRequiredProperties(String expression) {
+        if (!isDatasourceExpression(expression)) {
+            return Collections.emptyList();
+        }
         List<String> requiredProperties = super.getRequiredProperties(expression);
         String datasource = datasourceNameFrom(expression);
         return Stream.concat(

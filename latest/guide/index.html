@@ -138,7 +138,7 @@
         <h1>Micronaut Test Resources</h1>
         <p></p>
         <p>Test resources integration (like Testcontainers) for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.5/guide/index.html'>1.1.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.4/guide/index.html'>1.1.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.3/guide/index.html'>1.1.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.2/guide/index.html'>1.1.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.1/guide/index.html'>1.1.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.1/guide/index.html'>1.0.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M5/guide/index.html'>1.0.0-M5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M4/guide/index.html'>1.0.0-M4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M3/guide/index.html'>1.0.0-M3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M2/guide/index.html'>1.0.0-M2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M1/guide/index.html'>1.0.0-M1</option></select> </p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/index.html'>LATEST</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.4/guide/index.html'>1.2.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.5/guide/index.html'>1.1.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.4/guide/index.html'>1.1.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.3/guide/index.html'>1.1.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.2/guide/index.html'>1.1.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.1/guide/index.html'>1.1.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.1/guide/index.html'>1.0.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M5/guide/index.html'>1.0.0-M5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M4/guide/index.html'>1.0.0-M4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M3/guide/index.html'>1.0.0-M3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M2/guide/index.html'>1.0.0-M2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0-M1/guide/index.html'>1.0.0-M1</option></select> </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -312,13 +312,66 @@ It is possible to override the default image of the container by setting the fol
 <div class="paragraph">
 <p>For example, you can override the default image of the container for the <code>MariaDB</code> database by setting the following property:</p>
 </div>
-<div class="listingblock">
-<div class="title">application.yml</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mariadb.image-name=mariadb:10.3</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
     mariadb:
       image-name: mariadb:10.3</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mariadb]
+      image-name="mariadb:10.3"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mariadb {
+      imageName = "mariadb:10.3"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mariadb {
+        image-name = "mariadb:10.3"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mariadb": {
+        "image-name": "mariadb:10.3"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -334,12 +387,66 @@ It is possible to override the default image of the container by setting the fol
 <div class="paragraph">
 <p>Using the Microsoft SQL Server container will require you to accept its license. In order to do this, you must set the <code>test-resources.containers.mssql.accept-license</code> property to true:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mssql.accept-license=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
     mssql:
       accept-license: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mssql]
+      accept-license=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mssql {
+      acceptLicense = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mssql {
+        accept-license = true
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mssql": {
+        "accept-license": true
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </td>
@@ -554,8 +661,19 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <p>Alternatively, you can setup a custom container.
 For example, you can use Mosquitto instead:</p>
 </div>
-<div class="listingblock">
-<div class="title">application.yml</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">mqtt.client.server-uri=tcp://${mqtt.host}:${mqtt.port}
+mqtt.client.client-id=${random.uuid}
+test-resources.containers.mosquitto.image-name=eclipse-mosquitto
+test-resources.containers.mosquitto.hostnames[0]=mqtt.host
+test-resources.containers.mosquitto.exposed-ports[0].mqtt.port=1883
+test-resources.containers.mosquitto.ro-fs-bind[0].mosquitto.conf=/mosquitto/config/mosquitto.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">mqtt:
   client:
@@ -571,6 +689,103 @@ test-resources:
         - mqtt.port: 1883
       ro-fs-bind:
         - "mosquitto.conf": /mosquitto/config/mosquitto.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[mqtt]
+  [mqtt.client]
+    server-uri="tcp://${mqtt.host}:${mqtt.port}"
+    client-id="${random.uuid}"
+[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mosquitto]
+      image-name="eclipse-mosquitto"
+      hostnames=[
+        "mqtt.host"
+      ]
+      [[test-resources.containers.mosquitto.exposed-ports]]
+        "mqtt.port"=1883
+      [[test-resources.containers.mosquitto.ro-fs-bind]]
+        "mosquitto.conf"="/mosquitto/config/mosquitto.conf"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">mqtt {
+  client {
+    serverUri = "tcp://${mqtt.host}:${mqtt.port}"
+    clientId = "${random.uuid}"
+  }
+}
+testResources {
+  containers {
+    mosquitto {
+      imageName = "eclipse-mosquitto"
+      hostnames = ["mqtt.host"]
+      exposedPorts = [{
+          mqtt.port = 1883
+        }]
+      roFsBind = [{
+          mosquitto.conf = "/mosquitto/config/mosquitto.conf"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  mqtt {
+    client {
+      server-uri = "tcp://${mqtt.host}:${mqtt.port}"
+      client-id = "${random.uuid}"
+    }
+  }
+  test-resources {
+    containers {
+      mosquitto {
+        image-name = "eclipse-mosquitto"
+        hostnames = ["mqtt.host"]
+        exposed-ports = [{
+            "mqtt.port" = 1883
+          }]
+        ro-fs-bind = [{
+            "mosquitto.conf" = "/mosquitto/config/mosquitto.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "mqtt": {
+    "client": {
+      "server-uri": "tcp://${mqtt.host}:${mqtt.port}",
+      "client-id": "${random.uuid}"
+    }
+  },
+  "test-resources": {
+    "containers": {
+      "mosquitto": {
+        "image-name": "eclipse-mosquitto",
+        "hostnames": ["mqtt.host"],
+        "exposed-ports": [{
+            "mqtt.port": 1883
+          }],
+        "ro-fs-bind": [{
+            "mosquitto.conf": "/mosquitto/config/mosquitto.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="listingblock">
@@ -657,7 +872,16 @@ listener 1883</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.hashicorp-vault.path=secret/my-path
+test-resources.containers.hashicorp-vault.secrets[0]=key1=value1
+test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -666,6 +890,60 @@ listener 1883</code></pre>
       secrets:
         - "key1=value1"
         - "key2=value2"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.hashicorp-vault]
+      path="secret/my-path"
+      secrets=[
+        "key1=value1",
+        "key2=value2"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    hashicorpVault {
+      path = "secret/my-path"
+      secrets = ["key1=value1", "key2=value2"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      hashicorp-vault {
+        path = "secret/my-path"
+        secrets = ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "hashicorp-vault": {
+        "path": "secret/my-path",
+        "secrets": ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 
@@ -689,46 +967,103 @@ Unlike the other resources, this will require adding configuration to your appli
 <div class="paragraph">
 <p>Let&#8217;s illustrate how we can declare an SMTP test container (here using YAML configuration) for use with <a href="https://micronaut-projects.github.io/micronaut-email">Micronaut Email</a>:</p>
 </div>
-<div class="listingblock">
-<div class="title">application.yml</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.fakesmtp.image-name=ghusta/fakesmtp
+test-resources.containers.fakesmtp.hostnames[0]=smtp.host
+test-resources.containers.fakesmtp.exposed-ports[0].smtp.port=25</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
-    fakesmtp:                       <i class="conum" data-value="1"></i><b>(1)</b>
-      image-name: ghusta/fakesmtp   <i class="conum" data-value="2"></i><b>(2)</b>
-      hostnames:                    <i class="conum" data-value="3"></i><b>(3)</b>
-        - smtp.host                 <i class="conum" data-value="4"></i><b>(4)</b>
-      exposed-ports:                <i class="conum" data-value="5"></i><b>(5)</b>
-        - smtp.port: 25             <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+    fakesmtp:
+      image-name: ghusta/fakesmtp
+      hostnames:
+        - smtp.host
+      exposed-ports:
+        - smtp.port: 25</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The name of the test container</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The image name to use</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The hostnames declare what properties will be resolved with the value of the container host name</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Declares that the <code>smtp.host</code> property will be resolved with the container host name</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Declares what ports the container exposes</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Declares that the property <code>smtp.port</code> will be set to the value of the mapped port <code>25</code></td>
-</tr>
-</table>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.fakesmtp]
+      image-name="ghusta/fakesmtp"
+      hostnames=[
+        "smtp.host"
+      ]
+      [[test-resources.containers.fakesmtp.exposed-ports]]
+        "smtp.port"=25</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    fakesmtp {
+      imageName = "ghusta/fakesmtp"
+      hostnames = ["smtp.host"]
+      exposedPorts = [{
+          smtp.port = 25
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      fakesmtp {
+        image-name = "ghusta/fakesmtp"
+        hostnames = ["smtp.host"]
+        exposed-ports = [{
+            "smtp.port" = 25
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "fakesmtp": {
+        "image-name": "ghusta/fakesmtp",
+        "hostnames": ["smtp.host"],
+        "exposed-ports": [{
+            "smtp.port": 25
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>fakesmtp</code> names the test container</p>
+</li>
+<li>
+<p>The <code>hostnames</code> declare what properties will be resolved with the value of the container host name. The <code>smtp.host</code> property will be resolved with the container host name</p>
+</li>
+<li>
+<p>The <code>exposed-ports</code> declares what ports the container exposes. <code>smtp.port</code> will be set to the value of the mapped port <code>25</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Then the values <code>smtp.host</code> and <code>smtp.port</code> can for example be used in a bean configuration:</p>
@@ -769,8 +1104,18 @@ public class JavamailSessionProvider implements SessionProvider {
 <div class="paragraph">
 <p>In addition, generic containers can bind file system resources (either read-only or read-write):</p>
 </div>
-<div class="listingblock">
-<div class="title">application.yml</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.ro-fs-bind[0].path/to/local/readonly-file.conf=/path/to/container/readonly-file.conf
+test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file.conf=/path/to/container/readwrite-file.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -786,11 +1131,107 @@ public class JavamailSessionProvider implements SessionProvider {
         - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      [[test-resources.containers.mycontainer.ro-fs-bind]]
+        "path/to/local/readonly-file.conf"="/path/to/container/readonly-file.conf"
+      [[test-resources.containers.mycontainer.rw-fs-bind]]
+        "path/to/local/readwrite-file.conf"="/path/to/container/readwrite-file.conf"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      roFsBind = [{
+          path/to/local/readonlyFile.conf = "/path/to/container/readonly-file.conf"
+        }]
+      rwFsBind = [{
+          path/to/local/readwriteFile.conf = "/path/to/container/readwrite-file.conf"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        ro-fs-bind = [{
+            "path/to/local/readonly-file.conf" = "/path/to/container/readonly-file.conf"
+          }]
+        rw-fs-bind = [{
+            "path/to/local/readwrite-file.conf" = "/path/to/container/readwrite-file.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "ro-fs-bind": [{
+            "path/to/local/readonly-file.conf": "/path/to/container/readonly-file.conf"
+          }],
+        "rw-fs-bind": [{
+            "path/to/local/readwrite-file.conf": "/path/to/container/readwrite-file.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 <div class="paragraph">
 <p>It is also possible to copy files from the host to the container:</p>
 </div>
-<div class="listingblock">
-<div class="title">application.yml</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.copy-to-container[0].path/to/local/readonly-file.conf=/path/to/container/file.conf
+test-resources.containers.mycontainer.copy-to-container[1].classpath:/file/on/classpath.conf=/path/to/container/other.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -803,6 +1244,89 @@ public class JavamailSessionProvider implements SessionProvider {
       copy-to-container:
         - path/to/local/readonly-file.conf: /path/to/container/file.conf
         - classpath:/file/on/classpath.conf: /path/to/container/other.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      [[test-resources.containers.mycontainer.copy-to-container]]
+        "path/to/local/readonly-file.conf"="/path/to/container/file.conf"
+      [[test-resources.containers.mycontainer.copy-to-container]]
+        "classpath:/file/on/classpath.conf"="/path/to/container/other.conf"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      copyToContainer = [{
+          path/to/local/readonlyFile.conf = "/path/to/container/file.conf"
+        }, {
+          classpath:/file/on/classpath.conf = "/path/to/container/other.conf"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        copy-to-container = [{
+            "path/to/local/readonly-file.conf" = "/path/to/container/file.conf"
+          }, {
+            "classpath:/file/on/classpath.conf" = "/path/to/container/other.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "copy-to-container": [{
+            "path/to/local/readonly-file.conf": "/path/to/container/file.conf"
+          }, {
+            "classpath:/file/on/classpath.conf": "/path/to/container/other.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -830,8 +1354,20 @@ public class JavamailSessionProvider implements SessionProvider {
 <div class="paragraph">
 <p>e.g:</p>
 </div>
-<div class="listingblock">
-<div class="title">application.yml</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.command=some.sh
+test-resources.containers.mycontainer.env[0].MY_ENV_VAR=my value
+test-resources.containers.mycontainer.labels[0].my.label=my value
+test-resources.containers.mycontainer.startup-timeout=120s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -849,6 +1385,100 @@ public class JavamailSessionProvider implements SessionProvider {
       startup-timeout: 120s</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      command="some.sh"
+      [[test-resources.containers.mycontainer.env]]
+        MY_ENV_VAR="my value"
+      [[test-resources.containers.mycontainer.labels]]
+        "my.label"="my value"
+      startup-timeout="120s"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      command = "some.sh"
+      env = [{
+          MY_ENV_VAR = "my value"
+        }]
+      labels = [{
+          my.label = "my value"
+        }]
+      startupTimeout = "120s"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        command = "some.sh"
+        env = [{
+            MY_ENV_VAR = "my value"
+          }]
+        labels = [{
+            "my.label" = "my value"
+          }]
+        startup-timeout = "120s"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "command": "some.sh",
+        "env": [{
+            "MY_ENV_VAR": "my value"
+          }],
+        "labels": [{
+            "my.label": "my value"
+          }],
+        "startup-timeout": "120s"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 <div class="paragraph">
 <p>Please refer to the <a href="configurationreference.html#io.micronaut.testresources.testcontainers.TestContainersConfiguration">configuration properties reference</a> for details.</p>
 </div>
@@ -859,7 +1489,25 @@ public class JavamailSessionProvider implements SessionProvider {
 <p>By default, each container is spawned in its own network.
 It is possible to let containers communicate with each other by declaring the network they belong to:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.producer.image-name=alpine:3.14
+test-resources.containers.producer.command[0]=/bin/sh
+test-resources.containers.producer.command[1]=-c
+test-resources.containers.producer.command[2]=while true ; do printf 'HTTP/1.1 200 OK\n\nyay' | nc -l -p 8080; done
+test-resources.containers.producer.network=custom
+test-resources.containers.producer.network-aliases=bob
+test-resources.containers.producer.hostnames=producer.host
+test-resources.containers.consumer.image-name=alpine:3.14
+test-resources.containers.consumer.command=top
+test-resources.containers.consumer.network=custom
+test-resources.containers.consumer.network-aliases=alice
+test-resources.containers.consumer.hostnames=consumer.host</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -880,6 +1528,100 @@ It is possible to let containers communicate with each other by declaring the ne
       hostnames: consumer.host</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.producer]
+      image-name="alpine:3.14"
+      command=[
+        "/bin/sh",
+        "-c",
+        "while true ; do printf \'HTTP/1.1 200 OK\\n\\nyay\' | nc -l -p 8080; done"
+      ]
+      network="custom"
+      network-aliases="bob"
+      hostnames="producer.host"
+    [test-resources.containers.consumer]
+      image-name="alpine:3.14"
+      command="top"
+      network="custom"
+      network-aliases="alice"
+      hostnames="consumer.host"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    producer {
+      imageName = "alpine:3.14"
+      command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+      network = "custom"
+      networkAliases = "bob"
+      hostnames = "producer.host"
+    }
+    consumer {
+      imageName = "alpine:3.14"
+      command = "top"
+      network = "custom"
+      networkAliases = "alice"
+      hostnames = "consumer.host"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      producer {
+        image-name = "alpine:3.14"
+        command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+        network = "custom"
+        network-aliases = "bob"
+        hostnames = "producer.host"
+      }
+      consumer {
+        image-name = "alpine:3.14"
+        command = "top"
+        network = "custom"
+        network-aliases = "alice"
+        hostnames = "consumer.host"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "producer": {
+        "image-name": "alpine:3.14",
+        "command": ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"],
+        "network": "custom",
+        "network-aliases": "bob",
+        "hostnames": "producer.host"
+      },
+      "consumer": {
+        "image-name": "alpine:3.14",
+        "command": "top",
+        "network": "custom",
+        "network-aliases": "alice",
+        "hostnames": "consumer.host"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 <div class="paragraph">
 <p>The <code>network</code> key is used to declare the network containers use.
 The <code>network-aliases</code> can be used to assign host names to the containers.</p>
@@ -895,7 +1637,15 @@ The <code>network-aliases</code> can be used to assign host names to the contain
 <div class="paragraph">
 <p>It is however possible to override the default by configuration.</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -904,6 +1654,71 @@ The <code>network-aliases</code> can be used to assign host names to the contain
         wait-strategy:
             log:
                 regex: ".*Started.*"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.log]
+          regex=".*Started.*"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      waitStrategy {
+        log {
+          regex = ".*Started.*"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        wait-strategy {
+          log {
+            regex = ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "wait-strategy": {
+          "log": {
+            "regex": ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -946,7 +1761,16 @@ The <code>network-aliases</code> can be used to assign host names to the contain
 <div class="paragraph">
 <p>Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.wait-strategy.port=null
+test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -958,10 +1782,88 @@ The <code>network-aliases</code> can be used to assign host names to the contain
                 regex: ".*Started.*"</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.log]
+          regex=".*Started.*"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      waitStrategy {
+        port = null
+        log {
+          regex = ".*Started.*"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        wait-strategy {
+          port = null
+          log {
+            regex = ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "wait-strategy": {
+          "port": null,
+          "log": {
+            "regex": ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 <div class="paragraph">
 <p>It is possible to configure the <code>all</code> strategy itself:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.wait-strategy.port=null
+test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*
+test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
@@ -973,6 +1875,85 @@ The <code>network-aliases</code> can be used to assign host names to the contain
                 regex: ".*Started.*"
             all:
               timeout: 120s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.log]
+          regex=".*Started.*"
+        [test-resources.containers.mycontainer.wait-strategy.all]
+          timeout="120s"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      waitStrategy {
+        port = null
+        log {
+          regex = ".*Started.*"
+        }
+        all {
+          timeout = "120s"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        wait-strategy {
+          port = null
+          log {
+            regex = ".*Started.*"
+          }
+          all {
+            timeout = "120s"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "wait-strategy": {
+          "port": null,
+          "log": {
+            "regex": ".*Started.*"
+          },
+          "all": {
+            "timeout": "120s"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

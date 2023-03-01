@@ -5,8 +5,7 @@ It will automatically configure the `mqtt.client.server-uri` property.
 Alternatively, you can setup a custom container.
 For example, you can use Mosquitto instead:
 
-.application.yml
-[source,yaml]
+[configuration]
 ----
 mqtt:
   client:

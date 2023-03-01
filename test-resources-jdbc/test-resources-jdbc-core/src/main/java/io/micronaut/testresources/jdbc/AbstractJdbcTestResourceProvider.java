@@ -72,7 +72,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        if (!expression.startsWith(PREFIX)) {
+        if (!isDatasourceExpression(expression)) {
             return Collections.emptyList();
         }
         String datasource = datasourceNameFrom(expression);
@@ -147,6 +147,10 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         if (value != null) {
             consumer.accept(value.toString());
         }
+    }
+
+    protected static boolean isDatasourceExpression(String expression) {
+        return expression.startsWith(PREFIX);
     }
 
     protected static String datasourceNameFrom(String expression) {

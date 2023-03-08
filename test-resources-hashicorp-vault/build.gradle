@@ -9,7 +9,7 @@ Provides support for launching a Hashicorp Vault test container.
 dependencies {
     implementation(libs.testcontainers.vault)
 
-    testImplementation(testFixtures(project(":test-resources-testcontainers")))
+    testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
     testImplementation(libs.micronaut.discovery)
     testImplementation(mnSecurity.micronaut.security.oauth2)
 }

@@ -8,5 +8,5 @@ The resource resolvers are loaded via service loading.
 """
 
 dependencies {
-    api(project(':test-resources-core'))
+    api(project(':micronaut-test-resources-core'))
 }

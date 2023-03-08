@@ -7,11 +7,11 @@ Provides support for Localstack S3.
 """
 
 dependencies {
-    implementation(project(":test-resources-localstack-core"))
+    implementation(project(":micronaut-test-resources-localstack-core"))
     runtimeOnly(libs.amazon.awssdk.v1.s3) {
         because "Localstack requires the AWS SDK in version 1 at runtime"
     }
-    testImplementation(testFixtures(project(":test-resources-localstack-core")))
+    testImplementation(testFixtures(project(":micronaut-test-resources-localstack-core")))
     testImplementation(libs.amazon.awssdk.v2.s3)
 }
 

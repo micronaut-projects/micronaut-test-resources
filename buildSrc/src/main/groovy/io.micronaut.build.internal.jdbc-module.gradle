@@ -3,9 +3,9 @@ plugins {
 }
 
 dependencies {
-    api(project(':test-resources-jdbc-core'))
+    api(project(':micronaut-test-resources-jdbc-core'))
 
     testCompileOnly(mnData.micronaut.data.processor)
-    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
+    testImplementation(testFixtures(project(":micronaut-test-resources-jdbc-core")))
     testRuntimeOnly(mnSql.micronaut.jdbc.hikari)
 }

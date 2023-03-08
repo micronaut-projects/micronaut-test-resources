@@ -8,7 +8,7 @@ Provides support for MS SQL Server R2DBC test resources.
 
 dependencies {
     implementation(libs.testcontainers.mssql)
-    implementation(project(":test-resources-jdbc-mssql"))
+    implementation(project(":micronaut-test-resources-jdbc-mssql"))
 
     testRuntimeOnly(mnR2dbc.r2dbc.mssql)
     testRuntimeOnly(mnSql.mssql.jdbc)

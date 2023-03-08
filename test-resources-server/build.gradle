@@ -14,16 +14,16 @@ client.
 dependencies {
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.reactor)
-    implementation(project(':test-resources-core'))
-    implementation(project(':test-resources-embedded'))
-    implementation(project(':test-resources-testcontainers'))
+    implementation(project(':micronaut-test-resources-core'))
+    implementation(project(':micronaut-test-resources-embedded'))
+    implementation(project(':micronaut-test-resources-testcontainers'))
     runtimeOnly(mn.logback.classic)
     runtimeOnly(mn.micronaut.management)
     runtimeOnly(mnSerde.micronaut.serde.jackson)
     runtimeOnly(mn.snakeyaml)
 
-    testImplementation(project(':test-resources-client'))
-    testRuntimeOnly(project(':test-resources-kafka'))
+    testImplementation(project(':micronaut-test-resources-client'))
+    testRuntimeOnly(project(':micronaut-test-resources-kafka'))
 
     // For logback conversion
     aotPlugins(mn.logback.classic)

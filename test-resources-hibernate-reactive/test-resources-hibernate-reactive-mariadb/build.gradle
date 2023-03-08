@@ -8,7 +8,7 @@ Provides support for launching a MariaDB test container for Hibernate Reactive.
 
 dependencies {
     implementation(libs.testcontainers.mariadb)
-    runtimeOnly(project(":test-resources-jdbc-mariadb"))
+    runtimeOnly(project(":micronaut-test-resources-jdbc-mariadb"))
 
     testRuntimeOnly(mnSql.mariadb.java.client)
     testRuntimeOnly(libs.vertx.mysql)

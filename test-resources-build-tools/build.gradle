@@ -31,7 +31,7 @@ def writeModuleList = tasks.register("writeModuleList", WriteModuleList) {
     getPackage().set("io.micronaut.testresources.buildtools")
     def thisProject = project
     modules = rootProject.allprojects.findAll { it != thisProject && it != rootProject }
-            .collect { it.name - 'test-resources-' }
+            .collect { it.name - 'micronaut-test-resources-' }
             .groupBy {
                 if (it.startsWith('jdbc')) {
                     'jdbc'
@@ -39,6 +39,8 @@ def writeModuleList = tasks.register("writeModuleList", WriteModuleList) {
                     'r2dbc'
                 } else if (it in ['core', 'bom', 'embedded', 'client', 'testcontainers']) {
                     'core'
+                } else if (it.startsWith('localstack')) {
+                    'localstack'
                 } else {
                     'modules'
                 }
@@ -47,6 +49,7 @@ def writeModuleList = tasks.register("writeModuleList", WriteModuleList) {
     moduleDescriptions.put('jdbc', 'JDBC modules')
     moduleDescriptions.put('r2dbc', 'R2DBC modules')
     moduleDescriptions.put('modules', 'Extra modules')
+    moduleDescriptions.put('localstack', 'Localstack modules')
 }
 
 sourceSets.main.java.srcDirs(writeVersion, writeModuleList)

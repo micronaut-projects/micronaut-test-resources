@@ -8,7 +8,7 @@ Provides support for MySQL R2DBC test resources.
 
 dependencies {
     implementation(libs.testcontainers.mysql)
-    runtimeOnly(project(":test-resources-jdbc-mysql"))
+    runtimeOnly(project(":micronaut-test-resources-jdbc-mysql"))
 
     testRuntimeOnly(mnR2dbc.r2dbc.mysql)
     testRuntimeOnly(mnSql.mysql.connector.java)

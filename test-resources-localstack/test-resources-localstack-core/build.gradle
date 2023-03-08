@@ -12,7 +12,7 @@ dependencies {
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesImplementation(mn.groovy)
     testFixturesImplementation(libs.spock)
-    testFixturesApi(testFixtures(project(":test-resources-testcontainers"))) {
+    testFixturesApi(testFixtures(project(":micronaut-test-resources-testcontainers"))) {
         because "exposes AbstractTestContainersSpec"
     }
 }

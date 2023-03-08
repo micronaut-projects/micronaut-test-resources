@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    api(project(':test-resources-r2dbc-core'))
+    api(project(':micronaut-test-resources-r2dbc-core'))
     testImplementation(mnData.micronaut.data.r2dbc)
     testImplementation(mnData.micronaut.data.processor)
-    testImplementation(testFixtures(project(":test-resources-jdbc-core")))
+    testImplementation(testFixtures(project(":micronaut-test-resources-jdbc-core")))
 }

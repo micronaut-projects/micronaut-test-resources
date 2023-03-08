@@ -7,10 +7,10 @@ Provides support for launching a Redis test container.
 """
 
 dependencies {
-    api(project(':test-resources-core'))
-    api(project(':test-resources-testcontainers'))
+    api(project(':micronaut-test-resources-core'))
+    api(project(':micronaut-test-resources-testcontainers'))
 
-    testImplementation(project(":test-resources-embedded"))
-    testImplementation(testFixtures(project(":test-resources-testcontainers")))
+    testImplementation(project(":micronaut-test-resources-embedded"))
+    testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
     testImplementation(mnRedis.micronaut.redis.lettuce)
 }

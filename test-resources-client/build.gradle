@@ -10,7 +10,7 @@ and provide their value on demand.
 
 dependencies {
     api(mn.micronaut.http.client)
-    api(project(':test-resources-core'))
+    api(project(':micronaut-test-resources-core'))
 
     testRuntimeOnly(mn.micronaut.http.server.netty)
 }

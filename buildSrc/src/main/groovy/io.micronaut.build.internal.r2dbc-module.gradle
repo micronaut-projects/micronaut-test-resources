@@ -1,5 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.testcontainers-module'
+    id 'io.micronaut.build.internal.database-testing'
 }
 
 dependencies {

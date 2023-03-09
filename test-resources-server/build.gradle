@@ -1,5 +1,7 @@
 plugins {
     id 'io.micronaut.build.internal.server-module'
+    // server uses kafka in tests
+    id 'io.micronaut.build.internal.kafka-testing'
     alias(libs.plugins.micronaut.miniapp)
     alias(libs.plugins.micronaut.aot)
 }

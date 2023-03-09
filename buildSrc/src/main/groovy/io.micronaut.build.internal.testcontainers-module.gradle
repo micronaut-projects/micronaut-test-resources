@@ -1,3 +1,5 @@
+import io.micronaut.internal.ParallelGateService
+
 plugins {
     id 'io.micronaut.build.internal.test-resources-module'
 }
@@ -9,3 +11,9 @@ dependencies {
     testImplementation(project(":micronaut-test-resources-embedded"))
     testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
 }
+
+// We allow at most 2 containers to run in parallel on CI
+ParallelGateService.requiresResource(project,
+        "containers",
+        micronautBuild.environment.isGithubAction().map { isCi -> isCi ? 2 : Runtime.getRuntime().availableProcessors() }.get()
+)

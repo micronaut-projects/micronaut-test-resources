@@ -1,5 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.test-resources-module'
+    id 'jvm-test-suite'
 }
 
 description = """
@@ -9,4 +10,27 @@ The resource resolvers are loaded via service loading.
 
 dependencies {
     api(project(':test-resources-core'))
+}
+
+testing {
+    suites {
+        // This new test suite is used to test invalid test resources resolvers.
+        // Because the resolvers are loaded from classpath, we have to use a
+        // separate source set, otherwise other test suites will fail.
+        test2(JvmTestSuite) {
+            dependencies {
+                implementation(project)
+            }
+            useJUnitJupiter()
+        }
+    }
+}
+
+configurations {
+    test2CompileOnly.extendsFrom(testCompileOnly)
+    test2Implementation.extendsFrom(testImplementation)
+}
+
+tasks.named("check") {
+    dependsOn(testing.suites.test2)
 }

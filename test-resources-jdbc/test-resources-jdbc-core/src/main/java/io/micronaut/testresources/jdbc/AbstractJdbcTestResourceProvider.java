@@ -39,7 +39,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String DIALECT = "dialect";
-    private static final String DRIVER = "driverClassName";
+    private static final String DRIVER = "driver-class-name";
     private static final String DB_NAME = "db-name";
     private static final String INIT_SCRIPT = "init-script-path";
 

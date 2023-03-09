@@ -1,0 +1,13 @@
+import io.micronaut.internal.ParallelGateService
+
+String resourceName = project.name
+        .replace("micronaut-test-resources-jdbc-", "")
+        .replace("micronaut-test-resources-r2dbc-", "")
+        .replace("micronaut-test-resources-hibernate-reactive-", "")
+        .capitalize()
+
+// We test at most 3 different databases in parallel
+ParallelGateService.requiresResource(project, "db", 3)
+
+// but only one of a particular kind
+ParallelGateService.requiresResource(project, "db${resourceName}")

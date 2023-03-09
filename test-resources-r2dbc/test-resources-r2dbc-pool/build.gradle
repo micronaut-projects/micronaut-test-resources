@@ -1,3 +1,5 @@
+import io.micronaut.internal.ParallelGateService
+
 plugins {
     id 'io.micronaut.build.internal.r2dbc-module'
 }
@@ -13,3 +15,5 @@ dependencies {
     testImplementation(mnR2dbc.r2dbc.pool)
     testRuntimeOnly(mnSql.postgresql)
 }
+
+ParallelGateService.requiresResource(project, "dbPostgresql")

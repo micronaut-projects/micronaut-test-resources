@@ -1,0 +1,3 @@
+import io.micronaut.internal.ParallelGateService
+
+ParallelGateService.requiresResource(project, "kafka")

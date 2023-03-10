@@ -18,10 +18,13 @@ package io.micronaut.testresources.embedded;
 import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.testresources.core.LazyTestResourcesPropertySourceLoader;
 import io.micronaut.testresources.core.PropertyExpressionProducer;
+import io.micronaut.testresources.core.TestResourcesResolver;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +32,8 @@ import java.util.stream.Collectors;
  * This delegates to test resources resolver loaded via service loading.
  */
 public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResourcesPropertySourceLoader {
+    private static final Pattern CAMEL_CASE = Pattern.compile("([a-z])([A-Z])");
+
     public EmbeddedTestResourcesPropertySourceLoader() {
         super(new EmbeddedTestResourcesProducer());
     }
@@ -49,9 +54,18 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
         public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return loader.getResolvers()
                 .stream()
-                .flatMap(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig).stream())
-                .distinct()
+                .flatMap(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig)
+                    .stream().map(key -> assertValidKey(key, r))
+                ).distinct()
                 .collect(Collectors.toList());
+        }
+
+        private static String assertValidKey(String key, TestResourcesResolver r) {
+            Matcher m = CAMEL_CASE.matcher(key);
+            if (m.find()) {
+                throw new IllegalArgumentException("Test resources resolver [" + r.getClass().getName() + "] : Property key [" + key + "] is not valid. Property keys must be in kebab case.");
+            }
+            return key;
         }
     }
 }

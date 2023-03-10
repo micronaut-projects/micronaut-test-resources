@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 public class ElasticsearchTestResourceProvider extends AbstractTestContainersProvider<ElasticsearchContainer> {
 
-    public static final String ELASTICSEARCH_HOSTS = "elasticsearch.httpHosts";
+    public static final String ELASTICSEARCH_HOSTS = "elasticsearch.http-hosts";
     public static final String SIMPLE_NAME = "elasticsearch";
     public static final String DEFAULT_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch";
     public static final String DEFAULT_TAG = "8.4.3";

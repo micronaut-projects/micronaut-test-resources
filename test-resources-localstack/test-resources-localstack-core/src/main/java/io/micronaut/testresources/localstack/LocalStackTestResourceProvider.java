@@ -41,8 +41,8 @@ public class LocalStackTestResourceProvider extends AbstractTestContainersProvid
     private static final String DEFAULT_IMAGE = "localstack/localstack";
     private static final String NAME = "localstack";
 
-    private static final String AWS_ACCESS_KEY_ID = "aws.accessKeyId";
-    private static final String AWS_SECRET_KEY = "aws.secretKey";
+    private static final String AWS_ACCESS_KEY_ID = "aws.access-key-id";
+    private static final String AWS_SECRET_KEY = "aws.secret-key";
     private static final String AWS_REGION = "aws.region";
 
     private static final List<String> COMMON_PROPERTIES;

@@ -43,7 +43,12 @@ public final class TestResourcesClientFactory {
 
     }
 
-    static TestResourcesClient configuredAt(URL configFile) {
+    /**
+     * Creates a new test resources client configured via a properties file.
+     * @param configFile the URL to the configuration properties file.
+     * @return a new test resources client.
+     */
+    public static TestResourcesClient configuredAt(URL configFile) {
         Properties props = new Properties();
         try (InputStream input = configFile.openStream()) {
             props.load(input);
@@ -63,7 +68,11 @@ public final class TestResourcesClientFactory {
         }
     }
 
-    static Optional<TestResourcesClient> fromSystemProperties() {
+    /**
+     * Creates a new test resources client configured via system properties.
+     * @return a new test resources client, if system properties were found.
+     */
+    public static Optional<TestResourcesClient> fromSystemProperties() {
         String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));
         if (serverUri != null) {
             String accessToken = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ACCESS_TOKEN));

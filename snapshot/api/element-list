@@ -4,12 +4,6 @@ io.micronaut.testresources.core
 io.micronaut.testresources.elasticsearch
 io.micronaut.testresources.embedded
 io.micronaut.testresources.hashicorp.vault
-io.micronaut.testresources.hibernate.reactive.core
-io.micronaut.testresources.hibernate.reactive.mariadb
-io.micronaut.testresources.hibernate.reactive.mssql
-io.micronaut.testresources.hibernate.reactive.mysql
-io.micronaut.testresources.hibernate.reactive.oracle
-io.micronaut.testresources.hibernate.reactive.postgresql
 io.micronaut.testresources.hivemq
 io.micronaut.testresources.jdbc
 io.micronaut.testresources.kafka

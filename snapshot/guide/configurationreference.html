@@ -46,11 +46,11 @@
         <div class="docs-content">
             <div class="project">
                 <h1>Configuration Reference</h1>
-                <p><strong>Version:</strong>1.2.5-SNAPSHOT</p>
+                <p><strong>Version:</strong>2.0.0-SNAPSHOT</p>
                 <p></p>
             </div>
 <div class="sect2">
-<h3 id="_test_resources_server_config_properties">Test Resources Server Config Properties</h3>
+<h3 id="_micronaut_test_resources_server_config_properties">Micronaut Test Resources Server Config Properties</h3>
 <a id="io.micronaut.testresources.server.AccessConfiguration" href="#io.micronaut.testresources.server.AccessConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/testresources/server/AccessConfiguration.html">AccessConfiguration</a></caption>
@@ -77,7 +77,7 @@
 <div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
-<h3 id="_test_resources_testcontainers_config_properties">Test Resources Testcontainers Config Properties</h3>
+<h3 id="_micronaut_test_resources_testcontainers_config_properties">Micronaut Test Resources Testcontainers Config Properties</h3>
 <a id="io.micronaut.testresources.testcontainers.TestContainersConfiguration" href="#io.micronaut.testresources.testcontainers.TestContainersConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Configuration Properties for <a href="../api/io/micronaut/testresources/testcontainers/TestContainersConfiguration.html">TestContainersConfiguration</a></caption>
@@ -97,62 +97,48 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.image-name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the docker image to use.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the name of the docker image to use for the test resources container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.image-tag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The image tag, in case it&#8217;s not specified in the image name or
- that you want to specifically override the default tag but not
- the image name.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The image tag.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.hostnames</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Names of the properties which will be set to the
- host name of the container (e.g. if "some.host", then
- the "some.host" property will be set to the value of
- the container host name)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the names of the properties which will be set
+ to the host name of the container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.exposed-ports</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the names of the properties which will be set to
- the exposed port of the container. For example, if the
- container exposes port 25 and that you need the "smtp.port"
- property to be set to the value of the container port,
- then the key needs to be set to "smtp.port" and the value to 25.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The map of property names to port names.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.ro-fs-bind</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A map where the key is a path in the host filesystem and the value is
- a path in the container filesystem. If the host path starts with "classpath:"
- then the path refers to an entry on classpath.
- The path will be mounted read-only.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the map of read-only system bindings.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.rw-fs-bind</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A map where the key is a path in the host filesystem and the value is
- a path in the container filesystem. If the host path starts with "classpath:"
- then the path refers to an entry on classpath.
- The path will be mounted read-write.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the map of read-write system bindings.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.command</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.List</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The container command, for example: "./gradlew run".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The container command.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.working-directory</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The working directory of the container.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The working directory for the container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.env</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The environment variables to set in the container.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The map of environment variables.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.labels</code></p></td>
@@ -162,37 +148,27 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.startup-timeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The startup timer of the container, for example: "60s".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The startup timeout of the container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.copy-to-container</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The files to be copied to the container. The key represents a
- path on the host filesystem and the value represents a path
- on the container filesystem.</p>
-<p class="tableblock"> If the key is prefixed by &lt;code&gt;classpath:&lt;/code&gt; then the
- key will represent a path of an entry on classpath.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The files to be copied to the container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.memory</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The memory limit of the container.
- Can be expressed in bytes, kilobytes (eg 600kb), megabytes (e.g 256mb),
- or gigabytes (e.g 1.5g).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The memory limit of the container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.swap-memory</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The swap memory limit of the container.
- Can be expressed in bytes, kilobytes (eg 600kb), megabytes (e.g 256mb),
- or gigabytes (e.g 1.5g).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The swap memory limit of the container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.shared-memory</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The shared memory limit of the container.
- Can be expressed in bytes, kilobytes (eg 600kb), megabytes (e.g 256mb),
- or gigabytes (e.g 1.5g).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The shared memory limit of the container.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>test-resources.containers.*.network</code></p></td>

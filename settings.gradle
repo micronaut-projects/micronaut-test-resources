@@ -77,7 +77,9 @@ localstackModules.each {
     project(":test-resources-localstack-$it").projectDir = file("test-resources-localstack/$projectName")
 }
 
-if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+// Hibernate reactive support is currently disabled
+// because Hibernate Reactive doesn't support Hibernate 6
+if (false) {
     hibernateReactiveModules.each {
         String projectName = "test-resources-hibernate-reactive-$it"
         include projectName

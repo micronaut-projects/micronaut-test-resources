@@ -1,17 +1,32 @@
 [
   {
-    "type": "io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters",
-    "member": "Class io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters",
-    "reason": "Added default method"
+    "type": "io.micronaut.testresources.buildtools.KnownModules",
+    "member": "Field HIBERNATE_REACTIVE_CORE",
+    "reason": "Hibernate Reactive support temporarily removed"
   },
   {
-    "type": "io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters",
-    "member": "Method io.micronaut.testresources.buildtools.ServerUtils$ProcessParameters.isCDSDumpInvocation()",
-    "reason": "Default method wasn't implemented by consumers"
+    "type": "io.micronaut.testresources.buildtools.KnownModules",
+    "member": "Field HIBERNATE_REACTIVE_MSSQL",
+    "reason": "Hibernate Reactive support temporarily removed"
   },
   {
-    "type": "io.micronaut.testresources.elasticsearch.ElasticsearchTestResourceProvider",
-    "member": "Field DEFAULT_MEMORY",
-    "reason": "Field should have been private in the first place"
+    "type": "io.micronaut.testresources.buildtools.KnownModules",
+    "member": "Field HIBERNATE_REACTIVE_MYSQL",
+    "reason": "Hibernate Reactive support temporarily removed"
+  },
+  {
+    "type": "io.micronaut.testresources.buildtools.KnownModules",
+    "member": "Field HIBERNATE_REACTIVE_MARIADB",
+    "reason": "Hibernate Reactive support temporarily removed"
+  },
+  {
+    "type": "io.micronaut.testresources.buildtools.KnownModules",
+    "member": "Field HIBERNATE_REACTIVE_POSTGRESQL",
+    "reason": "Hibernate Reactive support temporarily removed"
+  },
+  {
+    "type": "io.micronaut.testresources.buildtools.KnownModules",
+    "member": "Field HIBERNATE_REACTIVE_ORACLE_XE",
+    "reason": "Hibernate Reactive support temporarily removed"
   }
 ]

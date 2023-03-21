@@ -1,0 +1,14 @@
+Micronaut Test Resources supports a subset of https://localstack.cloud/[Localstack] via https://www.testcontainers.org/modules/localstack/[Testcontainers].
+
+The default image can be overwritten by setting the `test-resources.containers.localstack.image-name` property.
+
+The following services are supported:
+
+- S3, by providing the `aws.services.s3.endpoint-override` property
+- DynamoDB, by providing the `aws.services.dynamodb.endpoint-override` property
+
+In addition, the following properties will be resolved by test resources:
+
+- `aws.access-key-id`
+- `aws.secret-key`
+- `aws.region`

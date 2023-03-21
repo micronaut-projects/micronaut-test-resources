@@ -15,6 +15,8 @@ modules:
     title: Elasticsearch
   modules-kafka:
     title: Kafka
+  modules-localstack:
+    title: Localstack
   modules-mongodb:
     title: MongoDB
   modules-mqtt:

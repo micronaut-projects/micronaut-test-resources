@@ -88,13 +88,13 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public void closeAll() {
-        doGet(CLOSE_ALL_URI, Argument.STRING);
+    public boolean closeAll() {
+        return doGet(CLOSE_ALL_URI, Argument.BOOLEAN);
     }
 
     @Override
-    public void closeScope(@Nullable String id) {
-        doGet(CLOSE_URI, Argument.STRING, id);
+    public boolean closeScope(@Nullable String id) {
+        return doGet(CLOSE_URI, Argument.BOOLEAN, id);
     }
 
     private <T> T doGet(URI uri, Argument<T> clazz, String... pathElements) {

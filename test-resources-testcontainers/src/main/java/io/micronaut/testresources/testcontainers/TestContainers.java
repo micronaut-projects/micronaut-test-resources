@@ -138,25 +138,29 @@ public final class TestContainers {
         return NETWORKS_BY_KEY.computeIfAbsent(name, k -> Network.newNetwork());
     }
 
-    public static void closeAll() {
+    public static boolean closeAll() {
         LOCK.lock();
+        boolean closed = false;
         for (GenericContainer<?> container : CONTAINERS_BY_KEY.values()) {
             container.close();
+            closed = true;
         }
         CONTAINERS_BY_KEY.clear();
         CONTAINERS_BY_PROPERTY.clear();
         NETWORKS_BY_KEY.values().forEach(Network::close);
         NETWORKS_BY_KEY.clear();
         LOCK.unlock();
+        return closed;
     }
 
     public static Map<String, Network> getNetworks() {
         return Collections.unmodifiableMap(NETWORKS_BY_KEY);
     }
 
-    public static void closeScope(String id) {
+    public static boolean closeScope(String id) {
         Scope scope = Scope.of(id);
         LOCK.lock();
+        boolean closed = false;
         Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS_BY_KEY.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Key, GenericContainer<?>> entry = iterator.next();
@@ -164,12 +168,14 @@ public final class TestContainers {
                 iterator.remove();
                 GenericContainer<?> container = entry.getValue();
                 container.close();
+                closed = true;
                 for (Set<GenericContainer<?>> value : CONTAINERS_BY_PROPERTY.values()) {
                     value.remove(container);
                 }
             }
         }
         LOCK.unlock();
+        return closed;
     }
 
     public static List<GenericContainer<?>> findByRequestedProperty(Scope scope, String property) {

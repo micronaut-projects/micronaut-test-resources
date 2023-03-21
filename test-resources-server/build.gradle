@@ -39,7 +39,7 @@ application {
 
 micronaut {
     aot {
-        version = '2.0.0-SNAPSHOT'
+        version = libs.versions.micronaut.aot.get()
         cacheEnvironment.set(true)
         optimizeServiceLoading.set(true)
         optimizeClassLoading.set(true)
@@ -58,12 +58,14 @@ micronautBuild {
     }
 }
 
-// This will only be required until we build
-// the test resources server with Micronaut Gradle Plugin 4.0.0
 configurations.all {
     resolutionStrategy {
-        dependencySubstitution {
-            substitute platform(module("io.micronaut:micronaut-bom")) using platform(module("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.asProvider().get()}"))
+        eachDependency {
+            // We want to build against M1 of core, but the platform
+            // is not released yet
+            if (requested.group == 'io.micronaut.platform') {
+                useVersion libs.versions.micronaut.development.get()
+            }
         }
     }
 }

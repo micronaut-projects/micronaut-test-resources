@@ -77,14 +77,11 @@ localstackModules.each {
     project(":test-resources-localstack-$it").projectDir = file("test-resources-localstack/$projectName")
 }
 
-// Hibernate reactive support is currently disabled
-// because Hibernate Reactive doesn't support Hibernate 6
-if (false) {
-    hibernateReactiveModules.each {
-        String projectName = "test-resources-hibernate-reactive-$it"
-        include projectName
-        project(":test-resources-hibernate-reactive-$it").projectDir = file("test-resources-hibernate-reactive/$projectName")
-    }
+
+hibernateReactiveModules.each {
+    String projectName = "test-resources-hibernate-reactive-$it"
+    include projectName
+    project(":test-resources-hibernate-reactive-$it").projectDir = file("test-resources-hibernate-reactive/$projectName")
 }
 
 micronautBuild {

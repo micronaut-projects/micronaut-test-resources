@@ -1,32 +1,3 @@
 [
-  {
-    "type": "io.micronaut.testresources.buildtools.KnownModules",
-    "member": "Field HIBERNATE_REACTIVE_CORE",
-    "reason": "Hibernate Reactive support temporarily removed"
-  },
-  {
-    "type": "io.micronaut.testresources.buildtools.KnownModules",
-    "member": "Field HIBERNATE_REACTIVE_MSSQL",
-    "reason": "Hibernate Reactive support temporarily removed"
-  },
-  {
-    "type": "io.micronaut.testresources.buildtools.KnownModules",
-    "member": "Field HIBERNATE_REACTIVE_MYSQL",
-    "reason": "Hibernate Reactive support temporarily removed"
-  },
-  {
-    "type": "io.micronaut.testresources.buildtools.KnownModules",
-    "member": "Field HIBERNATE_REACTIVE_MARIADB",
-    "reason": "Hibernate Reactive support temporarily removed"
-  },
-  {
-    "type": "io.micronaut.testresources.buildtools.KnownModules",
-    "member": "Field HIBERNATE_REACTIVE_POSTGRESQL",
-    "reason": "Hibernate Reactive support temporarily removed"
-  },
-  {
-    "type": "io.micronaut.testresources.buildtools.KnownModules",
-    "member": "Field HIBERNATE_REACTIVE_ORACLE_XE",
-    "reason": "Hibernate Reactive support temporarily removed"
-  }
+
 ]

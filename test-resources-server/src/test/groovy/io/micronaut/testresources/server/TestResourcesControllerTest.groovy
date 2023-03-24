@@ -63,9 +63,9 @@ class TestResourcesControllerTest extends Specification {
          * Closes all test resources.
          */
         @Get("/close/all")
-        void closeAll();
+        boolean closeAll();
 
         @Get("/close/{id}")
-        void closeScope(@Nullable String id);
+        boolean closeScope(@Nullable String id);
     }
 }

@@ -97,13 +97,13 @@ public final class TestResourcesController implements TestResourcesResolver {
     }
 
     @Get("/close/all")
-    public void closeAll() {
-        TestContainers.closeAll();
+    public boolean closeAll() {
+        return TestContainers.closeAll();
     }
 
     @Get("/close/{id}")
-    public void closeScope(@Nullable String id) {
-        TestContainers.closeScope(id);
+    public boolean closeScope(@Nullable String id) {
+        return TestContainers.closeScope(id);
     }
 
     @Get("/testcontainers")

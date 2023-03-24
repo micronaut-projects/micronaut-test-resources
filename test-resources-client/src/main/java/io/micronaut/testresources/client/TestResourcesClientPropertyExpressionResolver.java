@@ -81,11 +81,13 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         @Override
-        public void closeAll() {
+        public boolean closeAll() {
+            return true;
         }
 
         @Override
-        public void closeScope(@Nullable String id) {
+        public boolean closeScope(@Nullable String id) {
+            return true;
         }
     }
 

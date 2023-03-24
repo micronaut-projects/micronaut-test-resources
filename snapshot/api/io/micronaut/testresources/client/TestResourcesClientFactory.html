@@ -97,9 +97,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractFrom(io.micronaut.context.ApplicationContext)" class="member-name-link">extractFrom</a><wbr>(io.micronaut.context.ApplicationContext&nbsp;context)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configuredAt(java.net.URL)" class="member-name-link">configuredAt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;configFile)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a new test resources client configured via a properties file.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractFrom(io.micronaut.context.ApplicationContext)" class="member-name-link">extractFrom</a><wbr>(io.micronaut.context.ApplicationContext&nbsp;context)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extracts the <a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client"><code>TestResourcesClient</code></a> from the given <code>ApplicationContext</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromSystemProperties()" class="member-name-link">fromSystemProperties</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a new test resources client configured via system properties.</div>
 </div>
 </div>
 </div>
@@ -118,6 +128,30 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="configuredAt(java.net.URL)">
+<h3>configuredAt</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a></span>&nbsp;<span class="element-name">configuredAt</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;configFile)</span></div>
+<div class="block">Creates a new test resources client configured via a properties file.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>configFile</code> - the URL to the configuration properties file.</dd>
+<dt>Returns:</dt>
+<dd>a new test resources client.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fromSystemProperties()">
+<h3>fromSystemProperties</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a>&gt;</span>&nbsp;<span class="element-name">fromSystemProperties</span>()</div>
+<div class="block">Creates a new test resources client configured via system properties.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new test resources client, if system properties were found.</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="extractFrom(io.micronaut.context.ApplicationContext)">
 <h3>extractFrom</h3>

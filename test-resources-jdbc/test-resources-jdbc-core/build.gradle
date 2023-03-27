@@ -1,6 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.testcontainers-module'
-    id 'java-test-fixtures'
+    id 'io.micronaut.build.internal.test-fixtures'
 }
 
 description = """

@@ -65,7 +65,7 @@ test-resources:
         - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf
 ----
 
-Furthermore, generic containers can use tmpfs bindings (in read-only or read-write mode):
+Furthermore, generic containers can use tmpfs mappings (in read-only or read-write mode):
 
 [configuration]
 ----
@@ -79,7 +79,7 @@ test-resources:
         - my.service.port: 1883
       ro-tmpfs-mappings:
         - /path/to/readonly/container/file
-      rw-fs-bind:
+      rw-tmpfs-mappings:
         - /path/to/readwrite/container/file
 ----
 

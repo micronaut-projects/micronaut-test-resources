@@ -116,6 +116,29 @@ class TestContainerMetadataSupportTest extends Specification {
         }
     }
 
+    def "reads tmpfs mappings"() {
+        def config = """
+            containers:
+                foo:
+                    ro-tmpfs-mappings:
+                        - /some/path
+                        - /some/other/path
+                    rw-tmpfs-mappings:
+                        - /yet/another/path
+                        - /yet/another/other/path
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        md.get().with {
+            assert it.roTmpfsMappings.containsAll(['/some/path', '/some/other/path'])
+            assert it.rwTmpfsMappings.containsAll(['/yet/another/path', '/yet/another/other/path'])
+        }
+    }
+
     def "reads command"() {
         def config = """
                 containers:

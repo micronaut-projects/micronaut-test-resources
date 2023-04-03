@@ -33,6 +33,8 @@ final class TestContainerMetadata {
 
     private final Map<String, String> rwFsBinds;
     private final Map<String, String> roFsBinds;
+    private final Set<String> rwTmpfsMappings;
+    private final Set<String> roTmpfsMappings;
     private final List<String> command;
     private final String workingDirectory;
     private final Map<String, String> env;
@@ -54,6 +56,8 @@ final class TestContainerMetadata {
                           Set<String> hostNames,
                           Map<String, String> rwFsBinds,
                           Map<String, String> roFsBinds,
+                          Set<String> rwTmpfsMappings,
+                          Set<String> roTmpfsMappings,
                           List<String> command,
                           String workingDirectory,
                           Map<String, String> env,
@@ -73,6 +77,8 @@ final class TestContainerMetadata {
         this.hostNames = hostNames;
         this.rwFsBinds = rwFsBinds;
         this.roFsBinds = roFsBinds;
+        this.rwTmpfsMappings = rwTmpfsMappings;
+        this.roTmpfsMappings = roTmpfsMappings;
         this.command = command;
         this.workingDirectory = workingDirectory;
         this.env = env;
@@ -161,6 +167,14 @@ final class TestContainerMetadata {
 
     public Optional<WaitStrategy> getWaitStrategy() {
         return Optional.ofNullable(waitStrategy);
+    }
+
+    public Set<String> getRwTmpfsMappings() {
+        return rwTmpfsMappings;
+    }
+
+    public Set<String> getRoTmpfsMappings() {
+        return roTmpfsMappings;
     }
 
     public static final class CopyFileToContainer {

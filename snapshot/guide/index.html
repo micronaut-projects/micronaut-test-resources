@@ -1273,6 +1273,112 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
 </div>
 </div>
 <div class="paragraph">
+<p>Furthermore, generic containers can use tmpfs mappings (in read-only or read-write mode):</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.ro-tmpfs-mappings[0]=/path/to/readonly/container/file
+test-resources.containers.mycontainer.rw-tmpfs-mappings[0]=/path/to/readwrite/container/file</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-tmpfs-mappings:
+        - /path/to/readonly/container/file
+      rw-tmpfs-mappings:
+        - /path/to/readwrite/container/file</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      ro-tmpfs-mappings=[
+        "/path/to/readonly/container/file"
+      ]
+      rw-tmpfs-mappings=[
+        "/path/to/readwrite/container/file"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      roTmpfsMappings = ["/path/to/readonly/container/file"]
+      rwTmpfsMappings = ["/path/to/readwrite/container/file"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        ro-tmpfs-mappings = ["/path/to/readonly/container/file"]
+        rw-tmpfs-mappings = ["/path/to/readwrite/container/file"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "ro-tmpfs-mappings": ["/path/to/readonly/container/file"],
+        "rw-tmpfs-mappings": ["/path/to/readwrite/container/file"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
 <p>It is also possible to copy files from the host to the container:</p>
 </div>
 <div class="openblock">

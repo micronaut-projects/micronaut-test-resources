@@ -82,6 +82,8 @@ final class TestContainerMetadataSupport {
         Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
         Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
         Map<String, String> roFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, true);
+        Set<String> rwTmpfsMappings = extractTmpfsMappingsFrom(prefix, testResourcesConfig, false);
+        Set<String> roTmpfsMappings = extractTmpfsMappingsFrom(prefix, testResourcesConfig, true);
         Map<String, String> env = extractMapFrom(prefix, "env", testResourcesConfig);
         Map<String, String> labels = extractMapFrom(prefix, "labels", testResourcesConfig);
         List<String> command = extractListFrom(prefix, testResourcesConfig, "command");
@@ -94,7 +96,7 @@ final class TestContainerMetadataSupport {
         String network = extractStringParameterFrom(prefix, "network", testResourcesConfig);
         Set<String> networkAliases = extractSetFrom(prefix, testResourcesConfig, "network-aliases");
         WaitStrategy waitStrategy = extractWaitStrategyFrom(prefix, testResourcesConfig);
-        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, waitStrategy));
+        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, rwTmpfsMappings, roTmpfsMappings, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, waitStrategy));
     }
 
     private static Long extractMemoryParameterFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
@@ -181,6 +183,10 @@ final class TestContainerMetadataSupport {
 
     private static Set<String> extractHostsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
         return extractSetFrom(prefix, testResourcesConfiguration, "hostnames");
+    }
+
+    private static Set<String> extractTmpfsMappingsFrom(String prefix, Map<String, Object> testResourcesConfiguration, boolean readOnly) {
+        return extractSetFrom(prefix, testResourcesConfiguration, (readOnly ? "ro-" : "rw-") + "tmpfs-mappings");
     }
 
     private static Map<String, String> extractFsBindsFrom(String prefix,
@@ -395,6 +401,8 @@ final class TestContainerMetadataSupport {
         }
         md.getRwFsBinds().forEach((hostPath, containerPath) -> applyFsBind(container, hostPath, containerPath, BindMode.READ_WRITE));
         md.getRoFsBinds().forEach((hostPath, containerPath) -> applyFsBind(container, hostPath, containerPath, BindMode.READ_ONLY));
+        md.getRwTmpfsMappings().forEach((mapping) -> applyTmpFsMapping(container, mapping, BindMode.READ_WRITE));
+        md.getRoTmpfsMappings().forEach((mapping) -> applyTmpFsMapping(container, mapping, BindMode.READ_ONLY));
         if (!md.getCommand().isEmpty()) {
             container.withCommand(md.getCommand().toArray(new String[0]));
         }
@@ -419,5 +427,9 @@ final class TestContainerMetadataSupport {
         } else {
             container.withFileSystemBind(hostPath, containerPath, bindMode);
         }
+    }
+
+    static void applyTmpFsMapping(GenericContainer<?> container, String mapping, BindMode bindMode) {
+        container.withTmpFs(Collections.singletonMap(mapping, bindMode.accessMode.name()));
     }
 }

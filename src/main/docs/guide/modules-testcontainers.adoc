@@ -65,6 +65,24 @@ test-resources:
         - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf
 ----
 
+Furthermore, generic containers can use tmpfs mappings (in read-only or read-write mode):
+
+[configuration]
+----
+test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-tmpfs-mappings:
+        - /path/to/readonly/container/file
+      rw-tmpfs-mappings:
+        - /path/to/readwrite/container/file
+----
+
 It is also possible to copy files from the host to the container:
 
 [configuration]

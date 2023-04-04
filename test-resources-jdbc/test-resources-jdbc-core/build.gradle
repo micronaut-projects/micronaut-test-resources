@@ -1,6 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.testcontainers-module'
-    id 'java-test-fixtures'
+    id 'io.micronaut.build.internal.test-fixtures'
 }
 
 description = """
@@ -22,3 +22,7 @@ dependencies {
     testFixturesImplementation(project(":micronaut-test-resources-embedded"))
     testFixturesRuntimeOnly(mnSql.micronaut.jdbc.hikari)
 }
+
+// Temporarily disable publishing of test fixtures until we depend on a released version of Data
+components.java.withVariantsFromConfiguration(configurations.testFixturesApiElements) { skip() }
+components.java.withVariantsFromConfiguration(configurations.testFixturesRuntimeElements) { skip() }

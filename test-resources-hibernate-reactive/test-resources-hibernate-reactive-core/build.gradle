@@ -1,6 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.testcontainers-module'
-    id 'java-test-fixtures'
+    id 'io.micronaut.build.internal.test-fixtures'
 }
 
 description = """
@@ -32,3 +32,7 @@ repositories {
         url "https://s01.oss.sonatype.org/content/repositories/snapshots"
     }
 }
+
+// Temporarily disable publishing of test fixtures until we depend on a released version of Data
+components.java.withVariantsFromConfiguration(configurations.testFixturesApiElements) { skip() }
+components.java.withVariantsFromConfiguration(configurations.testFixturesRuntimeElements) { skip() }

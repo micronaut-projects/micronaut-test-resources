@@ -20,22 +20,29 @@ import org.testcontainers.hivemq.HiveMQContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * A test resource provider which will spawn a HiveMQ test container.
  */
 public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<HiveMQContainer> {
 
+    public static final String MQTT_CLIENT_CLIENT_ID = "mqtt.client.client-id";
     public static final String MQTT_CLIENT_SERVER_URI = "mqtt.client.server-uri";
     public static final String DEFAULT_IMAGE = "hivemq/hivemq-ce:2021.3";
 
+    private final String clientId;
+
+    public HiveMQTestResourceProvider() {
+        clientId = UUID.randomUUID().toString();
+    }
+
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        return Collections.singletonList(MQTT_CLIENT_SERVER_URI);
+        return List.of(MQTT_CLIENT_CLIENT_ID, MQTT_CLIENT_SERVER_URI);
     }
 
     @Override
@@ -55,11 +62,14 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, HiveMQContainer container) {
+        if (MQTT_CLIENT_CLIENT_ID.equals(propertyName)) {
+            return Optional.of(clientId);
+        }
         return Optional.of("tcp://" + container.getHost() + ":" + container.getMqttPort());
     }
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        return MQTT_CLIENT_SERVER_URI.equals(propertyName);
+        return MQTT_CLIENT_SERVER_URI.equals(propertyName) || MQTT_CLIENT_CLIENT_ID.equals(propertyName);
     }
 }

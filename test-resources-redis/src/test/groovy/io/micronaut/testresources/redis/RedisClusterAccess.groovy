@@ -15,18 +15,19 @@
  */
 package io.micronaut.testresources.redis
 
-import io.lettuce.core.RedisClient
+
 import io.lettuce.core.api.sync.RedisCommands
+import io.lettuce.core.cluster.RedisClusterClient
 import io.micronaut.context.annotation.Requires
 import jakarta.inject.Inject
 
 import java.util.function.Function
 
 @jakarta.inject.Singleton
-@Requires(notEnv = "cluster")
-class RedisAccess {
+@Requires(env = "cluster")
+class RedisClusterAccess {
     @Inject
-    RedisClient redisClient
+    RedisClusterClient redisClient
 
     public <T> T withClient(Function<? super RedisCommands<String, String>, T> transformer) {
         def conn = redisClient.connect().sync()

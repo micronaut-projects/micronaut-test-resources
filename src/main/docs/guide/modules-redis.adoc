@@ -1,3 +1,9 @@
 Redis support will automatically start a https://redis.io/[Redis container] and provide the value of the `redis.uri` property.
 
+Alternatively, test resources can spawn a redis cluster, in which case you will need to set the `test-resources.containers.redis.cluster-mode` to `true` and the `redis.uris` property will be provided instead of `redis.uri`.
+
 The default image can be overwritten by setting the `test-resources.containers.redis.image-name` property.
+
+The number of nodes in cluster mode can be controlled by the `test-resources.containers.redis.masters` property.
+
+The number of slaves per master can be controller by the `test-resources.containers.redis.slaves-per-master` property.

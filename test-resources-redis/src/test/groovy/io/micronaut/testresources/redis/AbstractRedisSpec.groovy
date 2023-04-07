@@ -6,9 +6,6 @@ import jakarta.inject.Inject
 
 abstract class AbstractRedisSpec extends AbstractTestContainersSpec {
 
-    @Inject
-    protected RedisAccess redisAccess
-
     @Override
     String getScopeName() {
         'redis'

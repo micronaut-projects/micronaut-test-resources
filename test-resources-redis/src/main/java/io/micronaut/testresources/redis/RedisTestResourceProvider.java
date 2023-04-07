@@ -15,39 +15,36 @@
  */
 package io.micronaut.testresources.redis;
 
+import com.redis.testcontainers.RedisContainer;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static io.micronaut.testresources.redis.RedisConfigurationSupport.isClusterMode;
+
 /**
  * A test resource provider which will spawn a Redis test container.
  */
-public class RedisTestResourceProvider extends AbstractTestContainersProvider<GenericContainer<?>> {
+public class RedisTestResourceProvider extends AbstractTestContainersProvider<RedisContainer> {
 
     public static final String REDIS_URI = "redis.uri";
-    public static final String DEFAULT_IMAGE = "redis";
+
+    public static final String DEFAULT_IMAGE = RedisContainer.DEFAULT_IMAGE_NAME.asCanonicalNameString();
     public static final String SIMPLE_NAME = "redis";
-    public static final int REDIS_PORT = 6379;
 
-    private static final Set<String> SUPPORTED_PROPERTIES;
+    private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URI);
+    private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URI);
 
-    static {
-        Set<String> supported = new HashSet<>();
-        supported.add(REDIS_URI);
-        SUPPORTED_PROPERTIES = Collections.unmodifiableSet(supported);
-    }
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        return Collections.singletonList(REDIS_URI);
+        boolean clusterMode = isClusterMode(testResourcesConfig);
+        return clusterMode ? List.of() : SUPPORTED_PROPERTIES_LIST;
     }
 
     @Override
@@ -61,16 +58,14 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Ge
     }
 
     @Override
-    protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        GenericContainer<?> container = new GenericContainer<>(imageName);
-        container.withExposedPorts(REDIS_PORT);
-        return container;
+    protected RedisContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+        return new RedisContainer(imageName);
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, GenericContainer<?> container) {
+    protected Optional<String> resolveProperty(String propertyName, RedisContainer container) {
         if (REDIS_URI.equals(propertyName)) {
-            return Optional.of("redis://" + container.getHost() + ":" + container.getMappedPort(REDIS_PORT));
+            return Optional.of(container.getRedisURI());
         }
         return Optional.empty();
     }

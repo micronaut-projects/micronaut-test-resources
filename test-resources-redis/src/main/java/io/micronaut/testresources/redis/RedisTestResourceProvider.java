@@ -40,7 +40,6 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Re
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URI);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URI);
 
-
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         boolean clusterMode = isClusterMode(testResourcesConfig);

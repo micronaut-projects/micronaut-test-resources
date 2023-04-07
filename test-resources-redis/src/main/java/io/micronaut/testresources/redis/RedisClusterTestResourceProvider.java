@@ -44,7 +44,7 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URIS);
     /**
      * Alternate cluster configuration file, workaround for
-     * https://github.com/Grokzen/docker-redis-cluster/discussions/149
+     * https://github.com/Grokzen/docker-redis-cluster/discussions/149 .
      */
     private static final String CLUSTER_CONFIG = """
         bind ${BIND_ADDRESS}
@@ -56,7 +56,6 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
         dir /redis-data/${PORT}
         protected-mode no
         """;
-
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

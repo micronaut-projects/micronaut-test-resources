@@ -696,6 +696,15 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <div class="paragraph">
 <p>The default database name can be overwritten by setting the <code>test-resources.containers.mongodb.db-name</code> property.</p>
 </div>
+<div class="paragraph">
+<p>Alternatively, if you have multiple MongoDB servers declared in your configuration, the test resources service will supply a different replica set for each database.</p>
+</div>
+<div class="paragraph">
+<p>For example, if you have <code>mongodb.servers.users</code> and <code>mongodb.servers.books</code> defined, then the test resources service will supply the <code>mongodb.servers.users.uri</code> and <code>mondodb.servers.books.uri</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
+</div>
 
 <h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>4.6 MQTT</h2>
 

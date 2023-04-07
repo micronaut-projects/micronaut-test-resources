@@ -30,6 +30,7 @@ import java.util.Optional;
  */
 public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<MongoDBContainer> {
 
+    public static final String MONGODB_SERVERS = "mongodb.servers";
     public static final String MONGODB_SERVER_URI = "mongodb.uri";
     public static final String DEFAULT_IMAGE = "mongo:5";
     public static final String SIMPLE_NAME = "mongodb";
@@ -39,7 +40,17 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        return Collections.singletonList(MONGODB_SERVER_URI);
+        List<String> servers = List.copyOf(propertyEntries.getOrDefault(MONGODB_SERVERS, Collections.emptySet()));
+        if (servers.isEmpty()) {
+            return Collections.singletonList(MONGODB_SERVER_URI);
+        } else {
+            return servers.stream().map(s -> MONGODB_SERVERS + "." + s + ".uri").toList();
+        }
+    }
+
+    @Override
+    public List<String> getRequiredPropertyEntries() {
+        return List.of(MONGODB_SERVERS);
     }
 
     @Override
@@ -63,12 +74,38 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, MongoDBContainer container) {
+        Optional<String> database = extractMongoDbServerFrom(propertyName);
+        if (database.isPresent()) {
+            return Optional.of(container.getReplicaSetUrl(database.get()));
+        }
         String url = dbName == null ? container.getReplicaSetUrl() : container.getReplicaSetUrl(dbName);
         return Optional.of(url);
     }
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+        if (extractMongoDbServerFrom(propertyName).isPresent()) {
+            return true;
+        }
         return MONGODB_SERVER_URI.equals(propertyName);
+    }
+
+    private Optional<String> extractMongoDbServerFrom(String propertyName) {
+        if (propertyName.startsWith(MONGODB_SERVERS + ".")) {
+            String suffix = propertyName.substring(MONGODB_SERVERS.length() + 1);
+            int dot = suffix.indexOf(".");
+            if (dot > 0) {
+                int nextDot = suffix.indexOf(".", dot + 1);
+                if (nextDot == -1) {
+                    String database = suffix.substring(0, dot);
+                    String property = suffix.substring(dot + 1);
+                    if ("uri".equals(property)) {
+                        // it's the only property that we support
+                        return Optional.of(database);
+                    }
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

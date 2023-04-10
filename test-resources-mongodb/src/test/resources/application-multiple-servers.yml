@@ -1,0 +1,5 @@
+mongodb:
+  servers:
+    default:
+      use-serde: false
+    another:

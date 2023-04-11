@@ -43,6 +43,7 @@ spock = "2.3-groovy-4.0"
 vertx-client = "4.3.2"
 amazon-awssdk-v1 = "1.12.444"
 amazon-awssdk-v2 = "2.20.41"
+testcontainers-redis = "1.6.2"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.17.6"
@@ -81,6 +82,7 @@ testcontainers-neo4j = { module = "org.testcontainers:neo4j", version = "" }
 testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version = "" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
 testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version = "" }
+testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "testcontainers-redis" }
 testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version = "" }
 testcontainers-vault = { module = "org.testcontainers:vault", version = "" }
 

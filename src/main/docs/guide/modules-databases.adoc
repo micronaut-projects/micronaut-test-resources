@@ -1,6 +1,6 @@
 == Databases
 
-Micronaut Test Resources provides support for the following databases:
+Micronaut Test Resources provides support for the following relational databases:
 
 [cols="2,1,1,1"]
 |===
@@ -43,4 +43,21 @@ test-resources:
       accept-license: true
 ----
 
+====
+
+For a complete list configurable properties refer to the https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/configurationreference.html#io.micronaut.testresources.testcontainers.TestContainersConfiguration[Configuration Reference for Test Containers].
+
+[NOTE]
+====
+The initial image download of some database images can take some time depending the size and speed of your internet connection. In this case you may receive a `ReadTimeoutException`, to resolve this you should configure the  `clientTimeout` in either the https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuring_the_test_resources_plugin[Gradle] or https://micronaut-projects.github.io/micronaut-maven-plugin/latest/start-testresources-service-mojo.html#clienttimeout[Maven].
+
+In addition, sometimes containers may timeout starting up which requires configuring the startup timeout, for example the following extends the startup time for the `oracle` container image: 
+
+[configuration]
+----
+test-resources:
+  containers:
+    oracle:
+      startup-timeout: 300s
+----
 ====

@@ -49,7 +49,9 @@ For a complete list configurable properties refer to the https://micronaut-proje
 
 [NOTE]
 ====
-The initial image download of some database images can take some time depending the size and speed of your internet connection. In this case you may receive a `ReadTimeoutException`, which requires configuring the startup timeout, for example the following extends the startup time for the `oracle` container image: 
+The initial image download of some database images can take some time depending the size and speed of your internet connection. In this case you may receive a `ReadTimeoutException`, to resolve this you should configrue the  `clientTimeout` in either the https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#_configuring_the_test_resources_plugin[Gradle] or https://micronaut-projects.github.io/micronaut-maven-plugin/latest/start-testresources-service-mojo.html#clienttimeout[Maven].
+
+In addition, sometimes containers may timeout starting up which requires configuring the startup timeout, for example the following extends the startup time for the `oracle` container image: 
 
 [configuration]
 ----

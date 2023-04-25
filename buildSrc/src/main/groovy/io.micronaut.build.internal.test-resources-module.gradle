@@ -7,3 +7,7 @@ dependencies {
     testRuntimeOnly mnSerde.micronaut.serde.jackson
     testRuntimeOnly mn.snakeyaml
 }
+
+configurations.all {
+    resolutionStrategy.preferProjectModules()
+}

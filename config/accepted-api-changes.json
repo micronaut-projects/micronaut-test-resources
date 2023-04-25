@@ -1,3 +1,7 @@
 [
-
+  {
+    "type": "io.micronaut.testresources.redis.RedisTestResourceProvider",
+    "member": "Field REDIS_PORT",
+    "reason": "We're now using Redis URI"
+  }
 ]

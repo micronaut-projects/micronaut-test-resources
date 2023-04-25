@@ -9,19 +9,7 @@ tasks.named("publishGuide") {
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://s01.oss.sonatype.org/content/repositories/snapshots"
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        eachDependency {
-            // We want to build against M1 of core, but the platform
-            // is not released yet
-            if (requested.group == 'io.micronaut.platform') {
-                useVersion libs.versions.micronaut.development.get()
-            }
-        }
-    }
+//    maven {
+//        url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+//    }
 }

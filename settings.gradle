@@ -13,6 +13,16 @@ plugins {
 }
 rootProject.name = 'testresources-parent'
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+// Extensions as in "Micronaut Test extensions"
+// This name was chosen to reduce the naming overhead
+// e.g micronaut-test-resources-micronaut-test-extensions-core
+// is just micronaut-test-resources-extensions-core
+def extensionModules = [
+        'core'
+]
+
 def jdbcModules = [
         'core',
         'mysql',
@@ -52,6 +62,7 @@ include 'test-resources-client'
 include 'test-resources-elasticsearch'
 include 'test-resources-embedded'
 include 'test-resources-hivemq'
+include 'test-resources-junit5'
 include 'test-resources-kafka'
 include 'test-resources-mongodb'
 include 'test-resources-neo4j'
@@ -61,6 +72,11 @@ include 'test-resources-server'
 include 'test-resources-testcontainers'
 include 'test-resources-hashicorp-vault'
 
+extensionModules.each {
+    String projectName = "test-resources-extensions-$it"
+    include projectName
+    project(":test-resources-extensions-$it").projectDir = file("test-resources-extensions/$projectName")
+}
 jdbcModules.each {
     String projectName = "test-resources-jdbc-$it"
     include projectName

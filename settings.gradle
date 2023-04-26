@@ -2,14 +2,14 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        maven {
-            url "https://s01.oss.sonatype.org/content/repositories/snapshots"
-        }
+//        maven {
+//            url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+//        }
     }
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '6.3.5'
+    id 'io.micronaut.build.shared.settings' version '6.4.1'
 }
 rootProject.name = 'testresources-parent'
 

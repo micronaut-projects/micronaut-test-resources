@@ -38,6 +38,7 @@ application {
 }
 
 micronaut {
+    version = libs.versions.micronaut.platform.get()
     aot {
         version = libs.versions.micronaut.aot.get()
         cacheEnvironment.set(true)
@@ -55,17 +56,5 @@ micronautBuild {
     binaryCompatibility {
         // binary checks work on the wrong jar file
         enabled = false
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        eachDependency {
-            // We want to build against M1 of core, but the platform
-            // is not released yet
-            if (requested.group == 'io.micronaut.platform') {
-                useVersion libs.versions.micronaut.development.get()
-            }
-        }
     }
 }

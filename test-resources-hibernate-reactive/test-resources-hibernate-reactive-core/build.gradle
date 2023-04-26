@@ -28,9 +28,9 @@ dependencies {
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://s01.oss.sonatype.org/content/repositories/snapshots"
-    }
+//    maven {
+//        url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+//    }
 }
 
 // Temporarily disable publishing of test fixtures until we depend on a released version of Data

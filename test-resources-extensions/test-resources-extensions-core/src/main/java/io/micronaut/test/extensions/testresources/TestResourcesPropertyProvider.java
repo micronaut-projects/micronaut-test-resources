@@ -17,7 +17,35 @@ package io.micronaut.test.extensions.testresources;
 
 import java.util.Map;
 
+/**
+ * A test resources property provider is a type which
+ * must be explicitly declared in via the {@link io.micronaut.test.extensions.testresources.annotation.TestResourcesProperties}
+ * annotation.
+ * <p/>
+ * It is responsible for supplying additional test properties,
+ * given the set of properties which are available before the
+ * application context is started.
+ * <p/>
+ * It can be used, in particular, to derive new properties
+ * from other properties resolved by the test resources client.
+ * <p/>
+ * This works in a very similar way as {@link io.micronaut.test.support.TestPropertyProvider},
+ * but has access to other properties in order to perform
+ * computation based on the value of these properties.
+ */
 @FunctionalInterface
 public interface TestResourcesPropertyProvider {
+    /**
+     * Returns a map of properties which need to be exposed
+     * to the application context, given the map of properties
+     * which are already available during setup.
+     *
+     * These properties typically include the properties
+     * visible in the configuration files which do not require
+     * access to test resources.
+     *
+     * @param testProperties the set of properties available
+     * @return a map of properties to be added
+     */
     Map<String, String> provide(Map<String, Object> testProperties);
 }

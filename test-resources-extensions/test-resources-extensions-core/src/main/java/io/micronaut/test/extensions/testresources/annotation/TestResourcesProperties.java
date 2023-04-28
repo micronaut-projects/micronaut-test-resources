@@ -22,9 +22,34 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation can be applied to tests annotated with {@literal @MicronautTest}
+ * in order to require some properties to be resolved by Micronaut Test Resources
+ * before the application context is available.
+ * <p/>
+ * It is conceptually similar to a {@link io.micronaut.test.support.TestPropertyProvider}
+ * except that it allows accessing the test resources properties declaratively
+ * instead of having to use the test resources client directly.
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
 public @interface TestResourcesProperties {
+    /**
+     * Declares the list of properties which should be made available
+     * to the test before the application context is started.
+     * These properties will be queried by the test resources client
+     * and exposed as properties to the test.
+     *
+     * @return the list of properties
+     */
     String[] value() default {};
+
+    /**
+     * The optional list of test resource property providers which
+     * can be applied to enhance the set of properties available to
+     * a test.
+     * @return the list of providers
+     */
     Class<? extends TestResourcesPropertyProvider>[] providers() default {};
 }

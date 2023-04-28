@@ -15,6 +15,8 @@
  */
 package io.micronaut.test.extensions.testresources;
 
+import io.micronaut.core.annotation.NonNull;
+
 import java.util.Map;
 
 /**
@@ -47,5 +49,6 @@ public interface TestResourcesPropertyProvider {
      * @param testProperties the set of properties available
      * @return a map of properties to be added
      */
-    Map<String, String> provide(Map<String, Object> testProperties);
+    @NonNull
+    Map<String, String> provide(@NonNull Map<String, Object> testProperties);
 }

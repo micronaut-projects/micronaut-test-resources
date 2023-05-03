@@ -1,0 +1,9 @@
+/**
+ * Use this plugin for modules which are not Micronaut modules
+ * but follow the same conventions (e.g need publishing, binary
+ * compatibilty, etc...)
+ */
+plugins {
+    id 'io.micronaut.build.internal.test-resources-base'
+    id 'io.micronaut.build.internal.base-module'
+}

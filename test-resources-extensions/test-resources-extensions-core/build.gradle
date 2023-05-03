@@ -1,0 +1,25 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-mntest-extension'
+}
+
+description = """
+Provides Micronaut Test extensions which make it easier to integrate
+with Test Resources.
+"""
+
+dependencies {
+    // Sync'es the version of JUnit 5 used by Micronaut Test
+    api(platform(mnTest.micronaut.test.bom))
+    api(mnTest.micronaut.test.core)
+    implementation(projects.micronautTestResourcesClient)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testFixturesAnnotationProcessor(mn.micronaut.inject.java)
+    testFixturesApi(libs.junit.platform.launcher)
+    testFixturesApi(platform(mnTest.micronaut.test.bom))
+    testFixturesImplementation(projects.micronautTestResourcesClient)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mn.micronaut.context)
+    testRuntimeOnly(mn.snakeyaml)
+}

@@ -36,7 +36,7 @@ micronaut-redis = "6.0.0-M2"
 micronaut-security = "4.0.0-M2"
 micronaut-serde = "2.0.0-M3"
 micronaut-sql = "5.0.0-M3"
-micronaut-test = "4.0.0-M2"
+micronaut-test = "4.0.0-M3"
 micronaut-gradle-plugin = "4.0.0-M1"
 groovy = "4.0.11"
 spock = "2.3-groovy-4.0"
@@ -50,6 +50,10 @@ managed-testcontainers = "1.17.6"
 
 [libraries]
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
+
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher"}
 
 micronaut-aws = { module = "io.micronaut.aws:micronaut-aws-bom", version.ref = "micronaut-aws" }
 micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }

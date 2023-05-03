@@ -20,7 +20,8 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 // e.g micronaut-test-resources-micronaut-test-extensions-core
 // is just micronaut-test-resources-extensions-core
 def extensionModules = [
-        'core'
+        'core',
+        'junit-platform'
 ]
 
 def jdbcModules = [

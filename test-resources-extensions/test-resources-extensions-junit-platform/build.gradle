@@ -1,0 +1,60 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-mntest-extension'
+    id 'jvm-test-suite'
+    id("org.jetbrains.kotlin.jvm") version "1.8.21"
+    id("com.google.devtools.ksp") version "1.8.21-1.0.11"
+}
+
+description = """
+Provides JUnit 5 extensions to extend the capabiities of tests when
+test resources are present.
+"""
+
+testing {
+    suites {
+        spockTest(JvmTestSuite) {
+            dependencies {
+                implementation project(project.path)
+                implementation testFixtures(project(project.path))
+                implementation(mnTest.micronaut.test.spock)
+                compileOnly(mn.micronaut.inject.groovy)
+            }
+            targets.all {
+                tasks.named("check") {
+                    dependsOn(testTask)
+                }
+            }
+        }
+        koTest(JvmTestSuite) {
+            dependencies {
+                implementation project(project.path)
+                implementation testFixtures(project(project.path))
+                implementation(mnTest.micronaut.test.kotest5)
+            }
+            targets.all {
+                tasks.named("check") {
+                    dependsOn(testTask)
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor(mn.micronaut.inject.java)
+    api(projects.micronautTestResourcesExtensionsCore)
+    api(projects.micronautTestResourcesClient)
+    implementation(libs.junit.jupiter.api)
+    implementation(libs.junit.platform.launcher)
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testFixturesAnnotationProcessor(mn.micronaut.inject.java)
+    testFixturesApi(libs.junit.platform.launcher)
+    testFixturesApi(platform(mnTest.micronaut.test.bom))
+    testFixturesImplementation(projects.micronautTestResourcesClient)
+    testFixturesImplementation(projects.micronautTestResourcesExtensionsCore)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(mn.micronaut.context)
+    testRuntimeOnly(mn.snakeyaml)
+    kspKoTest(mn.micronaut.inject.kotlin)
+}

@@ -5,7 +5,6 @@ import io.micronaut.testresources.hibernate.reactive.core.Book
 import io.micronaut.testresources.hibernate.reactive.core.BookRepository
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 import jakarta.inject.Inject
-import spock.lang.PendingFeature
 
 import java.time.Duration
 import java.time.temporal.ChronoUnit
@@ -17,7 +16,6 @@ class WithJdbcStartMariaDBTest extends AbstractTestContainersSpec {
     @Inject
     BookRepository repository
 
-    @PendingFeature
     def "starts a MariaDB container"() {
         def book = new Book(title: "Micronaut for Spring developers")
         repository.save(book).block(TEST_TIMEOUT)

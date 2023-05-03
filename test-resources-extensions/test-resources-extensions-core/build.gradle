@@ -1,6 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.test-resources-simple-module'
-    id 'io.micronaut.build.internal.test-fixtures'
+    id 'io.micronaut.build.internal.test-resources-mntest-extension'
 }
 
 description = """
@@ -24,7 +23,3 @@ dependencies {
     testRuntimeOnly(mn.micronaut.context)
     testRuntimeOnly(mn.snakeyaml)
 }
-
-
-components.java.withVariantsFromConfiguration(configurations.testFixturesApiElements) { skip() }
-components.java.withVariantsFromConfiguration(configurations.testFixturesRuntimeElements) { skip() }

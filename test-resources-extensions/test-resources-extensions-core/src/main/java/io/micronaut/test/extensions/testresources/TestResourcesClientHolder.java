@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * test resources client, for testing purposes.
  */
 @Internal
-public class TestResourcesClientHolder {
+public final class TestResourcesClientHolder {
     private static TestResourcesClient CLIENT;
 
     private TestResourcesClientHolder() {

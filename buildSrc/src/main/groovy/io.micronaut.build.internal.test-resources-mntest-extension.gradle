@@ -1,0 +1,12 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-simple-module'
+    id 'io.micronaut.build.internal.test-fixtures'
+}
+
+components.java.withVariantsFromConfiguration(configurations.testFixturesApiElements) { skip() }
+components.java.withVariantsFromConfiguration(configurations.testFixturesRuntimeElements) { skip() }
+
+micronautBuild {
+    def (String major, String minor, String patch) = (version - '-SNAPSHOT').split("[.]")
+    binaryCompatibility.enabled = major.toInteger() >=2 && minor.toInteger() >= 0 && patch.toInteger() > 0
+}

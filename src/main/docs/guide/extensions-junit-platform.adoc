@@ -66,9 +66,9 @@ Test resources come with 2 built-in strategies:
 - a test can only use single scope: it is not possible to have a test which requires multiple scopes, but nested test classes can override the scope of their parent test class
 - scopes are handled _per process_ (e.g per JVM), which means that if 2 tests use the same scope but are executed on different JVMs, then the scope will be closed independently in these JVMs.
 
-The 2d point is important to understand as the test resources service runs independently of your test suite.
+The 2nd point is important to understand as the test resources service runs independently of your test suite.
 This means in practice that if 2 tests executed in 2 different processes, then as soon as the first process has finished all tests which use that scope, the scope will be closed on the _common server_.
-While test resources can recover from that situation by spawning a new test resource when the 2d process will need it, it is possible that a scope is closed _while a test is running in a different process_.
+While test resources can recover from that situation by spawning a new test resource when the 2nd process will need it, it is possible that a scope is closed _while a test is running in a different process_.
 
 For this reason, we recommend to make sure that you only use this feature if you are not splitting your test suite on multiple processes, which can happen if you use `forkEvery` in Gradle or parallel test execution with the Surefire Maven plugin.
 Similarly, using the test distribution plugin of Gradle will trigger the same problem.

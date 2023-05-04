@@ -164,6 +164,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#CORE" class="member-name-link">CORE</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/ScopeTestPropertyProviderFactory.html#create(java.util.Map,java.lang.Class)" class="member-name-link">create(Map&lt;String, Object&gt;, Class&lt;?&gt;)</a> - Method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/ScopeTestPropertyProviderFactory.html" title="class in io.micronaut.test.extensions.junit5">ScopeTestPropertyProviderFactory</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/testresources/TestResourcesPropertiesFactory.html#create(java.util.Map,java.lang.Class)" class="member-name-link">create(Map&lt;String, Object&gt;, Class&lt;?&gt;)</a> - Method in class io.micronaut.test.extensions.testresources.<a href="io/micronaut/test/extensions/testresources/TestResourcesPropertiesFactory.html" title="class in io.micronaut.test.extensions.testresources">TestResourcesPropertiesFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/elasticsearch/ElasticsearchTestResourceProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" class="member-name-link">createContainer(DockerImageName, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.elasticsearch.<a href="io/micronaut/testresources/elasticsearch/ElasticsearchTestResourceProvider.html" title="class in io.micronaut.testresources.elasticsearch">ElasticsearchTestResourceProvider</a></dt>
@@ -309,7 +311,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/core/Scope.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html#executionFinished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.TestExecutionResult)" class="member-name-link">executionFinished(TestIdentifier, TestExecutionResult)</a> - Method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html" title="class in io.micronaut.test.extensions.junit5">TestResourcesScopeListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html#executionStarted(org.junit.platform.launcher.TestIdentifier)" class="member-name-link">executionStarted(TestIdentifier)</a> - Method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html" title="class in io.micronaut.test.extensions.junit5">TestResourcesScopeListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#EXTENSIONS_CORE" class="member-name-link">EXTENSIONS_CORE</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#EXTENSIONS_JUNIT_PLATFORM" class="member-name-link">EXTENSIONS_JUNIT_PLATFORM</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/client/TestResourcesClientFactory.html#extractFrom(io.micronaut.context.ApplicationContext)" class="member-name-link">extractFrom(ApplicationContext)</a> - Static method in class io.micronaut.testresources.client.<a href="io/micronaut/testresources/client/TestResourcesClientFactory.html" title="class in io.micronaut.testresources.client">TestResourcesClientFactory</a></dt>
 <dd>
@@ -751,6 +759,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Determines a list of dependencies which should be added to the test
  resources classpath, given a user supplied classpath.</div>
 </dd>
+<dt><a href="io/micronaut/test/extensions/junit5/package-summary.html">io.micronaut.test.extensions.junit5</a> - package io.micronaut.test.extensions.junit5</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/package-summary.html">io.micronaut.test.extensions.junit5.annotation</a> - package io.micronaut.test.extensions.junit5.annotation</dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/testresources/package-summary.html">io.micronaut.test.extensions.testresources</a> - package io.micronaut.test.extensions.testresources</dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/testresources/annotation/package-summary.html">io.micronaut.test.extensions.testresources.annotation</a> - package io.micronaut.test.extensions.testresources.annotation</dt>
@@ -980,6 +992,11 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/TestResourcesScope.html#namingStrategy()" class="member-name-link">namingStrategy()</a> - Element in annotation interface io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/TestResourcesScope.html" title="annotation interface in io.micronaut.test.extensions.junit5.annotation">TestResourcesScope</a></dt>
+<dd>
+<div class="block">The name of the strategy to use, instead of an explicit
+ name provided with <a href="io/micronaut/test/extensions/junit5/annotation/TestResourcesScope.html#value()"><code>TestResourcesScope.value()</code></a>.</div>
+</dd>
 <dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#NEO4J" class="member-name-link">NEO4J</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html#NEO4J_SERVER_URI" class="member-name-link">NEO4J_SERVER_URI</a> - Static variable in class io.micronaut.testresources.neo4j.<a href="io/micronaut/testresources/neo4j/Neo4jTestResourceProvider.html" title="class in io.micronaut.testresources.neo4j">Neo4jTestResourceProvider</a></dt>
@@ -1008,6 +1025,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html#%3Cinit%3E()" class="member-name-link">PackageName()</a> - Constructor for class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.PackageName</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/core/LazyTestResourcesExpressionResolver.html#PLACEHOLDER_PREFIX" class="member-name-link">PLACEHOLDER_PREFIX</a> - Static variable in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/LazyTestResourcesExpressionResolver.html" title="class in io.micronaut.testresources.core">LazyTestResourcesExpressionResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/postgres/PostgreSQLTestResourceProvider.html" class="type-name-link" title="class in io.micronaut.testresources.postgres">PostgreSQLTestResourceProvider</a> - Class in <a href="io/micronaut/testresources/postgres/package-summary.html">io.micronaut.testresources.postgres</a></dt>
@@ -1246,6 +1265,25 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A scope represents the lifecycle of a test resource.</div>
 </dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html#scopeNameFor(org.junit.platform.launcher.TestIdentifier)" class="member-name-link">scopeNameFor(TestIdentifier)</a> - Method in class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.PackageName</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html#scopeNameFor(org.junit.platform.launcher.TestIdentifier)" class="member-name-link">scopeNameFor(TestIdentifier)</a> - Method in interface io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html" title="interface in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html#scopeNameFor(org.junit.platform.launcher.TestIdentifier)" class="member-name-link">scopeNameFor(TestIdentifier)</a> - Method in class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.TestClassName</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html" class="type-name-link" title="interface in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy</a> - Interface in <a href="io/micronaut/test/extensions/junit5/annotation/package-summary.html">io.micronaut.test.extensions.junit5.annotation</a></dt>
+<dd>
+<div class="block">Provides the name of a test resources scope to
+ be used in a test class.</div>
+</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html" class="type-name-link" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.PackageName</a> - Class in <a href="io/micronaut/test/extensions/junit5/annotation/package-summary.html">io.micronaut.test.extensions.junit5.annotation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html" class="type-name-link" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.TestClassName</a> - Class in <a href="io/micronaut/test/extensions/junit5/annotation/package-summary.html">io.micronaut.test.extensions.junit5.annotation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/ScopeTestPropertyProviderFactory.html" class="type-name-link" title="class in io.micronaut.test.extensions.junit5">ScopeTestPropertyProviderFactory</a> - Class in <a href="io/micronaut/test/extensions/junit5/package-summary.html">io.micronaut.test.extensions.junit5</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/ScopeTestPropertyProviderFactory.html#%3Cinit%3E()" class="member-name-link">ScopeTestPropertyProviderFactory()</a> - Constructor for class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/ScopeTestPropertyProviderFactory.html" title="class in io.micronaut.test.extensions.junit5">ScopeTestPropertyProviderFactory</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#SERVER" class="member-name-link">SERVER</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/client/TestResourcesClient.html#SERVER_URI" class="member-name-link">SERVER_URI</a> - Static variable in interface io.micronaut.testresources.client.<a href="io/micronaut/testresources/client/TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a></dt>
@@ -1351,6 +1389,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The name of the top-level test resources property configuration key.</div>
 </dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html#%3Cinit%3E()" class="member-name-link">TestClassName()</a> - Constructor for class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.TestClassName</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/TestContainer.html" class="type-name-link" title="class in io.micronaut.testresources.server">TestContainer</a> - Class in <a href="io/micronaut/testresources/server/package-summary.html">io.micronaut.testresources.server</a></dt>
 <dd>
 <div class="block">Stores metadata about a running test container.</div>
@@ -1362,6 +1402,8 @@ loadScripts(document, 'script');</script>
 <div class="block">An utility class used to manage the lifecycle of test containers.</div>
 </dd>
 <dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#TESTCONTAINERS" class="member-name-link">TESTCONTAINERS</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)" class="member-name-link">testPlanExecutionStarted(TestPlan)</a> - Method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html" title="class in io.micronaut.test.extensions.junit5">TestResourcesScopeListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/buildtools/TestResourcesClasspath.html" class="type-name-link" title="class in io.micronaut.testresources.buildtools">TestResourcesClasspath</a> - Class in <a href="io/micronaut/testresources/buildtools/package-summary.html">io.micronaut.testresources.buildtools</a></dt>
 <dd>
@@ -1436,6 +1478,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/testresources/embedded/TestResourcesResolverLoader.html#%3Cinit%3E()" class="member-name-link">TestResourcesResolverLoader()</a> - Constructor for class io.micronaut.testresources.embedded.<a href="io/micronaut/testresources/embedded/TestResourcesResolverLoader.html" title="class in io.micronaut.testresources.embedded">TestResourcesResolverLoader</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/TestResourcesScope.html" class="type-name-link" title="annotation interface in io.micronaut.test.extensions.junit5.annotation">TestResourcesScope</a> - Annotation Interface in <a href="io/micronaut/test/extensions/junit5/annotation/package-summary.html">io.micronaut.test.extensions.junit5.annotation</a></dt>
+<dd>
+<div class="block">Defines the test resources scope to use in a test
+ class.</div>
+</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html" class="type-name-link" title="class in io.micronaut.test.extensions.junit5">TestResourcesScopeListener</a> - Class in <a href="io/micronaut/test/extensions/junit5/package-summary.html">io.micronaut.test.extensions.junit5</a></dt>
+<dd>
+<div class="block">A listener which is responsible for shutting down test resources for a
+ particular scope once the last test which uses this scope is finished.</div>
+</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html#%3Cinit%3E()" class="member-name-link">TestResourcesScopeListener()</a> - Constructor for class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html" title="class in io.micronaut.test.extensions.junit5">TestResourcesScopeListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/TestResourcesService.html" class="type-name-link" title="class in io.micronaut.testresources.server">TestResourcesService</a> - Class in <a href="io/micronaut/testresources/server/package-summary.html">io.micronaut.testresources.server</a></dt>
 <dd>
 <div class="block">Main entry point for the server.</div>
@@ -1457,6 +1511,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/TestResourcesScope.html#value()" class="member-name-link">value()</a> - Element in annotation interface io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/TestResourcesScope.html" title="annotation interface in io.micronaut.test.extensions.junit5.annotation">TestResourcesScope</a></dt>
+<dd>
+<div class="block">The name of the test resources scope to use.</div>
+</dd>
 <dt><a href="io/micronaut/test/extensions/testresources/annotation/TestResourcesProperties.html#value()" class="member-name-link">value()</a> - Element in annotation interface io.micronaut.test.extensions.testresources.annotation.<a href="io/micronaut/test/extensions/testresources/annotation/TestResourcesProperties.html" title="annotation interface in io.micronaut.test.extensions.testresources.annotation">TestResourcesProperties</a></dt>
 <dd>
 <div class="block">Declares the list of properties which should be made available

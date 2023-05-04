@@ -98,11 +98,13 @@ public final class TestResourcesController implements TestResourcesResolver {
 
     @Get("/close/all")
     public boolean closeAll() {
+        LOGGER.debug("Closing all test resources");
         return TestContainers.closeAll();
     }
 
     @Get("/close/{id}")
     public boolean closeScope(@Nullable String id) {
+        LOGGER.info("Closing test resources of scope {}", id);
         return TestContainers.closeScope(id);
     }
 

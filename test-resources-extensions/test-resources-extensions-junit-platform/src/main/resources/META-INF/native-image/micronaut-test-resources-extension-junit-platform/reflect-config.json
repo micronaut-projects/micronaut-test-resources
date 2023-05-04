@@ -1,0 +1,20 @@
+[
+  {
+    "name" : "io.micronaut.test.extensions.junit5.annotation.ScopeNamingStrategy$TestClassName",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name" : "io.micronaut.test.extensions.junit5.annotation.ScopeNamingStrategy$PackageName",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  }
+]

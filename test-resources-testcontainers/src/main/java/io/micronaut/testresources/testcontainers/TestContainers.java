@@ -164,9 +164,11 @@ public final class TestContainers {
         Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS_BY_KEY.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Key, GenericContainer<?>> entry = iterator.next();
-            if (entry.getKey().scope.includes(scope)) {
+            var existingScope = entry.getKey().scope;
+            if (scope.includes(existingScope)) {
                 iterator.remove();
                 GenericContainer<?> container = entry.getValue();
+                LOGGER.debug("Stopping container {}", container.getContainerId());
                 container.close();
                 closed = true;
                 for (Set<GenericContainer<?>> value : CONTAINERS_BY_PROPERTY.values()) {

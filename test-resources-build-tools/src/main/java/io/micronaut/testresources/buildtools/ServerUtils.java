@@ -295,6 +295,9 @@ public class ServerUtils {
             startAndWait(serverFactory, explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
             return;
         }
+        if (explicitPort != null) {
+            return;
+        }
         while (!Files.exists(portFilePath)) {
             try {
                 serverFactory.waitFor(Duration.of(STARTUP_TIME_WAIT_MS, ChronoUnit.MILLIS));

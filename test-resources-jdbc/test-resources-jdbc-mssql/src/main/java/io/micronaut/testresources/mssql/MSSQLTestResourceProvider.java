@@ -47,8 +47,7 @@ public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
     public static MSSQLServerContainer<?> createMSSQLContainer(DockerImageName imageName, String simpleName, Map<String, Object> testResourcesConfiguration) {
         MSSQLServerContainer<?> container = new MSSQLServerContainer<>(imageName);
         String licenseKey = "containers." + simpleName + ".accept-license";
-        Boolean acceptLicense = (Boolean) testResourcesConfiguration.get(licenseKey);
-        if (Boolean.TRUE.equals(acceptLicense)) {
+        if (shouldAcceptLicense(licenseKey, testResourcesConfiguration)) {
             container.acceptLicense();
         } else {
             try {
@@ -60,4 +59,21 @@ public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
         return container;
     }
 
+    /**
+     *
+     * @param licenseKey License Key
+     * @param testResourcesConfiguration Test Resources Configuration
+     * @return {@code false} if no value found in Test Resources Configuration for the license key, otherwise it returns the object if it is a  boolean, or it parses the value to a boolean using {@link Boolean#parseBoolean(String)}.
+     */
+    public static boolean shouldAcceptLicense(String licenseKey, Map<String, Object> testResourcesConfiguration) {
+        Object obj = testResourcesConfiguration.get(licenseKey);
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Boolean b) {
+            return b;
+        } else {
+            return Boolean.parseBoolean(obj.toString());
+        }
+    }
 }

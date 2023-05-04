@@ -31,6 +31,12 @@ modules:
     title: Hashicorp Vault
   modules-testcontainers:
     title: Generic Testcontainers support
+extensions:
+  title: Micronaut Test extensions
+  extensions-core:
+    title: Core extension
+  extensions-junit-platform:
+    title: JUnit Platform
 architecture:
     title: Architecture
     architecture-server:

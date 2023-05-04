@@ -1,0 +1,74 @@
+In order to use the core extension, you need to add this dependency to your build:
+
+dependency:micronaut-test-resources-extensions-core[groupId="io.micronaut.testresources", scope="test"]
+
+== Expanding the set of test properties
+
+Micronaut Test resources is capable of supplying the values of properties which are missing from your configuration when you execute tests.
+For example, if the property `datasources.default.url` is missing, then the service will be called, a database will be provisioned and made available to your application.
+However, there is one assumption: these properties are only available once the application context is available.
+
+In some cases, you may need to expand the set of properties available to tests _before_ the application under test is started (or before the application context is available).
+In Micronaut, a test property can be supplied by implementing the `io.micronaut.test.support.TestPropertyProvider` interface, for example:
+
+[source,java]
+----
+class MyTest implements TestPropertyProvider {
+
+    // ...
+    Map<String, String> getProperties() {
+        return Map.of(
+                "myapp.someProperty", "value"
+        );
+    }
+}
+----
+
+However, a `TestPropertyProvider` cannot access values which are provided by Micronaut Test Resources, or values which are available in your configuration files, which means that you cannot compute a new property based on the value of other properties.
+
+The Micronaut test core extension offers an alternative mechanism to solve this problem: you can annotate a test with `@TestResourcesProperties` and provide a couple arguments:
+
+- the list of test resource properties which you need to compute your property
+- a class which is responsible for deriving new values from the set of available test properties
+
+To illustrate this, imagine a test which needs to access a RabbitMQ cluster.
+Micronaut test resources will not provide a `rabbitmq.servers.product-cluster.port`, but does provide a `rabbitmq.url` property.
+What we need is therefore a provider which will compute the value of `rabbitmq.servers.product-cluster.port` from that `rabbitmq.url` property.
+
+This has to be done _before_ the application is started, so we can use `@TestResourcesProperties` for this.
+First, annotate your test with:
+
+[source,java]
+----
+@MicronautTest
+@TestResourcesProperties(
+    value = "rabbitmq.uri",
+    providers = ConnectionSpec.RabbitMQProvider.class
+)
+class ConnectionSpec {
+    // ...
+}
+----
+
+Next implement the `RabbitMQProvider` type (here it's done as a nested class in the test but there's no limitation about where to find it):
+
+[source,java]
+----
+    @ReflectiveAccess
+    public static class RabbitMQProvider implements TestResourcesPropertyProvider {
+        @Override
+        public Map<String, String> provide(Map<String, Object> testProperties) {
+            String uri = (String) testProperties.get("rabbitmq.uri");
+            return Map.of(
+                "rabbitmq.servers.product-cluster.port", String.valueOf(URI.create(uri).getPort())
+            );
+        }
+    }
+----
+
+A test resources property provider can access:
+
+- the list of properties requested via the `value` of `@TestResourcesProperties`
+- the list of properties which are available in your configuration files
+
+In this case, we are computing the value of `rabbitmq.servers.product-cluster.port` from the `rabbitmq.uri` and return it as a single map entry, which will be added to the set of test properties.

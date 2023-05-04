@@ -1,0 +1,76 @@
+In order to use the JUnit Platform extension, you need to add this dependency to your build:
+
+dependency:micronaut-test-resources-extensions-junit-platform[groupId="io.micronaut.testresources", scope="test"]
+
+This extension is compatible with test frameworks which use JUnit Platform, which means in particular all test frameworks supported by Micronaut:
+
+- https://junit.org/junit5/[JUnit 5]
+- https://spockframework.org[Spock Framework]
+- https://kotest.io/[Kotest]
+
+== Isolating test resources
+
+By default, Micronaut Test Resources will share test resources for a whole test suite.
+For example, if 2 tests need a MySQL container, then the first test will start the container, and the next step will reuse that container.
+The main advantage is that you don't pay the cost of starting a container twice (or more), which can dramatically speed up test suites.
+The responsibility of shutting down resources is delegated to the build tools (e.g Gradle or Maven), which do this at the end of the build.
+The advantage of this is that not only a test container can be shared by different tests of a test suite, but it can be shared by different tasks of a single build.
+In particular, this allows sharing a container between JVM tests and native tests: the container will be started at the beginning of the build, and reused for native tests.
+
+While this behavior is usually preferred, there are situations where you may want to isolate tests, for example:
+
+1. when your test requires a dedicated container with a different configuration from the other tests
+2. when it's difficult to clean up the state of a container after a test is executed
+3. when your tests spawn many different containers and that resource consumption becomes too high
+
+For example, you may have an application which runs tests on different databases.
+By using the default behavior, it would mean that a database container would be started for each database, then left over even when the suite which tests that database is done.
+In order to reduce consumption, you can now use the `@TestResourcesScope` annotation to declare the _scope of test resources_.
+
+The easiest is to use an explicit name for a scope:
+
+[source,java]
+-----
+@TestResourcesScope("my scope")
+class MyTest {
+    @Test
+    void testSomething() {
+        // ...
+    }
+}
+-----
+
+When using this annotation, all tests which are using the same scope will share the test resources of that scope.
+Once the last test which requires that scope is finished, **test resources of that scope are automatically closed**.
+
+In addition to an explicit name, it is possible to supply a naming strategy:
+
+[source,java]
+-----
+@TestResourcesScope(namingStrategy = MyStrategy)
+class MyTest {
+    @Test
+    void testSomething() {
+        // ...
+    }
+}
+-----
+
+Test resources come with 2 built-in strategies:
+
+- `ScopeNamingStrategy.TestClassName` will use the name of the test class as the scope, which means in practice that the resources are exclusive to this test class
+- `ScopeNamingStrategy.PackageName` will use the name of the package of the test, which can be handy if all the tests which are in a common package share the same resources.
+
+== Known limitations of @TestResourcesScope
+
+- a test can only use single scope: it is not possible to have a test which requires multiple scopes, but nested test classes can override the scope of their parent test class
+- scopes are handled _per process_ (e.g per JVM), which means that if 2 tests use the same scope but are executed on different JVMs, then the scope will be closed independently in these JVMs.
+
+The 2nd point is important to understand as the test resources service runs independently of your test suite.
+This means in practice that if 2 tests executed in 2 different processes, then as soon as the first process has finished all tests which use that scope, the scope will be closed on the _common server_.
+While test resources can recover from that situation by spawning a new test resource when the 2nd process will need it, it is possible that a scope is closed _while a test is running in a different process_.
+
+For this reason, we recommend to make sure that you only use this feature if you are not splitting your test suite on multiple processes, which can happen if you use `forkEvery` in Gradle or parallel test execution with the Surefire Maven plugin.
+Similarly, using the test distribution plugin of Gradle will trigger the same problem.
+
+In practice, this may not be an issue for your use cases, depending on how you use scopes.

@@ -1,0 +1,2 @@
+Micronaut Test Resources also provides extensions to https://github.com/micronaut-projects/micronaut-test[Micronaut Test] to support more advanced use cases.
+The core extension provides a way to expand the set of test properties available to tests, while the JUnit Platform extension provides ways to isolate resources needed by different tests.

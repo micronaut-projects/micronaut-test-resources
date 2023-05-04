@@ -54,7 +54,7 @@ loadScripts(document, 'script');</script>
 <h1 title="All Classes and Interfaces" class="title">All Classes and Interfaces</h1>
 </div>
 <div id="all-classes-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="all-classes-table-tab0" role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="all-classes-table-tab1" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab1', 2)" class="table-tab">Interfaces</button><button id="all-classes-table-tab2" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab2', 2)" class="table-tab">Classes</button><button id="all-classes-table-tab5" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab5', 2)" class="table-tab">Exceptions</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="all-classes-table-tab0" role="tab" aria-selected="true" aria-controls="all-classes-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="all-classes-table-tab1" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab1', 2)" class="table-tab">Interfaces</button><button id="all-classes-table-tab2" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab2', 2)" class="table-tab">Classes</button><button id="all-classes-table-tab5" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab5', 2)" class="table-tab">Exceptions</button><button id="all-classes-table-tab7" role="tab" aria-selected="false" aria-controls="all-classes-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('all-classes-table', 'all-classes-table-tab7', 2)" class="table-tab">Annotation Interfaces</button></div>
 <div id="all-classes-table.tabpanel" role="tabpanel">
 <div class="summary-table two-column-summary" aria-labelledby="all-classes-table-tab0">
 <div class="table-header col-first">Class</div>
@@ -299,24 +299,43 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A factory responsible for creating a <a href="io/micronaut/testresources/client/TestResourcesClient.html" title="interface in io.micronaut.testresources.client"><code>TestResourcesClient</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/testresources/client/TestResourcesClientPropertyExpressionResolver.html" title="class in io.micronaut.testresources.client">TestResourcesClientPropertyExpressionResolver</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/test/extensions/testresources/TestResourcesClientHolder.html" title="class in io.micronaut.test.extensions.testresources">TestResourcesClientHolder</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">An internal class which can be used to inject a fake
+ test resources client, for testing purposes.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/testresources/client/TestResourcesClientPropertyExpressionResolver.html" title="class in io.micronaut.testresources.client">TestResourcesClientPropertyExpressionResolver</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A property expression resolver which connects via client to a server in order to resolve
  properties.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/testresources/client/TestResourcesClientPropertySourceLoader.html" title="class in io.micronaut.testresources.client">TestResourcesClientPropertySourceLoader</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/testresources/client/TestResourcesClientPropertySourceLoader.html" title="class in io.micronaut.testresources.client">TestResourcesClientPropertySourceLoader</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A property source loader which delegates resolution of properties to the client
  lazily.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A client responsible for connecting to a test resources
  server.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/testresources/client/TestResourcesException.html" title="class in io.micronaut.testresources.client">TestResourcesException</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab5">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab5"><a href="io/micronaut/testresources/client/TestResourcesException.html" title="class in io.micronaut.testresources.client">TestResourcesException</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab5">
 <div class="block">Test resources resolution exception.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="io/micronaut/test/extensions/testresources/annotation/TestResourcesProperties.html" title="annotation interface in io.micronaut.test.extensions.testresources.annotation">TestResourcesProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="block">This annotation can be applied to tests annotated with @MicronautTest
+ in order to require some properties to be resolved by Micronaut Test Resources
+ before the application context is available.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="io/micronaut/test/extensions/testresources/TestResourcesPropertiesFactory.html" title="class in io.micronaut.test.extensions.testresources">TestResourcesPropertiesFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/test/extensions/testresources/TestResourcesPropertyProvider.html" title="interface in io.micronaut.test.extensions.testresources">TestResourcesPropertyProvider</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">A test resources property provider is a type which
+ must be explicitly declared in via the <a href="io/micronaut/test/extensions/testresources/annotation/TestResourcesProperties.html" title="annotation interface in io.micronaut.test.extensions.testresources.annotation"><code>TestResourcesProperties</code></a>
+ annotation.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="io/micronaut/testresources/core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">

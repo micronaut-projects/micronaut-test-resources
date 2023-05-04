@@ -1,3 +1,5 @@
+io.micronaut.test.extensions.testresources
+io.micronaut.test.extensions.testresources.annotation
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
 io.micronaut.testresources.core

@@ -46,6 +46,9 @@ dependencies {
     api(projects.micronautTestResourcesClient)
     implementation(libs.junit.jupiter.api)
     implementation(libs.junit.platform.launcher)
+    compileOnly(mnTest.micronaut.test.spock) {
+        because("This project provides a Spock extension for @Shared fields")
+    }
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)
     testFixturesAnnotationProcessor(mn.micronaut.inject.java)

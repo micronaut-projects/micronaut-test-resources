@@ -92,20 +92,34 @@ public class TestResourcesScopeListener implements TestExecutionListener {
         });
     }
 
+    @SuppressWarnings({"java:S3776", "java:S3655"})
     private void visitTestIdentifierWithAnnotation(TestIdentifier id, EventKind kind, TestResourcesScope testResourcesScope) {
-        if (testResourcesScope != null) {
-            String scopeName = testResourcesScope.value();
-            if (scopeName == null || scopeName.isEmpty()) {
-                Class<? extends ScopeNamingStrategy> namingStrategy = testResourcesScope.namingStrategy();
-                if (!namingStrategy.equals(ScopeNamingStrategy.class)) {
-                    var scopeNamingStrategy = instantitateStrategy(namingStrategy);
-                    scopeName = scopeNamingStrategy.scopeNameFor(id);
+        if (id.getSource().isPresent()) {
+            var testSource = id.getSource().get();
+            if (testSource instanceof ClassSource classSource) {
+                Class<?> testClass = classSource.getJavaClass();
+                if (testResourcesScope != null) {
+                    Optional<String> scope = findScope(testResourcesScope, testClass);
+                    scope.ifPresent(scopeName -> {
+                        if (!scopeName.isEmpty()) {
+                            visitRequiredScope(id, kind, scopeName);
+                        }
+                    });
                 }
             }
-            if (scopeName != null && !scopeName.isEmpty()) {
-                visitRequiredScope(id, kind, scopeName);
+        }
+    }
+
+    private static Optional<String> findScope(TestResourcesScope testResourcesScope, Class<?> testClass) {
+        String scopeName = testResourcesScope.value();
+        if (scopeName == null || scopeName.isEmpty()) {
+            Class<? extends ScopeNamingStrategy> namingStrategy = testResourcesScope.namingStrategy();
+            if (!namingStrategy.equals(ScopeNamingStrategy.class)) {
+                var scopeNamingStrategy = instantitateStrategy(namingStrategy);
+                scopeName = scopeNamingStrategy.scopeNameFor(testClass);
             }
         }
+        return Optional.ofNullable(scopeName);
     }
 
     private void visitRequiredScope(TestIdentifier id, EventKind kind, String scopeName) {
@@ -114,16 +128,15 @@ public class TestResourcesScopeListener implements TestExecutionListener {
         switch (kind) {
             case TEST_REGISTERED -> testIdentifiers.add(testId);
             case TEST_STARTED -> {
-                nestedScopes.push(scopeName);
+                ScopeHolder.get().ifPresent(nestedScopes::push);
                 ScopeHolder.set(scopeName);
             }
             case TEST_FINISHED -> {
                 // We need to make sure the test id was known, because kotest
                 // can issue new test ids which weren't known at registration
                 if (testIdentifiers.remove(testId)) {
-                    nestedScopes.pop();
-                    ScopeHolder.set(nestedScopes.peek());
-                    if (nestedScopes.isEmpty()) {
+                    ScopeHolder.set(nestedScopes.poll());
+                    if (ScopeHolder.get().isEmpty()) {
                         ScopeHolder.remove();
                     }
                     if (testIdentifiers.isEmpty()) {
@@ -134,7 +147,7 @@ public class TestResourcesScopeListener implements TestExecutionListener {
         }
     }
 
-    private static Optional<TestResourcesScope> findTestResourceScopeAnnotation(Class<?> clazz) {
+    public static Optional<TestResourcesScope> findTestResourceScopeAnnotation(Class<?> clazz) {
         return Optional.ofNullable(clazz.getAnnotation(TestResourcesScope.class)).or(() -> findTestResourceScopeAnnotationFromInterfaces(clazz));
     }
 
@@ -169,7 +182,7 @@ public class TestResourcesScopeListener implements TestExecutionListener {
         }
     }
 
-    private static ScopeNamingStrategy instantitateStrategy(Class<? extends ScopeNamingStrategy> type) {
+    static ScopeNamingStrategy instantitateStrategy(Class<? extends ScopeNamingStrategy> type) {
         try {
             return type.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |

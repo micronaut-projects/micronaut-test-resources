@@ -89,8 +89,8 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         }
         String datasource = datasourceNameFrom(propertyName);
         String type = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, TYPE)));
-        if (type != null && getDbTypes().stream().anyMatch(type::equalsIgnoreCase)) {
-            return true;
+        if (type != null) {
+            return getDbTypes().stream().anyMatch(type::equalsIgnoreCase);
         }
         String dialect = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, DIALECT)));
         if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {

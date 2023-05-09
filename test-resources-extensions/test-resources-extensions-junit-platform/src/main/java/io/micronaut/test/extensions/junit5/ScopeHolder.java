@@ -25,7 +25,7 @@ import java.util.Optional;
  * service loading, we are using a thread local to share information.
  */
 @Internal
-final class ScopeHolder {
+public final class ScopeHolder {
     private static final ThreadLocal<String> CURRENT_SCOPE = ThreadLocal.withInitial(() -> null);
 
     private ScopeHolder() {

@@ -15,43 +15,26 @@
  */
 package io.micronaut.test.extensions.junit5.annotation;
 
-import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.launcher.TestIdentifier;
-
 /**
  * Provides the name of a test resources scope to
  * be used in a test class.
  */
 @FunctionalInterface
 public interface ScopeNamingStrategy {
-    String scopeNameFor(TestIdentifier testId);
+    String scopeNameFor(Class<?> testClass);
 
     class TestClassName implements ScopeNamingStrategy {
         @Override
-        public String scopeNameFor(TestIdentifier testId) {
-            var source = testId.getSource();
-            if (source.isPresent()) {
-                var testSource = source.get();
-                if (testSource instanceof ClassSource classSource) {
-                    return classSource.getClassName();
-                }
-            }
-            return null;
+        public String scopeNameFor(Class<?> testClass) {
+            return testClass.getName();
         }
     }
 
     class PackageName implements ScopeNamingStrategy {
 
         @Override
-        public String scopeNameFor(TestIdentifier testId) {
-            var source = testId.getSource();
-            if (source.isPresent()) {
-                var testSource = source.get();
-                if (testSource instanceof ClassSource classSource) {
-                    return classSource.getJavaClass().getPackageName();
-                }
-            }
-            return null;
+        public String scopeNameFor(Class<?> testClass) {
+            return testClass.getPackageName();
         }
     }
 }

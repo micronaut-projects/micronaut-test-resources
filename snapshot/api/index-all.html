@@ -348,6 +348,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/r2dbc/core/R2dbcSupport.html#findResolvableProperties(java.util.Map,java.util.List)" class="member-name-link">findResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, List&lt;String&gt;)</a> - Static method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/R2dbcSupport.html" title="class in io.micronaut.testresources.r2dbc.core">R2dbcSupport</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html#findTestResourceScopeAnnotation(java.lang.Class)" class="member-name-link">findTestResourceScopeAnnotation(Class&lt;?&gt;)</a> - Static method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/TestResourcesScopeListener.html" title="class in io.micronaut.test.extensions.junit5">TestResourcesScopeListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/core/Scope.html#from(java.util.Map)" class="member-name-link">from(Map&lt;String, Object&gt;)</a> - Static method in class io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a></dt>
 <dd>
 <div class="block">Returns the scope id if found in the supplied properties.</div>
@@ -364,6 +366,8 @@ loadScripts(document, 'script');</script>
 <div class="block">A generic test containers provider.</div>
 </dd>
 <dt><a href="io/micronaut/testresources/testcontainers/GenericTestContainerProvider.html#%3Cinit%3E()" class="member-name-link">GenericTestContainerProvider()</a> - Constructor for class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/GenericTestContainerProvider.html" title="class in io.micronaut.testresources.testcontainers">GenericTestContainerProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/ScopeHolder.html#get()" class="member-name-link">get()</a> - Static method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/ScopeHolder.html" title="class in io.micronaut.test.extensions.junit5">ScopeHolder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/testresources/TestResourcesClientHolder.html#get()" class="member-name-link">get()</a> - Static method in class io.micronaut.test.extensions.testresources.<a href="io/micronaut/test/extensions/testresources/TestResourcesClientHolder.html" title="class in io.micronaut.test.extensions.testresources">TestResourcesClientHolder</a></dt>
 <dd>&nbsp;</dd>
@@ -884,6 +888,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesLauncherSessionListener.html#launcherSessionOpened(org.junit.platform.launcher.LauncherSession)" class="member-name-link">launcherSessionOpened(LauncherSession)</a> - Method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/TestResourcesLauncherSessionListener.html" title="class in io.micronaut.test.extensions.junit5">TestResourcesLauncherSessionListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/testresources/TestResourcesClientHolder.html#lazy()" class="member-name-link">lazy()</a> - Static method in class io.micronaut.test.extensions.testresources.<a href="io/micronaut/test/extensions/testresources/TestResourcesClientHolder.html" title="class in io.micronaut.test.extensions.testresources">TestResourcesClientHolder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/core/LazyTestResourcesExpressionResolver.html" class="type-name-link" title="class in io.micronaut.testresources.core">LazyTestResourcesExpressionResolver</a> - Class in <a href="io/micronaut/testresources/core/package-summary.html">io.micronaut.testresources.core</a></dt>
@@ -1169,6 +1175,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/testresources/redis/RedisTestResourceProvider.html#%3Cinit%3E()" class="member-name-link">RedisTestResourceProvider()</a> - Constructor for class io.micronaut.testresources.redis.<a href="io/micronaut/testresources/redis/RedisTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/ScopeHolder.html#remove()" class="member-name-link">remove()</a> - Static method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/ScopeHolder.html" title="class in io.micronaut.test.extensions.junit5">ScopeHolder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/r2dbc/core/R2dbcSupport.html#removeR2dbPrefixFrom(java.lang.String)" class="member-name-link">removeR2dbPrefixFrom(String)</a> - Static method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/R2dbcSupport.html" title="class in io.micronaut.testresources.r2dbc.core">R2dbcSupport</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/r2dbc/core/R2dbcSupport.html#REQUIRED_PROPERTIES" class="member-name-link">REQUIRED_PROPERTIES</a> - Static variable in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/R2dbcSupport.html" title="class in io.micronaut.testresources.r2dbc.core">R2dbcSupport</a></dt>
@@ -1265,11 +1273,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A scope represents the lifecycle of a test resource.</div>
 </dd>
-<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html#scopeNameFor(org.junit.platform.launcher.TestIdentifier)" class="member-name-link">scopeNameFor(TestIdentifier)</a> - Method in class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.PackageName</a></dt>
+<dt><a href="io/micronaut/test/extensions/junit5/ScopeHolder.html" class="type-name-link" title="class in io.micronaut.test.extensions.junit5">ScopeHolder</a> - Class in <a href="io/micronaut/test/extensions/junit5/package-summary.html">io.micronaut.test.extensions.junit5</a></dt>
+<dd>
+<div class="block">Our JUnit listener needs to communicate with the test resources
+ provider factory.</div>
+</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html#scopeNameFor(java.lang.Class)" class="member-name-link">scopeNameFor(Class&lt;?&gt;)</a> - Method in class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.PackageName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.PackageName</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html#scopeNameFor(org.junit.platform.launcher.TestIdentifier)" class="member-name-link">scopeNameFor(TestIdentifier)</a> - Method in interface io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html" title="interface in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy</a></dt>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html#scopeNameFor(java.lang.Class)" class="member-name-link">scopeNameFor(Class&lt;?&gt;)</a> - Method in interface io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html" title="interface in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html#scopeNameFor(org.junit.platform.launcher.TestIdentifier)" class="member-name-link">scopeNameFor(TestIdentifier)</a> - Method in class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.TestClassName</a></dt>
+<dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html#scopeNameFor(java.lang.Class)" class="member-name-link">scopeNameFor(Class&lt;?&gt;)</a> - Method in class io.micronaut.test.extensions.junit5.annotation.<a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.TestClassName.html" title="class in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy.TestClassName</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/junit5/annotation/ScopeNamingStrategy.html" class="type-name-link" title="interface in io.micronaut.test.extensions.junit5.annotation">ScopeNamingStrategy</a> - Interface in <a href="io/micronaut/test/extensions/junit5/annotation/package-summary.html">io.micronaut.test.extensions.junit5.annotation</a></dt>
 <dd>
@@ -1309,6 +1322,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Forking process parameters.</div>
 </dd>
 <dt><a href="io/micronaut/test/extensions/testresources/TestResourcesClientHolder.html#set(io.micronaut.testresources.client.TestResourcesClient)" class="member-name-link">set(TestResourcesClient)</a> - Static method in class io.micronaut.test.extensions.testresources.<a href="io/micronaut/test/extensions/testresources/TestResourcesClientHolder.html" title="class in io.micronaut.test.extensions.testresources">TestResourcesClientHolder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/ScopeHolder.html#set(java.lang.String)" class="member-name-link">set(String)</a> - Static method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/ScopeHolder.html" title="class in io.micronaut.test.extensions.junit5">ScopeHolder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/AccessConfiguration.html#setAccessToken(java.lang.String)" class="member-name-link">setAccessToken(String)</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/AccessConfiguration.html" title="class in io.micronaut.testresources.server">AccessConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -1357,6 +1372,13 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/testresources/redis/RedisClusterTestResourceProvider.html#SIMPLE_NAME" class="member-name-link">SIMPLE_NAME</a> - Static variable in class io.micronaut.testresources.redis.<a href="io/micronaut/testresources/redis/RedisClusterTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisClusterTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/redis/RedisTestResourceProvider.html#SIMPLE_NAME" class="member-name-link">SIMPLE_NAME</a> - Static variable in class io.micronaut.testresources.redis.<a href="io/micronaut/testresources/redis/RedisTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/SpockScopeExtension.html" class="type-name-link" title="class in io.micronaut.test.extensions.junit5">SpockScopeExtension</a> - Class in <a href="io/micronaut/test/extensions/junit5/package-summary.html">io.micronaut.test.extensions.junit5</a></dt>
+<dd>
+<div class="block">A Spock extension which handles fields annotated with the shared
+ annotation.</div>
+</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/SpockScopeExtension.html#%3Cinit%3E()" class="member-name-link">SpockScopeExtension()</a> - Constructor for class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/SpockScopeExtension.html" title="class in io.micronaut.test.extensions.junit5">SpockScopeExtension</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/buildtools/ServerUtils.html#startOrConnectToExistingServer(java.lang.Integer,java.nio.file.Path,java.nio.file.Path,java.lang.String,java.nio.file.Path,java.util.Collection,java.lang.Integer,io.micronaut.testresources.buildtools.ServerFactory)" class="member-name-link">startOrConnectToExistingServer(Integer, Path, Path, String, Path, Collection&lt;File&gt;, Integer, ServerFactory)</a> - Static method in class io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/ServerUtils.html" title="class in io.micronaut.testresources.buildtools">ServerUtils</a></dt>
 <dd>
@@ -1450,6 +1472,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/testresources/client/TestResourcesException.html#%3Cinit%3E(java.lang.Throwable)" class="member-name-link">TestResourcesException(Throwable)</a> - Constructor for exception io.micronaut.testresources.client.<a href="io/micronaut/testresources/client/TestResourcesException.html" title="class in io.micronaut.testresources.client">TestResourcesException</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesLauncherSessionListener.html" class="type-name-link" title="class in io.micronaut.test.extensions.junit5">TestResourcesLauncherSessionListener</a> - Class in <a href="io/micronaut/test/extensions/junit5/package-summary.html">io.micronaut.test.extensions.junit5</a></dt>
+<dd>
+<div class="block">In a single JVM, tests can be executed in different sessions (e.g when test
+ distribution is active).</div>
+</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/TestResourcesLauncherSessionListener.html#%3Cinit%3E()" class="member-name-link">TestResourcesLauncherSessionListener()</a> - Constructor for class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/TestResourcesLauncherSessionListener.html" title="class in io.micronaut.test.extensions.junit5">TestResourcesLauncherSessionListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/testresources/annotation/TestResourcesProperties.html" class="type-name-link" title="annotation interface in io.micronaut.test.extensions.testresources.annotation">TestResourcesProperties</a> - Annotation Interface in <a href="io/micronaut/test/extensions/testresources/annotation/package-summary.html">io.micronaut.test.extensions.testresources.annotation</a></dt>
 <dd>
 <div class="block">This annotation can be applied to tests annotated with @MicronautTest
@@ -1537,6 +1566,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Version information about this module.</div>
 </dd>
 <dt><a href="io/micronaut/testresources/buildtools/VersionInfo.html#%3Cinit%3E()" class="member-name-link">VersionInfo()</a> - Constructor for class io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/VersionInfo.html" title="class in io.micronaut.testresources.buildtools">VersionInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/test/extensions/junit5/SpockScopeExtension.html#visitSpec(org.spockframework.runtime.model.SpecInfo)" class="member-name-link">visitSpec(SpecInfo)</a> - Method in class io.micronaut.test.extensions.junit5.<a href="io/micronaut/test/extensions/junit5/SpockScopeExtension.html" title="class in io.micronaut.test.extensions.junit5">SpockScopeExtension</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:W">W</h2>

@@ -52,8 +52,10 @@ public class TestResourcesScopeListener implements TestExecutionListener {
      * time in native image.
      */
     private void assertTestResourcesClient() {
-        testResourcesClient = TestResourcesClientFactory.fromSystemProperties()
-            .orElse(TestResourcesClientHolder.lazy());
+        if (testResourcesClient == null) {
+            testResourcesClient = TestResourcesClientFactory.fromSystemProperties()
+                .orElse(TestResourcesClientHolder.lazy());
+        }
     }
 
     @Override

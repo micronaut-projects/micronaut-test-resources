@@ -24,6 +24,7 @@ dependencies {
     runtimeOnly(mnSerde.micronaut.serde.jackson)
     runtimeOnly(mn.snakeyaml)
 
+    testImplementation(mn.micronaut.http.client.jdk)
     testImplementation(project(':micronaut-test-resources-client'))
     testRuntimeOnly(project(':micronaut-test-resources-kafka'))
 

@@ -22,7 +22,6 @@ dependencies {
     runtimeOnly(mn.logback.classic)
     runtimeOnly(mn.micronaut.management)
     runtimeOnly(mnSerde.micronaut.serde.jackson)
-    runtimeOnly(mn.snakeyaml)
 
     testImplementation(mn.micronaut.http.client)
     testImplementation(project(':micronaut-test-resources-client'))
@@ -31,7 +30,6 @@ dependencies {
     // For logback conversion
     aotPlugins(mn.logback.classic)
     aotPlugins("org.fusesource.jansi:jansi:1.18")
-    aotPlugins(mn.snakeyaml)
 }
 
 application {
@@ -45,11 +43,11 @@ micronaut {
         cacheEnvironment.set(true)
         optimizeServiceLoading.set(true)
         optimizeClassLoading.set(true)
-        convertYamlToJava.set(true)
+        convertYamlToJava.set(false)
         precomputeOperations.set(true)
         deduceEnvironment.set(true)
         // Workaround for an AOT conversion bug
-        replaceLogbackXml.set(false)
+        replaceLogbackXml.set(true)
     }
 }
 

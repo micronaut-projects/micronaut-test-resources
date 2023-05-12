@@ -15,46 +15,57 @@
  */
 package io.micronaut.testresources.client;
 
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.http.client.BlockingHttpClient;
-import io.micronaut.http.client.HttpClient;
-import io.micronaut.http.uri.UriBuilder;
+import io.micronaut.json.JsonMapper;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static io.micronaut.http.HttpHeaders.ACCEPT;
-import static io.micronaut.http.HttpHeaders.USER_AGENT;
+import java.util.function.Consumer;
 
 /**
  * A simple implementation of the test resources client.
  */
 @SuppressWarnings("unchecked")
+@Internal
 public class DefaultTestResourcesClient implements TestResourcesClient {
     public static final String ACCESS_TOKEN = "Access-Token";
 
-    private static final URI RESOLVABLE_PROPERTIES_URI = UriBuilder.of("/").path("/list").build();
-    private static final URI REQUIRED_PROPERTIES_URI = UriBuilder.of("/").path("/requirements/expr").build();
-    private static final URI REQUIRED_PROPERTY_ENTRIES_URI = UriBuilder.of("/").path("/requirements/entries").build();
-    private static final URI CLOSE_ALL_URI = UriBuilder.of("/").path("/close/all").build();
-    private static final URI CLOSE_URI = UriBuilder.of("/").path("/close").build();
-    private static final URI RESOLVE_URI = UriBuilder.of("/").path("/resolve").build();
-    private static final Argument<List<String>> LIST_OF_STRING = Argument.listOf(String.class);
+    private static final String RESOLVABLE_PROPERTIES_URI = "/list";
+    private static final String REQUIRED_PROPERTIES_URI = "/requirements/expr";
+    private static final String REQUIRED_PROPERTY_ENTRIES_URI = "/requirements/entries";
+    private static final String CLOSE_ALL_URI = "/close/all";
+    private static final String CLOSE_URI = "/close";
+    private static final String RESOLVE_URI = "/resolve";
+    private static final Argument<List<String>> LIST_OF_STRING = Argument.LIST_OF_STRING;
+    private static final Argument<String> STRING = Argument.STRING;
+    private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
 
-    private final BlockingHttpClient client;
+    private final JsonMapper jsonMapper;
+    private final String baseUri;
+    private final HttpClient client;
 
     private final String accessToken;
+    private final Duration clientTimeout;
 
-    public DefaultTestResourcesClient(HttpClient client, String accessToken) {
-        this.client = client.toBlocking();
+    public DefaultTestResourcesClient(String baseUri, String accessToken, int clientReadTimeout) {
+        this.baseUri = baseUri;
+        clientTimeout = Duration.ofSeconds(clientReadTimeout);
+        this.client = HttpClient.newBuilder()
+            .build();
         this.accessToken = accessToken;
+        this.jsonMapper = JsonMapper.createDefault();
     }
 
     @Override
@@ -63,8 +74,9 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         Map<String, Object> properties = new HashMap<>();
         properties.put("propertyEntries", propertyEntries);
         properties.put("testResourcesConfig", testResourcesConfig);
-        HttpRequest<?> req = configure(HttpRequest.POST(RESOLVABLE_PROPERTIES_URI, properties));
-        return client.retrieve(req, LIST_OF_STRING);
+        return request(RESOLVABLE_PROPERTIES_URI, LIST_OF_STRING,
+            r -> POST(r, properties)
+        );
     }
 
     @Override
@@ -73,45 +85,81 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         params.put("name", name);
         params.put("properties", properties);
         params.put("testResourcesConfig", testResourcesConfiguration);
-        HttpRequest<?> req = configure(HttpRequest.POST(RESOLVE_URI, params));
-        return Optional.ofNullable(client.retrieve(req));
+        return Optional.ofNullable(request(RESOLVE_URI, STRING, r -> POST(r, params)));
     }
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        return doGet(REQUIRED_PROPERTIES_URI, LIST_OF_STRING, expression);
+        return request(REQUIRED_PROPERTIES_URI + "/" + expression, LIST_OF_STRING, this::GET);
     }
 
     @Override
     public List<String> getRequiredPropertyEntries() {
-        return doGet(REQUIRED_PROPERTY_ENTRIES_URI, LIST_OF_STRING);
+        return request(REQUIRED_PROPERTY_ENTRIES_URI, LIST_OF_STRING, this::GET);
     }
 
     @Override
     public boolean closeAll() {
-        return doGet(CLOSE_ALL_URI, Argument.BOOLEAN);
+        return request(CLOSE_ALL_URI, BOOLEAN, this::GET);
     }
 
     @Override
     public boolean closeScope(@Nullable String id) {
-        return doGet(CLOSE_URI, Argument.BOOLEAN, id);
+        return request(CLOSE_URI + "/" + id, BOOLEAN, this::GET);
     }
 
-    private <T> T doGet(URI uri, Argument<T> clazz, String... pathElements) {
-        UriBuilder builder = UriBuilder.of(uri);
-        for (String param : pathElements) {
-            builder = builder.path(param);
-        }
-        MutableHttpRequest<?> req = configure(HttpRequest.GET(builder.build()));
-        return client.retrieve(req, clazz);
+    @SuppressWarnings({"java:S100", "checkstyle:MethodName"})
+    private void POST(HttpRequest.Builder request, Object o) {
+        request.POST(HttpRequest.BodyPublishers.ofByteArray(writeValueAsBytes(o)));
     }
 
-    private <T> MutableHttpRequest<T> configure(MutableHttpRequest<T> request) {
-        MutableHttpRequest<T> result = request.header(USER_AGENT, "Micronaut HTTP Client")
-            .header(ACCEPT, "application/json");
+    @SuppressWarnings({"java:S100", "checkstyle:MethodName"})
+    private void GET(HttpRequest.Builder request) {
+        request.GET();
+    }
+
+    private <T> T request(String path, Argument<T> type, Consumer<? super HttpRequest.Builder> config) {
+        var request = HttpRequest.newBuilder()
+            .uri(uri(path))
+            .timeout(clientTimeout);
+        request = request.header("User-Agent", "Micronaut Test Resources Client")
+            .header("Content-Type", "application/json")
+            .header("Accept", "application/json");
         if (accessToken != null) {
-            result = result.header(ACCESS_TOKEN, accessToken);
+            request = request.header(ACCESS_TOKEN, accessToken);
         }
-        return result;
+        config.accept(request);
+        try {
+            var response = client.send(request.build(), HttpResponse.BodyHandlers.ofString());
+            var body = response.body();
+            if (response.statusCode() == 200) {
+                if (STRING.equalsType(type)) {
+                    return (T) body;
+                }
+                return jsonMapper.readValue(body, type);
+            }
+            return null;
+        } catch (IOException e) {
+            throw new TestResourcesException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new TestResourcesException(e);
+        }
+    }
+
+    private URI uri(String path) {
+        try {
+            return new URI(baseUri + path);
+        } catch (URISyntaxException e) {
+            throw new TestResourcesException(e);
+        }
+    }
+
+    private byte[] writeValueAsBytes(Object o) {
+        try {
+            return jsonMapper.writeValueAsBytes(o);
+        } catch (IOException e) {
+            throw new TestResourcesException(e);
+        }
     }
 }

@@ -133,9 +133,12 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
             var response = client.send(request.build(), HttpResponse.BodyHandlers.ofString());
             var body = response.body();
             if (response.statusCode() == 200) {
+                if (STRING.equalsType(type)) {
+                    return (T) body;
+                }
                 return jsonMapper.readValue(body, type);
             }
-            throw new TestResourcesException("Test resources service failed with this error: " + body);
+            return null;
         } catch (IOException e) {
             throw new TestResourcesException(e);
         } catch (InterruptedException e) {

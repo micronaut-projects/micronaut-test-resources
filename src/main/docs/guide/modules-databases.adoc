@@ -31,6 +31,13 @@ test-resources:
 
 The `db-type` property value can be found in the table above.
 
+Similarly, you can use the following properties to override some default test resources parameters:
+
+- `test-resources.containers.[db-type].db-name`: overrides the default test database name
+- `test-resources.containers.[db-type].username`: overrides the default test user
+- `test-resources.containers.[db-type].password`: overrides the default test password
+- `test-resources.containers.[db-type].init-script-path`: a path to a SQL file on classpath, which will be executed at container startup
+
 [NOTE]
 ====
 Using the Microsoft SQL Server container will require you to accept its license. In order to do this, you must set the `test-resources.containers.mssql.accept-license` property to true:

@@ -10,7 +10,3 @@ In order for the database to be properly detected, _one of_ the following proper
 - `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `postgres`)
 - `datasources.*.driverClassName`: the class name of the driver (fallback)
 - `datasources.*.dialect`: the dialect to use for the database (fallback)
-- `datasources.*.db-name`: overrides the default test database name
-- `datasources.*.username`: overrides the default test user
-- `datasources.*.password`: overrides the default test password
-- `datasources.*.init-script-path`: a path to a SQL file on classpath, which will be executed at container startup

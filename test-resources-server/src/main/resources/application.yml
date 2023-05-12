@@ -1,9 +1,0 @@
-micronaut:
-  application:
-    name: Test resources server
-  server:
-    port: -1
-endpoints:
-  stop:
-    enabled: true
-    sensitive: false

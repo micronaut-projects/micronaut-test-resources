@@ -20,7 +20,6 @@ import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
@@ -116,12 +115,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         private static Optional<String> callClient(String expression, TestResourcesClient client, Map<String, Object> props, Map<String, Object> properties) {
-            try {
-                return client.resolve(expression, props, properties);
-            } catch (HttpClientResponseException ex) {
-                LOGGER.debug("Test resources client failed to resolve expression '{}'", expression, ex);
-                return Optional.empty();
-            }
+            return client.resolve(expression, props, properties);
         }
 
         @Override

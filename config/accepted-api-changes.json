@@ -3,5 +3,10 @@
     "type": "io.micronaut.testresources.redis.RedisTestResourceProvider",
     "member": "Field REDIS_PORT",
     "reason": "We're now using Redis URI"
+  },
+  {
+    "type": "io.micronaut.testresources.client.DefaultTestResourcesClient",
+    "member": "Constructor io.micronaut.testresources.client.DefaultTestResourcesClient(io.micronaut.http.client.HttpClient,java.lang.String)",
+    "reason": "This type is internal API"
   }
 ]

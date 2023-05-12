@@ -8,7 +8,7 @@ import io.micronaut.testresources.core.TestResourcesResolver
 
 @Controller("/")
 @Requires(property = 'server', notEquals = 'false')
- class TestServer implements TestResourcesResolver {
+class TestServer implements TestResourcesResolver {
 
     @Override
     @Post("/list")

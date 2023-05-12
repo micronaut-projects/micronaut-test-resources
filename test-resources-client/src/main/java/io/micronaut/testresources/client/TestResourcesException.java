@@ -22,4 +22,8 @@ public class TestResourcesException extends RuntimeException {
     public TestResourcesException(Throwable cause) {
         super(cause);
     }
+
+    public TestResourcesException(String message) {
+        super(message);
+    }
 }

@@ -16,16 +16,11 @@
 package io.micronaut.testresources.client;
 
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.http.client.DefaultHttpClientConfiguration;
-import io.micronaut.http.client.HttpClient;
-import io.micronaut.http.client.HttpClientConfiguration;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -39,12 +34,15 @@ import java.util.Properties;
 public final class TestResourcesClientFactory {
     private static final String DEFAULT_TIMEOUT_SECONDS = "60";
 
+    private static WeakReference<TestResourcesClient> cachedClient;
+
     private TestResourcesClientFactory() {
 
     }
 
     /**
      * Creates a new test resources client configured via a properties file.
+     *
      * @param configFile the URL to the configuration properties file.
      * @return a new test resources client.
      */
@@ -55,44 +53,37 @@ public final class TestResourcesClientFactory {
         } catch (IOException e) {
             throw new TestResourcesException(e);
         }
-        try {
-            String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
-            String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
-            int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, DEFAULT_TIMEOUT_SECONDS));
-            HttpClientConfiguration config = new DefaultHttpClientConfiguration();
-            config.setReadTimeout(Duration.of(clientReadTimeout, ChronoUnit.SECONDS));
-            HttpClient client = HttpClient.create(new URL(serverUri), config);
-            return new DefaultTestResourcesClient(client, accessToken);
-        } catch (MalformedURLException e) {
-            throw new TestResourcesException(e);
-        }
+        String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
+        String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
+        int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, DEFAULT_TIMEOUT_SECONDS));
+        return new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout);
     }
 
     /**
      * Creates a new test resources client configured via system properties.
+     *
      * @return a new test resources client, if system properties were found.
      */
     public static Optional<TestResourcesClient> fromSystemProperties() {
+        var client = cachedClient != null ? cachedClient.get() : null;
+        if (client != null) {
+            return Optional.of(client);
+        }
         String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));
         if (serverUri != null) {
             String accessToken = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ACCESS_TOKEN));
             String clientTimeoutString = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.CLIENT_READ_TIMEOUT), DEFAULT_TIMEOUT_SECONDS);
             int clientReadTimeout = Integer.parseInt(clientTimeoutString);
-            HttpClientConfiguration config = new DefaultHttpClientConfiguration();
-            config.setReadTimeout(Duration.of(clientReadTimeout, ChronoUnit.SECONDS));
-            HttpClient client;
-            try {
-                client = HttpClient.create(new URL(serverUri), config);
-            } catch (MalformedURLException e) {
-                return Optional.empty();
-            }
-            return Optional.of(new DefaultTestResourcesClient(client, accessToken));
+            client = new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout);
+            cachedClient = new WeakReference<>(client);
+            return Optional.of(client);
         }
         return Optional.empty();
     }
 
     /**
      * Extracts the {@link TestResourcesClient} from the given {@link ApplicationContext}.
+     *
      * @param context the application context
      * @return the test resources client
      */

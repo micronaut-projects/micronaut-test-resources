@@ -63,6 +63,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         this.baseUri = baseUri;
         clientTimeout = Duration.ofSeconds(clientReadTimeout);
         this.client = HttpClient.newBuilder()
+            .connectTimeout(clientTimeout)
             .build();
         this.accessToken = accessToken;
         this.jsonMapper = JsonMapper.createDefault();

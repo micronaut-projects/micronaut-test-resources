@@ -1,13 +1,23 @@
 plugins {
     id 'io.micronaut.build.internal.test-resources-base'
-    id "io.micronaut.build.internal.module"
+    id "io.micronaut.build.internal.base-module"
 }
 
 dependencies {
+    // These dependencies are compileOnly because they
+    // are going to run in the server process which is
+    // a fat jar, so they must not leak to the classpath
+    annotationProcessor mn.micronaut.inject.java
+    compileOnly mn.micronaut.inject
+    testImplementation mnTest.micronaut.test.spock
     testRuntimeOnly mnSerde.micronaut.serde.jackson
     testRuntimeOnly mn.snakeyaml
 }
 
 configurations.all {
     resolutionStrategy.preferProjectModules()
+}
+
+tasks.named("japiCmp") {
+    newClasspath.from(configurations.compileClasspath)
 }

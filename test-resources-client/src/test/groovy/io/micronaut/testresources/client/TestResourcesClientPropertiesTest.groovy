@@ -8,7 +8,7 @@ import jakarta.inject.Inject
 import spock.lang.Specification
 
 @MicronautTest
-class TestResourcesClientPropertiesTest extends Specification {
+class TestResourcesClientPropertiesTest extends Specification implements ClientCleanup {
 
     @Inject
     EmbeddedServer server

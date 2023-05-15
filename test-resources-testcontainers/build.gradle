@@ -12,7 +12,7 @@ dependencies {
     api(project(':micronaut-test-resources-core'))
     api(libs.testcontainers.core)
     api(platform(libs.boms.testcontainers))
-    implementation(mn.micronaut.context)
+    compileOnly(mn.micronaut.context)
 
     testImplementation(project(":micronaut-test-resources-embedded"))
     testImplementation(mnEmail.micronaut.email)

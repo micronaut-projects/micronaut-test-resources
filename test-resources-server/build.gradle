@@ -46,8 +46,8 @@ micronaut {
         convertYamlToJava.set(false)
         precomputeOperations.set(true)
         deduceEnvironment.set(true)
-        // Workaround for an AOT conversion bug
         replaceLogbackXml.set(true)
+        configFile.set(file("src/aot/aot.properties"))
     }
 }
 

@@ -19,7 +19,6 @@ import io.micronaut.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Optional;
 import java.util.Properties;
@@ -33,8 +32,6 @@ import java.util.Properties;
  */
 public final class TestResourcesClientFactory {
     private static final String DEFAULT_TIMEOUT_SECONDS = "60";
-
-    private static WeakReference<TestResourcesClient> cachedClient;
 
     private TestResourcesClientFactory() {
 
@@ -65,17 +62,12 @@ public final class TestResourcesClientFactory {
      * @return a new test resources client, if system properties were found.
      */
     public static Optional<TestResourcesClient> fromSystemProperties() {
-        var client = cachedClient != null ? cachedClient.get() : null;
-        if (client != null) {
-            return Optional.of(client);
-        }
         String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));
         if (serverUri != null) {
             String accessToken = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ACCESS_TOKEN));
             String clientTimeoutString = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.CLIENT_READ_TIMEOUT), DEFAULT_TIMEOUT_SECONDS);
             int clientReadTimeout = Integer.parseInt(clientTimeoutString);
-            client = new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout);
-            cachedClient = new WeakReference<>(client);
+            var client = new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout);
             return Optional.of(client);
         }
         return Optional.empty();

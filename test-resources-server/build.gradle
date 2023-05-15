@@ -46,7 +46,10 @@ micronaut {
         convertYamlToJava.set(false)
         precomputeOperations.set(true)
         deduceEnvironment.set(true)
-        replaceLogbackXml.set(true)
+        // We have to set it to false because the generated
+        // Java configuration is somehow wrong and generates
+        // duplicate log lines
+        replaceLogbackXml.set(false)
         configFile.set(file("src/aot/aot.properties"))
     }
 }

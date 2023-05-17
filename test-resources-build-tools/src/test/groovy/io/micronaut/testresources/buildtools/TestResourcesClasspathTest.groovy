@@ -132,6 +132,7 @@ class TestResourcesClasspathTest extends Specification {
         where:
         driver                                   | module
         'dev.miku:r2dbc-mysql'                   | 'mysql'
+        'io.asyncer:r2dbc-mysql'                 | 'mysql'
         'org.mariadb:r2dbc-mariadb'              | 'mariadb'
         'org.postgresql:r2dbc-postgresql'        | 'postgresql'
         'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-xe'

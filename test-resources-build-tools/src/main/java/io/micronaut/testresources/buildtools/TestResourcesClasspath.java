@@ -51,7 +51,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
     private static final String MICRONAUT_DATA_R2DBC = "micronaut-data-r2dbc";
     private static final String MYSQL_CONNECTOR_JAVA = "mysql-connector-java";
-    private static final String REACTIVE_MYSQL_DRIVER = "io.asyncer:r2dbc-mysql";
+    private static final String REACTIVE_MYSQL_DRIVER = "dev.miku:r2dbc-mysql";
     private static final String MSSQL_DRIVER = "com.microsoft.sqlserver:mssql-jdbc";
     private static final String REACTIVE_MSSQL_DRIVER = "io.r2dbc:r2dbc-mssql";
     private static final String MYSQL_MYSQL_CONNECTOR_JAVA = "mysql:mysql-connector-java";

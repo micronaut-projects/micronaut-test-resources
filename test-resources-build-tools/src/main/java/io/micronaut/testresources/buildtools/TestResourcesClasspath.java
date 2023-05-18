@@ -51,9 +51,10 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
     private static final String MICRONAUT_DATA_R2DBC = "micronaut-data-r2dbc";
     private static final String MYSQL_CONNECTOR_JAVA = "mysql-connector-java";
-    private static final String REACTIVE_MYSQL_DEV_MIKU_DRIVER = "dev.miku:r2dbc-mysql";
+    // Default driver for mysql r2dbc
+    private static final String REACTIVE_MYSQL_DRIVER = "dev.miku:r2dbc-mysql";
     private static final String REACTIVE_MYSQL_IO_ASYNCER_DRIVER = "io.asyncer:r2dbc-mysql";
-    private static final List<String> REACTIVE_MYSQL_DRIVERS = Arrays.asList(REACTIVE_MYSQL_DEV_MIKU_DRIVER, REACTIVE_MYSQL_IO_ASYNCER_DRIVER);
+    private static final List<String> REACTIVE_MYSQL_DRIVERS = Arrays.asList(REACTIVE_MYSQL_DRIVER, REACTIVE_MYSQL_IO_ASYNCER_DRIVER);
     private static final String MSSQL_DRIVER = "com.microsoft.sqlserver:mssql-jdbc";
     private static final String REACTIVE_MSSQL_DRIVER = "io.r2dbc:r2dbc-mssql";
     private static final String MYSQL_MYSQL_CONNECTOR_JAVA = "mysql:mysql-connector-java";
@@ -163,7 +164,7 @@ public final class TestResourcesClasspath implements KnownModules {
                 MONGODB_DRIVER_SYNC,
                 MONGODB_DRIVER_REACTIVESTREAMS,
                 ORACLE_DRIVER_5, ORACLE_DRIVER_6, ORACLE_DRIVER_8, ORACLE_DRIVER_10, ORACLE_DRIVER_11,
-                REACTIVE_MYSQL_DEV_MIKU_DRIVER, REACTIVE_MYSQL_IO_ASYNCER_DRIVER,
+                REACTIVE_MYSQL_DRIVER, REACTIVE_MYSQL_IO_ASYNCER_DRIVER,
                 REACTIVE_MARIADB_DRIVER,
                 REACTIVE_POSTGRESQL_DRIVER,
                 REACTIVE_ORACLE_DRIVER,

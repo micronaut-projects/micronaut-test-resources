@@ -59,7 +59,7 @@ public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Ne
     }
 
     @Override
-    protected Neo4jContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected Neo4jContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         Neo4jContainer<?> container = new Neo4jContainer<>(imageName);
         container.withoutAuthentication();
         return container;
@@ -74,7 +74,7 @@ public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Ne
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_PROPERTIES.contains(propertyName);
     }
 }

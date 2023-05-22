@@ -64,8 +64,8 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
-    protected MongoDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        Object configuredDbName = testResourcesConfiguration.get(DB_NAME);
+    protected MongoDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        Object configuredDbName = testResourcesConfig.get(DB_NAME);
         if (configuredDbName != null) {
             this.dbName = configuredDbName.toString();
         }
@@ -83,7 +83,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         if (extractMongoDbServerFrom(propertyName).isPresent()) {
             return true;
         }

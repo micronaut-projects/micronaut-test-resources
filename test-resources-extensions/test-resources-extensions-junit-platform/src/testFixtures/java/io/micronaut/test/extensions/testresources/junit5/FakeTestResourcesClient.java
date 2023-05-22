@@ -37,7 +37,7 @@ public class FakeTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         return Optional.ofNullable(MOCK_PROPERTIES.get(name));
     }
 

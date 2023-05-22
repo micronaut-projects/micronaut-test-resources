@@ -109,6 +109,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-elasticsearch")
     importMicronautCatalog("micronaut-email")
     importMicronautCatalog("micronaut-kafka")
+    importMicronautCatalog("micronaut-logging")
     importMicronautCatalog("micronaut-mongodb")
     importMicronautCatalog("micronaut-mqtt")
     importMicronautCatalog("micronaut-neo4j")

@@ -63,8 +63,8 @@ public final class TestResourcesClientHolder {
         }
 
         @Override
-        public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
-            return nullSafe(() -> CLIENT.resolve(name, properties, testResourcesConfiguration));
+        public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+            return nullSafe(() -> CLIENT.resolve(name, properties, testResourcesConfig));
         }
 
         @Override

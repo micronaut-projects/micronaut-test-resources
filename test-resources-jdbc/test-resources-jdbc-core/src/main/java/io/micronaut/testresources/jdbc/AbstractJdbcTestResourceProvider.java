@@ -83,7 +83,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         if (!propertyName.startsWith(PREFIX)) {
             return false;
         }
@@ -134,16 +134,16 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     }
 
     @Override
-    protected void configureContainer(T container, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
-        super.configureContainer(container, properties, testResourcesConfiguration);
-        ifPresent(INIT_SCRIPT, testResourcesConfiguration, container::withInitScript);
-        ifPresent(USERNAME, testResourcesConfiguration, container::withUsername);
-        ifPresent(PASSWORD, testResourcesConfiguration, container::withPassword);
-        ifPresent(DB_NAME, testResourcesConfiguration, container::withDatabaseName);
+    protected void configureContainer(T container, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        super.configureContainer(container, properties, testResourcesConfig);
+        ifPresent(INIT_SCRIPT, testResourcesConfig, container::withInitScript);
+        ifPresent(USERNAME, testResourcesConfig, container::withUsername);
+        ifPresent(PASSWORD, testResourcesConfig, container::withPassword);
+        ifPresent(DB_NAME, testResourcesConfig, container::withDatabaseName);
     }
 
-    private void ifPresent(String key, Map<String, Object> testResourcesConfiguration, Consumer<String> consumer) {
-        Object value = testResourcesConfiguration.get("containers." + getSimpleName() + "." + key);
+    private void ifPresent(String key, Map<String, Object> testResourcesConfig, Consumer<String> consumer) {
+        Object value = testResourcesConfig.get("containers." + getSimpleName() + "." + key);
         if (value != null) {
             consumer.accept(value.toString());
         }

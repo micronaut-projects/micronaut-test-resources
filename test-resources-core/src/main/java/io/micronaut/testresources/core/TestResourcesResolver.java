@@ -74,8 +74,8 @@ public interface TestResourcesResolver extends Ordered {
      *
      * @param propertyName the property to resolve
      * @param properties the resolved required properties
-     * @param testResourcesConfiguration the test resources configuration
+     * @param testResourcesConfig the test resources configuration
      * @return the resolved property or empty if not found
      */
-    Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration);
+    Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig);
 }

@@ -19,7 +19,7 @@ dependencies {
     implementation(project(':micronaut-test-resources-core'))
     implementation(project(':micronaut-test-resources-embedded'))
     implementation(project(':micronaut-test-resources-testcontainers'))
-    runtimeOnly(mn.logback.classic)
+    runtimeOnly(mnLogging.logback.classic)
     runtimeOnly(mn.micronaut.management)
     runtimeOnly(mnSerde.micronaut.serde.jackson)
 
@@ -28,7 +28,7 @@ dependencies {
     testRuntimeOnly(project(':micronaut-test-resources-kafka'))
 
     // For logback conversion
-    aotPlugins(mn.logback.classic)
+    aotPlugins(mnLogging.logback.classic)
     aotPlugins("org.fusesource.jansi:jansi:1.18")
 }
 

@@ -63,7 +63,7 @@ public class RabbitMQTestResourceProvider extends AbstractTestContainersProvider
     }
 
     @Override
-    protected RabbitMQContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected RabbitMQContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new RabbitMQContainer(imageName);
     }
 
@@ -82,7 +82,7 @@ public class RabbitMQTestResourceProvider extends AbstractTestContainersProvider
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_KEYSET.contains(propertyName);
     }
 }

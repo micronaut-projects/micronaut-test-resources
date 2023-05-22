@@ -37,7 +37,7 @@ public class HibernateReactiveMariaDBTestResourceProvider extends AbstractHibern
     }
 
     @Override
-    protected MariaDBContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected MariaDBContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new MariaDBContainer<>(imageName);
     }
 

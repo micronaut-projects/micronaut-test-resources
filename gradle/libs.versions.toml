@@ -16,7 +16,7 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "4.0.0-M2"
+micronaut = "4.0.0-M4"
 micronaut-platform = "4.0.0-M1"
 micronaut-aot = "2.0.0-M1"
 micronaut-aws = "4.0.0-M3"
@@ -26,6 +26,7 @@ micronaut-docs = "2.0.0"
 micronaut-elasticsearch = "5.0.0-M2"
 micronaut-email = "2.0.0-M1"
 micronaut-kafka = "5.0.0-M3"
+micronaut-logging = "1.0.0-M1"
 micronaut-mongodb = "5.0.0-M1"
 micronaut-mqtt = "3.0.0-M1"
 micronaut-neo4j = "6.0.0-M2"
@@ -34,7 +35,7 @@ micronaut-r2dbc = "5.0.0-M5"
 micronaut-reactor = "3.0.0-M2"
 micronaut-redis = "6.0.0-M3"
 micronaut-security = "4.0.0-M3"
-micronaut-serde = "2.0.0-M5"
+micronaut-serde = "2.0.0-M8"
 micronaut-sql = "5.0.0-M4"
 micronaut-test = "4.0.0-M3"
 micronaut-gradle-plugin = "4.0.0-M2"
@@ -61,6 +62,7 @@ micronaut-discovery = { module = "io.micronaut.discovery:micronaut-discovery-cli
 micronaut-elasticsearch = { module = "io.micronaut.elasticsearch:micronaut-elasticsearch-bom", version.ref = "micronaut-elasticsearch" }
 micronaut-email = { module = "io.micronaut.email:micronaut-email-bom", version.ref = "micronaut-email" }
 micronaut-kafka = { module = "io.micronaut.kafka:micronaut-kafka-bom", version.ref = "micronaut-kafka" }
+micronaut-logging = { module = "io.micronaut.logging:micronaut-logging-bom", version.ref = "micronaut-logging" }
 micronaut-mqtt = { module = "io.micronaut.mqtt:micronaut-mqtt-bom", version.ref = "micronaut-mqtt" }
 micronaut-mongodb = { module = "io.micronaut.mongodb:micronaut-mongo-bom", version.ref = "micronaut-mongodb" }
 micronaut-neo4j = { module = "io.micronaut.neo4j:micronaut-neo4j-bom", version.ref = "micronaut-neo4j" }

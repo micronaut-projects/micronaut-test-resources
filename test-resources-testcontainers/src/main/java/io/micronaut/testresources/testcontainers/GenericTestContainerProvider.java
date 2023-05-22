@@ -92,7 +92,7 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
     }
 
     @Override
-    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         class MappedContainer {
             private final TestContainerMetadata md;
             private final GenericContainer<?> container;
@@ -102,7 +102,7 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
                 this.container = container;
             }
         }
-        return containerMetadataFrom(testResourcesConfiguration)
+        return containerMetadataFrom(testResourcesConfig)
             .filter(e -> e.getExposedPorts().containsKey(propertyName) || e.getHostNames().contains(propertyName))
             .filter(md -> md.getImageName().isPresent())
             .findFirst()

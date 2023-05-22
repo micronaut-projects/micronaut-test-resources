@@ -97,14 +97,14 @@ public class LocalStackTestResourceProvider extends AbstractTestContainersProvid
     }
 
     @Override
-    protected LocalStackContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected LocalStackContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         LocalStackContainer localStackContainer = new LocalStackContainer(imageName);
         localStackContainer.withServices(SERVICES.stream().map(LocalStackService::getServiceKind).toArray(LocalStackContainer.Service[]::new));
         return localStackContainer;
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return ALL_SUPPORTED_KEYS.contains(propertyName);
     }
 

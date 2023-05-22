@@ -49,7 +49,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     @Override
-    protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new KafkaContainer(imageName);
     }
 
@@ -59,7 +59,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return KAFKA_BOOTSTRAP_SERVERS.equals(propertyName);
     }
 }

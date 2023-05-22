@@ -57,7 +57,7 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Re
     }
 
     @Override
-    protected RedisContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected RedisContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new RedisContainer(imageName);
     }
 
@@ -70,7 +70,7 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Re
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_PROPERTIES.contains(propertyName);
     }
 }

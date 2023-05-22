@@ -41,7 +41,7 @@ public class FakeKafkaResolver implements TestResourcesResolver {
     }
 
     @Override
-    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         if (KAFKA_BOOTSTRAP_SERVERS.equals(propertyName)) {
             return Optional.of("http://localhost:" + properties.get(KAFKA_TEST_PORT));
         }

@@ -63,15 +63,15 @@ public class VaultTestResourceProvider extends AbstractTestContainersProvider<Va
     }
 
     @Override
-    protected VaultContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    protected VaultContainer<?> createContainer(DockerImageName imageName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         VaultContainer<?> container = new VaultContainer<>(imageName);
-        container.withVaultToken(testResourcesConfiguration.getOrDefault(HASHICORP_VAULT_TOKEN_KEY, VAULT_CLIENT_TOKEN_VALUE).toString());
+        container.withVaultToken(testResourcesConfig.getOrDefault(HASHICORP_VAULT_TOKEN_KEY, VAULT_CLIENT_TOKEN_VALUE).toString());
 
-        if (testResourcesConfiguration.containsKey(TEST_RESOURCES_CONTAINERS_PATH_KEY) && testResourcesConfiguration.containsKey(HASHICORP_VAULT_SECRETS_KEY)) {
+        if (testResourcesConfig.containsKey(TEST_RESOURCES_CONTAINERS_PATH_KEY) && testResourcesConfig.containsKey(HASHICORP_VAULT_SECRETS_KEY)) {
             @SuppressWarnings("unchecked")
-            List<String> secrets = (List<String>) testResourcesConfiguration.get(HASHICORP_VAULT_SECRETS_KEY);
+            List<String> secrets = (List<String>) testResourcesConfig.get(HASHICORP_VAULT_SECRETS_KEY);
             container.withSecretInVault(
-                testResourcesConfiguration.get(TEST_RESOURCES_CONTAINERS_PATH_KEY).toString(),
+                testResourcesConfig.get(TEST_RESOURCES_CONTAINERS_PATH_KEY).toString(),
                 secrets.get(0),
                 secrets.subList(1, secrets.size()).toArray(new String[0])
             );
@@ -90,7 +90,7 @@ public class VaultTestResourceProvider extends AbstractTestContainersProvider<Va
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         return RESOLVABLE_PROPERTIES_SET.contains(propertyName);
     }
 }

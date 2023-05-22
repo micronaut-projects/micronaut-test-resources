@@ -66,7 +66,7 @@ public abstract class AbstractHibernateReactiveTestResourceProvider<T extends Jd
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         if (!propertyName.startsWith(JPA)) {
             return false;
         }
@@ -80,7 +80,7 @@ public abstract class AbstractHibernateReactiveTestResourceProvider<T extends Jd
     }
 
     @Override
-    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         String datasourceName = datasourceNameFrom(propertyName);
         if (propertyName.endsWith(CONNECTION_URL)) {
             Object url = properties.get(datasourceExpressionOf(datasourceName, URL));
@@ -100,7 +100,7 @@ public abstract class AbstractHibernateReactiveTestResourceProvider<T extends Jd
                 return Optional.of(String.valueOf(pwd));
             }
         }
-        return super.resolveWithoutContainer(propertyName, properties, testResourcesConfiguration);
+        return super.resolveWithoutContainer(propertyName, properties, testResourcesConfig);
     }
 
     @Override

@@ -78,7 +78,7 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         if (!propertyName.startsWith(R2dbcSupport.R2DBC_PREFIX)) {
             return false;
         }
@@ -100,7 +100,7 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
     }
 
     @Override
-    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         String name = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
         if (properties.containsKey(name)) {
             return resolveUsingExistingContainer(propertyName, properties, name);

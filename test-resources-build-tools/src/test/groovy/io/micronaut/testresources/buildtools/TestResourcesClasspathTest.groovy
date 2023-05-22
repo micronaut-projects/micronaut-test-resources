@@ -61,6 +61,7 @@ class TestResourcesClasspathTest extends Specification {
         'com.oracle.database.jdbc:ojdbc8'        | []
         'com.oracle.database.jdbc:ojdbc10'       | []
         'com.oracle.database.jdbc:ojdbc11'       | []
+        'dev.miku:r2dbc-mysql'                   | []
         'io.asyncer:r2dbc-mysql'                 | []
         'org.mariadb:r2dbc-mariadb'              | []
         'org.postgresql:r2dbc-postgresql'        | []
@@ -131,6 +132,7 @@ class TestResourcesClasspathTest extends Specification {
 
         where:
         driver                                   | module
+        'dev.miku:r2dbc-mysql'                   | 'mysql'
         'io.asyncer:r2dbc-mysql'                 | 'mysql'
         'org.mariadb:r2dbc-mariadb'              | 'mariadb'
         'org.postgresql:r2dbc-postgresql'        | 'postgresql'

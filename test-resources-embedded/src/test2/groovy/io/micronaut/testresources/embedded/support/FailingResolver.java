@@ -19,7 +19,7 @@ public class FailingResolver implements TestResourcesResolver {
     }
 
     @Override
-    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         return Optional.empty();
     }
 }

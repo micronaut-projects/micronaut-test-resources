@@ -54,7 +54,7 @@ public class R2DBCPoolTestResourceProvider implements TestResourcesResolver {
     }
 
     @Override
-    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         if (!propertyName.startsWith(R2dbcSupport.R2DBC_PREFIX)) {
             return Optional.empty();
         }

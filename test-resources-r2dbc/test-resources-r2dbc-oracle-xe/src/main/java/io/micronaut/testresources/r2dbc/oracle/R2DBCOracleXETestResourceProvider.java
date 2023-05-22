@@ -51,8 +51,8 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        boolean shouldAnswer = super.shouldAnswer(propertyName, requestedProperties, testResourcesConfiguration);
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        boolean shouldAnswer = super.shouldAnswer(propertyName, requestedProperties, testResourcesConfig);
         if (shouldAnswer) {
             String baseDatasourceExpression = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
             String datasource = datasourceNameFrom(baseDatasourceExpression);
@@ -94,7 +94,7 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
     }
 
     @Override
-    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new OracleContainer(imageName);
     }
 

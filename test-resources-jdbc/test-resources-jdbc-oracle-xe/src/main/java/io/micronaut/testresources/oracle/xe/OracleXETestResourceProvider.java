@@ -45,8 +45,8 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        boolean shouldAnswer = super.shouldAnswer(propertyName, requestedProperties, testResourcesConfiguration);
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        boolean shouldAnswer = super.shouldAnswer(propertyName, requestedProperties, testResourcesConfig);
         if (shouldAnswer) {
             String datasource = datasourceNameFrom(propertyName);
             String ocid = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, OCID)));
@@ -70,7 +70,7 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
     }
 
     @Override
-    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new OracleContainer(imageName);
     }
 

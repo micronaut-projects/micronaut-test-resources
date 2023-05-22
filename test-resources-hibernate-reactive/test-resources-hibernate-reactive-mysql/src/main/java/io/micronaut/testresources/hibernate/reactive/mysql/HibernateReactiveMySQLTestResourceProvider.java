@@ -37,7 +37,7 @@ public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernat
     }
 
     @Override
-    protected MySQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected MySQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new MySQLContainer<>(imageName);
     }
 

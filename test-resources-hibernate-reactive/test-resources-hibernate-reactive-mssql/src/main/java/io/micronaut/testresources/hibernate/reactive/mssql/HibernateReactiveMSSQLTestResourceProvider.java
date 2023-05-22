@@ -40,8 +40,8 @@ public class HibernateReactiveMSSQLTestResourceProvider extends AbstractHibernat
     }
 
     @Override
-    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        return createMSSQLContainer(imageName, getSimpleName(), testResourcesConfiguration);
+    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return createMSSQLContainer(imageName, getSimpleName(), testResourcesConfig);
     }
 
 }

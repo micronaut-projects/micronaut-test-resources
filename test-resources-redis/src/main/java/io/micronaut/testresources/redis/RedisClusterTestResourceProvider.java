@@ -74,11 +74,11 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     }
 
     @Override
-    protected RedisClusterContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected RedisClusterContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         RedisClusterContainer redisClusterContainer = new RedisClusterContainer(imageName);
         redisClusterContainer.withCopyToContainer(Transferable.of(CLUSTER_CONFIG), "/redis-conf/redis-cluster.tmpl");
-        redisClusterContainer.withMasters(findMasterCound(testResourcesConfiguration));
-        redisClusterContainer.withSlavesPerMaster(findSlavesPerMasterCount(testResourcesConfiguration));
+        redisClusterContainer.withMasters(findMasterCound(testResourcesConfig));
+        redisClusterContainer.withSlavesPerMaster(findSlavesPerMasterCount(testResourcesConfig));
         return redisClusterContainer;
     }
 
@@ -91,7 +91,7 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_PROPERTIES.contains(propertyName);
     }
 }

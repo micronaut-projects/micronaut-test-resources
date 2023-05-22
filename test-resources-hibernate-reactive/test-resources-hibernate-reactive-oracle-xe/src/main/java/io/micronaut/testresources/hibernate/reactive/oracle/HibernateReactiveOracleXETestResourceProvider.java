@@ -37,7 +37,7 @@ public class HibernateReactiveOracleXETestResourceProvider extends AbstractHiber
     }
 
     @Override
-    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+    protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new OracleContainer(imageName);
     }
 

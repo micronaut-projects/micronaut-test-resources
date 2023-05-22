@@ -107,7 +107,7 @@ final class TestContainerMetadataSupport {
         return null;
     }
 
-    private static Map<String, Integer> extractExposedPortsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
+    private static Map<String, Integer> extractExposedPortsFrom(String prefix, Map<String, Object> testResourcesConfig) {
         class MappedPort {
             final String key;
             final int value;
@@ -125,7 +125,7 @@ final class TestContainerMetadataSupport {
                 return value;
             }
         }
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + "exposed-ports"))
+        return Optional.ofNullable(testResourcesConfig.get(prefix + "exposed-ports"))
             .map(o -> {
                 if (o instanceof List) {
                     List<Object> list = (List<Object>) o;
@@ -145,20 +145,20 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptyMap());
     }
 
-    private static String extractStringParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfiguration) {
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+    private static String extractStringParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfig) {
+        return Optional.ofNullable(testResourcesConfig.get(prefix + key))
             .map(String::valueOf)
             .orElse(null);
     }
 
-    private static Integer extractIntParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfiguration) {
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+    private static Integer extractIntParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfig) {
+        return Optional.ofNullable(testResourcesConfig.get(prefix + key))
             .map(Integer.class::cast)
             .orElse(null);
     }
 
-    private static Set<String> extractSetFrom(String prefix, Map<String, Object> testResourcesConfiguration, String key) {
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+    private static Set<String> extractSetFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
+        return Optional.ofNullable(testResourcesConfig.get(prefix + key))
             .map(o -> {
                 if (o instanceof List) {
                     List<Object> list = (List<Object>) o;
@@ -169,8 +169,8 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptySet());
     }
 
-    private static List<String> extractListFrom(String prefix, Map<String, Object> testResourcesConfiguration, String key) {
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+    private static List<String> extractListFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
+        return Optional.ofNullable(testResourcesConfig.get(prefix + key))
             .map(o -> {
                 if (o instanceof List) {
                     List<Object> list = (List<Object>) o;
@@ -181,23 +181,23 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptyList());
     }
 
-    private static Set<String> extractHostsFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
-        return extractSetFrom(prefix, testResourcesConfiguration, "hostnames");
+    private static Set<String> extractHostsFrom(String prefix, Map<String, Object> testResourcesConfig) {
+        return extractSetFrom(prefix, testResourcesConfig, "hostnames");
     }
 
-    private static Set<String> extractTmpfsMappingsFrom(String prefix, Map<String, Object> testResourcesConfiguration, boolean readOnly) {
-        return extractSetFrom(prefix, testResourcesConfiguration, (readOnly ? "ro-" : "rw-") + "tmpfs-mappings");
+    private static Set<String> extractTmpfsMappingsFrom(String prefix, Map<String, Object> testResourcesConfig, boolean readOnly) {
+        return extractSetFrom(prefix, testResourcesConfig, (readOnly ? "ro-" : "rw-") + "tmpfs-mappings");
     }
 
     private static Map<String, String> extractFsBindsFrom(String prefix,
-                                                          Map<String, Object> testResourcesConfiguration,
+                                                          Map<String, Object> testResourcesConfig,
                                                           boolean readOnly) {
-        return extractMapFrom(prefix, (readOnly ? "ro-" : "rw-") + "fs-bind", testResourcesConfiguration);
+        return extractMapFrom(prefix, (readOnly ? "ro-" : "rw-") + "fs-bind", testResourcesConfig);
     }
 
     private static List<TestContainerMetadata.CopyFileToContainer> extractFileCopiesFrom(String prefix,
-                                                                                         Map<String, Object> testResourcesConfiguration) {
-        Map<String, String> copyDefinitions = extractMapFrom(prefix, "copy-to-container", testResourcesConfiguration);
+                                                                                         Map<String, Object> testResourcesConfig) {
+        Map<String, String> copyDefinitions = extractMapFrom(prefix, "copy-to-container", testResourcesConfig);
         return copyDefinitions.entrySet()
             .stream()
             .map(e -> {
@@ -214,7 +214,7 @@ final class TestContainerMetadataSupport {
 
     private static Map<String, String> extractMapFrom(String prefix,
                                                       String key,
-                                                      Map<String, Object> testResourcesConfiguration) {
+                                                      Map<String, Object> testResourcesConfig) {
         class StringEntry {
             final String key;
             final String value;
@@ -232,7 +232,7 @@ final class TestContainerMetadataSupport {
                 return value;
             }
         }
-        return Optional.ofNullable(testResourcesConfiguration.get(prefix + key))
+        return Optional.ofNullable(testResourcesConfig.get(prefix + key))
             .map(o -> {
                 if (o instanceof List) {
                     List<Object> list = (List<Object>) o;
@@ -252,32 +252,32 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptyMap());
     }
 
-    private static WaitStrategy extractWaitStrategyFrom(String prefix, Map<String, Object> testResourcesConfiguration) {
+    private static WaitStrategy extractWaitStrategyFrom(String prefix, Map<String, Object> testResourcesConfig) {
         String waitStrategyPrefix = prefix + "wait-strategy.";
         List<WaitStrategy> strategies = new ArrayList<>();
-        Set<String> strategyIds = testResourcesConfiguration.keySet()
+        Set<String> strategyIds = testResourcesConfig.keySet()
             .stream()
-            .map(k -> determineWaitStrategyIdFor(prefix, testResourcesConfiguration, waitStrategyPrefix, k))
+            .map(k -> determineWaitStrategyIdFor(prefix, testResourcesConfig, waitStrategyPrefix, k))
             .filter(Objects::nonNull)
             .collect(Collectors.toCollection(LinkedHashSet::new));
         for (String strategyId : strategyIds) {
             switch (strategyId) {
                 case "log":
-                    strategies.add(parseLogStrategy(waitStrategyPrefix + "log.", testResourcesConfiguration));
+                    strategies.add(parseLogStrategy(waitStrategyPrefix + "log.", testResourcesConfig));
                     break;
                     case "http":
-                        strategies.add(parseHttpStrategy(waitStrategyPrefix + "http.", testResourcesConfiguration));
+                        strategies.add(parseHttpStrategy(waitStrategyPrefix + "http.", testResourcesConfig));
                         break;
                 case "port":
-                    assertAllowedKeys(prefix + ".port", testResourcesConfiguration);
+                    assertAllowedKeys(prefix + ".port", testResourcesConfig);
                     strategies.add(Wait.forListeningPort());
                     break;
                 case "healthcheck":
-                    assertAllowedKeys(prefix + ".healthcheck", testResourcesConfiguration);
+                    assertAllowedKeys(prefix + ".healthcheck", testResourcesConfig);
                     strategies.add(Wait.forHealthcheck());
                     break;
                 case "all":
-                    strategies.add(parseAllStrategy(waitStrategyPrefix + "all.", testResourcesConfiguration));
+                    strategies.add(parseAllStrategy(waitStrategyPrefix + "all.", testResourcesConfig));
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown wait strategy: " + strategyId);
@@ -306,15 +306,15 @@ final class TestContainerMetadataSupport {
         return waitAllStrategy;
     }
 
-    private static WaitStrategy parseAllStrategy(String prefix, Map<String, Object> testResourcesConfiguration) {
-        assertAllowedKeys(prefix, testResourcesConfiguration, "mode", "timeout");
-        String modeStr = extractStringParameterFrom(prefix, "mode", testResourcesConfiguration);
+    private static WaitStrategy parseAllStrategy(String prefix, Map<String, Object> testResourcesConfig) {
+        assertAllowedKeys(prefix, testResourcesConfig, "mode", "timeout");
+        String modeStr = extractStringParameterFrom(prefix, "mode", testResourcesConfig);
         WaitAllStrategy.Mode mode = WaitAllStrategy.Mode.WITH_OUTER_TIMEOUT;
         if (modeStr != null) {
             mode = WaitAllStrategy.Mode.valueOf(modeStr.toUpperCase(Locale.US));
         }
         WaitAllStrategy waitAllStrategy = new WaitAllStrategy(mode);
-        String timeoutStr = extractStringParameterFrom(prefix, "timeout", testResourcesConfiguration);
+        String timeoutStr = extractStringParameterFrom(prefix, "timeout", testResourcesConfig);
         if (timeoutStr != null) {
             Duration startupTimeout = CONVERSION_SERVICE.convert(timeoutStr, Duration.class).orElse(null);
             waitAllStrategy = waitAllStrategy.withStartupTimeout(startupTimeout);
@@ -323,10 +323,10 @@ final class TestContainerMetadataSupport {
     }
 
     @Nullable
-    private static String determineWaitStrategyIdFor(String prefix, Map<String, Object> testResourcesConfiguration, String waitStrategyPrefix, String k) {
+    private static String determineWaitStrategyIdFor(String prefix, Map<String, Object> testResourcesConfig, String waitStrategyPrefix, String k) {
         String simpleWaitStrategyPrefix = prefix + "wait-strategy";
         if (k.equals(simpleWaitStrategyPrefix)) {
-            return String.valueOf(testResourcesConfiguration.get(simpleWaitStrategyPrefix));
+            return String.valueOf(testResourcesConfig.get(simpleWaitStrategyPrefix));
         }
         if (k.startsWith(waitStrategyPrefix)) {
             k = k.substring(waitStrategyPrefix.length());
@@ -338,12 +338,12 @@ final class TestContainerMetadataSupport {
         return null;
     }
 
-    private static HttpWaitStrategy parseHttpStrategy(String prefix, Map<String, Object> testResourcesConfiguration) {
-        assertAllowedKeys(prefix, testResourcesConfiguration, "path", "port", "tls", "status-code");
-        String path = extractStringParameterFrom(prefix, "path", testResourcesConfiguration);
-        Integer port = extractIntParameterFrom(prefix, "port", testResourcesConfiguration);
-        String tls = extractStringParameterFrom(prefix, "tls", testResourcesConfiguration);
-        List<String> statusCode = extractListFrom(prefix, testResourcesConfiguration, "status-code");
+    private static HttpWaitStrategy parseHttpStrategy(String prefix, Map<String, Object> testResourcesConfig) {
+        assertAllowedKeys(prefix, testResourcesConfig, "path", "port", "tls", "status-code");
+        String path = extractStringParameterFrom(prefix, "path", testResourcesConfig);
+        Integer port = extractIntParameterFrom(prefix, "port", testResourcesConfig);
+        String tls = extractStringParameterFrom(prefix, "tls", testResourcesConfig);
+        List<String> statusCode = extractListFrom(prefix, testResourcesConfig, "status-code");
         HttpWaitStrategy httpWaitStrategy = new HttpWaitStrategy().forPath(path);
         if (port != null) {
             httpWaitStrategy = httpWaitStrategy.forPort(port);
@@ -359,16 +359,16 @@ final class TestContainerMetadataSupport {
         return httpWaitStrategy;
     }
 
-    private static LogMessageWaitStrategy parseLogStrategy(String prefix, Map<String, Object> testResourcesConfiguration) {
-        assertAllowedKeys(prefix, testResourcesConfiguration, "regex", "times");
-        String regex = extractStringParameterFrom(prefix, "regex", testResourcesConfiguration);
-        Integer times = extractIntParameterFrom(prefix, "times", testResourcesConfiguration);
+    private static LogMessageWaitStrategy parseLogStrategy(String prefix, Map<String, Object> testResourcesConfig) {
+        assertAllowedKeys(prefix, testResourcesConfig, "regex", "times");
+        String regex = extractStringParameterFrom(prefix, "regex", testResourcesConfig);
+        Integer times = extractIntParameterFrom(prefix, "times", testResourcesConfig);
         return Wait.forLogMessage(regex, times != null ? times : 1);
     }
 
-    private static void assertAllowedKeys(String prefix, Map<String, Object> testResourcesConfiguration, String... allowed) {
+    private static void assertAllowedKeys(String prefix, Map<String, Object> testResourcesConfig, String... allowed) {
         Set<String> allowedKeys = new LinkedHashSet<>(Arrays.asList(allowed));
-        List<String> disallowed = testResourcesConfiguration.keySet()
+        List<String> disallowed = testResourcesConfig.keySet()
             .stream()
             .filter(k -> k.startsWith(prefix))
             .map(k -> k.substring(prefix.length()))

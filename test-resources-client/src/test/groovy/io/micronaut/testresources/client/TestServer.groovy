@@ -30,7 +30,7 @@ class TestServer implements TestResourcesResolver {
 
     @Override
     @Post('/resolve')
-    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         if ("missing" == name) {
             return Optional.empty()
         }

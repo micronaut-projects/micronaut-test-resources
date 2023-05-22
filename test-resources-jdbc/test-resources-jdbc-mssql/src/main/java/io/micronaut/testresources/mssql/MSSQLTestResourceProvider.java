@@ -40,14 +40,14 @@ public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
     }
 
     @Override
-    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
-        return createMSSQLContainer(imageName, getSimpleName(), testResourcesConfiguration);
+    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return createMSSQLContainer(imageName, getSimpleName(), testResourcesConfig);
     }
 
-    public static MSSQLServerContainer<?> createMSSQLContainer(DockerImageName imageName, String simpleName, Map<String, Object> testResourcesConfiguration) {
+    public static MSSQLServerContainer<?> createMSSQLContainer(DockerImageName imageName, String simpleName, Map<String, Object> testResourcesConfig) {
         MSSQLServerContainer<?> container = new MSSQLServerContainer<>(imageName);
         String licenseKey = "containers." + simpleName + ".accept-license";
-        if (shouldAcceptLicense(licenseKey, testResourcesConfiguration)) {
+        if (shouldAcceptLicense(licenseKey, testResourcesConfig)) {
             container.acceptLicense();
         } else {
             try {
@@ -62,11 +62,11 @@ public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
     /**
      *
      * @param licenseKey License Key
-     * @param testResourcesConfiguration Test Resources Configuration
+     * @param testResourcesConfig Test Resources Configuration
      * @return {@code false} if no value found in Test Resources Configuration for the license key, otherwise it returns the object if it is a  boolean, or it parses the value to a boolean using {@link Boolean#parseBoolean(String)}.
      */
-    public static boolean shouldAcceptLicense(String licenseKey, Map<String, Object> testResourcesConfiguration) {
-        Object obj = testResourcesConfiguration.get(licenseKey);
+    public static boolean shouldAcceptLicense(String licenseKey, Map<String, Object> testResourcesConfig) {
+        Object obj = testResourcesConfig.get(licenseKey);
         if (obj == null) {
             return false;
         }

@@ -46,7 +46,7 @@ public interface TestResourcesClient extends TestResourcesResolver {
 
     @Override
     @Post("/resolve")
-    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration);
+    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig);
 
     @Override
     @Get("/requirements/expr/{expression}")

@@ -81,11 +81,11 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfiguration) {
+    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);
-        params.put("testResourcesConfig", testResourcesConfiguration);
+        params.put("testResourcesConfig", testResourcesConfig);
         return Optional.ofNullable(request(RESOLVE_URI, STRING, r -> POST(r, params)));
     }
 

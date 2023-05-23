@@ -4,7 +4,7 @@ package io.micronaut.testresources.hivemq
 import io.micronaut.context.annotation.Prototype
 import io.micronaut.mqtt.annotation.MqttSubscriber
 import io.micronaut.mqtt.annotation.Topic
-import io.micronaut.mqtt.v5.annotation.MqttPublisher
+import io.micronaut.mqtt.annotation.v5.MqttPublisher
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 
 import java.util.concurrent.LinkedBlockingDeque

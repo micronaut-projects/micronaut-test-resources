@@ -50,6 +50,9 @@ testcontainers-redis = "1.6.4"
 managed-testcontainers = "1.18.1"
 
 [libraries]
+# Core
+micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
+
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
 
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }

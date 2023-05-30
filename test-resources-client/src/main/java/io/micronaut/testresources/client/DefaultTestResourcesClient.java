@@ -18,8 +18,13 @@ package io.micronaut.testresources.client;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
-import io.micronaut.json.JsonMapper;
+import io.micronaut.testresources.codec.Result;
+import io.micronaut.testresources.codec.TestResourcesCodec;
+import io.micronaut.testresources.codec.TestResourcesMediaType;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -52,7 +57,6 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     private static final Argument<String> STRING = Argument.STRING;
     private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
 
-    private final JsonMapper jsonMapper;
     private final String baseUri;
     private final HttpClient client;
 
@@ -66,47 +70,46 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
             .connectTimeout(clientTimeout)
             .build();
         this.accessToken = accessToken;
-        this.jsonMapper = JsonMapper.createDefault();
     }
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
-                                                Map<String, Object> testResourcesConfig) {
+    public Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
+                                                        Map<String, Object> testResourcesConfig) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("propertyEntries", propertyEntries);
         properties.put("testResourcesConfig", testResourcesConfig);
-        return request(RESOLVABLE_PROPERTIES_URI, LIST_OF_STRING,
+        return Result.of(request(RESOLVABLE_PROPERTIES_URI, LIST_OF_STRING,
             r -> POST(r, properties)
-        );
+        ));
     }
 
     @Override
-    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+    public Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);
         params.put("testResourcesConfig", testResourcesConfig);
-        return Optional.ofNullable(request(RESOLVE_URI, STRING, r -> POST(r, params)));
+        return Result.asOptional(request(RESOLVE_URI, STRING, r -> POST(r, params)));
     }
 
     @Override
-    public List<String> getRequiredProperties(String expression) {
-        return request(REQUIRED_PROPERTIES_URI + "/" + expression, LIST_OF_STRING, this::GET);
+    public Result<List<String>> getRequiredProperties(String expression) {
+        return Result.of(request(REQUIRED_PROPERTIES_URI + "/" + expression, LIST_OF_STRING, this::GET));
     }
 
     @Override
-    public List<String> getRequiredPropertyEntries() {
-        return request(REQUIRED_PROPERTY_ENTRIES_URI, LIST_OF_STRING, this::GET);
+    public Result<List<String>> getRequiredPropertyEntries() {
+        return Result.of(request(REQUIRED_PROPERTY_ENTRIES_URI, LIST_OF_STRING, this::GET));
     }
 
     @Override
-    public boolean closeAll() {
-        return request(CLOSE_ALL_URI, BOOLEAN, this::GET);
+    public Result<Boolean> closeAll() {
+        return Result.of(request(CLOSE_ALL_URI, BOOLEAN, this::GET));
     }
 
     @Override
-    public boolean closeScope(@Nullable String id) {
-        return request(CLOSE_URI + "/" + id, BOOLEAN, this::GET);
+    public Result<Boolean> closeScope(@Nullable String id) {
+        return Result.of(request(CLOSE_URI + "/" + id, BOOLEAN, this::GET));
     }
 
     @SuppressWarnings({"java:S100", "checkstyle:MethodName"})
@@ -124,20 +127,17 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
             .uri(uri(path))
             .timeout(clientTimeout);
         request = request.header("User-Agent", "Micronaut Test Resources Client")
-            .header("Content-Type", "application/json")
-            .header("Accept", "application/json");
+            .header("Content-Type", TestResourcesMediaType.TEST_RESOURCES_BINARY)
+            .header("Accept", TestResourcesMediaType.TEST_RESOURCES_BINARY);
         if (accessToken != null) {
             request = request.header(ACCESS_TOKEN, accessToken);
         }
         config.accept(request);
         try {
-            var response = client.send(request.build(), HttpResponse.BodyHandlers.ofString());
+            var response = client.send(request.build(), HttpResponse.BodyHandlers.ofInputStream());
             var body = response.body();
             if (response.statusCode() == 200) {
-                if (STRING.equalsType(type)) {
-                    return (T) body;
-                }
-                return jsonMapper.readValue(body, type);
+                return TestResourcesCodec.readObject(new DataInputStream(body));
             }
             return null;
         } catch (IOException e) {
@@ -158,7 +158,9 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
 
     private byte[] writeValueAsBytes(Object o) {
         try {
-            return jsonMapper.writeValueAsBytes(o);
+            var baos = new ByteArrayOutputStream();
+            TestResourcesCodec.writeObject(o, new DataOutputStream(baos));
+            return baos.toByteArray();
         } catch (IOException e) {
             throw new TestResourcesException(e);
         }

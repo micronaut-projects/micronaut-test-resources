@@ -17,6 +17,7 @@ package io.micronaut.test.extensions.testresources;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.testresources.client.TestResourcesClient;
+import io.micronaut.testresources.codec.Result;
 
 import java.util.Collection;
 import java.util.List;
@@ -58,37 +59,37 @@ public final class TestResourcesClientHolder {
         }
 
         @Override
-        public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+        public Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return nullSafe(CLIENT::getResolvableProperties);
         }
 
         @Override
-        public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        public Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
             return nullSafe(() -> CLIENT.resolve(name, properties, testResourcesConfig));
         }
 
         @Override
-        public List<String> getRequiredProperties(String expression) {
+        public Result<List<String>> getRequiredProperties(String expression) {
             return nullSafe(() -> CLIENT.getRequiredProperties(expression));
         }
 
         @Override
-        public List<String> getRequiredPropertyEntries() {
+        public Result<List<String>> getRequiredPropertyEntries() {
             return nullSafe(CLIENT::getRequiredPropertyEntries);
         }
 
         @Override
-        public boolean closeAll() {
+        public Result<Boolean> closeAll() {
             return nullSafe(CLIENT::closeAll);
         }
 
         @Override
-        public boolean closeScope(String id) {
+        public Result<Boolean> closeScope(String id) {
             return nullSafe(() -> CLIENT.closeScope(id));
         }
 
         @Override
-        public List<String> getResolvableProperties() {
+        public Result<List<String>> getResolvableProperties() {
             return nullSafe(CLIENT::getResolvableProperties);
         }
 

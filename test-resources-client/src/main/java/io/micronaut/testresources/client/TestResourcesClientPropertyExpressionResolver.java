@@ -20,6 +20,7 @@ import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
+import io.micronaut.testresources.codec.Result;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,33 +60,33 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         static final TestResourcesClient INSTANCE = new NoOpClient();
 
         @Override
-        public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-            return Collections.emptyList();
+        public Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+            return Result.emptyList();
         }
 
         @Override
-        public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        public Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
             return Optional.empty();
         }
 
         @Override
-        public List<String> getRequiredProperties(String expression) {
-            return Collections.emptyList();
+        public Result<List<String>> getRequiredProperties(String expression) {
+            return Result.emptyList();
         }
 
         @Override
-        public List<String> getRequiredPropertyEntries() {
-            return Collections.emptyList();
+        public Result<List<String>> getRequiredPropertyEntries() {
+            return Result.emptyList();
         }
 
         @Override
-        public boolean closeAll() {
-            return true;
+        public Result<Boolean> closeAll() {
+            return Result.TRUE;
         }
 
         @Override
-        public boolean closeScope(@Nullable String id) {
-            return true;
+        public Result<Boolean> closeScope(@Nullable String id) {
+            return Result.FALSE;
         }
     }
 
@@ -100,7 +100,27 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
                                        Class<T> requiredType) {
             if (propertyResolver instanceof Environment) {
                 TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
-                Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
+                Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, new TestResourcesResolver() {
+                    @Override
+                    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+                        return client.getResolvableProperties(propertyEntries, testResourcesConfig).value();
+                    }
+
+                    @Override
+                    public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+                        return client.resolve(propertyName, properties, testResourcesConfig).map(Result::value);
+                    }
+
+                    @Override
+                    public List<String> getRequiredProperties(String expression) {
+                        return client.getRequiredProperties(expression).value();
+                    }
+
+                    @Override
+                    public List<String> getRequiredPropertyEntries() {
+                        return client.getRequiredPropertyEntries().value();
+                    }
+                });
                 Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
                 Optional<String> resolved = callClient(expression, client, props, properties);
                 if (resolved.isPresent()) {
@@ -115,7 +135,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         private static Optional<String> callClient(String expression, TestResourcesClient client, Map<String, Object> props, Map<String, Object> properties) {
-            return client.resolve(expression, props, properties);
+            return client.resolve(expression, props, properties).map(Result::value);
         }
 
         @Override

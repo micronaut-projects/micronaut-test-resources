@@ -12,6 +12,7 @@ dependencies {
     api(platform(mnTest.micronaut.test.bom))
     api(mnTest.micronaut.test.core)
     implementation(projects.micronautTestResourcesClient)
+    implementation(projects.micronautTestResourcesCodec)
 
     testAnnotationProcessor(mn.micronaut.inject.java)
     testImplementation(mnTest.micronaut.test.junit5)

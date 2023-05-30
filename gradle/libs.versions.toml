@@ -42,7 +42,7 @@ micronaut-gradle-plugin = "4.0.0-M4"
 groovy = "4.0.11"
 spock = "2.3-groovy-4.0"
 vertx-client = "4.4.2"
-amazon-awssdk-v1 = "1.12.473"
+amazon-awssdk-v1 = "1.12.477"
 amazon-awssdk-v2 = "2.20.74"
 testcontainers-redis = "1.6.4"
 

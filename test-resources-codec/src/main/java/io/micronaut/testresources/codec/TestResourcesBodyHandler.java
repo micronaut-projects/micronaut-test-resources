@@ -20,6 +20,7 @@ import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.Headers;
 import io.micronaut.core.type.MutableHeaders;
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Produces;
@@ -72,7 +73,7 @@ public class TestResourcesBodyHandler<T> implements MessageBodyHandler<T> {
             }
             return (T) result;
         } catch (IOException e) {
-            throw new CodecException("Invalid binary stream", e);
+            throw new CodecException("Test resources wasn't able to decode response", e);
         }
     }
 
@@ -80,10 +81,10 @@ public class TestResourcesBodyHandler<T> implements MessageBodyHandler<T> {
     public void writeTo(Argument<T> type, MediaType mediaType, T object, MutableHeaders outgoingHeaders, OutputStream outputStream) throws CodecException {
         try {
             var dos = new DataOutputStream(outputStream);
-            outgoingHeaders.set("Content-Type", TEST_RESOURCES_BINARY_MEDIA_TYPE);
+            outgoingHeaders.set(HttpHeaders.CONTENT_TYPE, TEST_RESOURCES_BINARY_MEDIA_TYPE);
             TestResourcesCodec.writeObject(object, dos);
         } catch (IOException e) {
-            throw new CodecException("Invalid binary stream", e);
+            throw new CodecException("Test resources wasn't able to encode response", e);
         }
     }
 

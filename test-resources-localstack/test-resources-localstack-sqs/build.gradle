@@ -1,0 +1,19 @@
+plugins {
+    id 'io.micronaut.build.internal.localstack-module'
+}
+
+description = """
+Provides support for Localstack SQS.
+"""
+
+dependencies {
+    implementation(project(":micronaut-test-resources-localstack-core"))
+    runtimeOnly(libs.amazon.awssdk.v1.sqs) {
+        because "Localstack requires the AWS SDK in version 1 at runtime"
+    }
+    testImplementation(testFixtures(project(":micronaut-test-resources-localstack-core")))
+    testImplementation(libs.amazon.awssdk.v2.sqs)
+}
+
+// TODO: enable once first release of Localstack support is available
+micronautBuild.binaryCompatibility.enabled = false

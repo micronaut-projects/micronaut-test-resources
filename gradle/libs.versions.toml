@@ -19,7 +19,7 @@
 micronaut = "4.0.0-M5"
 micronaut-platform = "4.0.0-M1"
 micronaut-aot = "2.0.0-M1"
-micronaut-aws = "4.0.0-M3"
+micronaut-aws = "4.0.0-M5"
 micronaut-data = "4.0.0-M6"
 micronaut-discovery = "4.0.0-M2"
 micronaut-docs = "2.0.0"

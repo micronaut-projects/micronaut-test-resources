@@ -6,6 +6,7 @@ import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
+import spock.util.environment.RestoreSystemProperties
 
 @MicronautTest
 class TestResourcesClientPropertiesTest extends Specification implements ClientCleanup {
@@ -13,6 +14,7 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
     @Inject
     EmbeddedServer server
 
+    @RestoreSystemProperties
     def "client can be configured from system properties"() {
         System.setProperty("micronaut.test.resources.server.uri", server.getURI().toString())
 

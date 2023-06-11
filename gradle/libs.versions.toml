@@ -47,7 +47,7 @@ amazon-awssdk-v2 = "2.20.83"
 testcontainers-redis = "1.6.4"
 
 # Managed versions appear in the BOM
-managed-testcontainers = "1.18.1"
+managed-testcontainers = "1.18.3"
 
 [libraries]
 # Core

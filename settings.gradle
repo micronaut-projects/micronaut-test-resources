@@ -103,7 +103,6 @@ hibernateReactiveModules.each {
 
 micronautBuild {
     useStandardizedProjectNames = true
-    addSnapshotRepository()
     importMicronautCatalog()
     importMicronautCatalog("micronaut-aws")
     importMicronautCatalog("micronaut-data")

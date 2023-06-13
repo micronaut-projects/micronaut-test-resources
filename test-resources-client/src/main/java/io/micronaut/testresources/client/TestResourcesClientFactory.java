@@ -20,7 +20,10 @@ import io.micronaut.context.ApplicationContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -33,6 +36,9 @@ import java.util.Properties;
  */
 public final class TestResourcesClientFactory {
     private static final String DEFAULT_TIMEOUT_SECONDS = "60";
+    private static final String TEST_RESOURCES_PROPERTIES = "test-resources.properties";
+    private static final String DEFAULT_MICRONAUT_DIR = ".micronaut/test-resources/";
+    private static final String DEFAULT_PROPERTIES_RELATIVE_PATH = DEFAULT_MICRONAUT_DIR + TEST_RESOURCES_PROPERTIES;
 
     private static WeakReference<TestResourcesClient> cachedClient;
 
@@ -41,22 +47,47 @@ public final class TestResourcesClientFactory {
     }
 
     /**
-     * Creates a new test resources client configured via a properties file.
+     * Tries to configure a test resources client by looking for configuration
+     * in conventional places. It will first look for the configuration as
+     * system properties, which is the most reliable way for the client to
+     * figure out how to connect to the server.
+     * <p>
+     * If not found, then it will try to read configuration
+     * from the working directory, and then, from the user home.
+     * It is recommended that consumers prefer passing the configuration via system
+     * properties in order to support all possible options to configure the
+     * client (in particular, shared mode or namespaces, which is not possible
+     * to figure out via standard file system lookups).
      *
-     * @param configFile the URL to the configuration properties file.
-     * @return a new test resources client.
+     * @return a configured client, or an empty optional.
      */
-    public static TestResourcesClient configuredAt(URL configFile) {
-        Properties props = new Properties();
-        try (InputStream input = configFile.openStream()) {
-            props.load(input);
-        } catch (IOException e) {
-            throw new TestResourcesException(e);
+    public static Optional<TestResourcesClient> findByConvention() {
+        return fromSystemProperties()
+            .or(() -> fromFileSystem(Paths.get(DEFAULT_PROPERTIES_RELATIVE_PATH)))
+            .or(() -> fromFileSystem(Paths.get(System.getProperty("user.home")).resolve(DEFAULT_PROPERTIES_RELATIVE_PATH)));
+    }
+
+    /**
+     * Tries to configure a test resources client from properties configuration file
+     * found on a specific file system location.
+     *
+     * @param location the path to the configuration file
+     * @return a configured client if found, otherwise an empty optional
+     */
+    public static Optional<TestResourcesClient> fromFileSystem(Path location) {
+        if (Files.exists(location) && location.getFileName().endsWith(TEST_RESOURCES_PROPERTIES)) {
+            Properties props = new Properties();
+            try (InputStream input = Files.newInputStream(location, StandardOpenOption.READ)) {
+                props.load(input);
+            } catch (IOException e) {
+                throw new TestResourcesException(e);
+            }
+            String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
+            String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
+            int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, DEFAULT_TIMEOUT_SECONDS));
+            return Optional.of(new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout));
         }
-        String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
-        String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
-        int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, DEFAULT_TIMEOUT_SECONDS));
-        return new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout);
+        return Optional.empty();
     }
 
     /**

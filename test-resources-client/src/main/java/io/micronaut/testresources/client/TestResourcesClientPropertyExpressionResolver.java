@@ -25,7 +25,6 @@ import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +32,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.micronaut.testresources.client.ConfigFinder.findConfiguration;
 import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
 
 /**
@@ -48,12 +46,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
     }
 
     private static TestResourcesClient createClient(Environment env) {
-        Optional<URL> config = findConfiguration(env);
-        if (config.isPresent()) {
-            return config.map(TestResourcesClientFactory::configuredAt)
-                .get();
-        }
-        return TestResourcesClientFactory.fromSystemProperties().orElse(NoOpClient.INSTANCE);
+        return TestResourcesClientFactory.findByConvention().orElse(NoOpClient.INSTANCE);
     }
 
     private static class NoOpClient implements TestResourcesClient {

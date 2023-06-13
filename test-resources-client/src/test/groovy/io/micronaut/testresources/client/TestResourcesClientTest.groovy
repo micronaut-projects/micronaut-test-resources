@@ -7,11 +7,14 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
 import spock.lang.TempDir
+import spock.util.environment.RestoreSystemProperties
 
 import java.nio.file.Path
 
+import static io.micronaut.testresources.client.ConfigFinder.systemPropertyNameOf
+
 @MicronautTest
-class TestResourcesClientTest extends Specification {
+class TestResourcesClientTest extends Specification implements ClientCleanup {
 
     @TempDir
     Path tempDir
@@ -19,6 +22,7 @@ class TestResourcesClientTest extends Specification {
     @Inject
     EmbeddedServer server
 
+    @RestoreSystemProperties
     def "property source loader registers properties from server"() {
         def app = createApplication()
 
@@ -35,22 +39,8 @@ class TestResourcesClientTest extends Specification {
     }
 
     private ApplicationContext createApplication() {
-        def propertiesFile = tempDir.resolve("test-resources.properties").toFile()
-        def cl = new URLClassLoader([] as URL[], this.class.classLoader) {
-            @Override
-            URL findResource(String name) {
-                if ("/test-resources.properties" == name) {
-                    return propertiesFile.toURI().toURL()
-                }
-                return super.findResource(name)
-            }
-        }
-
-        propertiesFile << """
-            ${TestResourcesClient.SERVER_URI}=${server.getURI()}
-        """.stripIndent()
+        System.setProperty(systemPropertyNameOf(TestResourcesClient.SERVER_URI), server.getURI().toString())
         def app = ApplicationContext.builder()
-                .classLoader(cl)
                 .properties(['server': 'false'])
                 .start()
         assert !app.findBean(TestServer).present

@@ -10,15 +10,15 @@ class BookRepository {
 
     void save(Book book) {
         driver.session().with {
-            it.writeTransaction {
-                it.run("CREATE (myNode:Book { name: '${book.title}' })")
+            it.executeWrite {
+                it.run("CREATE (myNode:Book { name: '${book.title}' })").consume()
             }
         }
     }
 
     List<Book> findAll() {
         return driver.session().with {
-            it.readTransaction {
+            it.executeRead {
                 it.run("MATCH (myNode:Book) RETURN myNode")
                     .list {
                         def b = new Book()

@@ -19,6 +19,8 @@ dependencies {
     testImplementation(mnEmail.micronaut.email.javamail)
     testImplementation(mn.snakeyaml)
 
+    testRuntimeOnly(mnEmail.eclipse.angus)
+
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesApi(mnTest.micronaut.test.core) {
         because "exposes TestPropertyProvider"

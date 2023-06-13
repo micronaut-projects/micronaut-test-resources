@@ -19,15 +19,12 @@ import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.testresources.core.LazyTestResourcesPropertySourceLoader;
 import io.micronaut.testresources.core.PropertyExpressionProducer;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
-
-import static io.micronaut.testresources.client.ConfigFinder.findConfiguration;
 
 /**
  * A property source loader which delegates resolution of properties to the client
@@ -49,25 +46,23 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
 
         @Override
         public List<String> getPropertyEntries() {
-            return findClient(null)
+            return findClient()
                 .map(TestResourcesClient::getRequiredPropertyEntries)
                 .orElse(Collections.emptyList());
         }
 
         @Override
         public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-            return findClient(resourceLoader)
+            return findClient()
                 .map(client -> client.getResolvableProperties(propertyEntries, testResourcesConfig))
                 .orElse(Collections.emptyList());
         }
 
-        private Optional<TestResourcesClient> findClient(ResourceLoader resourceLoader) {
+        private Optional<TestResourcesClient> findClient() {
             lock.lock();
             try {
                 if (client == null) {
-                    Optional<URL> config = findConfiguration(resourceLoader);
-                    client = config.map(TestResourcesClientFactory::configuredAt)
-                        .orElseGet(() -> TestResourcesClientFactory.fromSystemProperties().orElse(null));
+                    client = TestResourcesClientFactory.findByConvention().orElse(null);
                 }
                 return Optional.ofNullable(client);
             } finally {

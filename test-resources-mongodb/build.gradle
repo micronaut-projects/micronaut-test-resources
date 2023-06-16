@@ -8,7 +8,7 @@ Provides support for launching a MongoDB test container.
 
 dependencies {
     implementation(platform(libs.micronaut.serde))
-    implementation(libs.testcontainers.mongodb)
+    implementation(libs.managed.testcontainers.mongodb)
 
     testCompileOnly(mnData.micronaut.data.document.processor)
     testImplementation(platform(mnMongo.micronaut.mongo.bom))

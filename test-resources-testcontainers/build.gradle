@@ -10,7 +10,7 @@ of testcontainers.
 
 dependencies {
     api(project(':micronaut-test-resources-core'))
-    api(libs.testcontainers.core)
+    api(libs.managed.testcontainers.core)
     api(platform(libs.boms.testcontainers))
     compileOnly(mn.micronaut.context)
 

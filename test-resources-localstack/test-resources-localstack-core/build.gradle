@@ -8,7 +8,7 @@ Provides core support for launching Localstack test containers.
 """
 
 dependencies {
-    api(libs.testcontainers.localstack)
+    api(libs.managed.testcontainers.localstack)
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesImplementation(mn.groovy)
     testFixturesImplementation(libs.spock)

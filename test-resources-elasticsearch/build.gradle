@@ -7,7 +7,7 @@ Provides support for launching an Elasticsearch test container.
 """
 
 dependencies {
-    implementation(libs.testcontainers.elasticsearch)
+    implementation(libs.managed.testcontainers.elasticsearch)
 
     testImplementation(mnElasticsearch.micronaut.elasticsearch)
     testRuntimeOnly(mn.micronaut.jackson.databind)

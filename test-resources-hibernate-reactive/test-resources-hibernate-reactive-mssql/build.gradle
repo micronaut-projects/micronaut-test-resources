@@ -7,7 +7,7 @@ Provides support for launching a MSSQL test container for Hibernate Reactive.
 """
 
 dependencies {
-    implementation(libs.testcontainers.mssql)
+    implementation(libs.managed.testcontainers.mssql)
     implementation(project(":micronaut-test-resources-jdbc-mssql"))
 
     testRuntimeOnly(mnSql.mssql.jdbc)

@@ -44,20 +44,38 @@ spock = "2.3-groovy-4.0"
 vertx-client = "4.4.2"
 amazon-awssdk-v1 = "1.12.489"
 amazon-awssdk-v2 = "2.20.86"
-testcontainers-redis = "1.6.4"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.18.3"
+managed-testcontainers-redis = "1.6.4"
 
 [libraries]
-# Core
-micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
-
+# Testcontainers
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
 
+managed-testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "managed-testcontainers" }
+managed-testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version.ref = "managed-testcontainers" }
+managed-testcontainers-jdbc = { module = "org.testcontainers:jdbc", version.ref = "managed-testcontainers" }
+managed-testcontainers-hivemq = { module = "org.testcontainers:hivemq", version.ref = "managed-testcontainers" }
+managed-testcontainers-kafka = { module = "org.testcontainers:kafka", version.ref = "managed-testcontainers" }
+managed-testcontainers-localstack = { module = "org.testcontainers:localstack", version.ref = "managed-testcontainers" }
+managed-testcontainers-mariadb = { module = "org.testcontainers:mariadb", version.ref = "managed-testcontainers" }
+managed-testcontainers-mongodb = { module = "org.testcontainers:mongodb", version.ref = "managed-testcontainers" }
+managed-testcontainers-mssql = { module = "org.testcontainers:mssqlserver", version.ref = "managed-testcontainers" }
+managed-testcontainers-mysql = { module = "org.testcontainers:mysql", version.ref = "managed-testcontainers" }
+managed-testcontainers-neo4j = { module = "org.testcontainers:neo4j", version.ref = "managed-testcontainers" }
+managed-testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version.ref = "managed-testcontainers" }
+managed-testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "managed-testcontainers" }
+managed-testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version.ref = "managed-testcontainers" }
+managed-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "managed-testcontainers-redis" }
+managed-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "managed-testcontainers" }
+managed-testcontainers-vault = { module = "org.testcontainers:vault", version.ref = "managed-testcontainers" }
+
+# Core
+micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher"}
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
 micronaut-aws = { module = "io.micronaut.aws:micronaut-aws-bom", version.ref = "micronaut-aws" }
 micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }
@@ -77,24 +95,6 @@ micronaut-security = { module = "io.micronaut.security:micronaut-security-bom", 
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
 micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
 
-testcontainers-core = { module = "org.testcontainers:testcontainers", version = "" }
-testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version = "" }
-testcontainers-jdbc = { module = "org.testcontainers:jdbc", version = "" }
-testcontainers-hivemq = { module = "org.testcontainers:hivemq", version = "" }
-testcontainers-kafka = { module = "org.testcontainers:kafka", version = "" }
-testcontainers-localstack = { module = "org.testcontainers:localstack", version = "" }
-testcontainers-mariadb = { module = "org.testcontainers:mariadb", version = "" }
-testcontainers-mongodb = { module = "org.testcontainers:mongodb", version = "" }
-testcontainers-mssql = { module = "org.testcontainers:mssqlserver", version = "" }
-testcontainers-mysql = { module = "org.testcontainers:mysql", version = "" }
-testcontainers-neo4j = { module = "org.testcontainers:neo4j", version = "" }
-testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version = "" }
-testcontainers-postgres = { module = "org.testcontainers:postgresql", version = "" }
-testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version = "" }
-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "testcontainers-redis" }
-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version = "" }
-testcontainers-vault = { module = "org.testcontainers:vault", version = "" }
-
 vertx-mysql = { module = "io.vertx:vertx-mysql-client", version.ref = "vertx.client" }
 vertx-mssql = { module = "io.vertx:vertx-mssql-client", version.ref = "vertx.client" }
 vertx-postgres = { module = "io.vertx:vertx-pg-client", version.ref = "vertx.client" }
@@ -102,12 +102,12 @@ vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.c
 scram = { module = "com.ongres.scram:client", version = "2.1" }
 spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
 
-amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1"}
-amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1"}
-amazon-awssdk-v1-sqs = { module = "com.amazonaws:aws-java-sdk-sqs", version.ref = "amazon-awssdk-v1"}
-amazon-awssdk-v2-dynamodb = { module = "software.amazon.awssdk:dynamodb", version.ref = "amazon-awssdk-v2"}
-amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "amazon-awssdk-v2"}
-amazon-awssdk-v2-sqs = { module = "software.amazon.awssdk:sqs", version.ref = "amazon-awssdk-v2"}
+amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1" }
+amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1" }
+amazon-awssdk-v1-sqs = { module = "com.amazonaws:aws-java-sdk-sqs", version.ref = "amazon-awssdk-v1" }
+amazon-awssdk-v2-dynamodb = { module = "software.amazon.awssdk:dynamodb", version.ref = "amazon-awssdk-v2" }
+amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "amazon-awssdk-v2" }
+amazon-awssdk-v2-sqs = { module = "software.amazon.awssdk:sqs", version.ref = "amazon-awssdk-v2" }
 #
 # Managed dependencies appear in the BOM
 #

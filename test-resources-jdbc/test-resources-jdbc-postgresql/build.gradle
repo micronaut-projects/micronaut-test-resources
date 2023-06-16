@@ -7,7 +7,7 @@ Provides support for launching a PostgreSQL test container.
 """
 
 dependencies {
-    implementation(libs.testcontainers.postgres)
+    implementation(libs.managed.testcontainers.postgres)
 
     testRuntimeOnly(mnSql.postgresql)
 }

@@ -7,7 +7,7 @@ Provides support for launching a PostgreSQL test container for Hibernate Reactiv
 """
 
 dependencies {
-    implementation(libs.testcontainers.postgres)
+    implementation(libs.managed.testcontainers.postgres)
     runtimeOnly(project(":micronaut-test-resources-jdbc-postgresql"))
 
     testRuntimeOnly(mnSql.postgresql)

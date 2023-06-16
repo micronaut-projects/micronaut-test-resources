@@ -12,7 +12,7 @@ micronautBuild {
 }
 
 dependencies {
-    api(libs.testcontainers.jdbc)
+    api(libs.managed.testcontainers.jdbc)
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesApi(platform(mnSql.micronaut.sql.bom))
     testFixturesCompileOnly(mnData.micronaut.data.processor)

@@ -7,7 +7,7 @@ Provides support for launching a RabbitMQ test container.
 """
 
 dependencies {
-    implementation(libs.testcontainers.rabbitmq)
+    implementation(libs.managed.testcontainers.rabbitmq)
 
     testImplementation(mnRabbitmq.micronaut.rabbitmq)
 }

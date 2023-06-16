@@ -7,7 +7,7 @@ Provides support for launching a MongoDB test container.
 """
 
 dependencies {
-    implementation(libs.testcontainers.neo4j)
+    implementation(libs.managed.testcontainers.neo4j)
 
     testImplementation(mnNeo4j.micronaut.neo4j.bolt)
 }

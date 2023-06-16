@@ -8,7 +8,7 @@ Provides core support for JDBC test containers.
 """
 
 dependencies {
-    implementation(libs.testcontainers.jdbc)
+    implementation(libs.managed.testcontainers.jdbc)
 
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesApi(mnData.micronaut.data.jdbc)

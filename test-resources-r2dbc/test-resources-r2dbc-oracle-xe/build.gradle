@@ -7,7 +7,7 @@ Provides support for Oracle XE R2DBC test resources.
 """
 
 dependencies {
-    implementation(libs.testcontainers.oracle.xe)
+    implementation(libs.managed.testcontainers.oracle.xe)
     runtimeOnly(project(":micronaut-test-resources-jdbc-oracle-xe"))
 
     testRuntimeOnly(mnR2dbc.r2dbc.oracle)

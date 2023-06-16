@@ -7,7 +7,7 @@ Provides support for R2DBC MariaDB test resources.
 """
 
 dependencies {
-    implementation(libs.testcontainers.mariadb)
+    implementation(libs.managed.testcontainers.mariadb)
     runtimeOnly(project(":micronaut-test-resources-jdbc-mariadb"))
 
     testRuntimeOnly(mnR2dbc.r2dbc.mariadb)

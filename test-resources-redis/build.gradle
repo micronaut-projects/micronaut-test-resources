@@ -9,7 +9,7 @@ Provides support for launching a Redis test container.
 dependencies {
     api(project(':micronaut-test-resources-core'))
     api(project(':micronaut-test-resources-testcontainers'))
-    api(libs.testcontainers.redis)
+    api(libs.managed.testcontainers.redis)
 
     testImplementation(project(":micronaut-test-resources-embedded"))
     testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))

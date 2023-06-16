@@ -7,7 +7,7 @@ Provides support for launching a Oracle XE test container.
 """
 
 dependencies {
-    implementation(libs.testcontainers.oracle.xe)
+    implementation(libs.managed.testcontainers.oracle.xe)
 
     testRuntimeOnly(mnSql.ojdbc8)
 }

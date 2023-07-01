@@ -16,7 +16,7 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "4.0.0-RC3"
+micronaut = "4.0.0-RC4"
 micronaut-platform = "4.0.0-M4"
 micronaut-aot = "2.0.0-M4"
 micronaut-aws = "4.0.0-M11"

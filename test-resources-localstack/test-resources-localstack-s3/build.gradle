@@ -15,5 +15,10 @@ dependencies {
     testImplementation(libs.amazon.awssdk.v2.s3)
 }
 
-// TODO: enable once first release of Localstack support is available
-micronautBuild.binaryCompatibility.enabled = false
+// TODO: required for now. Remove once first release of Localstack support is available
+micronautBuild {
+    binaryCompatibility {
+        enabled = true
+        baselineVersion = "2.0.0-M12"
+    }
+}

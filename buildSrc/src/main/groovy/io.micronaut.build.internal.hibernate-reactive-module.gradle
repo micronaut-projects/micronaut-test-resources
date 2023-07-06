@@ -3,10 +3,6 @@ plugins {
     id 'io.micronaut.build.internal.database-testing'
 }
 
-micronautBuild {
-    binaryCompatibility.enabled = false
-}
-
 dependencies {
     api(project(':micronaut-test-resources-hibernate-reactive-core'))
 

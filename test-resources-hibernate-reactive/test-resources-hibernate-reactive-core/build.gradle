@@ -7,10 +7,6 @@ description = """
 Provides core support for Hibernate Reactive test resources.
 """
 
-micronautBuild {
-    binaryCompatibility.enabled = false
-}
-
 dependencies {
     api(libs.managed.testcontainers.jdbc)
     testFixturesApi(platform(mn.micronaut.core.bom))

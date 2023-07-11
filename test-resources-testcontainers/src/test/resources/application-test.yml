@@ -21,3 +21,4 @@ test-resources:
       network: custom
       network-aliases: alice
       hostnames: consumer.host
+      depends-on: producer

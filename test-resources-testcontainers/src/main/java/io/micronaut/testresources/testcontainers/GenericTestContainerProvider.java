@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -112,6 +113,9 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
                     md.getId(),
                     properties,
                     () -> {
+                        if (!md.getDependencies().isEmpty()) {
+                           resolveDependencies(md.getDependencies(), containerMetadataFrom(testResourcesConfig).toList(), properties, testResourcesConfig);
+                        }
                         GenericContainer<?> selfGenericContainer = new GenericContainer<>(imageName);
                         return TestContainerMetadataSupport.applyMetadata(md, selfGenericContainer);
                     }
@@ -126,6 +130,27 @@ public class GenericTestContainerProvider implements TestResourcesResolver {
                 }
                 return null;
             });
+    }
+
+    private void resolveDependencies(Set<String> dependencies,
+                                     List<TestContainerMetadata> containersMetadata,
+                                     Map<String, Object> properties,
+                                     Map<String, Object> testResourcesConfig) {
+        for (String dependency : dependencies) {
+            resolveDependency(dependency, containersMetadata, properties, testResourcesConfig);
+        }
+    }
+
+    private void resolveDependency(String dependency,
+                                   List<TestContainerMetadata> containersMetadata,
+                                   Map<String, Object> properties,
+                                   Map<String, Object> testResourcesConfig) {
+        var propertyToResolve = containersMetadata.stream()
+            .filter(md -> md.getId().equals(dependency))
+            .findFirst()
+            .flatMap(md -> Stream.concat(md.getHostNames().stream(), md.getExposedPorts().keySet().stream()).findFirst())
+            .orElseThrow(() -> new IllegalArgumentException("Dependent container '" + dependency + "' doesn't exist or cannot be resolved"));
+        resolve(propertyToResolve, properties, testResourcesConfig);
     }
 
     private static List<String> containerNamesFrom(Map<String, Object> configuration) {

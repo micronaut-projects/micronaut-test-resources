@@ -131,6 +131,7 @@ test-resources:
 
 Please refer to the <<configurationreference#io.micronaut.testresources.testcontainers.TestContainersConfiguration,configuration properties reference>> for details.
 
+[[advanced-networking]]
 == Advanced networking
 
 By default, each container is spawned in its own network.
@@ -219,3 +220,25 @@ test-resources:
             all:
               timeout: 120s
 ----
+
+== Dependencies between containers
+
+In some cases, your containers may require other containers to be started before they start.
+You can declare such dependencies with the `depends-on` property:
+
+[configuration]
+----
+test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        depends-on: other
+        ...
+    other:
+        image-name: my/other
+        ...
+----
+
+It's worth noting that such containers need to be declared on the <<#advanced-networking,same network>> in order to be able to communicate with each other.
+
+WARNING: Dependencies between containers **only work between generic containers**. It is not possible to create a dependency between a generic container and a container created with the other test resources resolvers. For example, you cannot add a dependency on a container which provides a MySQL database by adding a `depends-on: mysql`.

@@ -19,6 +19,7 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,6 +48,7 @@ final class TestContainerMetadata {
     private final String network;
     private final Set<String> networkAliases;
     private final WaitStrategy waitStrategy;
+    private final Set<String> dependencies;
 
     @SuppressWarnings("checkstyle:ParameterNumber")
     TestContainerMetadata(String id,
@@ -69,7 +71,7 @@ final class TestContainerMetadata {
                           Long sharedMemory,
                           String network,
                           Set<String> networkAliases,
-                          WaitStrategy waitStrategy) {
+                          WaitStrategy waitStrategy, Set<String> dependencies) {
         this.id = id;
         this.imageName = imageName;
         this.imageTag = imageTag;
@@ -91,6 +93,7 @@ final class TestContainerMetadata {
         this.network = network;
         this.networkAliases = networkAliases;
         this.waitStrategy = waitStrategy;
+        this.dependencies = dependencies;
     }
 
     public String getId() {
@@ -175,6 +178,10 @@ final class TestContainerMetadata {
 
     public Set<String> getRoTmpfsMappings() {
         return roTmpfsMappings;
+    }
+
+    public Set<String> getDependencies() {
+        return Collections.unmodifiableSet(dependencies);
     }
 
     public static final class CopyFileToContainer {

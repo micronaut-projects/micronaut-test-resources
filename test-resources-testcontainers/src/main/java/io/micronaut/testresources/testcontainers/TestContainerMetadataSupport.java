@@ -95,8 +95,9 @@ final class TestContainerMetadataSupport {
         Long sharedMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "shared-memory");
         String network = extractStringParameterFrom(prefix, "network", testResourcesConfig);
         Set<String> networkAliases = extractSetFrom(prefix, testResourcesConfig, "network-aliases");
+        Set<String> dependsOn = extractSetFrom(prefix, testResourcesConfig, "depends-on");
         WaitStrategy waitStrategy = extractWaitStrategyFrom(prefix, testResourcesConfig);
-        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, rwTmpfsMappings, roTmpfsMappings, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, waitStrategy));
+        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, rwTmpfsMappings, roTmpfsMappings, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, waitStrategy, dependsOn));
     }
 
     private static Long extractMemoryParameterFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {

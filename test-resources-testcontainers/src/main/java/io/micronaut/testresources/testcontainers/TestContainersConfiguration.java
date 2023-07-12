@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.EachProperty;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents the mutable view of the container metadata, for
@@ -46,6 +47,7 @@ final class TestContainersConfiguration {
     private String sharedMemory;
     private String network;
     private List<String> networkAliases;
+    private Set<String> dependencies;
 
     /**
      * Returns the name of the docker image to use for the test resources container.
@@ -347,5 +349,21 @@ final class TestContainersConfiguration {
      */
     public void setNetworkAliases(List<String> networkAliases) {
         this.networkAliases = networkAliases;
+    }
+
+    /**
+     * The names of other containers this container depends on.
+     * @return the dependencies
+     */
+    public Set<String> getDependencies() {
+        return dependencies;
+    }
+
+    /**
+     * Sets the names of containers this container depends on.
+     * @param dependencies the dependencies
+     */
+    public void setDependencies(Set<String> dependencies) {
+        this.dependencies = dependencies;
     }
 }

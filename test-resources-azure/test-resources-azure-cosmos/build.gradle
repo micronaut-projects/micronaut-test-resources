@@ -1,0 +1,19 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for launching an Azure Cosmos test container.
+"""
+
+dependencies {
+    api(project(':micronaut-test-resources-core'))
+    api(project(':micronaut-test-resources-testcontainers'))
+    api(libs.managed.testcontainers.azure)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testAnnotationProcessor(mnData.micronaut.data.document.processor)
+    testImplementation(project(":micronaut-test-resources-embedded"))
+    testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
+    testImplementation(mnData.micronaut.data.azure.cosmos)
+}

@@ -231,12 +231,12 @@ You can declare such dependencies with the `depends-on` property:
 test-resources:
   containers:
     mycontainer:
-        image-name: my/container
+        image-name: "my/container"
         depends-on: other
-        ...
+        # ...
     other:
-        image-name: my/other
-        ...
+        image-name: "my/other"
+        # ...
 ----
 
 It's worth noting that such containers need to be declared on the <<#advanced-networking,same network>> in order to be able to communicate with each other.

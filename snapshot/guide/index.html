@@ -149,7 +149,7 @@
         <h1>Micronaut Test Resources</h1>
         <p></p>
         <p>Test resources integration (like Testcontainers) for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/index.html'>LATEST</option><option selected value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.5/guide/index.html'>1.2.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.4/guide/index.html'>1.2.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.5/guide/index.html'>1.1.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.4/guide/index.html'>1.1.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.3/guide/index.html'>1.1.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.2/guide/index.html'>1.1.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.1/guide/index.html'>1.1.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.1/guide/index.html'>1.0.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.0.0/guide/index.html'>1.0.0</option></select> </p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/index.html'>LATEST</option></select> </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -217,8 +217,8 @@ If that property is set, then the test resource will not be used.</p>
 <div class="title">Gradle</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'io.micronaut.application' version '4.0.0-RC5'
-    id 'io.micronaut.test-resources' version '4.0.0-RC5'
+    id 'io.micronaut.application' version '4.0.0'
+    id 'io.micronaut.test-resources' version '4.0.0'
 }</code></pre>
 </div>
 </div>
@@ -1680,7 +1680,7 @@ test-resources.containers.mycontainer.startup-timeout=120s</code></pre>
 <p>Please refer to the <a href="configurationreference.html#io.micronaut.testresources.testcontainers.TestContainersConfiguration">configuration properties reference</a> for details.</p>
 </div>
 <div class="sect1">
-<h2 id="_advanced_networking">Advanced networking</h2>
+<h2 id="advanced-networking">Advanced networking</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>By default, each container is spawned in its own network.
@@ -2152,6 +2152,114 @@ test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependencies_between_containers">Dependencies between containers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In some cases, your containers may require other containers to be started before they start.
+You can declare such dependencies with the <code>depends-on</code> property:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.depends-on=other
+test-resources.containers.other.image-name=my/other</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: "my/container"
+        depends-on: other
+        # ...
+    other:
+        image-name: "my/other"
+        # ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      depends-on="other"
+    [test-resources.containers.other]
+      image-name="my/other"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      dependsOn = "other"
+    }
+    other {
+      imageName = "my/other"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        depends-on = "other"
+      }
+      other {
+        image-name = "my/other"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "depends-on": "other"
+      },
+      "other": {
+        "image-name": "my/other"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s worth noting that such containers need to be declared on the <a href="#advanced-networking">same network</a> in order to be able to communicate with each other.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Dependencies between containers <strong>only work between generic containers</strong>. It is not possible to create a dependency between a generic container and a container created with the other test resources resolvers. For example, you cannot add a dependency on a container which provides a MySQL database by adding a <code>depends-on: mysql</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

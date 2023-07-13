@@ -132,8 +132,10 @@ public class TestResourcesScopeListener implements TestExecutionListener {
             case TEST_STARTED -> {
                 ScopeHolder.get().ifPresent(nestedScopes::push);
                 ScopeHolder.set(scopeName);
+                System.out.println("testId = " + testId + " started with scope " + scopeName + " nested scopes = " + nestedScopes);
             }
             case TEST_FINISHED -> {
+                System.out.println("testId = " + testId + " finished with scope " + scopeName + " nested scopes = " + nestedScopes);
                 // We need to make sure the test id was known, because kotest
                 // can issue new test ids which weren't known at registration
                 if (testIdentifiers.remove(testId)) {
@@ -145,6 +147,7 @@ public class TestResourcesScopeListener implements TestExecutionListener {
                         testResourcesClient.closeScope(scopeName);
                     }
                 }
+                System.out.println("testId = " + testId + " finished and remaining nested scopes = " + nestedScopes);
             }
         }
     }

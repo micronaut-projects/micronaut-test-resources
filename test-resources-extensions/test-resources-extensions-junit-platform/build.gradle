@@ -61,7 +61,3 @@ dependencies {
     testRuntimeOnly(mn.snakeyaml)
     kspKoTest(mn.micronaut.inject.kotlin)
 }
-
-tasks.withType(Test).configureEach {
-    enabled = false
-}

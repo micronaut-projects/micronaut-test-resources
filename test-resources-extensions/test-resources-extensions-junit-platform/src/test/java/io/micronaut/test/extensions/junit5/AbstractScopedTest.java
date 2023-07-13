@@ -17,10 +17,15 @@ package io.micronaut.test.extensions.junit5;
 
 import io.micronaut.test.extensions.testresources.junit5.FakeTestResourcesClient;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 public abstract class AbstractScopedTest {
     @AfterAll
-    static void reset() {
+    static void resetAfter() {
+        FakeTestResourcesClient.reset();
+    }
+    @BeforeAll
+    static void resetBefore() {
         FakeTestResourcesClient.reset();
     }
 }

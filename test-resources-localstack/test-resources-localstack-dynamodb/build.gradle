@@ -14,11 +14,3 @@ dependencies {
     testImplementation(testFixtures(project(":micronaut-test-resources-localstack-core")))
     testImplementation(libs.amazon.awssdk.v2.dynamodb)
 }
-
-// TODO: required for now. Remove once first release of Localstack support is available
-micronautBuild {
-    binaryCompatibility {
-        enabled = true
-        baselineVersion = "2.0.0-M12"
-    }
-}

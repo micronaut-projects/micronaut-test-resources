@@ -59,6 +59,7 @@ def localstackModules = [
 
 include 'test-resources-bom'
 include 'test-resources-build-tools'
+include 'test-resources-codec'
 include 'test-resources-core'
 include 'test-resources-client'
 include 'test-resources-elasticsearch'

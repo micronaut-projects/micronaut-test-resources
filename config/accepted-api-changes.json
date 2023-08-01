@@ -8,5 +8,15 @@
     "type": "io.micronaut.testresources.client.DefaultTestResourcesClient",
     "member": "Constructor io.micronaut.testresources.client.DefaultTestResourcesClient(io.micronaut.http.client.HttpClient,java.lang.String)",
     "reason": "This type is internal API"
+  },
+  {
+    "type": "io.micronaut.testresources.client.TestResourcesClient",
+    "member": "Implemented interface io.micronaut.testresources.core.TestResourcesResolver",
+    "reason": "With the custom codec the client can no longer directly implement the interface"
+  },
+  {
+    "type": "io.micronaut.testresources.client.TestResourcesClient",
+    "member": "Implemented interface io.micronaut.core.order.Ordered",
+    "reason": "Was supplied by the test resources resolver"
   }
 ]

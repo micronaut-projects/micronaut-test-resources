@@ -2,11 +2,15 @@ package io.micronaut.testresources.server
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.client.TestResourcesClient
+import io.micronaut.testresources.codec.Result
+import io.micronaut.testresources.codec.TestResourcesMediaType
 import jakarta.inject.Inject
 import spock.lang.Specification
 
@@ -20,14 +24,15 @@ class TestResourcesControllerTest extends Specification {
 
     def "verifies that server can instantiate container"() {
         expect:
-        client.resolvableProperties == ['kafka.bootstrap.servers']
-        client.listContainers().empty
+        client.resolvableProperties.value() == ['kafka.bootstrap.servers']
+        client.listContainers().value().empty
 
         when:
-        client.resolve("kafka.bootstrap.servers", [:], [:])
+        Optional<Result<String>> servers = client.resolve("kafka.bootstrap.servers", [:], [:])
 
         then:
-        def containers = client.listContainers()
+        servers.present
+        def containers = client.listContainers().value()
         containers.size() == 1
         containers[0].imageName.startsWith 'confluentinc/cp-kafka'
 
@@ -35,37 +40,39 @@ class TestResourcesControllerTest extends Specification {
         client.closeAll()
 
         then:
-        client.listContainers().empty
+        client.listContainers().value().empty
     }
 
     @Client("/")
+    @Produces(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+    @Consumes(TestResourcesMediaType.TEST_RESOURCES_BINARY)
     static interface DiagnosticsClient extends TestResourcesClient {
         @Get("/testcontainers")
-        List<TestContainer> listContainers();
+        Result<List<TestContainer>> listContainers();
 
         @Override
         @Post("/list")
-        List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
+        Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
 
         @Override
         @Post("/resolve")
-        Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig);
+        Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig);
 
         @Override
         @Get("/requirements/expr/{expression}")
-        List<String> getRequiredProperties(String expression);
+        Result<List<String>> getRequiredProperties(String expression);
 
         @Override
         @Get("/requirements/entries")
-        List<String> getRequiredPropertyEntries();
+        Result<List<String>> getRequiredPropertyEntries();
 
         /**
          * Closes all test resources.
          */
         @Get("/close/all")
-        boolean closeAll();
+        Result<Boolean> closeAll();
 
         @Get("/close/{id}")
-        boolean closeScope(@Nullable String id);
+        Result<Boolean> closeScope(@Nullable String id);
     }
 }

@@ -16,9 +16,7 @@
 package io.micronaut.testresources.client;
 
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
-import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.codec.Result;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,38 +28,27 @@ import java.util.Optional;
  * A client responsible for connecting to a test resources
  * server.
  */
-public interface TestResourcesClient extends TestResourcesResolver {
+public interface TestResourcesClient {
     String SERVER_URI = "server.uri";
     String ACCESS_TOKEN = "server.access.token";
     String CLIENT_READ_TIMEOUT = "server.client.read.timeout";
 
-    @Get("/list")
-    default List<String> getResolvableProperties() {
+    default Result<List<String>> getResolvableProperties() {
         return getResolvableProperties(Collections.emptyMap(), Collections.emptyMap());
     }
 
-    @Override
-    @Post("/list")
-    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
+    Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig);
 
-    @Override
-    @Post("/resolve")
-    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig);
+    Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig);
 
-    @Override
-    @Get("/requirements/expr/{expression}")
-    List<String> getRequiredProperties(String expression);
+    Result<List<String>> getRequiredProperties(String expression);
 
-    @Override
-    @Get("/requirements/entries")
-    List<String> getRequiredPropertyEntries();
+    Result<List<String>> getRequiredPropertyEntries();
 
     /**
      * Closes all test resources.
      */
-    @Get("/close/all")
-    boolean closeAll();
+    Result<Boolean> closeAll();
 
-    @Get("/close/{id}")
-    boolean closeScope(@Nullable String id);
+    Result<Boolean> closeScope(@Nullable String id);
 }

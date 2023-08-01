@@ -1,44 +1,45 @@
 package io.micronaut.testresources.client
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
-import io.micronaut.testresources.core.TestResourcesResolver
+import io.micronaut.http.annotation.Produces
+import io.micronaut.testresources.codec.Result
+import io.micronaut.testresources.codec.TestResourcesMediaType
 
 @Controller("/")
 @Requires(property = 'server', notEquals = 'false')
-class TestServer implements TestResourcesResolver {
+@Produces(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+@Consumes(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+class TestServer {
 
-    @Override
     @Post("/list")
-    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        ["dummy1", "dummy2", "missing"]
+    Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+        Result.of(["dummy1", "dummy2", "missing"])
     }
 
-    @Override
     @Get("/requirements/expr/{expression}")
-    List<String> getRequiredProperties(String expression) {
-        []
+    Result<List<String>> getRequiredProperties(String expression) {
+        Result.of([])
     }
 
-    @Override
     @Get("/requirements/entries")
-    List<String> getRequiredPropertyEntries() {
-        []
+    Result<List<String>> getRequiredPropertyEntries() {
+        Result.of([])
     }
 
-    @Override
     @Post('/resolve')
-    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+    Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         if ("missing" == name) {
             return Optional.empty()
         }
-        Optional.of("value for $name".toString())
+        Result.asOptional("value for $name".toString())
     }
 
     @Get("/close/all")
-    void closeAll() {
-
+    Result<Boolean> closeAll() {
+        Result.TRUE
     }
 }

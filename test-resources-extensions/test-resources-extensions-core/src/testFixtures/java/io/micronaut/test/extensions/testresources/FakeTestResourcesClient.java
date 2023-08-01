@@ -16,6 +16,7 @@
 package io.micronaut.test.extensions.testresources;
 
 import io.micronaut.testresources.client.TestResourcesClient;
+import io.micronaut.testresources.codec.Result;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,32 +31,32 @@ public class FakeTestResourcesClient implements TestResourcesClient {
     );
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        return MOCK_PROPERTIES.keySet().stream().toList();
+    public Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+        return new Result<>(MOCK_PROPERTIES.keySet().stream().toList());
     }
 
     @Override
-    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
-        return Optional.ofNullable(MOCK_PROPERTIES.get(name));
+    public Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        return Result.asOptional(MOCK_PROPERTIES.get(name));
     }
 
     @Override
-    public List<String> getRequiredProperties(String expression) {
-        return List.of();
+    public Result<List<String>> getRequiredProperties(String expression) {
+        return Result.emptyList();
     }
 
     @Override
-    public List<String> getRequiredPropertyEntries() {
-        return List.of();
+    public Result<List<String>> getRequiredPropertyEntries() {
+        return Result.emptyList();
     }
 
     @Override
-    public boolean closeAll() {
-        return true;
+    public Result<Boolean> closeAll() {
+        return Result.TRUE;
     }
 
     @Override
-    public boolean closeScope(String id) {
-        return true;
+    public Result<Boolean> closeScope(String id) {
+        return Result.TRUE;
     }
 }

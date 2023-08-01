@@ -16,9 +16,13 @@
 package io.micronaut.testresources.server;
 
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Produces;
+import io.micronaut.testresources.codec.Result;
+import io.micronaut.testresources.codec.TestResourcesMediaType;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
 import io.micronaut.testresources.testcontainers.TestContainers;
@@ -30,92 +34,89 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * A client responsible for connecting to a test resources
  * server.
  */
 @Controller("/")
-public final class TestResourcesController implements TestResourcesResolver {
+@Produces(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+@Consumes(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+public final class TestResourcesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
 
     private final TestResourcesResolverLoader loader = new TestResourcesResolverLoader();
 
     @Get("/list")
-    public List<String> getResolvableProperties() {
+    public Result<List<String>> getResolvableProperties() {
         return getResolvableProperties(Collections.emptyMap(), Collections.emptyMap());
     }
 
-    @Override
     @Post("/list")
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        return loader.getResolvers()
+    public Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+        return Result.of(loader.getResolvers()
             .stream()
             .map(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig))
             .flatMap(Collection::stream)
             .distinct()
             .peek(p -> LOGGER.debug("For configuration {} and property entries {} , resolvable property: {}", testResourcesConfig, propertyEntries, p))
-            .collect(Collectors.toList());
+            .toList());
     }
 
-    @Override
     @Get("/requirements/expr/{expression}")
-    public List<String> getRequiredProperties(String expression) {
-        return loader.getResolvers()
+    public Result<List<String>> getRequiredProperties(String expression) {
+        return Result.of(loader.getResolvers()
             .stream()
             .map(testResourcesResolver -> testResourcesResolver.getRequiredProperties(expression))
             .flatMap(Collection::stream)
             .distinct()
-            .collect(Collectors.toList());
+            .toList());
     }
 
-    @Override
     @Get("/requirements/entries")
-    public List<String> getRequiredPropertyEntries() {
-        return loader.getResolvers()
+    public Result<List<String>> getRequiredPropertyEntries() {
+        return Result.of(loader.getResolvers()
             .stream()
             .map(TestResourcesResolver::getRequiredPropertyEntries)
             .flatMap(Collection::stream)
             .distinct()
-            .collect(Collectors.toList());
+            .toList());
     }
 
     @Post("/resolve")
-    public Optional<String> resolve(String name,
-                                    Map<String, Object> properties,
-                                    Map<String, Object> testResourcesConfig) {
-        Optional<String> result = Optional.empty();
+    public Optional<Result<String>> resolve(String name,
+                                            Map<String, Object> properties,
+                                            Map<String, Object> testResourcesConfig) {
         for (TestResourcesResolver resolver : loader.getResolvers()) {
-            result = resolver.resolve(name, properties, testResourcesConfig);
+            Optional<String> result = resolver.resolve(name, properties, testResourcesConfig);
             LOGGER.debug("Attempt to resolve {} with resolver {}, properties {} and test resources configuration {} : {}", name, resolver.getClass(), properties, testResourcesConfig, result.isPresent() ? result.get() : "\uD83D\uDEAB");
             if (result.isPresent()) {
-                return result;
+                return Result.asOptional(result.get());
             }
         }
-        return result;
+        return Optional.empty();
     }
 
     @Get("/close/all")
-    public boolean closeAll() {
+    public Result<Boolean> closeAll() {
         LOGGER.debug("Closing all test resources");
-        return TestContainers.closeAll();
+        return Result.of(TestContainers.closeAll());
     }
 
     @Get("/close/{id}")
-    public boolean closeScope(@Nullable String id) {
+    public Result<Boolean> closeScope(@Nullable String id) {
         LOGGER.info("Closing test resources of scope {}", id);
-        return TestContainers.closeScope(id);
+        return Result.of(TestContainers.closeScope(id));
     }
 
     @Get("/testcontainers")
-    public List<TestContainer> listContainers() {
+    public Result<List<Map<String, String>>> listContainers() {
         return listContainersByScope(null);
     }
 
     @Get("/testcontainers/{scope}")
-    public List<TestContainer> listContainersByScope(@Nullable String scope) {
-        return TestContainers.listByScope(scope)
+    public Result<List<Map<String, String>>> listContainersByScope(@Nullable String scope) {
+        return Result.of(TestContainers.listByScope(scope)
             .entrySet()
             .stream()
             .flatMap(entry -> entry.getValue().stream()
@@ -123,9 +124,9 @@ public final class TestResourcesController implements TestResourcesResolver {
                     c.getContainerName(),
                     c.getDockerImageName(),
                     c.getContainerId(),
-                    entry.getKey().toString())
+                    entry.getKey().toString()).asMap()
                 ))
-            .collect(Collectors.toList());
+            .toList());
     }
 
 }

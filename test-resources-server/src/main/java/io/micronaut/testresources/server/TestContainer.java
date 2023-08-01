@@ -18,6 +18,8 @@ package io.micronaut.testresources.server;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 
+import java.util.Map;
+
 /**
  * Stores metadata about a running test container.
  */
@@ -67,6 +69,15 @@ public final class TestContainer {
     @Nullable
     public String getScope() {
         return scope;
+    }
+
+    public Map<String, String> asMap() {
+        return Map.of(
+            "name", name,
+            "imageName", imageName,
+            "id", id,
+            "scope", scope
+        );
     }
 
     @Override

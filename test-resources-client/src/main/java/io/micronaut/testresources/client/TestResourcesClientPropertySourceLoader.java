@@ -16,6 +16,7 @@
 package io.micronaut.testresources.client;
 
 import io.micronaut.core.io.ResourceLoader;
+import io.micronaut.testresources.codec.Result;
 import io.micronaut.testresources.core.LazyTestResourcesPropertySourceLoader;
 import io.micronaut.testresources.core.PropertyExpressionProducer;
 
@@ -48,6 +49,7 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
         public List<String> getPropertyEntries() {
             return findClient()
                 .map(TestResourcesClient::getRequiredPropertyEntries)
+                .map(Result::value)
                 .orElse(Collections.emptyList());
         }
 
@@ -55,6 +57,7 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
         public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return findClient()
                 .map(client -> client.getResolvableProperties(propertyEntries, testResourcesConfig))
+                .map(Result::value)
                 .orElse(Collections.emptyList());
         }
 

@@ -9,8 +9,7 @@ and provide their value on demand.
 """
 
 dependencies {
-    api(mn.micronaut.json.core)
     api(project(':micronaut-test-resources-core'))
-
-    testRuntimeOnly(mn.micronaut.http.server.netty)
+    api(project(":micronaut-test-resources-codec"))
+    testImplementation(mn.micronaut.http.server.netty)
 }

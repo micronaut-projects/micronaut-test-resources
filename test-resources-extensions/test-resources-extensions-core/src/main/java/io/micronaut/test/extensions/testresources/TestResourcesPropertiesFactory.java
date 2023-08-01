@@ -19,6 +19,7 @@ import io.micronaut.test.extensions.testresources.annotation.TestResourcesProper
 import io.micronaut.test.support.TestPropertyProvider;
 import io.micronaut.test.support.TestPropertyProviderFactory;
 import io.micronaut.testresources.client.TestResourcesClientFactory;
+import io.micronaut.testresources.codec.Result;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -67,7 +68,7 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
                 Map<String, String> resolvedProperties = Stream.of(requestedProperties)
                     .map(v -> new Object() {
                         private final String key = v;
-                        private final String value = client.resolve(v, Map.of(), testResourcesConfig).orElse(null);
+                        private final String value = client.resolve(v, Map.of(), testResourcesConfig).map(Result::value).orElse(null);
                     })
                     .filter(o -> o.value != null)
                     .collect(Collectors.toMap(e -> e.key, e -> e.value));

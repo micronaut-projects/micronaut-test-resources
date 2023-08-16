@@ -47,6 +47,7 @@ final class TestContainerMetadata {
     private final Long sharedMemory;
     private final String network;
     private final Set<String> networkAliases;
+    private final String networkMode;
     private final WaitStrategy waitStrategy;
     private final Set<String> dependencies;
 
@@ -71,7 +72,9 @@ final class TestContainerMetadata {
                           Long sharedMemory,
                           String network,
                           Set<String> networkAliases,
-                          WaitStrategy waitStrategy, Set<String> dependencies) {
+                          String networkMode,
+                          WaitStrategy waitStrategy,
+                          Set<String> dependencies) {
         this.id = id;
         this.imageName = imageName;
         this.imageTag = imageTag;
@@ -92,6 +95,7 @@ final class TestContainerMetadata {
         this.sharedMemory = sharedMemory;
         this.network = network;
         this.networkAliases = networkAliases;
+        this.networkMode = networkMode;
         this.waitStrategy = waitStrategy;
         this.dependencies = dependencies;
     }
@@ -166,6 +170,10 @@ final class TestContainerMetadata {
 
     public Set<String> getNetworkAliases() {
         return networkAliases;
+    }
+
+    public Optional<String> getNetworkMode() {
+        return Optional.ofNullable(networkMode);
     }
 
     public Optional<WaitStrategy> getWaitStrategy() {

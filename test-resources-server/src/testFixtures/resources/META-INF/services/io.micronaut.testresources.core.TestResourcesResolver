@@ -1,0 +1,2 @@
+io.micronaut.testresources.fixtures.FailingTestResource
+io.micronaut.testresources.fixtures.FailingContainer

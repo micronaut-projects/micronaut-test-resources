@@ -19,6 +19,8 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
 import io.micronaut.testresources.testcontainers.TestContainers;
@@ -30,13 +32,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * A client responsible for connecting to a test resources
  * server.
  */
 @Controller("/")
+@ExecuteOn(TaskExecutors.BLOCKING)
 public final class TestResourcesController implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
 
@@ -56,7 +58,7 @@ public final class TestResourcesController implements TestResourcesResolver {
             .flatMap(Collection::stream)
             .distinct()
             .peek(p -> LOGGER.debug("For configuration {} and property entries {} , resolvable property: {}", testResourcesConfig, propertyEntries, p))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Override
@@ -67,7 +69,7 @@ public final class TestResourcesController implements TestResourcesResolver {
             .map(testResourcesResolver -> testResourcesResolver.getRequiredProperties(expression))
             .flatMap(Collection::stream)
             .distinct()
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Override
@@ -78,7 +80,7 @@ public final class TestResourcesController implements TestResourcesResolver {
             .map(TestResourcesResolver::getRequiredPropertyEntries)
             .flatMap(Collection::stream)
             .distinct()
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Post("/resolve")
@@ -125,7 +127,7 @@ public final class TestResourcesController implements TestResourcesResolver {
                     c.getContainerId(),
                     entry.getKey().toString())
                 ))
-            .collect(Collectors.toList());
+            .toList();
     }
 
 }

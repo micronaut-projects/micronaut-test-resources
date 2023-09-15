@@ -3,6 +3,12 @@ plugins {
     id "io.micronaut.build.internal.quality-reporting"
 }
 
+pluginManager.apply(io.micronaut.build.catalogs.MicronautVersionCatalogUpdatePlugin)
+
+tasks.withType(io.micronaut.build.catalogs.tasks.VersionCatalogUpdate).configureEach {
+    outputDirectory = file("gradle")
+}
+
 tasks.named("publishGuide") {
     properties['micronautVersion'] = micronautVersion
 }

@@ -4,6 +4,7 @@ plugins {
     id 'io.micronaut.build.internal.kafka-testing'
     alias(libs.plugins.micronaut.miniapp)
     alias(libs.plugins.micronaut.aot)
+    id('java-test-fixtures')
 }
 
 description = """
@@ -23,6 +24,8 @@ dependencies {
     runtimeOnly(mn.micronaut.management)
     runtimeOnly(mnSerde.micronaut.serde.jackson)
 
+    testFixturesImplementation(project(':micronaut-test-resources-core'))
+    testFixturesImplementation(project(':micronaut-test-resources-testcontainers'))
     testImplementation(mn.micronaut.http.client)
     testImplementation(project(':micronaut-test-resources-client'))
     testRuntimeOnly(project(':micronaut-test-resources-kafka'))
@@ -30,6 +33,7 @@ dependencies {
     // For logback conversion
     aotPlugins(mnLogging.logback.classic)
     aotPlugins("org.fusesource.jansi:jansi:1.18")
+    aotPlugins(testFixtures(project(":micronaut-test-resources-server")))
 }
 
 application {

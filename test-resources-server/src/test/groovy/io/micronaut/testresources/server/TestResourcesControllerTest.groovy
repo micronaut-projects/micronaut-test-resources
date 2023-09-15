@@ -20,10 +20,62 @@ class TestResourcesControllerTest extends Specification {
 
     def "verifies that server can instantiate container"() {
         expect:
-        client.resolvableProperties == ['kafka.bootstrap.servers']
+        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container']
         client.listContainers().empty
 
         when:
+        client.resolve("kafka.bootstrap.servers", [:], [:])
+
+        then:
+        def containers = client.listContainers()
+        containers.size() == 1
+        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+
+        when:
+        client.closeAll()
+
+        then:
+        client.listContainers().empty
+    }
+
+    def "can resolve a valid property after an error in a regular test resource"() {
+        expect:
+        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container']
+        client.listContainers().empty
+
+        when: "resolution of a property fails"
+        client.resolve("failing.message", [:], [:])
+
+        then:
+        RuntimeException ex = thrown()
+
+        when: "resolves another property"
+        client.resolve("kafka.bootstrap.servers", [:], [:])
+
+        then:
+        def containers = client.listContainers()
+        containers.size() == 1
+        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+
+        when:
+        client.closeAll()
+
+        then:
+        client.listContainers().empty
+    }
+
+    def "can resolve a valid property after an error in a container test resource"() {
+        expect:
+        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container']
+        client.listContainers().empty
+
+        when: "resolution of a property which starts a container"
+        client.resolve("failing.container", [:], [:])
+
+        then:
+        RuntimeException ex = thrown()
+
+        when: "resolves another property"
         client.resolve("kafka.bootstrap.servers", [:], [:])
 
         then:

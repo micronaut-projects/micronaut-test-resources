@@ -19,6 +19,7 @@ import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.testresources.core.LazyTestResourcesPropertySourceLoader;
 import io.micronaut.testresources.core.PropertyExpressionProducer;
 import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 
 import java.util.Collection;
 import java.util.List;
@@ -54,10 +55,11 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
         public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return loader.getResolvers()
                 .stream()
+                .filter(r -> isEnabled(r, testResourcesConfig))
                 .flatMap(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig)
                     .stream().map(key -> assertValidKey(key, r))
                 ).distinct()
-                .collect(Collectors.toList());
+                .toList();
         }
 
         private static String assertValidKey(String key, TestResourcesResolver r) {
@@ -66,6 +68,13 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
                 throw new IllegalArgumentException("Test resources resolver [" + r.getClass().getName() + "] : Property key [" + key + "] is not valid. Property keys must be in kebab case.");
             }
             return key;
+        }
+
+        private static boolean isEnabled(TestResourcesResolver resolver, Map<String, Object> testResourcesConfig) {
+            if (resolver instanceof ToggableTestResourcesResolver toggable) {
+                return toggable.isEnabled(testResourcesConfig);
+            }
+            return true;
         }
     }
 }

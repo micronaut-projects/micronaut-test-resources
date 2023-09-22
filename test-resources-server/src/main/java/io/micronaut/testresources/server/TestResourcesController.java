@@ -22,6 +22,7 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
 import io.micronaut.testresources.testcontainers.TestContainers;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ public final class TestResourcesController implements TestResourcesResolver {
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return loader.getResolvers()
             .stream()
+            .filter(testResourcesResolver -> isEnabled(testResourcesResolver, testResourcesConfig))
             .map(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig))
             .flatMap(Collection::stream)
             .distinct()
@@ -89,6 +91,9 @@ public final class TestResourcesController implements TestResourcesResolver {
                                     Map<String, Object> testResourcesConfig) {
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {
+            if (resolver instanceof ToggableTestResourcesResolver toggable && !toggable.isEnabled(testResourcesConfig)) {
+                continue;
+            }
             result = resolver.resolve(name, properties, testResourcesConfig);
             LOGGER.debug("Attempt to resolve {} with resolver {}, properties {} and test resources configuration {} : {}", name, resolver.getClass(), properties, testResourcesConfig, result.isPresent() ? result.get() : "\uD83D\uDEAB");
             if (result.isPresent()) {
@@ -130,4 +135,10 @@ public final class TestResourcesController implements TestResourcesResolver {
             .toList();
     }
 
+    private static boolean isEnabled(TestResourcesResolver resolver, Map<String, Object> testResourcesConfig) {
+        if (resolver instanceof ToggableTestResourcesResolver toggable) {
+            return toggable.isEnabled(testResourcesConfig);
+        }
+        return true;
+    }
 }

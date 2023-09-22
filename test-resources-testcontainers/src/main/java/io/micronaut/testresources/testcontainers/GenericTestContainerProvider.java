@@ -15,7 +15,7 @@
  */
 package io.micronaut.testresources.testcontainers;
 
-import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +65,13 @@ import static io.micronaut.testresources.testcontainers.TestContainerMetadataSup
  * property.
  */
 @SuppressWarnings("unchecked")
-public class GenericTestContainerProvider implements TestResourcesResolver {
+public class GenericTestContainerProvider implements ToggableTestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericTestContainerProvider.class);
+
+    @Override
+    public String getName() {
+        return "generic";
+    }
 
     @Override
     public int getOrder() {

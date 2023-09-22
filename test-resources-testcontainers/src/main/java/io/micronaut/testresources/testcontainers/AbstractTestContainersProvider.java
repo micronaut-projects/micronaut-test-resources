@@ -15,7 +15,7 @@
  */
 package io.micronaut.testresources.testcontainers;
 
-import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -30,7 +30,12 @@ import static io.micronaut.testresources.testcontainers.TestContainerMetadataSup
  *
  * @param <T> the container type
  */
-public abstract class AbstractTestContainersProvider<T extends GenericContainer<? extends T>> implements TestResourcesResolver {
+public abstract class AbstractTestContainersProvider<T extends GenericContainer<? extends T>> implements ToggableTestResourcesResolver {
+    @Override
+    public String getName() {
+        return "containers." + getSimpleName();
+    }
+
     @Override
     public int getOrder() {
         return SPECIFIC_ORDER;

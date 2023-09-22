@@ -15,7 +15,7 @@
  */
 package io.micronaut.testresources.r2dbc.pool;
 
-import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 import io.micronaut.testresources.r2dbc.core.R2dbcSupport;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * A test resource provider for configuring the R2DBC pool.
  */
-public class R2DBCPoolTestResourceProvider implements TestResourcesResolver {
+public class R2DBCPoolTestResourceProvider implements ToggableTestResourcesResolver {
 
     private static final String PROTOCOL = "options.protocol";
     private static final String DRIVER = "options.driver";
@@ -37,6 +37,11 @@ public class R2DBCPoolTestResourceProvider implements TestResourcesResolver {
         PROTOCOL,
         DRIVER
     ));
+
+    @Override
+    public String getName() {
+        return "r2dbc-pool";
+    }
 
     @Override
     public List<String> getRequiredPropertyEntries() {

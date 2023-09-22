@@ -1,0 +1,13 @@
+datasources:
+  default:
+    driverClassName: org.postgresql.Driver
+    schema-generate: CREATE_DROP
+    dialect: POSTGRES
+r2dbc:
+  datasources:
+    default:
+      schema-generate: CREATE_DROP
+      dialect: POSTGRES
+test-resources:
+  r2dbc-pool:
+    enabled: false

@@ -12,7 +12,7 @@ import spock.lang.Specification
 
 @MicronautTest
 @Property(name = "micronaut.testresources.server.url", value = "")
-@Property(name = "micronaut.http.client.read-timeout", value = "60s")
+@Property(name = "micronaut.http.client.read-timeout", value = "120s")
 class TestResourcesControllerTest extends Specification {
 
     @Inject

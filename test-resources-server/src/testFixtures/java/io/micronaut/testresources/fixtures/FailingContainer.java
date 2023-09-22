@@ -45,6 +45,11 @@ public class FailingContainer extends AbstractTestContainersProvider<GenericCont
     }
 
     @Override
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return FAILING_CONTAINER.equals(propertyName);
+    }
+
+    @Override
     protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         throw new ContainerLaunchException("test");
     }

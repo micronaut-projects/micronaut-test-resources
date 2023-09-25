@@ -161,7 +161,7 @@ test-resources:
 The `network` key is used to declare the network containers use.
 The `network-aliases` can be used to assign host names to the containers.
 
-The `network-mode` key can be used to join an existing network.
+The `network-mode` can be used to set the network mode (e.g. including 'host', 'bridge', 'none' or the name of an existing named network.)
 
 == Wait strategies
 

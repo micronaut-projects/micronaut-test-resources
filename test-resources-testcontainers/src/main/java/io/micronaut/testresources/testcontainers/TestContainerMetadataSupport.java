@@ -95,7 +95,7 @@ final class TestContainerMetadataSupport {
         Long sharedMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "shared-memory");
         String network = extractStringParameterFrom(prefix, "network", testResourcesConfig);
         Set<String> networkAliases = extractSetFrom(prefix, testResourcesConfig, "network-aliases");
-        String networkMode = extractStringParameterFrom(prefix, "networkMode", testResourcesConfig);
+        String networkMode = extractStringParameterFrom(prefix, "network-mode", testResourcesConfig);
         Set<String> dependsOn = extractSetFrom(prefix, testResourcesConfig, "depends-on");
         WaitStrategy waitStrategy = extractWaitStrategyFrom(prefix, testResourcesConfig);
         return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, rwTmpfsMappings, roTmpfsMappings, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, networkMode, waitStrategy, dependsOn));

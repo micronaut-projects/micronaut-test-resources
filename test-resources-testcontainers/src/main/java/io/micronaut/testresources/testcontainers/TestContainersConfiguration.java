@@ -47,6 +47,7 @@ final class TestContainersConfiguration {
     private String sharedMemory;
     private String network;
     private List<String> networkAliases;
+    private String networkMode;
     private Set<String> dependencies;
 
     /**
@@ -349,6 +350,22 @@ final class TestContainersConfiguration {
      */
     public void setNetworkAliases(List<String> networkAliases) {
         this.networkAliases = networkAliases;
+    }
+
+    /**
+     * The network mode this container will use.
+     * @return the network mode
+     */
+    public String getNetworkMode() {
+        return networkMode;
+    }
+
+    /**
+     * The network mode this container will use.
+     * @param networkMode the network mode
+     */
+    public void setNetworkMode(String networkMode) {
+        this.networkMode = networkMode;
     }
 
     /**

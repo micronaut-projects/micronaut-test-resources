@@ -341,11 +341,14 @@ class TestContainerMetadataSupportTest extends Specification {
                         network-aliases:
                             - tarzan
                             - jane
+                    baz:
+                        network-mode: third
         """
 
         when:
         def md1 = metadataFrom(config, "foo")
         def md2 = metadataFrom(config, "bar")
+        def md3 = metadataFrom(config, "baz")
 
         then:
         md1.present
@@ -357,6 +360,10 @@ class TestContainerMetadataSupportTest extends Specification {
         md2.get().with {
             assert it.network.get() == 'second'
             assert it.networkAliases == ['tarzan', 'jane'] as Set
+        }
+        md3.present
+        md3.get().with {
+            assert it.networkMode.get() == 'third'
         }
     }
 

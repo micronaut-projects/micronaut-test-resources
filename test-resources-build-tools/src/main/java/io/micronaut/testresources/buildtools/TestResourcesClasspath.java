@@ -136,7 +136,7 @@ public final class TestResourcesClasspath implements KnownModules {
     }
 
     private static Stream<MavenDependency> inferSingle(MavenDependency input, List<MavenDependency> allDependencies, String testResourcesVersion) {
-        List<MavenDependency> matched = Matcher.match(input, allDependencies, testResourcesVersion, m -> {
+        return Matcher.match(input, allDependencies, testResourcesVersion, m -> {
             m.onArtifact(MICRONAUT_ELASTICSEARCH, ELASTICSEARCH_MODULE);
             m.onArtifact(MICRONAUT_KAFKA, KAFKA_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_MQTT), deps -> true, HIVEMQ_MODULE);
@@ -174,8 +174,7 @@ public final class TestResourcesClasspath implements KnownModules {
                 REACTIVE_MSSQL_DRIVER,
                 REACTIVE_POOL_DRIVER
             );
-        }).toList();
-        return matched.stream();
+        });
     }
 
     private static Predicate<MavenDependency> artifactEquals(String artifactId) {

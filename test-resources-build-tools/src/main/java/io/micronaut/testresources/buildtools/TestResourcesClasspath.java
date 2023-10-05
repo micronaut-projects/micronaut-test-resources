@@ -50,7 +50,6 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
     private static final String MICRONAUT_DATA_R2DBC = "micronaut-data-r2dbc";
-    private static final String MYSQL_CONNECTOR_JAVA = "mysql-connector-java";
     // Default driver for mysql r2dbc
     private static final String REACTIVE_MYSQL_DRIVER = "dev.miku:r2dbc-mysql";
     private static final String REACTIVE_MYSQL_IO_ASYNCER_DRIVER = "io.asyncer:r2dbc-mysql";
@@ -58,6 +57,8 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MSSQL_DRIVER = "com.microsoft.sqlserver:mssql-jdbc";
     private static final String REACTIVE_MSSQL_DRIVER = "io.r2dbc:r2dbc-mssql";
     private static final String MYSQL_MYSQL_CONNECTOR_JAVA = "mysql:mysql-connector-java";
+    private static final String MYSQL_MYSQL_CONNECTOR_J = "com.mysql:mysql-connector-j";
+    private static final List<String> MYSQL_DRIVERS = Arrays.asList(MYSQL_MYSQL_CONNECTOR_JAVA, MYSQL_MYSQL_CONNECTOR_J);
     private static final String POSTGRESQL_DRIVER = "org.postgresql:postgresql";
     private static final String REACTIVE_POSTGRESQL_DRIVER = "org.postgresql:r2dbc-postgresql";
     private static final String MARIADB_JAVA_CLIENT = "org.mariadb.jdbc:mariadb-java-client";
@@ -147,7 +148,7 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(MICRONAUT_DISCOVERY_CLIENT, HASHICORP_VAULT_MODULE);
             m.onModule(REACTIVE_POOL_DRIVER, REACTIVE_POOL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_NEO4J), deps -> true, NEO4J_MODULE);
-            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(artifactEquals(MYSQL_CONNECTOR_JAVA)), MYSQL_MODULE);
+            m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(d -> MYSQL_DRIVERS.contains(d.getModule())), MYSQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(POSTGRESQL_DRIVER)), POSTGRESQL_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(MARIADB_JAVA_CLIENT)), MARIADB_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_DATA_PREFIX), deps -> deps.anyMatch(moduleEquals(MSSQL_DRIVER)), MSSQL_MODULE);
@@ -157,7 +158,8 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_POSTGRESQL_DRIVER)), REACTIVE_POSTGRESQL_MODULE);
             m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_ORACLE_DRIVER)), REACTIVE_ORACLE_XE_MODULE);
             m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_MSSQL_DRIVER)), REACTIVE_MSSQL_MODULE);
-            m.passthroughModules(MYSQL_MYSQL_CONNECTOR_JAVA,
+            m.passthroughModules(
+                MYSQL_MYSQL_CONNECTOR_JAVA, MYSQL_MYSQL_CONNECTOR_J,
                 POSTGRESQL_DRIVER,
                 MARIADB_JAVA_CLIENT,
                 MONGODB_DRIVER_ASYNC,

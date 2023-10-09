@@ -2,3 +2,9 @@ plugins {
     id 'io.micronaut.build.internal.test-resources-base'
     id "io.micronaut.build.internal.module"
 }
+
+micronautBuild {
+    binaryCompatibility {
+        baselineVersion = ((version-'-SNAPSHOT').split('[.]') as List).withIndex().collect { v, i -> (i == 2 ? Integer.parseInt(v) -1 : v) as String }.join('.')
+    }
+}

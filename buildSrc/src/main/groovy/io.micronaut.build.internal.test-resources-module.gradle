@@ -5,6 +5,7 @@ plugins {
 
 micronautBuild {
     binaryCompatibility {
+        enabled = JavaVersion.current().isJava11Compatible()
         baselineVersion = ((version-'-SNAPSHOT').split('[.]') as List).withIndex().collect { v, i -> (i == 2 ? Integer.parseInt(v) -1 : v) as String }.join('.')
     }
 }

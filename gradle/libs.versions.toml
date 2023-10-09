@@ -16,16 +16,16 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "3.6.0"
+micronaut = "3.10.1"
 micronaut-docs = "2.0.0"
-micronaut-test = "3.1.1"
-micronaut-gradle-plugin = "3.6.5"
-groovy = "3.0.10"
-spock = "2.1-groovy-3.0"
-vertx-client = "4.3.2"
+micronaut-test = "3.9.2"
+micronaut-gradle-plugin = "3.7.10"
+groovy = "3.0.19"
+spock = "2.4-M1-groovy-3.0"
+vertx-client = "4.4.5"
 
 # Managed versions appear in the BOM
-managed-testcontainers = "1.17.6"
+managed-testcontainers = "1.19.0"
 
 [libraries]
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }

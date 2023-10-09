@@ -6,7 +6,7 @@ import io.micronaut.testresources.jdbc.AbstractJDBCSpec
 import io.micronaut.testresources.jdbc.Book
 import jakarta.inject.Inject
 
-@MicronautTest(environments = ["customized-jdbc"] )
+@MicronautTest(environments = ["customized-jdbc"], transactional = false )
 class JdbcWithCustomizationMariaDBSQLTest extends AbstractJDBCSpec {
 
     @Inject

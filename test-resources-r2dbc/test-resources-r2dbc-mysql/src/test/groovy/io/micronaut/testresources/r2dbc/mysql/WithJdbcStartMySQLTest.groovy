@@ -5,7 +5,7 @@ import io.micronaut.testresources.jdbc.AbstractJDBCSpec
 import io.micronaut.testresources.jdbc.Book
 import jakarta.inject.Inject
 
-@MicronautTest(environments = ["jdbc"] )
+@MicronautTest(environments = ["jdbc"], transactional = false )
 class WithJdbcStartMySQLTest extends AbstractJDBCSpec {
 
     @Inject

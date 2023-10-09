@@ -8,7 +8,7 @@ import io.r2dbc.pool.ConnectionPool
 import io.r2dbc.spi.ConnectionFactory
 import jakarta.inject.Inject
 
-@MicronautTest(environments = ["standalone"] )
+@MicronautTest(environments = ["standalone"], transactional = false )
 class StandaloneStartPostgreSQLTest extends AbstractJDBCSpec {
     @Inject
     ReactiveBookRepository repository

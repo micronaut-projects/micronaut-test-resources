@@ -5,7 +5,7 @@ import io.micronaut.testresources.jdbc.AbstractJDBCSpec
 import io.micronaut.testresources.jdbc.Book
 import jakarta.inject.Inject
 
-@MicronautTest(environments = ["standalone"] )
+@MicronautTest(environments = ["standalone"], transactional = false )
 class StandaloneStartMariaDBSQLTest extends AbstractJDBCSpec {
     @Inject
     ReactiveBookRepository repository

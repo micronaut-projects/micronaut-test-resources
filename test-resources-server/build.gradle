@@ -32,7 +32,7 @@ dependencies {
 
     // For logback conversion
     aotPlugins(mnLogging.logback.classic)
-    aotPlugins("org.fusesource.jansi:jansi:1.18")
+    aotPlugins("org.fusesource.jansi:jansi:2.4.1")
     aotPlugins(testFixtures(project(":micronaut-test-resources-server")))
 }
 

@@ -129,6 +129,7 @@ public final class TestContainers {
         );
     }
 
+    @SuppressWarnings("java:S6204") // toList() breaks the return type
     private static List<GenericContainer<?>> filterByScope(Scope scope, Set<GenericContainer<?>> containers) {
         if (containers.isEmpty()) {
             return Collections.emptyList();
@@ -199,9 +200,9 @@ public final class TestContainers {
     private static final class Key {
         private final Class<?> type;
         private final String name;
-        final Scope scope;
         private final Map<String, String> properties;
         private final int hashCode;
+        final Scope scope;
 
         private Key(Class<?> type, String name, Scope scope, Map<String, String> properties) {
             this.type = type;

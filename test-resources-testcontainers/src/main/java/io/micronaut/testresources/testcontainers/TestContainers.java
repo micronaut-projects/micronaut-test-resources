@@ -52,6 +52,21 @@ public final class TestContainers {
 
     }
 
+    private static <B> B withLock(String description, Supplier<B> supplier) {
+        LOCK.lock();
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Locked for {}", description);
+        }
+        try {
+            return supplier.get();
+        } finally {
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Unlocked for {}", description);
+            }
+            LOCK.unlock();
+        }
+    }
+
     /**
      * Returns a test container and caches it, so that if the same owner
      * and properties are requested, we can return an existing container.
@@ -71,19 +86,18 @@ public final class TestContainers {
                                                                    Map<String, Object> query,
                                                                    Supplier<T> creator) {
         Key key = Key.of(owner, name, Scope.from(query), query);
-        LOCK.lock();
-        @SuppressWarnings("unchecked")
-        T container = (T) CONTAINERS_BY_KEY.get(key);
-        if (container == null) {
-            container = creator.get();
-            LOGGER.info("Starting test container {}", name);
-            container.start();
-            CONTAINERS_BY_KEY.put(key, container);
-        }
-        CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty, e -> new LinkedHashSet<>())
-            .add(container);
-        LOCK.unlock();
-        return container;
+        return withLock("getOrCreate", () -> {
+            T container = (T) CONTAINERS_BY_KEY.get(key);
+            if (container == null) {
+                container = creator.get();
+                LOGGER.info("Starting test container {}", name);
+                container.start();
+                CONTAINERS_BY_KEY.put(key, container);
+            }
+            CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty, e -> new LinkedHashSet<>())
+                .add(container);
+            return container;
+        });
     }
 
     /**
@@ -101,9 +115,8 @@ public final class TestContainers {
     }
 
     private static Map<Scope, List<GenericContainer<?>>> listByScope(Scope scope) {
-        LOCK.lock();
-        try {
-            return CONTAINERS_BY_KEY.entrySet()
+        return withLock("listByScope", () ->
+            CONTAINERS_BY_KEY.entrySet()
                 .stream()
                 .filter(entry -> scope.includes(entry.getKey().scope))
                 .collect(Collectors.groupingBy(
@@ -112,26 +125,21 @@ public final class TestContainers {
                         Map.Entry::getValue,
                         Collectors.toList()
                     )
-                ));
-        } finally {
-            LOCK.unlock();
-        }
+                ))
+        );
     }
 
     private static List<GenericContainer<?>> filterByScope(Scope scope, Set<GenericContainer<?>> containers) {
         if (containers.isEmpty()) {
             return Collections.emptyList();
         }
-        LOCK.lock();
-        try {
-            return CONTAINERS_BY_KEY.entrySet()
+        return withLock("filterByScope", () ->
+            CONTAINERS_BY_KEY.entrySet()
                 .stream()
                 .filter(entry -> containers.contains(entry.getValue()) && scope.includes(entry.getKey().scope))
                 .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
-        } finally {
-            LOCK.unlock();
-        }
+                .collect(Collectors.toList())
+        );
     }
 
     public static Network network(String name) {
@@ -139,18 +147,18 @@ public final class TestContainers {
     }
 
     public static boolean closeAll() {
-        LOCK.lock();
-        boolean closed = false;
-        for (GenericContainer<?> container : CONTAINERS_BY_KEY.values()) {
-            container.close();
-            closed = true;
-        }
-        CONTAINERS_BY_KEY.clear();
-        CONTAINERS_BY_PROPERTY.clear();
-        NETWORKS_BY_KEY.values().forEach(Network::close);
-        NETWORKS_BY_KEY.clear();
-        LOCK.unlock();
-        return closed;
+        return withLock("closeAll", () -> {
+            boolean closed = false;
+            for (GenericContainer<?> container : CONTAINERS_BY_KEY.values()) {
+                container.close();
+                closed = true;
+            }
+            CONTAINERS_BY_KEY.clear();
+            CONTAINERS_BY_PROPERTY.clear();
+            NETWORKS_BY_KEY.values().forEach(Network::close);
+            NETWORKS_BY_KEY.clear();
+            return closed;
+        });
     }
 
     public static Map<String, Network> getNetworks() {
@@ -159,42 +167,39 @@ public final class TestContainers {
 
     public static boolean closeScope(String id) {
         Scope scope = Scope.of(id);
-        LOCK.lock();
-        boolean closed = false;
-        Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS_BY_KEY.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Key, GenericContainer<?>> entry = iterator.next();
-            var existingScope = entry.getKey().scope;
-            if (scope.includes(existingScope)) {
-                iterator.remove();
-                GenericContainer<?> container = entry.getValue();
-                LOGGER.debug("Stopping container {}", container.getContainerId());
-                container.close();
-                closed = true;
-                for (Set<GenericContainer<?>> value : CONTAINERS_BY_PROPERTY.values()) {
-                    value.remove(container);
+        return withLock("closeScope", () -> {
+            boolean closed = false;
+            Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS_BY_KEY.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<Key, GenericContainer<?>> entry = iterator.next();
+                var existingScope = entry.getKey().scope;
+                if (scope.includes(existingScope)) {
+                    iterator.remove();
+                    GenericContainer<?> container = entry.getValue();
+                    LOGGER.debug("Stopping container {}", container.getContainerId());
+                    container.close();
+                    closed = true;
+                    for (Set<GenericContainer<?>> value : CONTAINERS_BY_PROPERTY.values()) {
+                        value.remove(container);
+                    }
                 }
             }
-        }
-        LOCK.unlock();
-        return closed;
+            return closed;
+        });
     }
 
     public static List<GenericContainer<?>> findByRequestedProperty(Scope scope, String property) {
-        LOCK.lock();
-        try {
+        return withLock("findByRequestedProperty", () -> {
             Set<GenericContainer<?>> byProperty = CONTAINERS_BY_PROPERTY.getOrDefault(property, Collections.emptySet());
             LOGGER.debug("Found {} containers for property {}. All properties: {}", byProperty.size(), property, CONTAINERS_BY_PROPERTY.keySet());
             return filterByScope(scope, byProperty);
-        } finally {
-            LOCK.unlock();
-        }
+        });
     }
 
     private static final class Key {
         private final Class<?> type;
         private final String name;
-        private final Scope scope;
+        final Scope scope;
         private final Map<String, String> properties;
         private final int hashCode;
 

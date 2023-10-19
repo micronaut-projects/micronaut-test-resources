@@ -11,4 +11,6 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
+    <logger name="io.micronaut.testresources.server" level="debug" />
+    <logger name="io.micronaut.testresources.testcontainers" level="trace" />
 </configuration>

@@ -9,7 +9,6 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.client.TestResourcesClient
 import jakarta.inject.Inject
 import spock.lang.Specification
-import io.micronaut.testresources.testcontainers.TestContainers
 
 @MicronautTest
 @Property(name = "micronaut.testresources.server.url", value = "")
@@ -94,7 +93,7 @@ class TestResourcesControllerTest extends Specification {
     @Client("/")
     static interface DiagnosticsClient extends TestResourcesClient {
         @Get("/testcontainers")
-        List<TestContainers> listContainers();
+        List<TestContainer> listContainers();
 
         @Override
         @Post("/list")

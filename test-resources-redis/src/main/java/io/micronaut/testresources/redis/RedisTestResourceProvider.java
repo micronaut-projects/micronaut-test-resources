@@ -39,11 +39,17 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Re
 
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URI);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URI);
+    public static final String DISPLAY_NAME = "Redis";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         boolean clusterMode = isClusterMode(testResourcesConfig);
         return clusterMode ? List.of() : SUPPORTED_PROPERTIES_LIST;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

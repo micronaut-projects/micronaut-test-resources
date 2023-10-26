@@ -36,6 +36,7 @@ public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Ne
     public static final String DEFAULT_IMAGE = "neo4j";
 
     private static final Set<String> SUPPORTED_PROPERTIES;
+    public static final String DISPLAY_NAME = "Neo4J";
 
     static {
         Set<String> supported = new HashSet<>();
@@ -46,6 +47,11 @@ public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Ne
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return Collections.singletonList(NEO4J_SERVER_URI);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

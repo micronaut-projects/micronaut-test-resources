@@ -43,7 +43,13 @@ import java.util.Optional;
 public final class TestResourcesController implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
 
-    private final TestResourcesResolverLoader loader = new TestResourcesResolverLoader();
+    private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
+
+    private final List<PropertyResolutionListener> propertyResolutionListeners;
+
+    public TestResourcesController(List<PropertyResolutionListener> propertyResolutionListeners) {
+        this.propertyResolutionListeners = propertyResolutionListeners;
+    }
 
     @Get("/list")
     public List<String> getResolvableProperties() {
@@ -97,6 +103,9 @@ public final class TestResourcesController implements TestResourcesResolver {
             result = resolver.resolve(name, properties, testResourcesConfig);
             LOGGER.debug("Attempt to resolve {} with resolver {}, properties {} and test resources configuration {} : {}", name, resolver.getClass(), properties, testResourcesConfig, result.isPresent() ? result.get() : "\uD83D\uDEAB");
             if (result.isPresent()) {
+                for (PropertyResolutionListener listener : propertyResolutionListeners) {
+                    listener.resolved(name, result.get(), resolver, properties, testResourcesConfig);
+                }
                 return result;
             }
         }

@@ -61,6 +61,7 @@ include 'test-resources-bom'
 include 'test-resources-build-tools'
 include 'test-resources-core'
 include 'test-resources-client'
+include 'test-resources-control-panel'
 include 'test-resources-elasticsearch'
 include 'test-resources-embedded'
 include 'test-resources-hivemq'
@@ -105,6 +106,7 @@ micronautBuild {
     useStandardizedProjectNames = true
     importMicronautCatalog()
     importMicronautCatalog("micronaut-aws")
+    importMicronautCatalog("micronaut-control-panel")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-elasticsearch")
     importMicronautCatalog("micronaut-email")

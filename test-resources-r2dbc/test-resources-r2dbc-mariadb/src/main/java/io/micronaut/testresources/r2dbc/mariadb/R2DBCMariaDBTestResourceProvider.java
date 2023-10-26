@@ -29,6 +29,12 @@ import java.util.Optional;
  * A test resource provider for reactive MariaDB.
  */
 public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceProvider<MariaDBContainer<?>> {
+    public static final String DISPLAY_NAME = "MariaDB (R2DBC)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

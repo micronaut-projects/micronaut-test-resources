@@ -1,0 +1,13 @@
+{{#with controlPanel.body }}
+
+    {{#eq badge '0' }}
+        No property resolved yet.
+    {{else}}
+        {{#eq badge '1' }}
+            Resolved 1 property.
+        {{else}}
+            Resolved {{badge}} properties.
+        {{/eq}}
+    {{/eq}}
+
+{{/with}}

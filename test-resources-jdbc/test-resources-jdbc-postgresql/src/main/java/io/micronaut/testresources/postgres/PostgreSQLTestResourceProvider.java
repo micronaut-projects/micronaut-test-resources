@@ -31,6 +31,12 @@ public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProv
     private static final List<String> SUPPORTED_DB_TYPES = Collections.unmodifiableList(
         Arrays.asList("postgresql", "postgres", "pg")
     );
+    public static final String DISPLAY_NAME = "PostgreSQL";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

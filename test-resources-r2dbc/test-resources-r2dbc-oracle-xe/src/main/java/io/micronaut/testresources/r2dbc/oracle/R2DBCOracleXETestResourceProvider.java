@@ -38,6 +38,7 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
 
     private static final String R2DBC_ORACLE_DRIVER = "oracle";
     private static final String OCID = "ocid";
+    public static final String DISPLAY_NAME = "Oracle Database (R2DBC)";
 
     @Override
     public List<String> getRequiredProperties(String expression) {
@@ -64,6 +65,11 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
             }
         }
         return shouldAnswer;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

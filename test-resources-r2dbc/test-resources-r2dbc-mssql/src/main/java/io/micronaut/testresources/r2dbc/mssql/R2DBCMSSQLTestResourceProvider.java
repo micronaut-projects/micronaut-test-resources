@@ -31,6 +31,13 @@ import java.util.Optional;
  */
 public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<MSSQLServerContainer<?>> {
 
+    public static final String DISPLAY_NAME = "MSSQL (R2DBC)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
+
     @Override
     protected String getSimpleName() {
         return "mssql";

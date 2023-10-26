@@ -35,6 +35,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     public static final String DEFAULT_IMAGE = "mongo:5";
     public static final String SIMPLE_NAME = "mongodb";
     public static final String DB_NAME = "containers." + SIMPLE_NAME + ".db-name";
+    public static final String DISPLAY_NAME = "MongoDB";
 
     private String dbName;
 
@@ -51,6 +52,11 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     @Override
     public List<String> getRequiredPropertyEntries() {
         return List.of(MONGODB_SERVERS);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

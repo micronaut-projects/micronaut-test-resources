@@ -51,6 +51,7 @@ public class LocalStackTestResourceProvider extends AbstractTestContainersProvid
     private static final Set<String> ALL_SUPPORTED_KEYS;
     private static final List<LocalStackService> SERVICES;
     private static final Map<String, LocalStackService> PROPERTY_TO_SERVICE;
+    public static final String DISPLAY_NAME = "LocalStack";
 
     static {
         SERVICES = StreamSupport.stream(ServiceLoader.load(LocalStackService.class).spliterator(), false)
@@ -75,6 +76,11 @@ public class LocalStackTestResourceProvider extends AbstractTestContainersProvid
             RESOLVABLE_PROPERTIES.values().stream().flatMap(Collection::stream)
         ).collect(Collectors.toSet());
         PROPERTY_TO_SERVICE = Collections.unmodifiableMap(propertyToService);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

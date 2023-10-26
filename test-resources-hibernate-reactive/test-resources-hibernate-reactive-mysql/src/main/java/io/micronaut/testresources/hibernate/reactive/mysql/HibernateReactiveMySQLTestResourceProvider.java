@@ -25,6 +25,12 @@ import java.util.Map;
  * A test resource provider which will spawn a MySQL test container.
  */
 public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MySQLContainer<?>> {
+    public static final String DISPLAY_NAME = "MySQL (Hibernate reactive)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

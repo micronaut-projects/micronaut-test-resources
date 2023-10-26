@@ -46,10 +46,16 @@ public class RabbitMQTestResourceProvider extends AbstractTestContainersProvider
     private static final Set<String> SUPPORTED_KEYSET = Collections.unmodifiableSet(
         new HashSet<>(SUPPORTED_KEYS)
     );
+    public static final String DISPLAY_NAME = "RabbitMQ";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_KEYS;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

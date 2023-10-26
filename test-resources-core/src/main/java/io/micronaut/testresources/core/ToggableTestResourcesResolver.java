@@ -24,6 +24,10 @@ import java.util.Map;
 public interface ToggableTestResourcesResolver extends TestResourcesResolver {
     String getName();
 
+    default String getDisplayName() {
+        return getName();
+    }
+
     default boolean isEnabled(Map<String, Object> testResourcesConfig) {
         var o = testResourcesConfig.get(getName() + ".enabled");
         if (o == null) {

@@ -46,8 +46,8 @@ public final class TestResourcesResolverLoader {
             .values()
             .stream()
             .map(list -> list.get(0))
-            .collect(Collectors.toList());
-        resolvers = OrderUtil.sort(values.stream()).collect(Collectors.toList());
+            .toList();
+        resolvers = OrderUtil.sort(values.stream()).toList();
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Loaded {} test resources resolvers: {}", resolvers.size(), resolvers.stream().map(Object::getClass).map(Class::getName).collect(Collectors.joining(", ")));
         }
@@ -57,7 +57,7 @@ public final class TestResourcesResolverLoader {
         return resolvers;
     }
 
-    static TestResourcesResolverLoader getInstance() {
+    public static TestResourcesResolverLoader getInstance() {
         return Initializer.INSTANCE;
     }
 

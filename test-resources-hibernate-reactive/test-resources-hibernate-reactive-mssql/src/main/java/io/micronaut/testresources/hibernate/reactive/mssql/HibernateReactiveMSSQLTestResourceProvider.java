@@ -28,6 +28,12 @@ import static io.micronaut.testresources.mssql.MSSQLTestResourceProvider.createM
  * A test resource provider which will spawn a MSSQL test container.
  */
 public class HibernateReactiveMSSQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MSSQLServerContainer<?>> {
+    public static final String DISPLAY_NAME = "MSSQL (Hibernate reactive)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

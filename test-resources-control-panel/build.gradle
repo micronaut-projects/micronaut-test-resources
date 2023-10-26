@@ -1,0 +1,24 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Adds a control panel to the test resources server
+"""
+
+dependencies {
+    implementation(mnControlPanel.micronaut.control.panel.ui)
+    implementation(libs.managed.testcontainers.core)
+    implementation(projects.micronautTestResourcesTestcontainers)
+    implementation(projects.micronautTestResourcesEmbedded)
+    implementation(projects.micronautTestResourcesServer)
+    runtimeOnly(mn.micronaut.management)
+}
+
+micronautBuild {
+    binaryCompatibility {
+        String v = projectVersion - '-SNAPSHOT'
+        def (int major, int minor, int patch) = (v.split(/[.]/) as List).collect { Integer.parseInt(it) }
+        enabled = major > 2 || (major == 2 && minor > 1) || (major == 2 && minor == 1 && patch > 1)
+    }
+}

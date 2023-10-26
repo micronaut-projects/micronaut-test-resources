@@ -39,6 +39,23 @@ public interface TestResourcesResolver extends Ordered {
     String TEST_RESOURCES_PROPERTY = "test-resources";
 
     /**
+     * Returns a display name for a test resources resolver, used
+     * for debugging purposes.
+     * @return the display name
+     */
+    default String getDisplayName() {
+        return getId();
+    }
+
+    /**
+     * Returns an id for the resolver.
+     * @return the id
+     */
+    default String getId() {
+        return this.getClass().getSimpleName();
+    }
+
+    /**
      * Returns the list of properties that this resolver
      * is able to support. The property entries map is
      * a map which keys are the property entries retrieved

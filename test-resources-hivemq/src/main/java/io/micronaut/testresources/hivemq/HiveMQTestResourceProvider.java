@@ -33,6 +33,7 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
     public static final String MQTT_CLIENT_CLIENT_ID = "mqtt.client.client-id";
     public static final String MQTT_CLIENT_SERVER_URI = "mqtt.client.server-uri";
     public static final String DEFAULT_IMAGE = "hivemq/hivemq-ce:2021.3";
+    public static final String DISPLAY_NAME = "HiveMQ";
 
     private final String clientId;
 
@@ -43,6 +44,11 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return List.of(MQTT_CLIENT_CLIENT_ID, MQTT_CLIENT_SERVER_URI);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

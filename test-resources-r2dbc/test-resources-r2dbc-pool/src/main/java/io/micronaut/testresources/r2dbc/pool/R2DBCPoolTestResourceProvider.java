@@ -37,6 +37,12 @@ public class R2DBCPoolTestResourceProvider implements ToggableTestResourcesResol
         PROTOCOL,
         DRIVER
     ));
+    public static final String DISPLAY_NAME = "R2DBC Pool";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     public String getName() {

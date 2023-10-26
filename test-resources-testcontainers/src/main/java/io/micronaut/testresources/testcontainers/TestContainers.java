@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 public final class TestContainers {
     private static final Map<Key, GenericContainer<?>> CONTAINERS_BY_KEY = new HashMap<>();
     private static final Map<String, Set<GenericContainer<?>>> CONTAINERS_BY_PROPERTY = new HashMap<>();
-    private static final ReentrantLock LOCK = new ReentrantLock();
+    private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestContainers.class);
     private static final Map<String, Network> NETWORKS_BY_KEY = new ConcurrentHashMap<>();
 
@@ -52,8 +52,8 @@ public final class TestContainers {
 
     }
 
-    private static <B> B withLock(String description, Supplier<B> supplier) {
-        LOCK.lock();
+    private static <B> B withWriteLock(String description, Supplier<B> supplier) {
+        LOCK.writeLock().lock();
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Locked for {}", description);
         }
@@ -63,7 +63,22 @@ public final class TestContainers {
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace("Unlocked for {}", description);
             }
-            LOCK.unlock();
+            LOCK.writeLock().unlock();
+        }
+    }
+
+    private static <B> B withReadLock(String description, Supplier<B> supplier) {
+        LOCK.readLock().lock();
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Locked for {}", description);
+        }
+        try {
+            return supplier.get();
+        } finally {
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Unlocked for {}", description);
+            }
+            LOCK.readLock().unlock();
         }
     }
 
@@ -86,12 +101,16 @@ public final class TestContainers {
                                                                    Map<String, Object> query,
                                                                    Supplier<T> creator) {
         Key key = Key.of(owner, name, Scope.from(query), query);
-        return withLock("getOrCreate", () -> {
+        return withWriteLock("getOrCreate", () -> {
             T container = (T) CONTAINERS_BY_KEY.get(key);
             if (container == null) {
                 container = creator.get();
-                LOGGER.info("Starting test container {}", name);
-                container.start();
+                if (DockerSupport.isDockerAvailable()) {
+                    LOGGER.info("Starting test container {}", name);
+                    container.start();
+                } else {
+                    LOGGER.error("Cannot start container {} as Docker support isn't available", name);
+                }
                 CONTAINERS_BY_KEY.put(key, container);
             }
             CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty, e -> new LinkedHashSet<>())
@@ -115,7 +134,7 @@ public final class TestContainers {
     }
 
     private static Map<Scope, List<GenericContainer<?>>> listByScope(Scope scope) {
-        return withLock("listByScope", () ->
+        return withReadLock("listByScope", () ->
             CONTAINERS_BY_KEY.entrySet()
                 .stream()
                 .filter(entry -> scope.includes(entry.getKey().scope))
@@ -134,7 +153,7 @@ public final class TestContainers {
         if (containers.isEmpty()) {
             return Collections.emptyList();
         }
-        return withLock("filterByScope", () ->
+        return withReadLock("filterByScope", () ->
             CONTAINERS_BY_KEY.entrySet()
                 .stream()
                 .filter(entry -> containers.contains(entry.getValue()) && scope.includes(entry.getKey().scope))
@@ -148,7 +167,7 @@ public final class TestContainers {
     }
 
     public static boolean closeAll() {
-        return withLock("closeAll", () -> {
+        return withWriteLock("closeAll", () -> {
             boolean closed = false;
             for (GenericContainer<?> container : CONTAINERS_BY_KEY.values()) {
                 container.close();
@@ -168,7 +187,7 @@ public final class TestContainers {
 
     public static boolean closeScope(String id) {
         Scope scope = Scope.of(id);
-        return withLock("closeScope", () -> {
+        return withWriteLock("closeScope", () -> {
             boolean closed = false;
             Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS_BY_KEY.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -190,7 +209,7 @@ public final class TestContainers {
     }
 
     public static List<GenericContainer<?>> findByRequestedProperty(Scope scope, String property) {
-        return withLock("findByRequestedProperty", () -> {
+        return withReadLock("findByRequestedProperty", () -> {
             Set<GenericContainer<?>> byProperty = CONTAINERS_BY_PROPERTY.getOrDefault(property, Collections.emptySet());
             LOGGER.debug("Found {} containers for property {}. All properties: {}", byProperty.size(), property, CONTAINERS_BY_PROPERTY.keySet());
             return filterByScope(scope, byProperty);

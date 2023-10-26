@@ -20,6 +20,7 @@ micronaut = "4.1.11"
 micronaut-platform = "4.1.1"
 micronaut-aot = "2.1.1"
 micronaut-aws = "4.1.1"
+micronaut-control-panel = "1.0.1"
 micronaut-data = "4.1.4"
 micronaut-discovery = "4.0.1"
 micronaut-docs = "2.0.0"
@@ -78,6 +79,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
 micronaut-aws = { module = "io.micronaut.aws:micronaut-aws-bom", version.ref = "micronaut-aws" }
+micronaut-control-panel = { module = "io.micronaut.controlpanel:micronaut-control-panel-bom", version.ref = "micronaut-control-panel" }
 micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }
 micronaut-discovery = { module = "io.micronaut.discovery:micronaut-discovery-client", version.ref = "micronaut-discovery" }
 micronaut-elasticsearch = { module = "io.micronaut.elasticsearch:micronaut-elasticsearch-bom", version.ref = "micronaut-elasticsearch" }

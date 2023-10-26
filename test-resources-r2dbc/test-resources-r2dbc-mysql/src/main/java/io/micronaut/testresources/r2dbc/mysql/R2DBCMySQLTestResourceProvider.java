@@ -29,6 +29,12 @@ import java.util.Optional;
  * A test resource provider for reactive MySQL.
  */
 public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<MySQLContainer<?>> {
+    public static final String DISPLAY_NAME = "MySQL (R2DBC)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

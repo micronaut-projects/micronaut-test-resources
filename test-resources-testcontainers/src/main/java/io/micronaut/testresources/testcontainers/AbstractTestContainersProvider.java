@@ -41,6 +41,14 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
         return SPECIFIC_ORDER;
     }
 
+    @Override
+    public boolean isEnabled(Map<String, Object> testResourcesConfig) {
+        if (!DockerSupport.isDockerAvailable()) {
+            return false;
+        }
+        return ToggableTestResourcesResolver.super.isEnabled(testResourcesConfig);
+    }
+
     /**
      * Returns the name of the resource resolver, for example "kafka" or "mysql".
      *

@@ -25,6 +25,12 @@ import java.util.Map;
  * A test resource provider which will spawn an Oracle XE test container.
  */
 public class HibernateReactiveOracleXETestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<OracleContainer> {
+    public static final String DISPLAY_NAME = "Oracle Database (Hibernate Reactive)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

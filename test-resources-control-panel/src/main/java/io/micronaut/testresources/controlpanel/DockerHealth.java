@@ -26,11 +26,23 @@ import java.util.List;
  * @param info docker service metadata
  * @param runningContainers the number of containers started by test resources
  * @param managedContainers the containers managed by test resources
+ * @param startingContainers the list of containers being started
+ * @param pullingContainers the list of containers being pulled
  */
 @Introspected
 public record DockerHealth(
     Status dockerStatus,
     Info info,
     int runningContainers,
-    List<TestResourcesContainer> managedContainers) {
+    List<TestResourcesContainer> managedContainers,
+    List<String> startingContainers,
+    List<String> pullingContainers) {
+
+    /**
+     * Returns the number of containers which are not yet ready.
+     * @return the container count
+     */
+    public int getInProgress() {
+        return startingContainers.size() + pullingContainers.size();
+    }
 }

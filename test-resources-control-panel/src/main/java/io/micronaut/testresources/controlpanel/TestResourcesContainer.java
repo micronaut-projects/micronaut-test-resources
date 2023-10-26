@@ -19,7 +19,7 @@ import io.micronaut.core.annotation.Introspected;
 
 /**
  * Information about a Docker container which was
- * started by the test resources service
+ * started by the test resources service.
  * @param scope the test resources scope
  * @param id the container id
  * @param name the container name

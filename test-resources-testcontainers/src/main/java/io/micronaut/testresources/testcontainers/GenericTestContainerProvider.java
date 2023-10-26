@@ -130,7 +130,8 @@ public class GenericTestContainerProvider implements ToggableTestResourcesResolv
                 return new MappedContainer(md, TestContainers.getOrCreate(propertyName, GenericTestContainerProvider.class,
                     md.getId(),
                     properties,
-                    () -> {
+                    () -> imageName,
+                    unused -> {
                         if (!md.getDependencies().isEmpty()) {
                            resolveDependencies(md.getDependencies(), containerMetadataFrom(testResourcesConfig).toList(), properties, testResourcesConfig);
                         }

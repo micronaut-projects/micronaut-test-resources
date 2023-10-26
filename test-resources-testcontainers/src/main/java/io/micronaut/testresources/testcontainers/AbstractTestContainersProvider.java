@@ -30,7 +30,8 @@ import static io.micronaut.testresources.testcontainers.TestContainerMetadataSup
  *
  * @param <T> the container type
  */
-public abstract class AbstractTestContainersProvider<T extends GenericContainer<? extends T>> implements ToggableTestResourcesResolver {
+public abstract class AbstractTestContainersProvider<T extends GenericContainer<? extends T>>
+    implements ToggableTestResourcesResolver {
     @Override
     public String getName() {
         return "containers." + getSimpleName();
@@ -71,7 +72,9 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
      * @param testResourcesConfig the test resources configuration
      * @return a container
      */
-    protected abstract T createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig);
+    protected abstract T createContainer(DockerImageName imageName,
+                                         Map<String, Object> requestedProperties,
+                                         Map<String, Object> testResourcesConfig);
 
     /**
      * Determines if this resolver can resolve the requested property.
@@ -84,7 +87,8 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
      * @param testResourcesConfig the test resources configuration
      * @return if this resolver should answer
      */
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties,
+                                   Map<String, Object> testResourcesConfig) {
         return true;
     }
 
@@ -98,42 +102,58 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
      * @param testResourcesConfig the test resources configuration
      * @return a resolved property
      */
-    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+    protected Optional<String> resolveWithoutContainer(String propertyName,
+                                                       Map<String, Object> properties,
+                                                       Map<String, Object> testResourcesConfig) {
         return Optional.empty();
     }
 
     @Override
-    public final Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+    public final Optional<String> resolve(String propertyName, Map<String, Object> properties,
+                                          Map<String, Object> testResourcesConfig) {
         if (shouldAnswer(propertyName, properties, testResourcesConfig)) {
-            Optional<String> firstPass = resolveWithoutContainer(propertyName, properties, testResourcesConfig);
+            Optional<String> firstPass =
+                resolveWithoutContainer(propertyName, properties, testResourcesConfig);
             if (firstPass.isPresent()) {
                 return firstPass;
             }
             return resolveProperty(propertyName,
-                TestContainers.getOrCreate(propertyName, this.getClass(), getSimpleName(), properties, () -> {
-                    String defaultImageName = getDefaultImageName();
-                    DockerImageName imageName = DockerImageName.parse(defaultImageName);
-                    Optional<TestContainerMetadata> metadata = TestContainerMetadataSupport.containerMetadataFor(Collections.singletonList(getSimpleName()), testResourcesConfig)
-                        .findAny();
-                    if (metadata.isPresent()) {
-                        TestContainerMetadata md = metadata.get();
-                        if (md.getImageName().isPresent()) {
-                            imageName = DockerImageName.parse(md.getImageName().get()).asCompatibleSubstituteFor(defaultImageName);
+                TestContainers.getOrCreate(propertyName, this.getClass(), getSimpleName(),
+                    properties, () -> {
+                        String defaultImageName = getDefaultImageName();
+                        DockerImageName imageName = DockerImageName.parse(defaultImageName);
+                        Optional<TestContainerMetadata> metadata =
+                            TestContainerMetadataSupport.containerMetadataFor(
+                                    Collections.singletonList(getSimpleName()), testResourcesConfig)
+                                .findAny();
+                        if (metadata.isPresent()) {
+                            TestContainerMetadata md = metadata.get();
+                            if (md.getImageName().isPresent()) {
+                                imageName = DockerImageName.parse(md.getImageName().get())
+                                    .asCompatibleSubstituteFor(defaultImageName);
+                            }
+                            if (md.getImageTag().isPresent()) {
+                                imageName = imageName.withTag(md.getImageTag().get());
+                            }
                         }
-                        if (md.getImageTag().isPresent()) {
-                            imageName = imageName.withTag(md.getImageTag().get());
-                        }
-                    }
-                    T container = createContainer(imageName, properties, testResourcesConfig);
-                    configureContainer(container, properties, testResourcesConfig);
-                    metadata.ifPresent(md -> TestContainerMetadataSupport.applyMetadata(md, container));
-                    return container;
-                }));
+                        return imageName;
+                    }, imageName -> {
+                        Optional<TestContainerMetadata> metadata =
+                            TestContainerMetadataSupport.containerMetadataFor(
+                                    Collections.singletonList(getSimpleName()), testResourcesConfig)
+                                .findAny();
+                        T container = createContainer(imageName, properties, testResourcesConfig);
+                        configureContainer(container, properties, testResourcesConfig);
+                        metadata.ifPresent(
+                            md -> TestContainerMetadataSupport.applyMetadata(md, container));
+                        return container;
+                    }));
         }
         return Optional.empty();
     }
 
-    protected void configureContainer(T container, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+    protected void configureContainer(T container, Map<String, Object> properties,
+                                      Map<String, Object> testResourcesConfig) {
     }
 
     protected abstract Optional<String> resolveProperty(String propertyName, T container);

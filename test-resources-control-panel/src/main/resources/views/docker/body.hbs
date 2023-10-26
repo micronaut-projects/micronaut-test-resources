@@ -10,7 +10,11 @@
                 <i class="fas fa-check"></i>
             </div>
         </div>
-        <p><strong>{{badge}}</strong> test resources</p>
+        <p><strong>{{badge}}</strong> test resources
+        {{#neq inProgress 0}}
+            ({{inProgress}} in progress)
+        {{/neq}}
+        </p>
     {{/eq}}
     {{#eq dockerStatus.name 'UNAVAILABLE'}}
         <div class="small-box bg-warning">

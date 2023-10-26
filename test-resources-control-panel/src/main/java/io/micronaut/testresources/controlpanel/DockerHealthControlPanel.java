@@ -48,7 +48,8 @@ public class DockerHealthControlPanel extends AbstractControlPanel<DockerHealth>
     @Override
     public String getBadge() {
         var body = getBody();
-        return String.valueOf(body.runningContainers());
+        var inProgress = TestContainers.startingContainers().size() + TestContainers.pullingContainers().size();
+        return String.valueOf(body.runningContainers() + inProgress);
     }
 
     @Override
@@ -78,11 +79,13 @@ public class DockerHealthControlPanel extends AbstractControlPanel<DockerHealth>
                     })
                     .toList();
                 var info = factory.getInfo();
-                return new DockerHealth(Status.AVAILABLE, info, runningContainers, containers);
+                var starting = TestContainers.startingContainers();
+                var pulling = TestContainers.pullingContainers();
+                return new DockerHealth(Status.AVAILABLE, info, runningContainers, containers, pulling, starting);
             } catch (Exception ex) {
             }
         }
-        return new DockerHealth(Status.UNAVAILABLE,  null, 0, List.of());
+        return new DockerHealth(Status.UNAVAILABLE,  null, 0, List.of(), List.of(), List.of());
     }
 
     private static String networkOf(GenericContainer<?> c) {

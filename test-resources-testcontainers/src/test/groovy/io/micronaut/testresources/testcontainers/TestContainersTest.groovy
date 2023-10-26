@@ -64,7 +64,7 @@ class TestContainersTest extends Specification {
     void create(String name, String scope, GenericContainer container) {
         TestContainers.getOrCreate("foo", TestContainersTest, name, [
                 (Scope.PROPERTY_KEY): scope
-        ]) {
+        ], () -> null) { imageName ->
             container
         }
     }

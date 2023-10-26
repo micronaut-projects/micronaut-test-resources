@@ -6,6 +6,17 @@
         </div>
         <div class="card-body">
             <h2>Managed containers</h2>
+            {{#neq inProgress 0}}
+                There are {{inProgress.size}} containers currently being pulled or starting:
+                <ul>
+                    {{#each pullingContainers as |image|}}
+                        <li><code>{{image}}</code> (pulling)</li>
+                    {{/each}}
+                    {{#each startingContainers as |image|}}
+                        <li><code>{{image}}</code> (starting)</li>
+                    {{/each}}
+                </ul>
+            {{/neq}}
             <p>The following list only includes the containers whose lifecycle is handled by this Micronaut Test Resources server.</p>
             <table class="table">
                 <thead>

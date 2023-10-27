@@ -15,6 +15,8 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.DockerClientFactory;
 
 import java.util.concurrent.ExecutionException;
@@ -29,6 +31,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * Provides utilities around Docker support.
  */
 public final class DockerSupport {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DockerSupport.class);
+    private static final int TIMEOUT = Integer.getInteger("docker.check.timeout.seconds", 5);
     private static final Lock LOCK = new ReentrantLock();
     private static final AtomicReference<Boolean> AVAILABLE = new AtomicReference<>();
 
@@ -38,17 +42,22 @@ public final class DockerSupport {
 
     private static boolean performDockerCheck() {
         var executor = Executors.newSingleThreadExecutor();
+        boolean available;
         try {
             var future = executor.submit(() -> DockerClientFactory.instance().isDockerAvailable());
-            return future.get(2, TimeUnit.SECONDS);
+            available = future.get(TIMEOUT, TimeUnit.SECONDS);
         } catch (ExecutionException | TimeoutException e) {
-            return false;
+            available = false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return false;
+            available = false;
         } finally {
             executor.shutdown();
         }
+        if (!available) {
+            LOGGER.error("Docker support doesn't seem to be available, test resources will not work correctly. Please check your Docker install.");
+        }
+        return available;
     }
 
     /**

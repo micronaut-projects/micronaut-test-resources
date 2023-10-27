@@ -32,7 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class DockerSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(DockerSupport.class);
-    private static final int TIMEOUT = Integer.getInteger("docker.check.timeout.seconds", 5);
+    private static final int TIMEOUT = Integer.getInteger("docker.check.timeout.seconds", 10);
     private static final Lock LOCK = new ReentrantLock();
     private static final AtomicReference<Boolean> AVAILABLE = new AtomicReference<>();
 

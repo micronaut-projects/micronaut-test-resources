@@ -20,11 +20,12 @@ import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.server.PropertyResolutionListener;
 import jakarta.inject.Singleton;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class ControlPanelPropertyResolutionListener implements PropertyResolutionListener {
-    private final Map<String, List<Resolution>> resolvedProperties = new HashMap<>();
+    private final Map<String, Set<Resolution>> resolvedProperties = new HashMap<>();
 
     @Override
     public void resolved(String property, String resolvedValue, TestResourcesResolver resolver,
@@ -45,7 +46,7 @@ public class ControlPanelPropertyResolutionListener implements PropertyResolutio
             asStringMap(properties),
             asStringMap(testResourcesConfig)
         );
-        resolvedProperties.computeIfAbsent(resolver.getId(), k -> new ArrayList<>())
+        resolvedProperties.computeIfAbsent(resolver.getId(), k -> new HashSet<>())
             .add(resolution);
     }
 
@@ -64,7 +65,7 @@ public class ControlPanelPropertyResolutionListener implements PropertyResolutio
      * @return the resolutions
      */
     public List<Resolution> findById(String id) {
-        return resolvedProperties.getOrDefault(id, List.of())
+        return resolvedProperties.getOrDefault(id, Set.of())
             .stream()
             .sorted(Comparator.comparing(Resolution::property))
             .toList();

@@ -17,31 +17,35 @@
                     {{/each}}
                 </ul>
             {{/neq}}
-            <p>The following list only includes the containers whose lifecycle is handled by this Micronaut Test Resources server.</p>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Scope</th>
-                    <th>Container name</th>
-                    <th>Image Name</th>
-                    <th>Container id</th>
-                    <th>Network</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each managedContainers as |container|}}
+        {{#eq managedContainers.size 0}}
+            There are no containers managed by this Micronaut Test Resources server yet.
+        {{/eq}}
+        {{#neq managedContainers.size 0}}
+                <p>The following list only includes the containers whose lifecycle is handled by this Micronaut Test Resources server.</p>
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td><code>{{container.scope}}</code></td>
-                        <td><code>{{container.name}}</code></td>
-                        <td><code>{{container.imageName}}</code></td>
-                        <td><code>{{container.id}}</code></td>
-                        <td><code>{{container.network}}</code></td>
+                        <th>Scope</th>
+                        <th>Container name</th>
+                        <th>Image Name</th>
+                        <th>Container id</th>
+                        <th>Network</th>
                     </tr>
+                    </thead>
+                    <tbody>
+                    {{#each managedContainers as |container|}}
+                        <tr>
+                            <td><code>{{container.scope}}</code></td>
+                            <td><code>{{container.name}}</code></td>
+                            <td><code>{{container.imageName}}</code></td>
+                            <td><code>{{container.id}}</code></td>
+                            <td><code>{{container.network}}</code></td>
+                        </tr>
 
-                {{/each}}
-                </tbody>
-            </table>
-
+                    {{/each}}
+                    </tbody>
+                </table>
+            {{/neq}}
             <h2>Docker information</h2>
             {{#with info}}
             <table class="table">

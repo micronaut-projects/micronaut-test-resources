@@ -46,7 +46,7 @@ public class VaultTestResourceProvider extends AbstractTestContainersProvider<Va
     public static final String HASHICORP_VAULT_TOKEN_KEY = "containers.hashicorp-vault.token";
     public static final String TEST_RESOURCES_CONTAINERS_PATH_KEY = "containers.hashicorp-vault.path";
     public static final String HASHICORP_VAULT_SECRETS_KEY = "containers.hashicorp-vault.secrets";
-    public static final String DISPLAY_NAME = "Hashcorp Vault";
+    public static final String DISPLAY_NAME = "Hashicorp Vault";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

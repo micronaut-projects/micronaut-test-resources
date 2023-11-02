@@ -21,7 +21,11 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.controlpanel.core.ControlPanel;
 import io.micronaut.core.type.Argument;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.runtime.event.annotation.EventListener;
+import io.micronaut.runtime.server.event.ServerStartupEvent;
 import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This bean is responsible for creating the panels for each
@@ -29,6 +33,7 @@ import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
  */
 @Context
 public class TestResourcesPanelRegistration {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesPanelRegistration.class);
 
     public static final Argument<ControlPanel> CONTROL_PANEL_ARGUMENT =
         Argument.of(ControlPanel.class, Argument.ofTypeVariable(Object.class, "E"));
@@ -48,6 +53,13 @@ public class TestResourcesPanelRegistration {
                         .build()
                 )
             );
+    }
+
+    @EventListener
+    public void onStartup(ServerStartupEvent event) {
+        var server = event.getSource();
+        var port = server.getPort();
+        LOGGER.info("Test Resources control panel can be browsed at http://localhost:{}/control-panel", port);
     }
 
 }

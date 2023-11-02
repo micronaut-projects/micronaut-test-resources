@@ -1,0 +1,19 @@
+The test resources service runs as a separate service, on its own process.
+
+Debugging the test resources service is currently only supported via the Gradle plugin.
+This can be configured using the following code:
+
+[source.multi-language-sample,groovy]
+----
+tasks.named("internalStartTestResourcesService") {
+    debugServer = true
+}
+----
+[source.multi-language-sample,kotlin]
+----
+tasks.internalStartTestResourcesService {
+    debugServer.set(true)
+}
+----
+
+Alternatively, you may want to add the test resources control panel.

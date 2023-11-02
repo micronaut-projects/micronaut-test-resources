@@ -19,6 +19,6 @@ micronautBuild {
     binaryCompatibility {
         String v = projectVersion - '-SNAPSHOT'
         def (int major, int minor, int patch) = (v.split(/[.]/) as List).collect { Integer.parseInt(it) }
-        enabled = major > 2 || (major == 2 && minor > 1) || (major == 2 && minor == 1 && patch > 1)
+        enabled = major > 2 || (major == 2 && minor > 2) || (major == 2 && minor == 2 && patch > 0)
     }
 }

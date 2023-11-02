@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import io.micronaut.core.annotation.Internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.DockerClientFactory;
@@ -30,6 +31,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Provides utilities around Docker support.
  */
+@Internal
 public final class DockerSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(DockerSupport.class);
     private static final int TIMEOUT = Integer.getInteger("docker.check.timeout.seconds", 10);

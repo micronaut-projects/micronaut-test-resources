@@ -80,6 +80,13 @@ public class ControlPanelPropertyResolutionListener implements PropertyResolutio
         ));
     }
 
+    /**
+     * A property resolution.
+     * @param property the property which was resolved
+     * @param resolvedValue the resolved value as a string
+     * @param properties the properties which were used for the resolution context
+     * @param testResourcesConfig the test resources configuration of the application
+     */
     @Introspected
     public record Resolution(
         String property,

@@ -33,10 +33,11 @@ import org.slf4j.LoggerFactory;
  */
 @Context
 public class TestResourcesPanelRegistration {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesPanelRegistration.class);
 
     public static final Argument<ControlPanel> CONTROL_PANEL_ARGUMENT =
         Argument.of(ControlPanel.class, Argument.ofTypeVariable(Object.class, "E"));
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesPanelRegistration.class);
 
     public TestResourcesPanelRegistration(ApplicationContext beanContext,
                                           ControlPanelPropertyResolutionListener resolutionListener) {
@@ -55,6 +56,10 @@ public class TestResourcesPanelRegistration {
             );
     }
 
+    /**
+     * Displays the control panel URL at startup.
+     * @param event the startup event
+     */
     @EventListener
     public void onStartup(ServerStartupEvent event) {
         var server = event.getSource();

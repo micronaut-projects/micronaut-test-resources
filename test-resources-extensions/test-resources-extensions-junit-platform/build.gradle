@@ -1,8 +1,8 @@
 plugins {
     id 'io.micronaut.build.internal.test-resources-mntest-extension'
     id 'jvm-test-suite'
-    id("org.jetbrains.kotlin.jvm") version "1.8.21"
-    id("com.google.devtools.ksp") version "1.8.22-1.0.11"
+    id("org.jetbrains.kotlin.jvm") version "1.9.20"
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
 }
 
 description = """
@@ -15,7 +15,7 @@ testing {
         spockTest(JvmTestSuite) {
             dependencies {
                 implementation project(project.path)
-                implementation testFixtures(project(project.path))
+                implementation(testFixtures(project(project.path)))
                 implementation(mnTest.micronaut.test.spock)
                 compileOnly(mn.micronaut.inject.groovy)
             }
@@ -60,4 +60,14 @@ dependencies {
     testRuntimeOnly(mn.micronaut.context)
     testRuntimeOnly(mn.snakeyaml)
     kspKoTest(mn.micronaut.inject.kotlin)
+}
+
+tasks.named("spockTest", Test) {
+    classpath = classpath.filter {
+        println(it.name)
+        if (it.name.endsWith(".jar") && it.name.startsWith("micronaut-test-resources-extensions-junit-platform-") && !it.name.contains("fixtures")) {
+            return false
+        }
+        return true
+    }
 }

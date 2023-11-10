@@ -32,10 +32,16 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
     public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:7.0.4";
+    public static final String DISPLAY_NAME = "Kafka";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return Collections.singletonList(KAFKA_BOOTSTRAP_SERVERS);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

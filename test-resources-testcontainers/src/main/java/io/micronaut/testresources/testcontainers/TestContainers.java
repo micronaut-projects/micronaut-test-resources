@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -42,18 +46,34 @@ import java.util.stream.Collectors;
  * the {@link #closeAll()} method.
  */
 public final class TestContainers {
-    private static final Map<Key, GenericContainer<?>> CONTAINERS_BY_KEY = new HashMap<>();
-    private static final Map<String, Set<GenericContainer<?>>> CONTAINERS_BY_PROPERTY = new HashMap<>();
-    private static final ReentrantLock LOCK = new ReentrantLock();
+    private static final Map<Key, GenericContainer<?>> CONTAINERS_BY_KEY =
+        new HashMap<>();
+    private static final Map<String, Set<GenericContainer<?>>> CONTAINERS_BY_PROPERTY =
+        new HashMap<>();
+    private static final Map<DockerImageName, AtomicInteger> PULLING = new HashMap<>();
+    private static final Map<DockerImageName, AtomicInteger> STARTING = new HashMap<>();
+    private static final Map<Key, Lock> OPERATIONS_PER_KEY = new ConcurrentHashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestContainers.class);
     private static final Map<String, Network> NETWORKS_BY_KEY = new ConcurrentHashMap<>();
+
+    private static final Lock MAP_LOCK = new ReentrantLock();
 
     private TestContainers() {
 
     }
 
-    private static <B> B withLock(String description, Supplier<B> supplier) {
-        LOCK.lock();
+    private static <R> R withKey(Key key, Function<Key, R> action) {
+        var lock = OPERATIONS_PER_KEY.computeIfAbsent(key, op -> new ReentrantLock());
+        lock.lock();
+        try {
+            return action.apply(key);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private static <B> B withMapLock(String description, Supplier<B> supplier) {
+        MAP_LOCK.lock();
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Locked for {}", description);
         }
@@ -63,7 +83,7 @@ public final class TestContainers {
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace("Unlocked for {}", description);
             }
-            LOCK.unlock();
+            MAP_LOCK.unlock();
         }
     }
 
@@ -77,6 +97,7 @@ public final class TestContainers {
      * @param name the identifier of the container
      * @param query the parameters used to create the container. Different parameters mean
      * different container will be created.
+     * @param imageNameSupplier the function which computes the image name
      * @param creator if the container is not in cache, factory to create the container
      * @return the container
      */
@@ -84,20 +105,82 @@ public final class TestContainers {
                                                                    Class<?> owner,
                                                                    String name,
                                                                    Map<String, Object> query,
-                                                                   Supplier<T> creator) {
-        Key key = Key.of(owner, name, Scope.from(query), query);
-        return withLock("getOrCreate", () -> {
-            T container = (T) CONTAINERS_BY_KEY.get(key);
+                                                                   Supplier<DockerImageName> imageNameSupplier,
+                                                                   Function<DockerImageName, T> creator) {
+        return withKey(Key.of(owner, name, Scope.from(query), query), key -> {
+            T container = withMapLock("getOrCreate", () -> (T) CONTAINERS_BY_KEY.get(key));
+            var dockerImageName = imageNameSupplier.get();
             if (container == null) {
-                container = creator.get();
-                LOGGER.info("Starting test container {}", name);
-                container.start();
-                CONTAINERS_BY_KEY.put(key, container);
+                notifyStartOperation(PULLING, dockerImageName);
+                try {
+                    container = creator.apply(dockerImageName);
+                } finally {
+                    notifyEndOperation(PULLING, dockerImageName);
+                }
+                try {
+                    notifyStartOperation(STARTING, dockerImageName);
+                    if (DockerSupport.isDockerAvailable()) {
+                        LOGGER.info("Starting test container {}", name);
+                        container.start();
+                    } else {
+                        LOGGER.error("Cannot start container {} as Docker support isn't available",
+                            name);
+                    }
+                } finally {
+                    notifyEndOperation(STARTING, dockerImageName);
+                }
+                T finalContainer = container;
+                withMapLock("getOrCreate", () -> CONTAINERS_BY_KEY.put(key, finalContainer));
             }
-            CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty, e -> new LinkedHashSet<>())
-                .add(container);
+            T finalContainer = container;
+            withMapLock("getOrCreate", () ->
+                CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty,
+                        e -> new LinkedHashSet<>())
+                    .add(finalContainer)
+            );
             return container;
         });
+    }
+
+    private static void notifyStartOperation(Map<DockerImageName, AtomicInteger> operation, DockerImageName dockerImageName) {
+        withMapLock("notifyStartOperation", () -> {
+            operation.computeIfAbsent(dockerImageName, unused -> new AtomicInteger(0))
+                .incrementAndGet();
+            return null;
+        });
+    }
+
+    private static void notifyEndOperation(Map<DockerImageName, AtomicInteger> operation, DockerImageName dockerImageName) {
+        withMapLock("notifyEndOperation", () -> {
+            var remaining = operation.get(dockerImageName)
+                .decrementAndGet();
+            if (remaining == 0) {
+                operation.remove(dockerImageName);
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Returns the list of containers which are being started.
+     *
+     * @return the list of containers
+     */
+    public static List<String> startingContainers() {
+        return withMapLock("containersInProgress", () ->
+            STARTING.keySet().stream().map(DockerImageName::toString).sorted().toList()
+        );
+    }
+
+    /**
+     * Returns the list of containers which are being pulled.
+     *
+     * @return the list of containers
+     */
+    public static List<String> pullingContainers() {
+        return withMapLock("containersInProgress", () ->
+            PULLING.keySet().stream().map(DockerImageName::toString).sorted().toList()
+        );
     }
 
     /**
@@ -115,40 +198,41 @@ public final class TestContainers {
     }
 
     private static Map<Scope, List<GenericContainer<?>>> listByScope(Scope scope) {
-        return withLock("listByScope", () ->
-            CONTAINERS_BY_KEY.entrySet()
-                .stream()
-                .filter(entry -> scope.includes(entry.getKey().scope))
-                .collect(Collectors.groupingBy(
-                    entry -> entry.getKey().scope,
-                    Collectors.mapping(
-                        Map.Entry::getValue,
-                        Collectors.toList()
-                    )
-                ))
+        return withMapLock("listByScope", () -> CONTAINERS_BY_KEY.entrySet()
+            .stream()
+            .filter(entry -> scope.includes(entry.getKey().scope))
+            .collect(Collectors.groupingBy(
+                entry -> entry.getKey().scope,
+                Collectors.mapping(
+                    Map.Entry::getValue,
+                    Collectors.toList()
+                )
+            ))
         );
     }
 
     @SuppressWarnings("java:S6204") // toList() breaks the return type
-    private static List<GenericContainer<?>> filterByScope(Scope scope, Set<GenericContainer<?>> containers) {
+    private static List<GenericContainer<?>> filterByScope(Scope scope,
+                                                           Set<GenericContainer<?>> containers) {
         if (containers.isEmpty()) {
             return Collections.emptyList();
         }
-        return withLock("filterByScope", () ->
-            CONTAINERS_BY_KEY.entrySet()
-                .stream()
-                .filter(entry -> containers.contains(entry.getValue()) && scope.includes(entry.getKey().scope))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList())
+        return withMapLock("filterByScope", () -> CONTAINERS_BY_KEY.entrySet()
+            .stream()
+            .filter(entry -> containers.contains(entry.getValue()) &&
+                             scope.includes(entry.getKey().scope))
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList())
         );
     }
 
     public static Network network(String name) {
-        return NETWORKS_BY_KEY.computeIfAbsent(name, k -> Network.newNetwork());
+        return withMapLock("network",
+            () -> NETWORKS_BY_KEY.computeIfAbsent(name, k -> Network.newNetwork()));
     }
 
     public static boolean closeAll() {
-        return withLock("closeAll", () -> {
+        return withMapLock("closeAll", () -> {
             boolean closed = false;
             for (GenericContainer<?> container : CONTAINERS_BY_KEY.values()) {
                 container.close();
@@ -168,9 +252,10 @@ public final class TestContainers {
 
     public static boolean closeScope(String id) {
         Scope scope = Scope.of(id);
-        return withLock("closeScope", () -> {
+        return withMapLock("closeScope", () -> {
             boolean closed = false;
-            Iterator<Map.Entry<Key, GenericContainer<?>>> iterator = CONTAINERS_BY_KEY.entrySet().iterator();
+            Iterator<Map.Entry<Key, GenericContainer<?>>> iterator =
+                CONTAINERS_BY_KEY.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<Key, GenericContainer<?>> entry = iterator.next();
                 var existingScope = entry.getKey().scope;
@@ -190,9 +275,11 @@ public final class TestContainers {
     }
 
     public static List<GenericContainer<?>> findByRequestedProperty(Scope scope, String property) {
-        return withLock("findByRequestedProperty", () -> {
-            Set<GenericContainer<?>> byProperty = CONTAINERS_BY_PROPERTY.getOrDefault(property, Collections.emptySet());
-            LOGGER.debug("Found {} containers for property {}. All properties: {}", byProperty.size(), property, CONTAINERS_BY_PROPERTY.keySet());
+        return withMapLock("findByRequestedProperty", () -> {
+            Set<GenericContainer<?>> byProperty =
+                CONTAINERS_BY_PROPERTY.getOrDefault(property, Collections.emptySet());
+            LOGGER.debug("Found {} containers for property {}. All properties: {}",
+                byProperty.size(), property, CONTAINERS_BY_PROPERTY.keySet());
             return filterByScope(scope, byProperty);
         });
     }
@@ -202,14 +289,16 @@ public final class TestContainers {
         private final String name;
         private final Map<String, String> properties;
         private final int hashCode;
-        final Scope scope;
+        private final Scope scope;
 
         private Key(Class<?> type, String name, Scope scope, Map<String, String> properties) {
             this.type = type;
             this.name = name;
             this.scope = scope;
             this.properties = properties;
-            this.hashCode = 31 * (31 * (31 * type.hashCode() + properties.hashCode()) + scope.hashCode()) + name.hashCode();
+            this.hashCode =
+                31 * (31 * (31 * type.hashCode() + properties.hashCode()) + scope.hashCode()) +
+                name.hashCode();
         }
 
         @Override

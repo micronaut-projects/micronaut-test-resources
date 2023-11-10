@@ -34,6 +34,9 @@ dependencies {
     aotPlugins(mnLogging.logback.classic)
     aotPlugins("org.fusesource.jansi:jansi:1.18")
     aotPlugins(testFixtures(project(":micronaut-test-resources-server")))
+
+    // In order to support the control panel at runtime
+    aotApplication projects.micronautTestResourcesControlPanel
 }
 
 application {

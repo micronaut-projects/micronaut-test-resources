@@ -36,9 +36,9 @@ import static io.micronaut.testresources.redis.RedisConfigurationSupport.isClust
 public class RedisClusterTestResourceProvider extends AbstractTestContainersProvider<RedisClusterContainer> {
 
     public static final String REDIS_URIS = "redis.uris";
-
-    public static final String DEFAULT_IMAGE = RedisClusterContainer.DEFAULT_IMAGE_NAME.asCanonicalNameString();
+    public static final String DISPLAY_NAME = "Redis";
     public static final String SIMPLE_NAME = "redis";
+    public static final String DEFAULT_IMAGE = RedisClusterContainer.DEFAULT_IMAGE_NAME.asCanonicalNameString();
 
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URIS);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URIS);
@@ -61,6 +61,11 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         boolean clusterMode = isClusterMode(testResourcesConfig);
         return clusterMode ? SUPPORTED_PROPERTIES_LIST : List.of();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

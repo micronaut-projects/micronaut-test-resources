@@ -1,0 +1,31 @@
+{{#with controlPanel.body }}
+
+    {{#eq dockerStatus.name 'AVAILABLE'}}
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>Available</h3>
+                <p>Docker client is available and running</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        <p><strong>{{badge}}</strong> test resources
+        {{#neq inProgress 0}}
+            ({{inProgress}} in progress)
+        {{/neq}}
+        </p>
+    {{/eq}}
+    {{#eq dockerStatus.name 'UNAVAILABLE'}}
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>Unavailable</h3>
+                <p>Docker client is unavailable</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-xmark"></i>
+            </div>
+        </div>
+    {{/eq}}
+
+{{/with}}

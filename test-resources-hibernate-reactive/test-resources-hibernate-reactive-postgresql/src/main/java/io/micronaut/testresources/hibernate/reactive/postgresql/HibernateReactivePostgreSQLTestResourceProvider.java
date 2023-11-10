@@ -25,6 +25,12 @@ import java.util.Map;
  * A test resource provider which will spawn a PostgreSQL test container.
  */
 public class HibernateReactivePostgreSQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<PostgreSQLContainer<?>> {
+    public static final String DISPLAY_NAME = "PostgreSQL (Hibernate reactive)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

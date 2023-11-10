@@ -1,0 +1,22 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Adds a control panel to the test resources server
+"""
+
+dependencies {
+    implementation(mnControlPanel.micronaut.control.panel.ui)
+    implementation(libs.managed.testcontainers.core)
+    implementation(projects.micronautTestResourcesTestcontainers)
+    implementation(projects.micronautTestResourcesEmbedded)
+    implementation(projects.micronautTestResourcesServer)
+    runtimeOnly(mn.micronaut.management)
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter '2.2.0'
+    }
+}

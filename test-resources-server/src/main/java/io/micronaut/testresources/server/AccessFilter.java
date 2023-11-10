@@ -45,6 +45,9 @@ public class AccessFilter implements HttpServerFilter {
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         if (request.getRemoteAddress().getAddress().isLoopbackAddress()) {
+            if (request.getPath().startsWith("/control-panel")) {
+                return chain.proceed(request);
+            }
             String serverToken = accessConfiguration.getAccessToken();
             if (serverToken != null) {
                 String clientToken = request.getHeaders().get(AccessConfiguration.ACCESS_TOKEN);

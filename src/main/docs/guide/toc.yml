@@ -37,6 +37,12 @@ extensions:
     title: Core extension
   extensions-junit-platform:
     title: JUnit Platform
+debugging:
+  title: Debugging
+  debugging-intro:
+    title: Running the test resources service in debug mode
+  modules-control-panel:
+    title: Control Panel
 architecture:
     title: Architecture
     architecture-server:

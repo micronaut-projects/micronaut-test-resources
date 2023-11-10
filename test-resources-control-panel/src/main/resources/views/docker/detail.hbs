@@ -1,0 +1,78 @@
+{{#with controlPanel.body }}
+
+    <div class="card card-light">
+        <div class="card-header">
+            <h3 class="card-title"><code>{{@key}}</code></h3>
+        </div>
+        <div class="card-body">
+            <h2>Managed containers</h2>
+            {{#neq inProgress 0}}
+                There are {{inProgress.size}} containers currently being pulled or starting:
+                <ul>
+                    {{#each pullingContainers as |image|}}
+                        <li><code>{{image}}</code> (pulling)</li>
+                    {{/each}}
+                    {{#each startingContainers as |image|}}
+                        <li><code>{{image}}</code> (starting)</li>
+                    {{/each}}
+                </ul>
+            {{/neq}}
+        {{#eq managedContainers.size 0}}
+            There are no containers managed by this Micronaut Test Resources server yet.
+        {{/eq}}
+        {{#neq managedContainers.size 0}}
+                <p>The following list only includes the containers whose lifecycle is handled by this Micronaut Test Resources server.</p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Scope</th>
+                        <th>Container name</th>
+                        <th>Image Name</th>
+                        <th>Container id</th>
+                        <th>Network</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each managedContainers as |container|}}
+                        <tr>
+                            <td><code>{{container.scope}}</code></td>
+                            <td><code>{{container.name}}</code></td>
+                            <td><code>{{container.imageName}}</code></td>
+                            <td><code>{{container.id}}</code></td>
+                            <td><code>{{container.network}}</code></td>
+                        </tr>
+
+                    {{/each}}
+                    </tbody>
+                </table>
+            {{/neq}}
+            <h2>Docker information</h2>
+            {{#with info}}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Architecture</td>
+                    <td><code>{{architecture}}</code></td>
+                </tr>
+                <tr>
+                    <td>Driver</td>
+                    <td><code>{{driver}}</code></td>
+                </tr>
+                <tr>
+                    <td>Containers</td>
+                    <td><strong><code>{{containers}}</code></strong> (<code>{{containersRunning}}</code>  running, <code>{{containersStopped}}</code> stopped, <code>{{containersPaused}}</code> paused)</td>
+                </tr>
+                </tbody>
+            </table>
+            {{/with}}
+        </div>
+    </div>
+
+
+{{/with}}

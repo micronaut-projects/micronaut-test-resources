@@ -25,6 +25,12 @@ import java.util.Map;
  * A test resource provider which will spawn a MySQL test container.
  */
 public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<MySQLContainer<?>> {
+    public static final String DISPLAY_NAME = "MySQL";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

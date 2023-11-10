@@ -25,6 +25,12 @@ import java.util.Map;
  * A test resource provider which will spawn a MariaDB test container.
  */
 public class HibernateReactiveMariaDBTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MariaDBContainer<?>> {
+    public static final String DISPLAY_NAME = "MariaDB (Hibernate reactive)";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

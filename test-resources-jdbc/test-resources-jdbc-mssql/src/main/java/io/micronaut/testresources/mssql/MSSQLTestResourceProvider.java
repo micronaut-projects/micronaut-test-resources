@@ -28,6 +28,12 @@ import java.util.Map;
 public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<MSSQLServerContainer<?>> {
 
     public static final String DEFAULT_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04";
+    public static final String DISPLAY_NAME = "MSSQL";
+
+    @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
     protected String getSimpleName() {

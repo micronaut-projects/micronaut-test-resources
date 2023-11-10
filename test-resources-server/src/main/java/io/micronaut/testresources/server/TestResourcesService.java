@@ -19,6 +19,7 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
+import io.micronaut.context.env.Environment;
 import io.micronaut.runtime.Micronaut;
 import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Singleton;
@@ -54,7 +55,8 @@ public class TestResourcesService {
                 }
             });
         long dur = System.nanoTime() - sd;
-        LOGGER.info("A Micronaut Test Resources server is listening on port {}, started in {}ms", context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
+        LOGGER.info("A Micronaut Test Resources server is listening on port {}, started in {}ms",
+            context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
     }
 
     /**
@@ -66,6 +68,7 @@ public class TestResourcesService {
         public void configure(ApplicationContextBuilder builder) {
             builder.packages("io.micronaut.testresources.server")
                 .deduceEnvironment(false)
+                .environments(Environment.TEST)
                 .banner(false);
         }
     }

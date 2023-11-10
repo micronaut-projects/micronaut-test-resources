@@ -1,0 +1,20 @@
+This module adds a https://github.com/micronaut-projects/micronaut-control-panel/[Micronaut Control Panel] to the test resources server.
+
+When added, the control panel module will be available on `/control-panel` of the test resources service.
+For example, at startup, you will see the following message:
+
+> Test Resources control panel can be browsed at http://localhost:40701/control-panel
+
+This URL can only be accessed from the local host.
+It provides information about:
+
+- the Docker environment (status and containers which have been started)
+- the test resources modules which are loaded in the test resources service (one for each test resource)
+- the properties which have been resolved by each test resources provider
+
+For example, it is possible to determine the database URL, username and password which were resolved by browsing to the corresponding test resources panel:
+
+image::test-resources-panel.jpg[]
+
+Note that the control panel _cannot_ show properties before the application has tried to resolve them, because the value of the properties depends on the request context.
+That request context is displayed

@@ -69,6 +69,11 @@ public class GenericTestContainerProvider implements ToggableTestResourcesResolv
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericTestContainerProvider.class);
 
     @Override
+    public String getDisplayName() {
+        return "Generic Test Containers";
+    }
+
+    @Override
     public String getName() {
         return "generic";
     }
@@ -76,6 +81,14 @@ public class GenericTestContainerProvider implements ToggableTestResourcesResolv
     @Override
     public int getOrder() {
         return GENERIC_ORDER;
+    }
+
+    @Override
+    public boolean isEnabled(Map<String, Object> testResourcesConfig) {
+        if (!DockerSupport.isDockerAvailable()) {
+            return false;
+        }
+        return ToggableTestResourcesResolver.super.isEnabled(testResourcesConfig);
     }
 
     @Override
@@ -117,7 +130,8 @@ public class GenericTestContainerProvider implements ToggableTestResourcesResolv
                 return new MappedContainer(md, TestContainers.getOrCreate(propertyName, GenericTestContainerProvider.class,
                     md.getId(),
                     properties,
-                    () -> {
+                    () -> imageName,
+                    unused -> {
                         if (!md.getDependencies().isEmpty()) {
                            resolveDependencies(md.getDependencies(), containerMetadataFrom(testResourcesConfig).toList(), properties, testResourcesConfig);
                         }

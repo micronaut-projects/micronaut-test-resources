@@ -15,7 +15,7 @@ testing {
         spockTest(JvmTestSuite) {
             dependencies {
                 implementation project(project.path)
-                implementation testFixtures(project(project.path))
+                implementation(testFixtures(project(project.path)))
                 implementation(mnTest.micronaut.test.spock)
                 compileOnly(mn.micronaut.inject.groovy)
             }
@@ -60,4 +60,14 @@ dependencies {
     testRuntimeOnly(mn.micronaut.context)
     testRuntimeOnly(mn.snakeyaml)
     kspKoTest(mn.micronaut.inject.kotlin)
+}
+
+tasks.named("spockTest", Test) {
+    classpath = classpath.filter {
+        println(it.name)
+        if (it.name.endsWith(".jar") && it.name.startsWith("micronaut-test-resources-extensions-junit-platform-") && !it.name.contains("fixtures")) {
+            return false
+        }
+        return true
+    }
 }

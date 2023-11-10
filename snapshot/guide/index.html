@@ -54,9 +54,11 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>6</strong><span>Architecture</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>7</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>8</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -127,19 +129,25 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-junit-platform"><a href="#extensions-junit-platform"><strong>5.2</strong><span>JUnit Platform</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>6</strong><span>Architecture</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-debugging"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>6.1</strong><span>The test resources server</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-debugging-intro"><a href="#debugging-intro"><strong>6.1</strong><span>Running the test resources service in debug mode</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>6.1.1</strong><span>Sharing containers between independent builds</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-control-panel"><a href="#modules-control-panel"><strong>6.2</strong><span>Control Panel</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>6.2</strong><span>The test resources client</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>6.3</strong><span>Embedded test resources</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>7.1</strong><span>The test resources server</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>6.4</strong><span>Implementing a test resource</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>7.1.1</strong><span>Sharing containers between independent builds</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>7</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>7.2</strong><span>The test resources client</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>7.3</strong><span>Embedded test resources</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>7.4</strong><span>Implementing a test resource</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>8</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -155,7 +163,7 @@
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -182,7 +190,7 @@ If that property is set, then the test resource will not be used.</p>
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -198,7 +206,7 @@ If that property is set, then the test resource will not be used.</p>
 <h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/quickStart.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/quickStart.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -236,7 +244,7 @@ POM or via the command-line).</p>
 <h1 id="modules"><a class="anchor" href="#modules"></a>4 Supported Modules</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -249,7 +257,7 @@ POM or via the command-line).</p>
 <h2 id="modules-databases"><a class="anchor" href="#modules-databases"></a>4.1 Databases</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-databases.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -496,7 +504,7 @@ It is possible to override the default image of the container by setting the fol
 <h2 id="modules-databases-jdbc"><a class="anchor" href="#modules-databases-jdbc"></a>4.1.1 JDBC</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-databases-jdbc.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases-jdbc.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -541,7 +549,7 @@ It is possible to override the default image of the container by setting the fol
 <h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>4.1.2 R2DBC</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-databases-r2dbc.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases-r2dbc.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -618,7 +626,7 @@ This can be useful when using modules like Flyway which only support JDBC for up
 <h2 id="modules-elasticsearch"><a class="anchor" href="#modules-elasticsearch"></a>4.2 Elasticsearch</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-elasticsearch.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-elasticsearch.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -635,7 +643,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>4.3 Kafka</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-kafka.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-kafka.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -651,7 +659,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>4.4 Localstack</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-localstack.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-localstack.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -699,7 +707,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>4.5 MongoDB</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-mongodb.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-mongodb.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -727,7 +735,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>4.6 MQTT</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-mqtt.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-mqtt.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -884,7 +892,7 @@ listener 1883</code></pre>
 <h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>4.7 Neo4j</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-neo4j.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-neo4j.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -900,7 +908,7 @@ listener 1883</code></pre>
 <h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>4.8 RabbitMQ</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-rabbitmq.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -916,7 +924,7 @@ listener 1883</code></pre>
 <h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>4.9 Redis</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-redis.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-redis.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -941,7 +949,7 @@ listener 1883</code></pre>
 <h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>4.10 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1041,7 +1049,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 <h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.11 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/modules-testcontainers.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-testcontainers.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2270,7 +2278,7 @@ Dependencies between containers <strong>only work between generic containers</st
 <h1 id="extensions"><a class="anchor" href="#extensions"></a>5 Micronaut Test extensions</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/extensions.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/extensions.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2284,7 +2292,7 @@ The core extension provides a way to expand the set of test properties available
 <h2 id="extensions-core"><a class="anchor" href="#extensions-core"></a>5.1 Core extension</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/extensions-core.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/extensions-core.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2411,7 +2419,7 @@ class ConnectionSpec {
 <h2 id="extensions-junit-platform"><a class="anchor" href="#extensions-junit-platform"></a>5.2 JUnit Platform</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/extensions-junit-platform.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/extensions-junit-platform.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2560,10 +2568,108 @@ Similarly, using the test distribution plugin of Gradle will trigger the same pr
 </div>
 </div>
 
-<h1 id="architecture"><a class="anchor" href="#architecture"></a>6 Architecture</h1>
+<h1 id="debugging"><a class="anchor" href="#debugging"></a>6 Debugging</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/architecture.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/debugging.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+
+
+<h2 id="debugging-intro"><a class="anchor" href="#debugging-intro"></a>6.1 Running the test resources service in debug mode</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/debugging-intro.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The test resources service runs as a separate service, on its own process.</p>
+</div>
+<div class="paragraph">
+<p>Debugging the test resources service is currently only supported via the Gradle plugin.
+This can be configured using the following code:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">tasks.named("internalStartTestResourcesService") {
+    debugServer = true
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">tasks.internalStartTestResourcesService {
+    debugServer.set(true)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you may want to add the test resources control panel.</p>
+</div>
+
+<h2 id="modules-control-panel"><a class="anchor" href="#modules-control-panel"></a>6.2 Control Panel</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-control-panel.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This module adds a <a href="https://github.com/micronaut-projects/micronaut-control-panel/">Micronaut Control Panel</a> to the test resources server.</p>
+</div>
+<div class="paragraph">
+<p>When added, the control panel module will be available on <code>/control-panel</code> of the test resources service.
+For example, at startup, you will see the following message:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Test Resources control panel can be browsed at <a href="http://localhost:40701/control-panel" class="bare">http://localhost:40701/control-panel</a></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>This URL can only be accessed from the local host.
+It provides information about:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the Docker environment (status and containers which have been started)</p>
+</li>
+<li>
+<p>the test resources modules which are loaded in the test resources service (one for each test resource)</p>
+</li>
+<li>
+<p>the properties which have been resolved by each test resources provider</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, it is possible to determine the database URL, username and password which were resolved by browsing to the corresponding test resources panel:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/test-resources-panel.jpg" alt="test resources panel">
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the control panel <em>cannot</em> show properties before the application has tried to resolve them, because the value of the properties depends on the request context.
+That request context is displayed</p>
+</div>
+
+<h1 id="architecture"><a class="anchor" href="#architecture"></a>7 Architecture</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2591,10 +2697,10 @@ For example, if a bean needs the value of the <code>datasources.default.url</cod
 As a side effect of providing the value, a database container may be started.</p>
 </div>
 
-<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>6.1 The test resources server</h2>
+<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>7.1 The test resources server</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/architecture-server.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-server.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2613,10 +2719,10 @@ As a side effect of providing the value, a database container may be started.</p
 <p>It means, for example, that with <a href="https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build">Gradle continuous builds</a>, the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.</p>
 </div>
 
-<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>6.1.1 Sharing containers between independent builds</h2>
+<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>7.1.1 Sharing containers between independent builds</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/architecture-shared-server.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-shared-server.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2647,10 +2753,10 @@ If you use a shared server, then you must make sure that the <em>first build</em
 </table>
 </div>
 
-<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>6.2 The test resources client</h2>
+<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>7.2 The test resources client</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/architecture-client.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-client.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2665,10 +2771,10 @@ It basically delegates requests of property resolution from Micronaut to the ser
 As a user, you should never have to deal with this module directly.</p>
 </div>
 
-<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>6.3 Embedded test resources</h2>
+<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>7.3 Embedded test resources</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/architecture-embedded.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-embedded.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2686,10 +2792,10 @@ However, we don&#8217;t recommend it because it would enhance the application cl
 <p>The client/server model is designed to avoid this situation, while offering a more fine-grained control over the lifecycle of the test resources.</p>
 </div>
 
-<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>6.4 Implementing a test resource</h2>
+<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>7.4 Implementing a test resource</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/implementing-test-resources.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/implementing-test-resources.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2789,10 +2895,10 @@ If, for some reason, the resolver cannot resolve the expression then <code>Optio
 </div>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>7 Repository</h1>
+<h1 id="repository"><a class="anchor" href="#repository"></a>8 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.1.x/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>

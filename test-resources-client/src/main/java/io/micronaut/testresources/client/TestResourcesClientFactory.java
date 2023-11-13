@@ -39,6 +39,8 @@ public final class TestResourcesClientFactory {
     private static final String TEST_RESOURCES_PROPERTIES = "test-resources.properties";
     private static final String DEFAULT_MICRONAUT_DIR = ".micronaut/test-resources/";
     private static final String DEFAULT_PROPERTIES_RELATIVE_PATH = DEFAULT_MICRONAUT_DIR + TEST_RESOURCES_PROPERTIES;
+    private static final String TEST_RESOURCES_NAMESPACE = "TEST_RESOURCES_NAMESPACE";
+    private static final String NAMESPACE_PREFIX = ".micronaut/test-resources-";
 
     private static WeakReference<TestResourcesClient> cachedClient;
 
@@ -64,7 +66,15 @@ public final class TestResourcesClientFactory {
     public static Optional<TestResourcesClient> findByConvention() {
         return fromSystemProperties()
             .or(() -> fromFileSystem(Paths.get(DEFAULT_PROPERTIES_RELATIVE_PATH)))
-            .or(() -> fromFileSystem(Paths.get(System.getProperty("user.home")).resolve(DEFAULT_PROPERTIES_RELATIVE_PATH)));
+            .or(() -> {
+                var homedir = Paths.get(System.getProperty("user.home"));
+                var namespace = System.getenv(TEST_RESOURCES_NAMESPACE);
+                if (namespace != null) {
+                    return fromFileSystem(homedir.resolve(
+                        NAMESPACE_PREFIX + namespace + "/" + TEST_RESOURCES_PROPERTIES));
+                }
+                return fromFileSystem(homedir.resolve(DEFAULT_PROPERTIES_RELATIVE_PATH));
+            });
     }
 
     /**

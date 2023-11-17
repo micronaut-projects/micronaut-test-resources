@@ -65,6 +65,7 @@ public class ServerUtils {
     private static final String SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY = "server.access-token";
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
     private static final String SERVER_CLIENT_READ_TIMEOUT = "server.client.read.timeout";
+    private static final String SERVER_IDLE_TIMEOUT_MINUTES = "server.idle.timeout.minutes";
     private static final String SERVER_ENTRY_POINT = "io.micronaut.testresources.server.TestResourcesService";
     private static final String MICRONAUT_SERVER_PORT = "micronaut.server.port";
     private static final String JMX_SYSTEM_PROPERTY = "com.sun.management.jmxremote";
@@ -107,6 +108,9 @@ public class ServerUtils {
                     props.getProperty(SERVER_ACCESS_TOKEN),
                     Optional.ofNullable(props.getProperty(SERVER_CLIENT_READ_TIMEOUT))
                         .map(Integer::parseInt)
+                        .orElse(null),
+                    Optional.ofNullable(props.getProperty(SERVER_IDLE_TIMEOUT_MINUTES))
+                        .map(Integer::parseInt)
                         .orElse(null)
                 ));
             } catch (IOException | URISyntaxException e) {
@@ -144,6 +148,7 @@ public class ServerUtils {
      * @param cdsDirectory the CDS directory. If not null, class data sharing will be enabled
      * @param serverClasspath the server classpath
      * @param clientTimeoutMs the client timeout
+     * @param serverIdleTimeoutMinutes the server idle timeout
      * @param serverFactory the server factory, responsible for forking a process
      * @return the server settings once the server is started
      * @throws IOException if an error occurs
@@ -155,6 +160,7 @@ public class ServerUtils {
                                                                 Path cdsDirectory,
                                                                 Collection<File> serverClasspath,
                                                                 Integer clientTimeoutMs,
+                                                                Integer serverIdleTimeoutMinutes,
                                                                 ServerFactory serverFactory) throws IOException {
         Optional<ServerSettings> maybeServerSettings = readServerSettings(serverSettingsDirectory);
         if (maybeServerSettings.isPresent()) {
@@ -175,7 +181,7 @@ public class ServerUtils {
         }
 
         Files.createDirectories(portFilePath.getParent());
-        startAndWait(serverFactory, explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
+        startAndWait(serverFactory, explicitPort, serverIdleTimeoutMinutes, portFilePath, accessToken, serverClasspath, cdsDirectory);
         int port;
         if (explicitPort == null) {
             List<String> lines = Files.readAllLines(portFilePath);
@@ -197,7 +203,7 @@ public class ServerUtils {
         } else {
             port = explicitPort;
         }
-        ServerSettings settings = new ServerSettings(port, accessToken, clientTimeoutMs);
+        ServerSettings settings = new ServerSettings(port, accessToken, clientTimeoutMs, serverIdleTimeoutMinutes);
         writeServerSettings(serverSettingsDirectory, settings);
         return settings;
     }
@@ -212,6 +218,7 @@ public class ServerUtils {
      * @param accessToken the access token, if any
      * @param serverClasspath the server classpath
      * @param clientTimeoutMs the client timeout
+     * @param serverIdleTimeoutMinutes the server idle timeout
      * @param serverFactory the server factory, responsible for forking a process
      * @return the server settings once the server is started
      * @throws IOException if an error occurs
@@ -222,6 +229,7 @@ public class ServerUtils {
                                                                 String accessToken,
                                                                 Collection<File> serverClasspath,
                                                                 Integer clientTimeoutMs,
+                                                                Integer serverIdleTimeoutMinutes,
                                                                 ServerFactory serverFactory) throws IOException {
         return startOrConnectToExistingServer(
             explicitPort,
@@ -231,6 +239,7 @@ public class ServerUtils {
             null,
             serverClasspath,
             clientTimeoutMs,
+            serverIdleTimeoutMinutes,
             serverFactory
         );
     }
@@ -283,16 +292,17 @@ public class ServerUtils {
 
     private static void startAndWait(ServerFactory serverFactory,
                                      Integer explicitPort,
+                                     Integer idleTimeoutMinutes,
                                      Path portFilePath,
                                      String accessToken,
                                      Collection<File> serverClasspath,
                                      Path cdsDirectory) throws IOException {
-        ProcessParameters processParameters = createProcessParameters(explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
+        ProcessParameters processParameters = createProcessParameters(explicitPort, idleTimeoutMinutes, portFilePath, accessToken, serverClasspath, cdsDirectory);
         serverFactory.startServer(processParameters);
         // If the call is a CDS dump, we need to perform a second invocation
         // which doesn't dump
         if (processParameters.isCDSDumpInvocation()) {
-            startAndWait(serverFactory, explicitPort, portFilePath, accessToken, serverClasspath, cdsDirectory);
+            startAndWait(serverFactory, explicitPort, idleTimeoutMinutes, portFilePath, accessToken, serverClasspath, cdsDirectory);
             return;
         }
         if (explicitPort != null) {
@@ -307,8 +317,8 @@ public class ServerUtils {
         }
     }
 
-    private static ProcessParameters createProcessParameters(Integer explicitPort, Path portFilePath, String accessToken, Collection<File> serverClasspath, Path cdsDirectory) {
-        return new DefaultProcessParameters(explicitPort, accessToken, cdsDirectory, serverClasspath, portFilePath);
+    private static ProcessParameters createProcessParameters(Integer explicitPort, Integer serverIdleTimeoutMinutes, Path portFilePath, String accessToken, Collection<File> serverClasspath, Path cdsDirectory) {
+        return new DefaultProcessParameters(explicitPort, serverIdleTimeoutMinutes, accessToken, cdsDirectory, serverClasspath, portFilePath);
 
     }
 
@@ -362,12 +372,19 @@ public class ServerUtils {
         private final Path cdsDirectory;
         private final Collection<File> serverClasspath;
         private final Path portFilePath;
+        private final Integer idleTimeoutMinutes;
         private List<String> jvmArgs;
         private List<File> classpath;
         private File flatDirsJar;
 
-        public DefaultProcessParameters(Integer explicitPort, String accessToken, Path cdsDirectory, Collection<File> serverClasspath, Path portFilePath) {
+        public DefaultProcessParameters(Integer explicitPort,
+                                        Integer idleTimeoutMinutes,
+                                        String accessToken,
+                                        Path cdsDirectory,
+                                        Collection<File> serverClasspath,
+                                        Path portFilePath) {
             this.explicitPort = explicitPort;
+            this.idleTimeoutMinutes = idleTimeoutMinutes;
             this.accessToken = accessToken;
             this.cdsDirectory = cdsDirectory;
             this.serverClasspath = serverClasspath;
@@ -395,6 +412,9 @@ public class ServerUtils {
             }
             if (accessToken != null) {
                 systemProperties.put(SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY, accessToken);
+            }
+            if (idleTimeoutMinutes != null) {
+                systemProperties.put(SERVER_IDLE_TIMEOUT_MINUTES, String.valueOf(idleTimeoutMinutes));
             }
             return systemProperties;
         }

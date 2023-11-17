@@ -19,9 +19,13 @@ import io.micronaut.testresources.core.TestResourcesResolver;
 
 import java.util.Map;
 
+/**
+ * A test resources property resolution listener will be notified
+ * whenever a property is resolved by a {@link TestResourcesResolver}.
+ */
 public interface PropertyResolutionListener {
     /**
-     * Records that a property was resolved by a particular resolver
+     * Records that a property was resolved by a particular resolver.
      * @param property the property which was resolved
      * @param resolvedValue the result of the resolution
      * @param resolver the resolver which resolved the property

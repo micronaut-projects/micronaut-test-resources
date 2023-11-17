@@ -49,7 +49,7 @@ class ServerUtilsTest extends Specification {
         embeddedServer.start()
 
         when:
-        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, token, classpath, timeout, factory)
+        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, token, classpath, timeout, null, factory)
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -98,17 +98,17 @@ class ServerUtilsTest extends Specification {
         def applicationContext = ApplicationContext.builder().start()
         def embeddedServer = applicationContext.getBean(EmbeddedServer)
         embeddedServer.start()
-        ServerUtils.writeServerSettings(settingsDir, new ServerSettings(embeddedServer.port, null, null))
+        ServerUtils.writeServerSettings(settingsDir, new ServerSettings(embeddedServer.port, null, null, null))
 
         when: "no explicit port"
-        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, factory)
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, null, factory)
 
         then:
         0 * factory.startServer(_)
         0 * factory.waitFor(_)
 
         when: "explicit port"
-        ServerUtils.startOrConnectToExistingServer(embeddedServer.port, portFile, settingsDir, null, [], null, factory)
+        ServerUtils.startOrConnectToExistingServer(embeddedServer.port, portFile, settingsDir, null, [], null, null, factory)
 
         then:
         0 * factory.startServer(_)
@@ -137,7 +137,7 @@ class ServerUtilsTest extends Specification {
         embeddedServer.start()
 
         when: "first call with CDS support enabled"
-        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, factory)
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, null, factory)
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -154,7 +154,7 @@ class ServerUtilsTest extends Specification {
         settingsDir.toFile().deleteDir()
 
         when: "second call dumps CDS then starts server"
-        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, factory)
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, null, factory)
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -177,7 +177,7 @@ class ServerUtilsTest extends Specification {
         settingsDir.toFile().deleteDir()
 
         when: "third call starts server with CDS"
-        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, factory)
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [cdsClasspathDir.toFile()], null, null, factory)
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -193,7 +193,7 @@ class ServerUtilsTest extends Specification {
         settingsDir.toFile().deleteDir()
 
         when: "removes CDS files if classpath changes"
-        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [], null, factory)
+        ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, cdsDir, [], null, null, factory)
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -220,7 +220,7 @@ class ServerUtilsTest extends Specification {
         embeddedServer.start()
 
         when:
-        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, factory)
+        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, null, factory)
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -247,7 +247,7 @@ class ServerUtilsTest extends Specification {
         embeddedServer.start()
 
         when:
-        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, factory)
+        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, null, factory)
 
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->

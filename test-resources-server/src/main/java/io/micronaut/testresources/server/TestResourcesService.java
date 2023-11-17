@@ -22,6 +22,7 @@ import io.micronaut.context.annotation.ContextConfigurer;
 import io.micronaut.context.env.Environment;
 import io.micronaut.runtime.Micronaut;
 import io.micronaut.runtime.server.EmbeddedServer;
+import io.micronaut.scheduling.annotation.Scheduled;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,19 @@ public class TestResourcesService {
         long dur = System.nanoTime() - sd;
         LOGGER.info("A Micronaut Test Resources server is listening on port {}, started in {}ms",
             context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
+    }
+
+    /**
+     * Periodically checks if the server is expired and if so, shuts it down.
+     * @param server the server
+     * @param manager the expiry manager
+     */
+    @Scheduled(fixedRate = "1m")
+    public void checkTimeout(EmbeddedServer server, ExpiryManager manager) {
+        if (manager.isExpired()) {
+            LOGGER.info("Shutting down server due to inactivity");
+            server.stop();
+        }
     }
 
     /**

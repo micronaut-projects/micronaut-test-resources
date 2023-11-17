@@ -35,12 +35,13 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A client responsible for connecting to a test resources
- * server.
+ * The main test resources controller, which will answer requests performed by the
+ * test resources client to resolve properties or close test resources.
  */
 @Controller("/")
 @ExecuteOn(TaskExecutors.BLOCKING)
-public final class TestResourcesController implements TestResourcesResolver {
+@Ping
+public class TestResourcesController implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
 
     private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
@@ -51,11 +52,22 @@ public final class TestResourcesController implements TestResourcesResolver {
         this.propertyResolutionListeners = propertyResolutionListeners;
     }
 
+    /**
+     * Lists all resolvable properties. Prefer {@link #getResolvableProperties()} to list
+     * all properties which can be resolved for a particular configuration.
+     * @return the list of resolvable properties which do not depend on the application configuration
+     */
     @Get("/list")
     public List<String> getResolvableProperties() {
         return getResolvableProperties(Collections.emptyMap(), Collections.emptyMap());
     }
 
+    /**
+     * Lists all resolvable properties for a particular configuration.
+     * @param propertyEntries the property entries
+     * @param testResourcesConfig the test resources configuration
+     * @return
+     */
     @Override
     @Post("/list")
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -69,6 +81,12 @@ public final class TestResourcesController implements TestResourcesResolver {
             .toList();
     }
 
+    /**
+     * Lists all properties required to resolve a particular expression.
+     * @param expression the expression which needs to be resolved.
+     *
+     * @return the list of required properties
+     */
     @Override
     @Get("/requirements/expr/{expression}")
     public List<String> getRequiredProperties(String expression) {
@@ -80,6 +98,10 @@ public final class TestResourcesController implements TestResourcesResolver {
             .toList();
     }
 
+    /**
+     * Lists all properties required by all resolvers.
+     * @return the list of required properties
+     */
     @Override
     @Get("/requirements/entries")
     public List<String> getRequiredPropertyEntries() {
@@ -91,6 +113,13 @@ public final class TestResourcesController implements TestResourcesResolver {
             .toList();
     }
 
+    /**
+     * Resolves a property.
+     * @param name the property to resolve
+     * @param properties the resolved required properties
+     * @param testResourcesConfig the test resources configuration
+     * @return the resolved property, if any
+     */
     @Post("/resolve")
     public Optional<String> resolve(String name,
                                     Map<String, Object> properties,
@@ -112,23 +141,41 @@ public final class TestResourcesController implements TestResourcesResolver {
         return result;
     }
 
+    /**
+     * Closes all test resources.
+     * @return true if the operation was successful
+     */
     @Get("/close/all")
     public boolean closeAll() {
         LOGGER.debug("Closing all test resources");
         return TestContainers.closeAll();
     }
 
+    /**
+     * Closes a test resource scope.
+     * @param id the scope id
+     * @return true if the operation was successful
+     */
     @Get("/close/{id}")
     public boolean closeScope(@Nullable String id) {
         LOGGER.info("Closing test resources of scope {}", id);
         return TestContainers.closeScope(id);
     }
 
+    /**
+     * Lists all test containers started by the server.
+     * @return the list of test containers
+     */
     @Get("/testcontainers")
     public List<TestContainer> listContainers() {
         return listContainersByScope(null);
     }
 
+    /**
+     * Lists all test containers started by the server for a particular scope.
+     * @param scope the scope id
+     * @return the list of test containers
+     */
     @Get("/testcontainers/{scope}")
     public List<TestContainer> listContainersByScope(@Nullable String scope) {
         return TestContainers.listByScope(scope)

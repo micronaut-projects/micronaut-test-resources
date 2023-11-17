@@ -25,11 +25,18 @@ public final class ServerSettings {
     private final int port;
     private final String accessToken;
     private final Integer clientTimeout;
+    private final Integer idleTimeoutMinutes;
 
+    @Deprecated
     public ServerSettings(int port, String accessToken, Integer clientTimeout) {
+        this(port, accessToken, clientTimeout, null);
+    }
+
+    public ServerSettings(int port, String accessToken, Integer clientTimeout, Integer idleTimeoutMinutes) {
         this.port = port;
         this.accessToken = accessToken;
         this.clientTimeout = clientTimeout;
+        this.idleTimeoutMinutes = idleTimeoutMinutes;
     }
 
     public int getPort() {
@@ -42,6 +49,10 @@ public final class ServerSettings {
 
     public Optional<Integer> getClientTimeout() {
         return Optional.ofNullable(clientTimeout);
+    }
+
+    public Optional<Integer> getIdleTimeoutMinutes() {
+        return Optional.ofNullable(idleTimeoutMinutes);
     }
 
     @Override
@@ -61,7 +72,10 @@ public final class ServerSettings {
         if (!Objects.equals(accessToken, that.accessToken)) {
             return false;
         }
-        return Objects.equals(clientTimeout, that.clientTimeout);
+        if (!Objects.equals(clientTimeout, that.clientTimeout)) {
+            return false;
+        }
+        return Objects.equals(idleTimeoutMinutes, that.idleTimeoutMinutes);
     }
 
     @Override
@@ -69,6 +83,7 @@ public final class ServerSettings {
         int result = port;
         result = 31 * result + (accessToken != null ? accessToken.hashCode() : 0);
         result = 31 * result + (clientTimeout != null ? clientTimeout.hashCode() : 0);
+        result = 31 * result + (idleTimeoutMinutes != null ? idleTimeoutMinutes.hashCode() : 0);
         return result;
     }
 }

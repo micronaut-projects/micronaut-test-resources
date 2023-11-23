@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
 
@@ -108,7 +109,26 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         private static Optional<String> callClient(String expression, TestResourcesClient client, Map<String, Object> props, Map<String, Object> properties) {
-            return client.resolve(expression, props, properties);
+            return withErrorHandling(
+                () -> client.resolve(expression, props, properties),
+                () -> "Test resources service wasn't able to revolve expression '" + expression + "'"
+            );
+        }
+
+        private static <T> T withErrorHandling(Supplier<T> callable, Supplier<String> errorMessage) {
+            try {
+                return callable.get();
+            } catch (TestResourcesException ex) {
+                var sb = new StringBuilder();
+                sb.append(errorMessage.get()).append(":");
+                var message = ex.getMessage();
+                if (message.contains("\n")) {
+                    sb.append("  ").append(message);
+                } else {
+                    sb.append(" ").append(message);
+                }
+                throw new TestResourcesException(sb.toString());
+            }
         }
 
         @Override

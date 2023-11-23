@@ -22,3 +22,6 @@ test-resources:
       network-aliases: alice
       hostnames: consumer.host
       depends-on: producer
+    incorrect-image:
+      image-name: this-image-does-not-exist:1.0
+      hostnames: incorrect-image.host

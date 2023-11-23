@@ -16,8 +16,10 @@
 package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.testresources.core.Scope;
+import io.micronaut.testresources.core.TestResourcesResolutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.ContainerFetchException;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.utility.DockerImageName;
@@ -108,37 +110,42 @@ public final class TestContainers {
                                                                    Supplier<DockerImageName> imageNameSupplier,
                                                                    Function<DockerImageName, T> creator) {
         return withKey(Key.of(owner, name, Scope.from(query), query), key -> {
-            T container = withMapLock("getOrCreate", () -> (T) CONTAINERS_BY_KEY.get(key));
-            var dockerImageName = imageNameSupplier.get();
-            if (container == null) {
-                notifyStartOperation(PULLING, dockerImageName);
-                try {
-                    container = creator.apply(dockerImageName);
-                } finally {
-                    notifyEndOperation(PULLING, dockerImageName);
-                }
-                try {
-                    notifyStartOperation(STARTING, dockerImageName);
-                    if (DockerSupport.isDockerAvailable()) {
-                        LOGGER.info("Starting test container {}", name);
-                        container.start();
-                    } else {
-                        LOGGER.error("Cannot start container {} as Docker support isn't available",
-                            name);
+            try {
+                T container = withMapLock("getOrCreate", () -> (T) CONTAINERS_BY_KEY.get(key));
+                var dockerImageName = imageNameSupplier.get();
+                if (container == null) {
+                    notifyStartOperation(PULLING, dockerImageName);
+                    try {
+                        container = creator.apply(dockerImageName);
+                    } finally {
+                        notifyEndOperation(PULLING, dockerImageName);
                     }
-                } finally {
-                    notifyEndOperation(STARTING, dockerImageName);
+                    try {
+                        notifyStartOperation(STARTING, dockerImageName);
+                        if (DockerSupport.isDockerAvailable()) {
+                            LOGGER.info("Starting test container {}", name);
+                            container.start();
+                        } else {
+                            throw new TestResourcesResolutionException("Cannot start container " + name + " as Docker doesn't seem to be available");
+                        }
+                    } finally {
+                        notifyEndOperation(STARTING, dockerImageName);
+                    }
+                    T finalContainer = container;
+                    withMapLock("getOrCreate", () -> CONTAINERS_BY_KEY.put(key, finalContainer));
                 }
                 T finalContainer = container;
-                withMapLock("getOrCreate", () -> CONTAINERS_BY_KEY.put(key, finalContainer));
+                withMapLock("getOrCreate", () ->
+                    CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty,
+                            e -> new LinkedHashSet<>())
+                        .add(finalContainer)
+                );
+                return container;
+            }  catch (ContainerFetchException ex) {
+                // unwrap message for clearer error on the client side
+                var message = ex.getCause().getMessage();
+                throw new TestResourcesResolutionException(message);
             }
-            T finalContainer = container;
-            withMapLock("getOrCreate", () ->
-                CONTAINERS_BY_PROPERTY.computeIfAbsent(requestedProperty,
-                        e -> new LinkedHashSet<>())
-                    .add(finalContainer)
-            );
-            return container;
         });
     }
 

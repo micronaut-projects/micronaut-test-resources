@@ -42,7 +42,15 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
                                    Class<T> requiredType) {
         if (expression.startsWith(PLACEHOLDER_PREFIX)) {
             String eagerExpression = expression.substring(PLACEHOLDER_PREFIX.length());
-            return delegate.resolve(propertyResolver, conversionService, eagerExpression, requiredType);
+            var resolved = delegate.resolve(propertyResolver, conversionService, eagerExpression,
+                requiredType);
+            if (resolved.isEmpty()) {
+                // This is the only case where we should throw an exception instead of returning
+                // an empty optional: we assume that if the expression starts with the prefix
+                // then ONLY test resources should resolve it
+                throw new TestResourcesResolutionException("Test resources doesn't support resolving expression '" + expression.substring(PLACEHOLDER_PREFIX.length()) + "'");
+            }
+            return resolved;
         }
         return Optional.empty();
     }

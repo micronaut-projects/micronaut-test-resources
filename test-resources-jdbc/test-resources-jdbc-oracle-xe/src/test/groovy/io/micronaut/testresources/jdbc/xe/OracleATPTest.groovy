@@ -19,7 +19,7 @@ class OracleATPTest extends AbstractJDBCSpec {
 
         then:
         BeanInstantiationException ex = thrown()
-        ex.message.contains("Could not resolve placeholder \${auto.test.resources.datasources.default")
+        ex.message.contains("Test resources doesn't support resolving expression 'datasources.default.password'")
     }
 
     @Override

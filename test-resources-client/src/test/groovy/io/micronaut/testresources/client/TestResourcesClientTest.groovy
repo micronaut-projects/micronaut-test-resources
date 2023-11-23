@@ -1,9 +1,9 @@
 package io.micronaut.testresources.client
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.testresources.core.TestResourcesResolutionException
 import jakarta.inject.Inject
 import spock.lang.Specification
 import spock.lang.TempDir
@@ -34,8 +34,20 @@ class TestResourcesClientTest extends Specification implements ClientCleanup {
         app.getProperty("missing", String).empty
 
         then:
-        ConfigurationException e = thrown()
-        e.message == 'Could not resolve placeholder ${auto.test.resources.missing}'
+        TestResourcesResolutionException e = thrown()
+        e.message == "Test resources doesn't support resolving expression 'missing'"
+    }
+
+    @RestoreSystemProperties
+    def "reasonable error message when the server throws an error"() {
+        def app = createApplication()
+
+        when:
+        app.getProperty("throws", String)
+
+        then:
+        TestResourcesException e = thrown()
+        e.message == "Test resources service wasn't able to revolve expression 'throws': Something bad happened"
     }
 
     private ApplicationContext createApplication() {

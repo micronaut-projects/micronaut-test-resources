@@ -19,12 +19,12 @@ class OracleATPReactiveTest extends AbstractJDBCSpec {
 
         then:
         BeanInstantiationException ex = thrown()
-        ex.message.contains("Could not resolve placeholder \${$placeholder")
+        ex.message.contains("Test resources doesn't support resolving expression '$expression")
 
         where:
-        environments                             | placeholder
-        ["test", "jdbc", "prod"]                 | "auto.test.resources.datasources.default"
-        ["test", "standalone", "standaloneprod"] | "auto.test.resources.r2dbc.datasources.default"
+        environments                             | expression
+        ["test", "jdbc", "prod"]                 | "datasources.default"
+        ["test", "standalone", "standaloneprod"] | "r2dbc.datasources.default"
 
     }
 

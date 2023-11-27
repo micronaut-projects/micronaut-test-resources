@@ -53,8 +53,8 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     private static final Argument<List<String>> LIST_OF_STRING = Argument.LIST_OF_STRING;
     private static final Argument<String> STRING = Argument.STRING;
     private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
-    private static final String INTERNAL_SERVER_ERROR_PREFIX = "Internal Server Error: ";
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
+    private static final String INTERNAL_SERVER_ERROR_PREFIX = INTERNAL_SERVER_ERROR + ": ";    
 
     private final JsonMapper jsonMapper;
     private final String baseUri;

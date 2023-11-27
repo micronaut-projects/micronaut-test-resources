@@ -9,8 +9,10 @@ and provide their value on demand.
 """
 
 dependencies {
+    annotationProcessor(mnSerde.micronaut.serde.processor)
     api(mn.micronaut.json.core)
-    api(project(':micronaut-test-resources-core'))
-
+    api(projects.micronautTestResourcesCore)
+    compileOnly(mnSerde.micronaut.serde.api)
+    compileOnly(mnSerde.micronaut.serde.jackson)
     testRuntimeOnly(mn.micronaut.http.server.netty)
 }

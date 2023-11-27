@@ -21,6 +21,7 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.json.JsonMapper;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -29,6 +30,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +53,8 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     private static final Argument<List<String>> LIST_OF_STRING = Argument.LIST_OF_STRING;
     private static final Argument<String> STRING = Argument.STRING;
     private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
+    private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
+    private static final String INTERNAL_SERVER_ERROR_PREFIX = INTERNAL_SERVER_ERROR + ": ";    
 
     private final JsonMapper jsonMapper;
     private final String baseUri;
@@ -81,7 +85,8 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @Override
-    public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+    public Optional<String> resolve(String name, Map<String, Object> properties,
+                                    Map<String, Object> testResourcesConfig) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);
@@ -119,7 +124,8 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         request.GET();
     }
 
-    private <T> T request(String path, Argument<T> type, Consumer<? super HttpRequest.Builder> config) {
+    private <T> T request(String path, Argument<T> type,
+                          Consumer<? super HttpRequest.Builder> config) {
         var request = HttpRequest.newBuilder()
             .uri(uri(path))
             .timeout(clientTimeout);
@@ -138,14 +144,56 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
                     return (T) body;
                 }
                 return jsonMapper.readValue(body, type);
+            } else if (response.statusCode() == 500) {
+                return handleError(jsonMapper.readValue(body, SimpleJsonErrorModel.class));
+            } else if (response.statusCode() == 404) {
+                return null;
             }
-            return null;
+            throw new TestResourcesException(
+                "Unexpected response code: " + response.statusCode() + " " + body);
+        } catch (ConnectException e) {
+            throw new TestResourcesException("Test resource service is not available at " + baseUri, e);
         } catch (IOException e) {
             throw new TestResourcesException(e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new TestResourcesException(e);
         }
+    }
+
+    private <T> T handleError(SimpleJsonErrorModel model) {
+        var allErrors = new LinkedHashSet<String>();
+        collectErrors(model, allErrors);
+        var errorList = allErrors.stream().toList();
+        if (errorList.size() == 1) {
+            throw new TestResourcesException(errorList.get(0));
+        } else {
+            var sb = new StringBuilder();
+            sb.append("Server failed with the following errors:\n");
+            for (String error : errorList) {
+                sb.append(" - ").append(error).append("\n");
+            }
+            throw new TestResourcesException(sb.toString());
+        }
+    }
+
+    private void collectErrors(SimpleJsonErrorModel model, LinkedHashSet<String> allErrors) {
+        sanitizeError(model.message()).ifPresent(allErrors::add);
+        if (model.embedded() != null && model.embedded().errors() != null) {
+            for (SimpleJsonErrorModel error : model.embedded().errors()) {
+                collectErrors(error, allErrors);
+            }
+        }
+    }
+
+    private static Optional<String> sanitizeError(String message) {
+        if (message.equals(INTERNAL_SERVER_ERROR)) {
+            return Optional.empty();
+        }
+        if (message.startsWith(INTERNAL_SERVER_ERROR_PREFIX)) {
+            return Optional.of(message.substring(INTERNAL_SERVER_ERROR_PREFIX.length()));
+        }
+        return Optional.of(message);
     }
 
     private URI uri(String path) {
@@ -163,4 +211,5 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
             throw new TestResourcesException(e);
         }
     }
+
 }

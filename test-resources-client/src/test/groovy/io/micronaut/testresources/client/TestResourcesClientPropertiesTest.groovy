@@ -1,9 +1,9 @@
 package io.micronaut.testresources.client
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.exceptions.ConfigurationException
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.testresources.core.TestResourcesResolutionException
 import jakarta.inject.Inject
 import spock.lang.Specification
 import spock.util.environment.RestoreSystemProperties
@@ -29,8 +29,8 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
         app.getProperty("missing", String).empty
 
         then:
-        ConfigurationException e = thrown()
-        e.message == 'Could not resolve placeholder ${auto.test.resources.missing}'
+        TestResourcesResolutionException e = thrown()
+        e.message == "Test resources doesn't support resolving expression 'missing'"
 
         cleanup:
         System.clearProperty("micronaut.test.resources.server.uri")

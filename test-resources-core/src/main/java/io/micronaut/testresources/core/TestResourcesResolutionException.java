@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.client;
+package io.micronaut.testresources.core;
 
 /**
- * Test resources resolution exception.
+ * An exception thrown whenever test resources was expected to resolve
+ * a property but couldn't.
  */
-public class TestResourcesException extends RuntimeException {
-    public TestResourcesException(Throwable cause) {
+public class TestResourcesResolutionException extends RuntimeException {
+    public TestResourcesResolutionException(Throwable cause) {
         super(cause);
     }
 
-    public TestResourcesException(String message, Throwable cause) {
+    public TestResourcesResolutionException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public TestResourcesException(String message) {
+    public TestResourcesResolutionException(String message) {
         super(message);
     }
 }

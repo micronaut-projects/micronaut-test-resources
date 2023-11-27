@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2023 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  */
 package io.micronaut.testresources.client;
 
-/**
- * Test resources resolution exception.
- */
-public class TestResourcesException extends RuntimeException {
-    public TestResourcesException(Throwable cause) {
-        super(cause);
-    }
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.serde.annotation.Serdeable;
 
-    public TestResourcesException(String message, Throwable cause) {
-        super(message, cause);
-    }
+import java.util.List;
 
-    public TestResourcesException(String message) {
-        super(message);
+@Serdeable
+public record SimpleJsonErrorModel(
+    @JsonProperty("message") String message,
+    @JsonProperty("_embedded") Embedded embedded
+) {
+    @Serdeable
+    public record Embedded(
+        @JsonProperty("errors") List<SimpleJsonErrorModel> errors
+    ) {
     }
 }

@@ -13,7 +13,7 @@ class TestServer implements TestResourcesResolver {
     @Override
     @Post("/list")
     List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        ["dummy1", "dummy2", "missing"]
+        ["dummy1", "dummy2", "missing", "throws"]
     }
 
     @Override
@@ -33,6 +33,9 @@ class TestServer implements TestResourcesResolver {
     Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         if ("missing" == name) {
             return Optional.empty()
+        }
+        if ("throws" == name) {
+            throw new RuntimeException("Something bad happened")
         }
         Optional.of("value for $name".toString())
     }

@@ -104,6 +104,11 @@ implements <a href="../server/PropertyResolutionListener.html" title="interface 
 <div class="col-last even-row-color">
 <div class="block">A property resolution.</div>
 </div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ControlPanelPropertyResolutionListener.ResolutionError.html" class="type-name-link" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.ResolutionError</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A property resolution error.</div>
+</div>
 </div>
 </section>
 </li>
@@ -131,13 +136,26 @@ implements <a href="../server/PropertyResolutionListener.html" title="interface 
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#errored(java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.lang.Throwable)" class="member-name-link">errored</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property,
+ <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;exception)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Records an error which happened during property resolution,
+ for example if a container fails to start.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ControlPanelPropertyResolutionListener.Resolution.html" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.Resolution</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findById(java.lang.String)" class="member-name-link">findById</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the resolutions performed by a particular resolver.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ControlPanelPropertyResolutionListener.Resolution.html" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.Resolution</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findById(java.lang.String)" class="member-name-link">findById</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findByResolver(io.micronaut.testresources.core.TestResourcesResolver)" class="member-name-link">findByResolver</a><wbr>(<a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the resolutions performed by a particular resolver.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ControlPanelPropertyResolutionListener.Resolution.html" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.Resolution</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findByResolver(io.micronaut.testresources.core.TestResourcesResolver)" class="member-name-link">findByResolver</a><wbr>(<a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ControlPanelPropertyResolutionListener.ResolutionError.html" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.ResolutionError</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findErrorsById(java.lang.String)" class="member-name-link">findErrorsById</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the resolutions performed by a particular resolver.</div>
 </div>
@@ -204,6 +222,25 @@ implements <a href="../server/PropertyResolutionListener.html" title="interface 
 </section>
 </li>
 <li>
+<section class="detail" id="errored(java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.lang.Throwable)">
+<h3>errored</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">errored</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property,
+ <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;exception)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../server/PropertyResolutionListener.html#errored(java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.lang.Throwable)">PropertyResolutionListener</a></code></span></div>
+<div class="block">Records an error which happened during property resolution,
+ for example if a container fails to start.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../server/PropertyResolutionListener.html#errored(java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.lang.Throwable)">errored</a></code>&nbsp;in interface&nbsp;<code><a href="../server/PropertyResolutionListener.html" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>property</code> - the property which we attempted to resolve</dd>
+<dd><code>resolver</code> - the resolver which failed</dd>
+<dd><code>exception</code> - the error which happened</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="findByResolver(io.micronaut.testresources.core.TestResourcesResolver)">
 <h3>findByResolver</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ControlPanelPropertyResolutionListener.Resolution.html" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.Resolution</a>&gt;</span>&nbsp;<span class="element-name">findByResolver</span><wbr><span class="parameters">(<a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver)</span></div>
@@ -220,6 +257,19 @@ implements <a href="../server/PropertyResolutionListener.html" title="interface 
 <section class="detail" id="findById(java.lang.String)">
 <h3>findById</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ControlPanelPropertyResolutionListener.Resolution.html" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.Resolution</a>&gt;</span>&nbsp;<span class="element-name">findById</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Returns the resolutions performed by a particular resolver.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the resolver id</dd>
+<dt>Returns:</dt>
+<dd>the resolutions</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="findErrorsById(java.lang.String)">
+<h3>findErrorsById</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ControlPanelPropertyResolutionListener.ResolutionError.html" title="class in io.micronaut.testresources.controlpanel">ControlPanelPropertyResolutionListener.ResolutionError</a>&gt;</span>&nbsp;<span class="element-name">findErrorsById</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
 <div class="block">Returns the resolutions performed by a particular resolver.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

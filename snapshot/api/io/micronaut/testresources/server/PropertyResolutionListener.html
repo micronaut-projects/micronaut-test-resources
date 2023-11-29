@@ -95,12 +95,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#resolved(java.lang.String,java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.util.Map,java.util.Map)" class="member-name-link">resolved</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#errored(java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.lang.Throwable)" class="member-name-link">errored</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property,
+ <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;error)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Records an error which happened during property resolution,
+ for example if a container fails to start.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#resolved(java.lang.String,java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.util.Map,java.util.Map)" class="member-name-link">resolved</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resolvedValue,
  <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Records that a property was resolved by a particular resolver.</div>
 </div>
 </div>
@@ -133,6 +141,22 @@ loadScripts(document, 'script');</script>
 <dd><code>resolver</code> - the resolver which resolved the property</dd>
 <dd><code>properties</code> - the properties used for resolution</dd>
 <dd><code>testResourcesConfig</code> - the test resources configuration</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="errored(java.lang.String,io.micronaut.testresources.core.TestResourcesResolver,java.lang.Throwable)">
+<h3>errored</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">errored</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property,
+ <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>&nbsp;resolver,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;error)</span></div>
+<div class="block">Records an error which happened during property resolution,
+ for example if a container fails to start.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>property</code> - the property which we attempted to resolve</dd>
+<dd><code>resolver</code> - the resolver which failed</dd>
+<dd><code>error</code> - the error which happened</dd>
 </dl>
 </section>
 </li>

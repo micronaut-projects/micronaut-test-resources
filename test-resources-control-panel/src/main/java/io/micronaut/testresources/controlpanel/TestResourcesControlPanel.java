@@ -18,15 +18,13 @@ package io.micronaut.testresources.controlpanel;
 import io.micronaut.controlpanel.core.AbstractControlPanel;
 import io.micronaut.controlpanel.core.config.ControlPanelConfiguration;
 
-import java.util.List;
-
 /**
  * A control panel for test resource resolvers.
  * Each resolver will result in the creation of a separate control panel.
  * The control panel is responsible for showing the properties resolved
  * by this particular test resources resolver.
  */
-public class TestResourcesControlPanel extends AbstractControlPanel<List<ControlPanelPropertyResolutionListener.Resolution>> {
+public class TestResourcesControlPanel extends AbstractControlPanel<TestResourcesControlPanelBody> {
     private final ControlPanelPropertyResolutionListener resolutionListener;
     private final String id;
 
@@ -45,9 +43,16 @@ public class TestResourcesControlPanel extends AbstractControlPanel<List<Control
         );
     }
 
+    public int getErrorCount() {
+        return resolutionListener.findErrorsById(id).size();
+    }
+
     @Override
-    public List<ControlPanelPropertyResolutionListener.Resolution> getBody() {
-        return resolutionListener.findById(id);
+    public TestResourcesControlPanelBody getBody() {
+        return new TestResourcesControlPanelBody(
+            resolutionListener.findById(id),
+            resolutionListener.findErrorsById(id)
+        );
     }
 
     @Override

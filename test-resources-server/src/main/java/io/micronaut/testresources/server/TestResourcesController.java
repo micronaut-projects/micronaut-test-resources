@@ -21,6 +21,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.micronaut.testresources.core.TestResourcesResolutionException;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
@@ -55,6 +56,7 @@ public class TestResourcesController implements TestResourcesResolver {
     /**
      * Lists all resolvable properties. Prefer {@link #getResolvableProperties()} to list
      * all properties which can be resolved for a particular configuration.
+     *
      * @return the list of resolvable properties which do not depend on the application configuration
      */
     @Get("/list")
@@ -64,27 +66,30 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Lists all resolvable properties for a particular configuration.
+     *
      * @param propertyEntries the property entries
      * @param testResourcesConfig the test resources configuration
-     * @return
      */
     @Override
     @Post("/list")
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
+                                                Map<String, Object> testResourcesConfig) {
         return loader.getResolvers()
             .stream()
             .filter(testResourcesResolver -> isEnabled(testResourcesResolver, testResourcesConfig))
             .map(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig))
             .flatMap(Collection::stream)
             .distinct()
-            .peek(p -> LOGGER.debug("For configuration {} and property entries {} , resolvable property: {}", testResourcesConfig, propertyEntries, p))
+            .peek(p -> LOGGER.debug(
+                "For configuration {} and property entries {} , resolvable property: {}",
+                testResourcesConfig, propertyEntries, p))
             .toList();
     }
 
     /**
      * Lists all properties required to resolve a particular expression.
-     * @param expression the expression which needs to be resolved.
      *
+     * @param expression the expression which needs to be resolved.
      * @return the list of required properties
      */
     @Override
@@ -100,6 +105,7 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Lists all properties required by all resolvers.
+     *
      * @return the list of required properties
      */
     @Override
@@ -115,6 +121,7 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Resolves a property.
+     *
      * @param name the property to resolve
      * @param properties the resolved required properties
      * @param testResourcesConfig the test resources configuration
@@ -126,14 +133,26 @@ public class TestResourcesController implements TestResourcesResolver {
                                     Map<String, Object> testResourcesConfig) {
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {
-            if (resolver instanceof ToggableTestResourcesResolver toggable && !toggable.isEnabled(testResourcesConfig)) {
+            if (resolver instanceof ToggableTestResourcesResolver toggable &&
+                !toggable.isEnabled(testResourcesConfig)) {
                 continue;
             }
-            result = resolver.resolve(name, properties, testResourcesConfig);
-            LOGGER.debug("Attempt to resolve {} with resolver {}, properties {} and test resources configuration {} : {}", name, resolver.getClass(), properties, testResourcesConfig, result.isPresent() ? result.get() : "\uD83D\uDEAB");
+            try {
+                result = resolver.resolve(name, properties, testResourcesConfig);
+                LOGGER.debug(
+                    "Attempt to resolve {} with resolver {}, properties {} and test resources configuration {} : {}",
+                    name, resolver.getClass(), properties, testResourcesConfig,
+                    result.orElse("\uD83D\uDEAB"));
+            } catch (Exception ex) {
+                for (PropertyResolutionListener listener : propertyResolutionListeners) {
+                    listener.errored(name, resolver, ex);
+                }
+                throw TestResourcesResolutionException.wrap(ex);
+            }
             if (result.isPresent()) {
                 for (PropertyResolutionListener listener : propertyResolutionListeners) {
-                    listener.resolved(name, result.get(), resolver, properties, testResourcesConfig);
+                    listener.resolved(name, result.get(), resolver, properties,
+                        testResourcesConfig);
                 }
                 return result;
             }
@@ -143,6 +162,7 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Closes all test resources.
+     *
      * @return true if the operation was successful
      */
     @Get("/close/all")
@@ -153,6 +173,7 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Closes a test resource scope.
+     *
      * @param id the scope id
      * @return true if the operation was successful
      */
@@ -164,6 +185,7 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Lists all test containers started by the server.
+     *
      * @return the list of test containers
      */
     @Get("/testcontainers")
@@ -173,6 +195,7 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Lists all test containers started by the server for a particular scope.
+     *
      * @param scope the scope id
      * @return the list of test containers
      */
@@ -191,7 +214,8 @@ public class TestResourcesController implements TestResourcesResolver {
             .toList();
     }
 
-    private static boolean isEnabled(TestResourcesResolver resolver, Map<String, Object> testResourcesConfig) {
+    private static boolean isEnabled(TestResourcesResolver resolver,
+                                     Map<String, Object> testResourcesConfig) {
         if (resolver instanceof ToggableTestResourcesResolver toggable) {
             return toggable.isEnabled(testResourcesConfig);
         }

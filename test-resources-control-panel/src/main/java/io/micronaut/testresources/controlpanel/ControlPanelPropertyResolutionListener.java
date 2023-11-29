@@ -20,6 +20,8 @@ import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.server.PropertyResolutionListener;
 import jakarta.inject.Singleton;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class ControlPanelPropertyResolutionListener implements PropertyResolutionListener {
     private final Map<String, Set<Resolution>> resolvedProperties = new HashMap<>();
+    private final Map<String, Set<ResolutionError>> errors = new HashMap<>();
 
     @Override
     public void resolved(String property, String resolvedValue, TestResourcesResolver resolver,
@@ -48,6 +51,13 @@ public class ControlPanelPropertyResolutionListener implements PropertyResolutio
         );
         resolvedProperties.computeIfAbsent(resolver.getId(), k -> new HashSet<>())
             .add(resolution);
+    }
+
+    @Override
+    public void errored(String property, TestResourcesResolver resolver, Throwable exception) {
+        var error = ResolutionError.of(property, exception);
+        errors.computeIfAbsent(resolver.getId(), k -> new HashSet<>())
+            .add(error);
     }
 
     /**
@@ -71,6 +81,18 @@ public class ControlPanelPropertyResolutionListener implements PropertyResolutio
             .toList();
     }
 
+    /**
+     * Returns the resolutions performed by a particular resolver.
+     * @param id the resolver id
+     * @return the resolutions
+     */
+    public List<ResolutionError> findErrorsById(String id) {
+        return errors.getOrDefault(id, Set.of())
+            .stream()
+            .sorted(Comparator.comparing(ResolutionError::property))
+            .toList();
+    }
+
     private static Map<String, String> asStringMap(Map<String, Object> input) {
         return input.entrySet()
             .stream()
@@ -82,6 +104,7 @@ public class ControlPanelPropertyResolutionListener implements PropertyResolutio
 
     /**
      * A property resolution.
+     *
      * @param property the property which was resolved
      * @param resolvedValue the resolved value as a string
      * @param properties the properties which were used for the resolution context
@@ -95,5 +118,32 @@ public class ControlPanelPropertyResolutionListener implements PropertyResolutio
         Map<String, String> testResourcesConfig
     ) {
 
+    }
+
+    /**
+     * A property resolution error.
+     *
+     * @param property the property which was resolved
+     * @param stackTrace the associated resolution error
+     */
+    @Introspected
+    public record ResolutionError(
+        String property,
+        String stackTrace
+    ) {
+
+        /**
+         * Builds a resolution error.
+         * @param property the property
+         * @param exception the exception
+         * @return a resolution error
+         */
+        public static ResolutionError of(String property, Throwable exception) {
+            var stackTrace = new StringWriter();
+            try (var writer = new PrintWriter(stackTrace)) {
+                exception.printStackTrace(writer);
+            }
+            return new ResolutionError(property, stackTrace.toString());
+        }
     }
 }

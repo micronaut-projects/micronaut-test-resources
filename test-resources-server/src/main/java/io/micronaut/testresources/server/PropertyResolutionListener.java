@@ -37,4 +37,15 @@ public interface PropertyResolutionListener {
                   TestResourcesResolver resolver,
                   Map<String, Object> properties,
                   Map<String, Object> testResourcesConfig);
+
+    /**
+     * Records an error which happened during property resolution,
+     * for example if a container fails to start.
+     * @param property the property which we attempted to resolve
+     * @param resolver the resolver which failed
+     * @param error the error which happened
+     */
+    void errored(String property,
+                 TestResourcesResolver resolver,
+                 Throwable error);
 }

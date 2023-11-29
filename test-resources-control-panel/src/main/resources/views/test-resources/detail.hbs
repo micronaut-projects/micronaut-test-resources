@@ -1,9 +1,9 @@
 <div class="card card-light">
-    {{#neq controlPanel.body.size 0}}
-        <div class="card-header">
-            <h3 class="card-title"><code>{{@key}}</code></h3>
-        </div>
-        <div class="card-body">
+    <div class="card-header">
+        <h3 class="card-title"><code>{{@key}}</code></h3>
+    </div>
+    <div class="card-body">
+        {{#neq controlPanel.body.resolvedProperties.size 0}}
             <p>
                 The following table contains the properties which were resolved by this test resources provider.
             </p>
@@ -17,7 +17,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{#each controlPanel.body as |resolution|}}
+                {{#each controlPanel.body.resolvedProperties as |resolution|}}
                     <tr>
                         <td><code>{{resolution.property}}</code></td>
                         <td><code>{{resolution.resolvedValue}}</code></td>
@@ -28,8 +28,28 @@
                 {{/each}}
                 </tbody>
             </table>
-        </div>
-    {{else}}
-        This test resources provider hasn't resolved any property yet.
-    {{/neq}}
+        {{else}}
+            This test resources provider hasn't resolved any property yet.
+        {{/neq}}
+        {{#neq controlPanel.body.errors.size 0}}
+            <p>There were errors during resolution of properties.</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Error</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each controlPanel.body.errors as |error|}}
+                    <tr>
+                        <td><code>{{error.property}}</code></td>
+                        <td><code>{{error.stackTrace}}</code></td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        {{/neq}}
+    </div>
+
 </div>

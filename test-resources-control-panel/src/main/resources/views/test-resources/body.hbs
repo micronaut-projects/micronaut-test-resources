@@ -9,5 +9,14 @@
             Resolved {{badge}} properties.
         {{/eq}}
     {{/eq}}
+    {{#neq errorCount 0 }}
+        <div class="card bg-danger">
+            {{#eq errorCount 1}}
+                1 resolution failure
+            {{else}}
+                {{errorCount}} resolution failures
+            {{/eq}}
+        </div>
+    {{/neq}}
 
 {{/with}}

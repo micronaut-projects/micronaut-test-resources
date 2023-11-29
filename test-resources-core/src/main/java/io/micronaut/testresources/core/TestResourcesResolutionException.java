@@ -31,4 +31,19 @@ public class TestResourcesResolutionException extends RuntimeException {
     public TestResourcesResolutionException(String message) {
         super(message);
     }
+
+    /**
+     * Returns a TestResourcesResolutionException from an exception. If
+     * the type of the exception is already TestResourcesResolutionException
+     * then the same instance is returned, otherwise the exception is
+     * wrapped into TestResourcesResolutionException.
+     * @param ex the exception
+     * @return a TestResourcesResolutionException
+     */
+    public static TestResourcesResolutionException wrap(Exception ex) {
+        if (ex instanceof TestResourcesResolutionException trre) {
+            return trre;
+        }
+        return new TestResourcesResolutionException(ex);
+    }
 }

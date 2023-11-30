@@ -15,10 +15,12 @@
  */
 package io.micronaut.testresources.server;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.testresources.core.TestResourcesResolver;
@@ -42,8 +44,18 @@ import java.util.Optional;
 @ExecuteOn(TaskExecutors.BLOCKING)
 public final class TestResourcesController implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
+    private static final int MAX_STOP_TIMEOUT = 5000;
 
     private final TestResourcesResolverLoader loader = new TestResourcesResolverLoader();
+
+    private final EmbeddedServer embeddedServer;
+    private final ApplicationContext applicationContext;
+
+    public TestResourcesController(EmbeddedServer embeddedServer,
+                                   ApplicationContext applicationContext) {
+        this.embeddedServer = embeddedServer;
+        this.applicationContext = applicationContext;
+    }
 
     @Get("/list")
     public List<String> getResolvableProperties() {
@@ -133,6 +145,26 @@ public final class TestResourcesController implements TestResourcesResolver {
                     entry.getKey().toString())
                 ))
             .toList();
+    }
+
+    /**
+     * Requests a test resources service shutdown.
+     */
+    @Post("/stop")
+    public void stopService() {
+        var makeSureServerIsStopped = new Thread(() -> {
+            try {
+                embeddedServer.stop();
+                applicationContext.close();
+                Thread.sleep(MAX_STOP_TIMEOUT);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                System.exit(0);
+            }
+        });
+        makeSureServerIsStopped.setDaemon(true);
+        makeSureServerIsStopped.start();
     }
 
     private static boolean isEnabled(TestResourcesResolver resolver, Map<String, Object> testResourcesConfig) {

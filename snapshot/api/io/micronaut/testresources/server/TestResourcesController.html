@@ -110,7 +110,9 @@ implements <a href="../core/TestResourcesResolver.html" title="interface in io.m
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List)" class="member-name-link">TestResourcesController</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyResolutionListener.html" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a>&gt;&nbsp;propertyResolutionListeners)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,io.micronaut.runtime.server.EmbeddedServer,io.micronaut.context.ApplicationContext)" class="member-name-link">TestResourcesController</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyResolutionListener.html" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a>&gt;&nbsp;propertyResolutionListeners,
+ io.micronaut.runtime.server.EmbeddedServer&nbsp;embeddedServer,
+ io.micronaut.context.ApplicationContext&nbsp;applicationContext)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -174,6 +176,11 @@ implements <a href="../core/TestResourcesResolver.html" title="interface in io.m
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Resolves a property.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopService()" class="member-name-link">stopService</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Requests a test resources service shutdown.</div>
+</div>
 </div>
 </div>
 </div>
@@ -198,9 +205,11 @@ implements <a href="../core/TestResourcesResolver.html" title="interface in io.m
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.List)">
+<section class="detail" id="&lt;init&gt;(java.util.List,io.micronaut.runtime.server.EmbeddedServer,io.micronaut.context.ApplicationContext)">
 <h3>TestResourcesController</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TestResourcesController</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyResolutionListener.html" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a>&gt;&nbsp;propertyResolutionListeners)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TestResourcesController</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyResolutionListener.html" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a>&gt;&nbsp;propertyResolutionListeners,
+ io.micronaut.runtime.server.EmbeddedServer&nbsp;embeddedServer,
+ io.micronaut.context.ApplicationContext&nbsp;applicationContext)</span></div>
 </section>
 </li>
 </ul>
@@ -344,6 +353,14 @@ implements <a href="../core/TestResourcesResolver.html" title="interface in io.m
 <dt>Returns:</dt>
 <dd>the list of test containers</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="stopService()">
+<h3>stopService</h3>
+<div class="member-signature"><span class="annotations">@Post("/stop")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopService</span>()</div>
+<div class="block">Requests a test resources service shutdown.</div>
 </section>
 </li>
 </ul>

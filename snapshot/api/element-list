@@ -4,7 +4,6 @@ io.micronaut.test.extensions.testresources
 io.micronaut.test.extensions.testresources.annotation
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
-io.micronaut.testresources.controlpanel
 io.micronaut.testresources.core
 io.micronaut.testresources.elasticsearch
 io.micronaut.testresources.embedded

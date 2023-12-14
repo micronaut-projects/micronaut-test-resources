@@ -58,7 +58,7 @@ public class ServerUtils {
     public static final String PROPERTIES_FILE_NAME = "test-resources.properties";
 
     /**
-     * Used only in tests to skip actual port checking
+     * Used only in tests to skip actual port checking.
      */
     protected static final String SERVER_TEST_PROPERTY = "test.resources.internal.server.started";
 

@@ -7,9 +7,11 @@ import io.micronaut.runtime.server.EmbeddedServer
 import jakarta.inject.Inject
 import spock.lang.Specification
 import spock.lang.TempDir
+import spock.util.environment.RestoreSystemProperties
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicInteger
 
 class ServerUtilsTest extends Specification {
     @TempDir
@@ -19,7 +21,8 @@ class ServerUtilsTest extends Specification {
         def settings = new ServerSettings(
                 1234,
                 token,
-                timeout
+                timeout,
+                null
         )
         def settingsDir = tmpDir.resolve("settings")
 
@@ -89,6 +92,37 @@ class ServerUtilsTest extends Specification {
         'abc' | []                | null
         null  | [new File('abc')] | null
         'abc' | [new File('def')] | 98
+    }
+
+    @RestoreSystemProperties
+    def "waits for the server to be available when using an explicit port"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def iterations = new AtomicInteger(0);
+        System.setProperty(ServerUtils.SERVER_TEST_PROPERTY, "false")
+
+        when:
+        def settings = ServerUtils.startOrConnectToExistingServer(9999, portFile, settingsDir, null, null, null, null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+            assert params.mainClass == 'io.micronaut.testresources.server.TestResourcesService'
+        }
+        _ * factory.waitFor(_) >> {
+            if (iterations.incrementAndGet() == 4) {
+                // start the service
+                System.setProperty(ServerUtils.SERVER_TEST_PROPERTY, "true")
+            } else {
+                Thread.sleep(10)
+            }
+        }
+
+        and:
+        Files.exists(settingsDir.resolve(ServerUtils.PROPERTIES_FILE_NAME))
+        iterations.get() == 4
+
+
     }
 
     def "reuses existing server"() {

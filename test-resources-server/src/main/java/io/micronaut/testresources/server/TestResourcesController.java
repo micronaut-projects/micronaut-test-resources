@@ -31,6 +31,8 @@ import io.micronaut.testresources.testcontainers.TestContainers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -230,9 +232,14 @@ public class TestResourcesController implements TestResourcesResolver {
     public void stopService() {
         var makeSureServerIsStopped = new Thread(() -> {
             try {
-                embeddedServer.stop();
-                applicationContext.close();
-                Thread.sleep(MAX_STOP_TIMEOUT);
+                try {
+                    embeddedServer.stop();
+                    applicationContext.close();
+                    closeResolvers();
+                    TestContainers.closeAll();
+                } finally {
+                    Thread.sleep(MAX_STOP_TIMEOUT);
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } finally {
@@ -241,6 +248,21 @@ public class TestResourcesController implements TestResourcesResolver {
         });
         makeSureServerIsStopped.setDaemon(true);
         makeSureServerIsStopped.start();
+    }
+
+    private void closeResolvers() {
+        loader.getResolvers()
+            .stream()
+            .parallel()
+            .filter(Closeable.class::isInstance)
+            .map(Closeable.class::cast)
+            .forEach(closable -> {
+                try {
+                    closable.close();
+                } catch (IOException e) {
+                    // ignore, we're shutting down anyway
+                }
+            });
     }
 
     private static boolean isEnabled(TestResourcesResolver resolver,

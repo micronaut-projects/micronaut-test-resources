@@ -57,6 +57,11 @@ import java.util.stream.Stream;
 public class ServerUtils {
     public static final String PROPERTIES_FILE_NAME = "test-resources.properties";
 
+    /**
+     * Used only in tests to skip actual port checking.
+     */
+    protected static final String SERVER_TEST_PROPERTY = "test.resources.internal.server.started";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerUtils.class.getName());
     private static final int STARTUP_TIME_WAIT_MS = 200;
     private static final int MAX_READS = 10;
@@ -66,7 +71,8 @@ public class ServerUtils {
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
     private static final String SERVER_CLIENT_READ_TIMEOUT = "server.client.read.timeout";
     private static final String SERVER_IDLE_TIMEOUT_MINUTES = "server.idle.timeout.minutes";
-    private static final String SERVER_ENTRY_POINT = "io.micronaut.testresources.server.TestResourcesService";
+    private static final String SERVER_ENTRY_POINT =
+        "io.micronaut.testresources.server.TestResourcesService";
     private static final String MICRONAUT_SERVER_PORT = "micronaut.server.port";
     private static final String JMX_SYSTEM_PROPERTY = "com.sun.management.jmxremote";
     private static final String CDS_HASH = "cds.bin";
@@ -81,13 +87,16 @@ public class ServerUtils {
      * @param settings the settings
      * @throws IOException if an error occurs
      */
-    public static void writeServerSettings(Path destinationDirectory, ServerSettings settings) throws IOException {
+    public static void writeServerSettings(Path destinationDirectory, ServerSettings settings)
+        throws IOException {
         Files.createDirectories(destinationDirectory);
         Path propertiesFile = destinationDirectory.resolve(PROPERTIES_FILE_NAME);
         try (PrintWriter prn = new PrintWriter(Files.newOutputStream(propertiesFile))) {
             prn.println(SERVER_URI + "=http\\://localhost\\:" + settings.getPort());
-            settings.getAccessToken().ifPresent(token -> prn.println(SERVER_ACCESS_TOKEN + "=" + token));
-            settings.getClientTimeout().ifPresent(timeout -> prn.println(SERVER_CLIENT_READ_TIMEOUT + "=" + timeout));
+            settings.getAccessToken()
+                .ifPresent(token -> prn.println(SERVER_ACCESS_TOKEN + "=" + token));
+            settings.getClientTimeout()
+                .ifPresent(timeout -> prn.println(SERVER_CLIENT_READ_TIMEOUT + "=" + timeout));
         }
     }
 
@@ -128,6 +137,9 @@ public class ServerUtils {
      */
     public static boolean isServerStarted(int port) {
         try {
+            if (System.getProperty(SERVER_TEST_PROPERTY) != null) {
+                return Boolean.getBoolean(SERVER_TEST_PROPERTY);
+            }
             Socket socket = new Socket("localhost", port);
             socket.close();
             LOGGER.info("Test resources service already started on port {}", port);
@@ -161,7 +173,8 @@ public class ServerUtils {
                                                                 Collection<File> serverClasspath,
                                                                 Integer clientTimeoutMs,
                                                                 Integer serverIdleTimeoutMinutes,
-                                                                ServerFactory serverFactory) throws IOException {
+                                                                ServerFactory serverFactory)
+        throws IOException {
         Optional<ServerSettings> maybeServerSettings = readServerSettings(serverSettingsDirectory);
         if (maybeServerSettings.isPresent()) {
             LOGGER.info("Server settings found in {}", serverSettingsDirectory);
@@ -170,7 +183,9 @@ public class ServerUtils {
                 if (serverSettings.getPort() == explicitPort) {
                     return serverSettings;
                 }
-                throw new IllegalStateException("Server already started on port " + explicitPort + " but settings file says it should be on port " + serverSettings.getPort());
+                throw new IllegalStateException("Server already started on port " + explicitPort +
+                                                " but settings file says it should be on port " +
+                                                serverSettings.getPort());
             }
             if (isServerStarted(serverSettings.getPort())) {
                 return serverSettings;
@@ -181,14 +196,16 @@ public class ServerUtils {
         }
 
         Files.createDirectories(portFilePath.getParent());
-        startAndWait(serverFactory, explicitPort, serverIdleTimeoutMinutes, portFilePath, accessToken, serverClasspath, cdsDirectory);
+        startAndWait(serverFactory, explicitPort, serverIdleTimeoutMinutes, portFilePath,
+            accessToken, serverClasspath, cdsDirectory);
         int port;
         if (explicitPort == null) {
             List<String> lines = Files.readAllLines(portFilePath);
             int attempts = 1;
             while (lines.isEmpty()) {
                 if (attempts == MAX_READS) {
-                    throw new IllegalStateException("Unable to read port file " + portFilePath + ": file is empty");
+                    throw new IllegalStateException(
+                        "Unable to read port file " + portFilePath + ": file is empty");
                 }
                 // It is still possible to see the file, but that its contents isn't flushed yet
                 try {
@@ -203,7 +220,8 @@ public class ServerUtils {
         } else {
             port = explicitPort;
         }
-        ServerSettings settings = new ServerSettings(port, accessToken, clientTimeoutMs, serverIdleTimeoutMinutes);
+        ServerSettings settings =
+            new ServerSettings(port, accessToken, clientTimeoutMs, serverIdleTimeoutMinutes);
         writeServerSettings(serverSettingsDirectory, settings);
         return settings;
     }
@@ -230,7 +248,8 @@ public class ServerUtils {
                                                                 Collection<File> serverClasspath,
                                                                 Integer clientTimeoutMs,
                                                                 Integer serverIdleTimeoutMinutes,
-                                                                ServerFactory serverFactory) throws IOException {
+                                                                ServerFactory serverFactory)
+        throws IOException {
         return startOrConnectToExistingServer(
             explicitPort,
             portFilePath,
@@ -258,7 +277,8 @@ public class ServerUtils {
             URL url = new URL("http://localhost:" + serverSettings.getPort() + "/stop");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
-            serverSettings.getAccessToken().ifPresent(token -> conn.setRequestProperty("Access-Token", token));
+            serverSettings.getAccessToken()
+                .ifPresent(token -> conn.setRequestProperty("Access-Token", token));
             try (InputStream is = conn.getInputStream()) {
                 is.read();
             }
@@ -297,28 +317,62 @@ public class ServerUtils {
                                      String accessToken,
                                      Collection<File> serverClasspath,
                                      Path cdsDirectory) throws IOException {
-        ProcessParameters processParameters = createProcessParameters(explicitPort, idleTimeoutMinutes, portFilePath, accessToken, serverClasspath, cdsDirectory);
+        ProcessParameters processParameters =
+            createProcessParameters(explicitPort, idleTimeoutMinutes, portFilePath, accessToken,
+                serverClasspath, cdsDirectory);
         serverFactory.startServer(processParameters);
         // If the call is a CDS dump, we need to perform a second invocation
         // which doesn't dump
         if (processParameters.isCDSDumpInvocation()) {
-            startAndWait(serverFactory, explicitPort, idleTimeoutMinutes, portFilePath, accessToken, serverClasspath, cdsDirectory);
+            startAndWait(serverFactory, explicitPort, idleTimeoutMinutes, portFilePath, accessToken,
+                serverClasspath, cdsDirectory);
             return;
         }
-        if (explicitPort != null) {
-            return;
-        }
-        while (!Files.exists(portFilePath)) {
-            try {
-                serverFactory.waitFor(Duration.of(STARTUP_TIME_WAIT_MS, ChronoUnit.MILLIS));
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        waitForServerToBeAvailable(serverFactory, explicitPort, portFilePath);
     }
 
-    private static ProcessParameters createProcessParameters(Integer explicitPort, Integer serverIdleTimeoutMinutes, Path portFilePath, String accessToken, Collection<File> serverClasspath, Path cdsDirectory) {
-        return new DefaultProcessParameters(explicitPort, serverIdleTimeoutMinutes, accessToken, cdsDirectory, serverClasspath, portFilePath);
+    private static void waitForServerToBeAvailable(ServerFactory serverFactory, Integer explicitPort,
+                                  Path portFilePath) {
+        Integer port = explicitPort;
+        if (explicitPort == null) {
+            while (!Files.exists(portFilePath)) {
+                try {
+                    serverFactory.waitFor(Duration.of(STARTUP_TIME_WAIT_MS, ChronoUnit.MILLIS));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            try {
+                port = Integer.parseInt(Files.readString(portFilePath));
+            } catch (Exception ex) {
+                return;
+            }
+        }
+        // Make sure the service is started: in case we use an explicit port,
+        // there can be some delay before the service is available
+        int retries = 8;
+        int waitMs = 25;
+        while (--retries > 0 && !isServerStarted(port)) {
+            try {
+                serverFactory.waitFor(Duration.of(waitMs, ChronoUnit.MILLIS));
+                // exponential backoff
+                waitMs *= 2;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        // At this stage if the server is still not started we have a bigger
+        // issue and it will be handled by the test resources client
+    }
+
+    private static ProcessParameters createProcessParameters(Integer explicitPort,
+                                                             Integer serverIdleTimeoutMinutes,
+                                                             Path portFilePath, String accessToken,
+                                                             Collection<File> serverClasspath,
+                                                             Path cdsDirectory) {
+        return new DefaultProcessParameters(explicitPort, serverIdleTimeoutMinutes, accessToken,
+            cdsDirectory, serverClasspath, portFilePath);
 
     }
 
@@ -414,7 +468,8 @@ public class ServerUtils {
                 systemProperties.put(SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY, accessToken);
             }
             if (idleTimeoutMinutes != null) {
-                systemProperties.put(SERVER_IDLE_TIMEOUT_MINUTES, String.valueOf(idleTimeoutMinutes));
+                systemProperties.put(SERVER_IDLE_TIMEOUT_MINUTES,
+                    String.valueOf(idleTimeoutMinutes));
             }
             return systemProperties;
         }
@@ -460,7 +515,8 @@ public class ServerUtils {
             File hashFile = new File(flatDirsJar.getParentFile(), flatDirsJar.getName() + ".bin");
             if (flatDirsJar.exists()) {
                 try {
-                    if (hashFile.exists() && Arrays.equals(Files.readAllBytes(hashFile.toPath()), hash)) {
+                    if (hashFile.exists() &&
+                        Arrays.equals(Files.readAllBytes(hashFile.toPath()), hash)) {
                         return;
                     }
                 } catch (IOException e) {
@@ -472,7 +528,8 @@ public class ServerUtils {
         }
 
         private void createFlatJarArchiveFile(byte[] hash, File hashFile) {
-            try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(flatDirsJar.toPath()))) {
+            try (JarOutputStream jos = new JarOutputStream(
+                Files.newOutputStream(flatDirsJar.toPath()))) {
                 Files.write(hashFile.toPath(), hash);
                 Set<String> addedEntries = new HashSet<>();
                 for (File dir : serverClasspath) {
@@ -486,7 +543,8 @@ public class ServerUtils {
             }
         }
 
-        private void compressDirectory(JarOutputStream jos, Set<String> addedEntries, Path rootDir) throws IOException {
+        private void compressDirectory(JarOutputStream jos, Set<String> addedEntries, Path rootDir)
+            throws IOException {
             try (Stream<Path> stream = Files.walk(rootDir)) {
                 List<Path> allpaths = stream.collect(Collectors.toList());
                 for (Path sourcePath : allpaths) {
@@ -573,15 +631,18 @@ public class ServerUtils {
             }
         }
 
-        private static void configureExportCdsClassList(List<String> jvmArguments, File cdsClassList) {
+        private static void configureExportCdsClassList(List<String> jvmArguments,
+                                                        File cdsClassList) {
             jvmArguments.add("-Xshare:off");
             jvmArguments.add("-XX:DumpLoadedClassList=" + cdsClassList);
         }
 
-        private static void configureCdsDump(List<String> jvmArguments, File cdsFile, File cdsClassList) {
+        private static void configureCdsDump(List<String> jvmArguments, File cdsFile,
+                                             File cdsClassList) {
             try {
                 Path cdsListPath = cdsClassList.toPath();
-                List<String> fileContent = new ArrayList<>(Files.readAllLines(cdsListPath, StandardCharsets.UTF_8));
+                List<String> fileContent =
+                    new ArrayList<>(Files.readAllLines(cdsListPath, StandardCharsets.UTF_8));
                 // Workaround for https://bugs.openjdk.org/browse/JDK-8290417
                 fileContent.removeIf(content ->
                     content.contains("SingleThreadedBufferingProcessor") ||
@@ -605,7 +666,8 @@ public class ServerUtils {
                     try (Stream<Path> s = Files.walk(fileOrDir.toPath())) {
                         return s.map(p -> {
                             File file = p.toFile();
-                            return file.getAbsolutePath() + ":" + file.length() + ":" + file.lastModified();
+                            return file.getAbsolutePath() + ":" + file.length() + ":" +
+                                   file.lastModified();
                         }).collect(Collectors.toList()).stream();
                     } catch (IOException e) {
                         return Stream.empty();

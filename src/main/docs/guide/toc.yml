@@ -55,4 +55,5 @@ architecture:
       title: Embedded test resources
     implementing-test-resources:
       title: Implementing a test resource
+testResourcesGuides: Guides
 repository: Repository

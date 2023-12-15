@@ -1,3 +1,5 @@
 Kafka support will automatically start a https://kafka.apache.org[Kafka container] and provide the value of the `kafka.bootstrap.servers` property.
 
 The default image can be overwritten by setting the `test-resources.containers.kafka.image-name` property.
+
+TIP: See the guide for https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html[Testing Kafka Listener using Testcontainers with the Micronaut Framework] to learn more.

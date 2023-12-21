@@ -51,3 +51,5 @@ test-resources:
 ----
 
 ====
+
+TIP: See the guide for https://guides.micronaut.io/latest/replace-h2-with-real-database-for-testing.html[Replace H2 with a Real Database for Testing] to learn more.

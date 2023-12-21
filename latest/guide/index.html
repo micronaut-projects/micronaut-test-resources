@@ -58,7 +58,9 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>8</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -147,7 +149,9 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>7.4</strong><span>Implementing a test resource</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>8</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-testResourcesGuides"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -157,7 +161,7 @@
         <h1>Micronaut Test Resources</h1>
         <p></p>
         <p>Test resources integration (like Testcontainers) for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/index.html'>LATEST</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/2.3.0/guide/index.html'>2.3.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.2.0/guide/index.html'>2.2.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.1.0/guide/index.html'>2.1.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0/guide/index.html'>2.0.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M13/guide/index.html'>2.0.0-M13</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M12/guide/index.html'>2.0.0-M12</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M11/guide/index.html'>2.0.0-M11</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M10/guide/index.html'>2.0.0-M10</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M9/guide/index.html'>2.0.0-M9</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M8/guide/index.html'>2.0.0-M8</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M7/guide/index.html'>2.0.0-M7</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M6/guide/index.html'>2.0.0-M6</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M5/guide/index.html'>2.0.0-M5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M4/guide/index.html'>2.0.0-M4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M3/guide/index.html'>2.0.0-M3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M2/guide/index.html'>2.0.0-M2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M1/guide/index.html'>2.0.0-M1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.6/guide/index.html'>1.2.6</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.5/guide/index.html'>1.2.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.4/guide/index.html'>1.2.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.5/guide/index.html'>1.1.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.4/guide/index.html'>1.1.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.3/guide/index.html'>1.1.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.2/guide/index.html'>1.1.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.1/guide/index.html'>1.1.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.0/guide/index.html'>1.1.0</option></select> </p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/index.html'>LATEST</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/2.3.1/guide/index.html'>2.3.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.3.0/guide/index.html'>2.3.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.2.0/guide/index.html'>2.2.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.1.0/guide/index.html'>2.1.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0/guide/index.html'>2.0.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M13/guide/index.html'>2.0.0-M13</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M12/guide/index.html'>2.0.0-M12</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M11/guide/index.html'>2.0.0-M11</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M10/guide/index.html'>2.0.0-M10</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M9/guide/index.html'>2.0.0-M9</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M8/guide/index.html'>2.0.0-M8</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M7/guide/index.html'>2.0.0-M7</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M6/guide/index.html'>2.0.0-M6</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M5/guide/index.html'>2.0.0-M5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M4/guide/index.html'>2.0.0-M4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M3/guide/index.html'>2.0.0-M3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M2/guide/index.html'>2.0.0-M2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/2.0.0-M1/guide/index.html'>2.0.0-M1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.6/guide/index.html'>1.2.6</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.5/guide/index.html'>1.2.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.4/guide/index.html'>1.2.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.3/guide/index.html'>1.2.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.2/guide/index.html'>1.2.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.5/guide/index.html'>1.1.5</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.4/guide/index.html'>1.1.4</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.3/guide/index.html'>1.1.3</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.2/guide/index.html'>1.1.2</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/1.1.1/guide/index.html'>1.1.1</option></select> </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -225,8 +229,8 @@ If that property is set, then the test resource will not be used.</p>
 <div class="title">Gradle</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'io.micronaut.application' version '4.2.0'
-    id 'io.micronaut.test-resources' version '4.2.0'
+    id 'io.micronaut.application' version '4.2.2'
+    id 'io.micronaut.test-resources' version '4.2.2'
 }</code></pre>
 </div>
 </div>
@@ -498,6 +502,18 @@ It is possible to override the default image of the container by setting the fol
 </tr>
 </table>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-real-database-for-testing.html">Replace H2 with a Real Database for Testing</a> to learn more.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 
@@ -654,6 +670,18 @@ The default version can be overwritten by setting the <code>test-resources.conta
 </div>
 <div class="paragraph">
 <p>The default image can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html">Testing Kafka Listener using Testcontainers with the Micronaut Framework</a> to learn more.
+</td>
+</tr>
+</table>
 </div>
 
 <h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>4.4 Localstack</h2>
@@ -2895,7 +2923,33 @@ If, for some reason, the resolver cannot resolve the expression then <code>Optio
 </div>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>8 Repository</h1>
+<h1 id="testResourcesGuides"><a class="anchor" href="#testResourcesGuides"></a>8 Guides</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/testResourcesGuides.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>See the following guides to learn more. They demonstrate using Testcontainers, followed by the simplification of using Test Resources instead.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://guides.micronaut.io/latest/replace-h2-with-real-database-for-testing.html">Replace H2 with a Real Database for Testing</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html">Testing Kafka Listener using Testcontainers with the Micronaut Framework</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/working-with-jooq-flyway-using-testcontainers.html">Working with JOOQ and Flyway using Testcontainers</a></p>
+</li>
+</ul>
+</div>
+
+<h1 id="repository"><a class="anchor" href="#repository"></a>9 Repository</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/repository.adoc"'>

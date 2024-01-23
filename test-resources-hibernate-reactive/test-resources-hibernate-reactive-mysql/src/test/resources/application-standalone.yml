@@ -9,3 +9,7 @@ jpa:
           db-type: mysql
         hbm2ddl:
           auto: update
+test-resources:
+  containers:
+    mysql:
+      image-name: mysql:8.2

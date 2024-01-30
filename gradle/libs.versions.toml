@@ -38,7 +38,7 @@ micronaut-gradle-plugin = "4.2.1"
 micronaut-redis = "6.1.0"
 micronaut-security = "4.4.0"
 micronaut-serde = "2.5.1"
-micronaut-sql = "5.4.0"
+micronaut-sql = "5.4.1"
 micronaut-test = "4.0.0"
 groovy = "4.0.13"
 spock = "2.3-groovy-4.0"
@@ -47,8 +47,8 @@ amazon-awssdk-v1 = "1.12.623"
 amazon-awssdk-v2 = "2.22.3"
 
 # Managed versions appear in the BOM
-managed-testcontainers = "1.18.3"
-managed-testcontainers-redis = "1.6.4"
+managed-testcontainers = "1.19.4"
+managed-testcontainers-redis = "2.0.1"
 
 [libraries]
 # Testcontainers

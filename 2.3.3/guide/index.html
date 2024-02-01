@@ -1,0 +1,2975 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Micronaut Test Resources</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+    <link rel="stylesheet" href="../css/custom.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    <link rel="stylesheet" href="../css/highlight/agate.css">
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../js/guide.js"></script>
+    <script src="../js/multi-language-sample.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <link rel="stylesheet" href="../css/multi-language-sample.css"/>
+    <script src="../js/docs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
+    <script type="text/javascript">
+        function addJsClass(el) {
+            var classes = document.body.className.split(" ");
+            classes.push("js");
+            document.body.className = classes.join(" ");
+        }
+    </script>
+
+</head>
+
+<body class="body" id="docs" onload="addJsClass();" onhashchange="highlightMenu()">
+
+<div id="table-of-content-nav-link" class="desktop">
+    <a id="theme-switcher" title="Switch to dark theme" href="javascript:switchTheme(true)"><i class="fa fa-moon-o"></i></a>
+    <a title="Collapse/Open Table of contents" title="Hide Table of Contents" href="javascript:hideTableOfContents();" class="button">[ + ]</a>
+</div>
+
+<div id="main">
+    <div id="navigation" class="no-print">
+        <div class="navTitle">
+            <span id="logo"><a href="http://micronaut.io" title="Go to Micronaut Website"><img src="../img/micronaut-logo-white.svg" alt="Micronaut"/></a></span>
+        </div>
+        <div class="navLinks">
+            <ul>
+                    <li><div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)" class="desktop">
+                            <a href="../guide/index.html" class="button">Table of contents</a>
+                            <div id="nav-summary-childs" style="display:none;">
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
+                                
+                            </div>
+                        </div>
+                    </li>
+
+                <li id="table-of-content-nav-link-mobile" class="mobile">
+                    <a title="Scroll to Table of contents" href="javascript:scrollToTop();" class="button">Toc</a>
+                </li>
+                <li class="desktop">
+                    <a title="Go to API documentation" href="../api/index.html" class="button">API Reference</a>
+                </li>
+                <li class="mobile">
+                    <a title="Go to API documentation" href="../api/index.html" class="button">API</a>
+                </li>
+                <li class="desktop">
+                    <a title="Go to Configuration Reference documentation" href="../guide/configurationreference.html" class="button">Configuration Reference</a>
+                </li>
+                <li class="mobile">
+                    <a title="Go to Configuration Reference documentation" href="../guide/configurationreference.html" class="button">Conf</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    
+    <div id="table-of-content">
+        <div class="toc-content">
+
+        <h2>Table of Contents</h2>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-introduction"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-releaseHistory"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-modules"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-databases"><a href="#modules-databases"><strong>4.1</strong><span>Databases</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-jdbc"><a href="#modules-databases-jdbc"><strong>4.1.1</strong><span>JDBC</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-r2dbc"><a href="#modules-databases-r2dbc"><strong>4.1.2</strong><span>R2DBC</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-elasticsearch"><a href="#modules-elasticsearch"><strong>4.2</strong><span>Elasticsearch</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>4.3</strong><span>Kafka</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>4.4</strong><span>Localstack</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>4.5</strong><span>MongoDB</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>4.6</strong><span>MQTT</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>4.7</strong><span>Neo4j</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>4.8</strong><span>RabbitMQ</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>4.9</strong><span>Redis</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>4.10</strong><span>Hashicorp Vault</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.11</strong><span>Generic Testcontainers support</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-core"><a href="#extensions-core"><strong>5.1</strong><span>Core extension</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-junit-platform"><a href="#extensions-junit-platform"><strong>5.2</strong><span>JUnit Platform</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-debugging"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-debugging-intro"><a href="#debugging-intro"><strong>6.1</strong><span>Running the test resources service in debug mode</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-control-panel"><a href="#modules-control-panel"><strong>6.2</strong><span>Control Panel</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>7.1</strong><span>The test resources server</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>7.1.1</strong><span>Sharing containers between independent builds</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>7.2</strong><span>The test resources client</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>7.3</strong><span>Embedded test resources</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>7.4</strong><span>Implementing a test resource</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-testResourcesGuides"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
+        
+        </div>
+    </div>
+    
+    <div class="docs-content">
+    <div class="project">
+        <h1>Micronaut Test Resources</h1>
+        <p></p>
+        <p>Test resources integration (like Testcontainers) for Micronaut</p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/index.html'>LATEST</option></select> </p>
+    </div>
+    
+<h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/introduction.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Test Resources adds support for managing external resources which are required during development or testing.</p>
+</div>
+<div class="paragraph">
+<p>For example, an application may need a database to run (say MySQL), but such a database may not be installed on the development machine or you may not want to handle the setup and tear down of the database manually.</p>
+</div>
+<div class="paragraph">
+<p>Micronaut Test Resources offers a generic purpose solution for this problem, <strong>without any configuration</strong> when possible. In particular, it integrates with <a href="https://www.testcontainers.org/">Testcontainers</a> to provide throwaway containers for testing.</p>
+</div>
+<div class="paragraph">
+<p>Test resources are only available during <em>development</em> (for example when running the Gradle <code>run</code> task or the Maven <code>mn:run</code> goal) and <em>test execution</em>: production code will require the resources to be available.</p>
+</div>
+<div class="paragraph">
+<p>A key aspect of test resources to understand is that they are created in reaction to a <em>missing property</em> in configuration.
+For example, if the <code>datasources.default.url</code> property is missing, then a test resource will be responsible for resolving its value.
+If that property is set, then the test resource will not be used.</p>
+</div>
+
+<h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>For this project, you can find a list of releases (with release notes) here:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/micronaut-projects/micronaut-test-resources/releases">https://github.com/micronaut-projects/micronaut-test-resources/releases</a></p>
+</div>
+
+<h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/quickStart.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Test Resources are integrated via build plugins.</p>
+</div>
+<div class="paragraph">
+<p>The recommended approach to get started is to use <a href="https://micronaut.io/launch">Micronaut Launch</a> and select the <code>test-resources</code> feature.</p>
+</div>
+<div class="paragraph">
+<p>If you wanted to integrate it manually, for Gradle you can use the <code>micronaut-test-resources</code> plugin:</p>
+</div>
+<div class="listingblock">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
+    id 'io.micronaut.application' version '4.2.2'
+    id 'io.micronaut.test-resources' version '4.2.2'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please refer to the <a href="https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#test-resources">Gradle plugin&#8217;s Test Resources documentation</a> for more information about configuring the test resources plugin.</p>
+</div>
+<div class="paragraph">
+<p>In the case of Maven, you can enable test resources support simply by setting the property <code>micronaut.test.resources.enabled</code> (either in your
+POM or via the command-line).</p>
+</div>
+<div class="paragraph">
+<p>Please refer to the <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/test-resources.html">Maven plugin&#8217;s Test Resources documentation</a> for more information about configuring the test resources plugin.</p>
+</div>
+
+<h1 id="modules"><a class="anchor" href="#modules"></a>4 Supported Modules</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The following modules are provided with Micronaut Test Resources.</p>
+</div>
+
+<h2 id="modules-databases"><a class="anchor" href="#modules-databases"></a>4.1 Databases</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_databases">Databases</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Micronaut Test Resources provides support for the following databases:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6669%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Database</th>
+<th class="tableblock halign-left valign-top">JDBC</th>
+<th class="tableblock halign-left valign-top">R2DBC</th>
+<th class="tableblock halign-left valign-top">Database identifier</th>
+<th class="tableblock halign-left valign-top">Default image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://mariadb.org/">MariaDB</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mariadb</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mariadb</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.mysql.com/">MySQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mysql</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mysql</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/">Oracle Database</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oracle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gvenzl/oracle-xe:slim-faststart</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.postgresql.org/">PostgreSQL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postgres</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">postgres</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.microsoft.com/sql-server">Microsoft SQL Server</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mssql</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Databases are supplied via a <a href="https://www.testcontainers.com/">Testcontainers</a> container.
+It is possible to override the default image of the container by setting the following property in your application configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>test-resources.containers.[db-type].image-name</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, you can override the default image of the container for the <code>MariaDB</code> database by setting the following property:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mariadb.image-name=mariadb:10.3</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mariadb:
+      image-name: mariadb:10.3</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mariadb]
+      image-name="mariadb:10.3"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mariadb {
+      imageName = "mariadb:10.3"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mariadb {
+        image-name = "mariadb:10.3"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mariadb": {
+        "image-name": "mariadb:10.3"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>db-type</code> property value can be found in the table above.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, you can use the following properties to override some default test resources parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>test-resources.containers.[db-type].db-name</code>: overrides the default test database name</p>
+</li>
+<li>
+<p><code>test-resources.containers.[db-type].username</code>: overrides the default test user</p>
+</li>
+<li>
+<p><code>test-resources.containers.[db-type].password</code>: overrides the default test password</p>
+</li>
+<li>
+<p><code>test-resources.containers.[db-type].init-script-path</code>: a path to a SQL file on classpath, which will be executed at container startup</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Using the Microsoft SQL Server container will require you to accept its license. In order to do this, you must set the <code>test-resources.containers.mssql.accept-license</code> property to true:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mssql.accept-license=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mssql:
+      accept-license: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mssql]
+      accept-license=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mssql {
+      acceptLicense = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mssql {
+        accept-license = true
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mssql": {
+        "accept-license": true
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-real-database-for-testing.html">Replace H2 with a Real Database for Testing</a> to learn more.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+
+<h2 id="modules-databases-jdbc"><a class="anchor" href="#modules-databases-jdbc"></a>4.1.1 JDBC</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases-jdbc.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The following properties will automatically be set when using a JDBC database:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>datasources.*.url</code></p>
+</li>
+<li>
+<p><code>datasources.*.username</code></p>
+</li>
+<li>
+<p><code>datasources.*.password</code></p>
+</li>
+<li>
+<p><code>datasources.*.dialect</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In order for the database to be properly detected, <em>one of</em> the following properties has to be set:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgres</code>)</p>
+</li>
+<li>
+<p><code>datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
+</li>
+<li>
+<p><code>datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
+</li>
+</ul>
+</div>
+
+<h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>4.1.2 R2DBC</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-databases-r2dbc.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In addition to traditional JDBC support, Micronaut Test Resources also supports R2DBC databases.</p>
+</div>
+<div class="paragraph">
+<p>The following properties will automatically be set when using a JDBC database:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>r2dbc.datasources.*.url</code></p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.username</code></p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.password</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In order for the database to be properly detected, <em>one of</em> the following properties has to be set:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>r2dbc.datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>)</p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
+</li>
+<li>
+<p><code>r2dbc.datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition, R2DBC databases can be configured simply by reading the traditional JDBC properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>)</p>
+</li>
+<li>
+<p><code>datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
+</li>
+<li>
+<p><code>datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
+</li>
+<li>
+<p><code>datasources.*.db-name</code>: overrides the default test database name</p>
+</li>
+<li>
+<p><code>datasources.*.username</code>: overrides the default test user</p>
+</li>
+<li>
+<p><code>datasources.*.password</code>: overrides the default test password</p>
+</li>
+<li>
+<p><code>datasources.*.init-script-path</code>: a path to a SQL file on classpath, which will be executed at container startup</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In which case, the name of the datasource must match the name of the R2DBC datasource.
+This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.</p>
+</div>
+
+<h2 id="modules-elasticsearch"><a class="anchor" href="#modules-elasticsearch"></a>4.2 Elasticsearch</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-elasticsearch.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.hosts</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
+</div>
+
+<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>4.3 Kafka</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-kafka.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Kafka support will automatically start a <a href="https://kafka.apache.org">Kafka container</a> and provide the value of the <code>kafka.bootstrap.servers</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html">Testing Kafka Listener using Testcontainers with the Micronaut Framework</a> to learn more.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>4.4 Localstack</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-localstack.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Test Resources supports a subset of <a href="https://localstack.cloud/">Localstack</a> via <a href="https://www.testcontainers.org/modules/localstack/">Testcontainers</a>.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.localstack.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The following services are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>S3, by providing the <code>aws.services.s3.endpoint-override</code> property</p>
+</li>
+<li>
+<p>DynamoDB, by providing the <code>aws.services.dynamodb.endpoint-override</code> property</p>
+</li>
+<li>
+<p>SQS, by providing the <code>aws.services.sqs.endpoint-override</code> property</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition, the following properties will be resolved by test resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>aws.access-key-id</code></p>
+</li>
+<li>
+<p><code>aws.secret-key</code></p>
+</li>
+<li>
+<p><code>aws.region</code></p>
+</li>
+</ul>
+</div>
+
+<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>4.5 MongoDB</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-mongodb.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>MongoDB support will automatically start a <a href="https://www.mongodb.com">MongoDB container</a> and provide the value of the <code>mongodb.uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default database name can be overwritten by setting the <code>test-resources.containers.mongodb.db-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, if you have multiple MongoDB servers declared in your configuration, the test resources service will supply a different replica set for each database.</p>
+</div>
+<div class="paragraph">
+<p>For example, if you have <code>mongodb.servers.users</code> and <code>mongodb.servers.books</code> defined, then the test resources service will supply the <code>mongodb.servers.users.uri</code> and <code>mondodb.servers.books.uri</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
+</div>
+
+<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>4.6 MQTT</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-mqtt.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>MQTT support is provided using a <a href="https://www.hivemq.com/">HiveMQ</a> container by default.</p>
+</div>
+<div class="paragraph">
+<p>It will automatically configure the <code>mqtt.client.server-uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can setup a custom container.
+For example, you can use Mosquitto instead:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">mqtt.client.server-uri=tcp://${mqtt.host}:${mqtt.port}
+mqtt.client.client-id=${random.uuid}
+test-resources.containers.mosquitto.image-name=eclipse-mosquitto
+test-resources.containers.mosquitto.hostnames[0]=mqtt.host
+test-resources.containers.mosquitto.exposed-ports[0].mqtt.port=1883
+test-resources.containers.mosquitto.ro-fs-bind[0].mosquitto.conf=/mosquitto/config/mosquitto.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">mqtt:
+  client:
+    server-uri: tcp://${mqtt.host}:${mqtt.port}
+    client-id: ${random.uuid}
+test-resources:
+  containers:
+    mosquitto:
+      image-name: eclipse-mosquitto
+      hostnames:
+        - mqtt.host
+      exposed-ports:
+        - mqtt.port: 1883
+      ro-fs-bind:
+        - "mosquitto.conf": /mosquitto/config/mosquitto.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[mqtt]
+  [mqtt.client]
+    server-uri="tcp://${mqtt.host}:${mqtt.port}"
+    client-id="${random.uuid}"
+[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mosquitto]
+      image-name="eclipse-mosquitto"
+      hostnames=[
+        "mqtt.host"
+      ]
+      [[test-resources.containers.mosquitto.exposed-ports]]
+        "mqtt.port"=1883
+      [[test-resources.containers.mosquitto.ro-fs-bind]]
+        "mosquitto.conf"="/mosquitto/config/mosquitto.conf"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">mqtt {
+  client {
+    serverUri = "tcp://${mqtt.host}:${mqtt.port}"
+    clientId = "${random.uuid}"
+  }
+}
+testResources {
+  containers {
+    mosquitto {
+      imageName = "eclipse-mosquitto"
+      hostnames = ["mqtt.host"]
+      exposedPorts = [{
+          mqtt.port = 1883
+        }]
+      roFsBind = [{
+          mosquitto.conf = "/mosquitto/config/mosquitto.conf"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  mqtt {
+    client {
+      server-uri = "tcp://${mqtt.host}:${mqtt.port}"
+      client-id = "${random.uuid}"
+    }
+  }
+  test-resources {
+    containers {
+      mosquitto {
+        image-name = "eclipse-mosquitto"
+        hostnames = ["mqtt.host"]
+        exposed-ports = [{
+            "mqtt.port" = 1883
+          }]
+        ro-fs-bind = [{
+            "mosquitto.conf" = "/mosquitto/config/mosquitto.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "mqtt": {
+    "client": {
+      "server-uri": "tcp://${mqtt.host}:${mqtt.port}",
+      "client-id": "${random.uuid}"
+    }
+  },
+  "test-resources": {
+    "containers": {
+      "mosquitto": {
+        "image-name": "eclipse-mosquitto",
+        "hostnames": ["mqtt.host"],
+        "exposed-ports": [{
+            "mqtt.port": 1883
+          }],
+        "ro-fs-bind": [{
+            "mosquitto.conf": "/mosquitto/config/mosquitto.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">mosquitto.conf</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-conf hljs" data-lang="conf">persistence false
+allow_anonymous true
+connection_messages true
+log_type all
+listener 1883</code></pre>
+</div>
+</div>
+
+<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>4.7 Neo4j</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-neo4j.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Neo4j support will automatically start a <a href="https://neo4j.com/">Neo4j container</a> and provide the value of the <code>neo4j.uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>4.8 RabbitMQ</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-rabbitmq.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>RabbitMQ support will automatically start a <a href="https://www.rabbitmq.com/">RabbitMQ container</a> and provide the value of the <code>rabbitmq.uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>4.9 Redis</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-redis.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Redis support will automatically start a <a href="https://redis.io/">Redis container</a> and provide the value of the <code>redis.uri</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, test resources can spawn a redis cluster, in which case you will need to set the <code>test-resources.containers.redis.cluster-mode</code> to <code>true</code> and the <code>redis.uris</code> property will be provided instead of <code>redis.uri</code>.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The number of nodes in cluster mode can be controlled by the <code>test-resources.containers.redis.masters</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The number of slaves per master can be controller by the <code>test-resources.containers.redis.slaves-per-master</code> property.</p>
+</div>
+
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>4.10 Hashicorp Vault</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Vault support will automatically start a <a href="https://www.vaultproject.io/">Hashicorp Vault container</a> and provide the value of <code>vault.client.uri</code> property.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The default image can be overwritten by setting the <code>test-resources.containers.hashicorp-vault.image-name</code> property.</p>
+</li>
+<li>
+<p>The default Vault access token is <code>vault-token</code> but this can be overridden by setting the <code>test-resources.containers.hashicorp-vault.token</code> property.</p>
+</li>
+<li>
+<p>Secrets should be inserted into Hashicorp Vault at startup by adding the config:</p>
+</li>
+</ul>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.hashicorp-vault.path=secret/my-path
+test-resources.containers.hashicorp-vault.secrets[0]=key1=value1
+test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    hashicorp-vault:
+      path: 'secret/my-path'
+      secrets:
+        - "key1=value1"
+        - "key2=value2"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.hashicorp-vault]
+      path="secret/my-path"
+      secrets=[
+        "key1=value1",
+        "key2=value2"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    hashicorpVault {
+      path = "secret/my-path"
+      secrets = ["key1=value1", "key2=value2"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      hashicorp-vault {
+        path = "secret/my-path"
+        secrets = ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "hashicorp-vault": {
+        "path": "secret/my-path",
+        "secrets": ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.11 Generic Testcontainers support</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-testcontainers.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>There are cases where the provided test resources modules don&#8217;t support your use case.
+For example, there is no built-in test resource for supplying a dummy SMTP server, but you may need such a resource for testing your application.</p>
+</div>
+<div class="paragraph">
+<p>In this case, Micronaut Test Resources provide generic support for starting arbitrary test containers.
+Unlike the other resources, this will require adding configuration to your application to make it work.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s illustrate how we can declare an SMTP test container (here using YAML configuration) for use with <a href="https://micronaut-projects.github.io/micronaut-email">Micronaut Email</a>:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.fakesmtp.image-name=ghusta/fakesmtp
+test-resources.containers.fakesmtp.hostnames[0]=smtp.host
+test-resources.containers.fakesmtp.exposed-ports[0].smtp.port=25</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    fakesmtp:
+      image-name: ghusta/fakesmtp
+      hostnames:
+        - smtp.host
+      exposed-ports:
+        - smtp.port: 25</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.fakesmtp]
+      image-name="ghusta/fakesmtp"
+      hostnames=[
+        "smtp.host"
+      ]
+      [[test-resources.containers.fakesmtp.exposed-ports]]
+        "smtp.port"=25</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    fakesmtp {
+      imageName = "ghusta/fakesmtp"
+      hostnames = ["smtp.host"]
+      exposedPorts = [{
+          smtp.port = 25
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      fakesmtp {
+        image-name = "ghusta/fakesmtp"
+        hostnames = ["smtp.host"]
+        exposed-ports = [{
+            "smtp.port" = 25
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "fakesmtp": {
+        "image-name": "ghusta/fakesmtp",
+        "hostnames": ["smtp.host"],
+        "exposed-ports": [{
+            "smtp.port": 25
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>fakesmtp</code> names the test container</p>
+</li>
+<li>
+<p>The <code>hostnames</code> declare what properties will be resolved with the value of the container host name. The <code>smtp.host</code> property will be resolved with the container host name</p>
+</li>
+<li>
+<p>The <code>exposed-ports</code> declares what ports the container exposes. <code>smtp.port</code> will be set to the value of the mapped port <code>25</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Then the values <code>smtp.host</code> and <code>smtp.port</code> can for example be used in a bean configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+public class JavamailSessionProvider implements SessionProvider {
+    @Value("${smtp.host}")          <i class="conum" data-value="1"></i><b>(1)</b>
+    private String smtpHost;
+
+    @Value("${smtp.port}")          <i class="conum" data-value="2"></i><b>(2)</b>
+    private String smtpPort;
+
+
+    @Override
+    public Session session() {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", smtpPort);
+        return Session.getDefaultInstance(props);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>smtp.host</code> property that we exposed in the test container configuration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>smtp.port</code> property that we exposed in the test container configuration</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In addition, generic containers can bind file system resources (either read-only or read-write):</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.ro-fs-bind[0].path/to/local/readonly-file.conf=/path/to/container/readonly-file.conf
+test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file.conf=/path/to/container/readwrite-file.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-fs-bind:
+        - "path/to/local/readonly-file.conf": /path/to/container/readonly-file.conf
+      rw-fs-bind:
+        - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      [[test-resources.containers.mycontainer.ro-fs-bind]]
+        "path/to/local/readonly-file.conf"="/path/to/container/readonly-file.conf"
+      [[test-resources.containers.mycontainer.rw-fs-bind]]
+        "path/to/local/readwrite-file.conf"="/path/to/container/readwrite-file.conf"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      roFsBind = [{
+          path/to/local/readonlyFile.conf = "/path/to/container/readonly-file.conf"
+        }]
+      rwFsBind = [{
+          path/to/local/readwriteFile.conf = "/path/to/container/readwrite-file.conf"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        ro-fs-bind = [{
+            "path/to/local/readonly-file.conf" = "/path/to/container/readonly-file.conf"
+          }]
+        rw-fs-bind = [{
+            "path/to/local/readwrite-file.conf" = "/path/to/container/readwrite-file.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "ro-fs-bind": [{
+            "path/to/local/readonly-file.conf": "/path/to/container/readonly-file.conf"
+          }],
+        "rw-fs-bind": [{
+            "path/to/local/readwrite-file.conf": "/path/to/container/readwrite-file.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Furthermore, generic containers can use tmpfs mappings (in read-only or read-write mode):</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.ro-tmpfs-mappings[0]=/path/to/readonly/container/file
+test-resources.containers.mycontainer.rw-tmpfs-mappings[0]=/path/to/readwrite/container/file</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-tmpfs-mappings:
+        - /path/to/readonly/container/file
+      rw-tmpfs-mappings:
+        - /path/to/readwrite/container/file</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      ro-tmpfs-mappings=[
+        "/path/to/readonly/container/file"
+      ]
+      rw-tmpfs-mappings=[
+        "/path/to/readwrite/container/file"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      roTmpfsMappings = ["/path/to/readonly/container/file"]
+      rwTmpfsMappings = ["/path/to/readwrite/container/file"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        ro-tmpfs-mappings = ["/path/to/readonly/container/file"]
+        rw-tmpfs-mappings = ["/path/to/readwrite/container/file"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "ro-tmpfs-mappings": ["/path/to/readonly/container/file"],
+        "rw-tmpfs-mappings": ["/path/to/readwrite/container/file"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>It is also possible to copy files from the host to the container:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.copy-to-container[0].path/to/local/readonly-file.conf=/path/to/container/file.conf
+test-resources.containers.mycontainer.copy-to-container[1].classpath:/file/on/classpath.conf=/path/to/container/other.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      copy-to-container:
+        - path/to/local/readonly-file.conf: /path/to/container/file.conf
+        - classpath:/file/on/classpath.conf: /path/to/container/other.conf</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      [[test-resources.containers.mycontainer.copy-to-container]]
+        "path/to/local/readonly-file.conf"="/path/to/container/file.conf"
+      [[test-resources.containers.mycontainer.copy-to-container]]
+        "classpath:/file/on/classpath.conf"="/path/to/container/other.conf"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      copyToContainer = [{
+          path/to/local/readonlyFile.conf = "/path/to/container/file.conf"
+        }, {
+          classpath:/file/on/classpath.conf = "/path/to/container/other.conf"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        copy-to-container = [{
+            "path/to/local/readonly-file.conf" = "/path/to/container/file.conf"
+          }, {
+            "classpath:/file/on/classpath.conf" = "/path/to/container/other.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "copy-to-container": [{
+            "path/to/local/readonly-file.conf": "/path/to/container/file.conf"
+          }, {
+            "classpath:/file/on/classpath.conf": "/path/to/container/other.conf"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you want to copy a file found on classpath, the source path must be prefixed with <code>classpath:</code>.</p>
+</div>
+<div class="paragraph">
+<p>The following properties are also supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>command</code>: Set the command that should be run in the container</p>
+</li>
+<li>
+<p><code>env</code>: the map of environment variables</p>
+</li>
+<li>
+<p><code>labels</code>: the map of labels</p>
+</li>
+<li>
+<p><code>startup-timeout</code>: the container startup timeout</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>e.g:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.command=some.sh
+test-resources.containers.mycontainer.env[0].MY_ENV_VAR=my value
+test-resources.containers.mycontainer.labels[0].my.label=my value
+test-resources.containers.mycontainer.startup-timeout=120s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      command: "some.sh"
+      env:
+        - MY_ENV_VAR: "my value"
+      labels:
+        - my.label: "my value"
+      startup-timeout: 120s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883
+      command="some.sh"
+      [[test-resources.containers.mycontainer.env]]
+        MY_ENV_VAR="my value"
+      [[test-resources.containers.mycontainer.labels]]
+        "my.label"="my value"
+      startup-timeout="120s"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      command = "some.sh"
+      env = [{
+          MY_ENV_VAR = "my value"
+        }]
+      labels = [{
+          my.label = "my value"
+        }]
+      startupTimeout = "120s"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        command = "some.sh"
+        env = [{
+            MY_ENV_VAR = "my value"
+          }]
+        labels = [{
+            "my.label" = "my value"
+          }]
+        startup-timeout = "120s"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "command": "some.sh",
+        "env": [{
+            "MY_ENV_VAR": "my value"
+          }],
+        "labels": [{
+            "my.label": "my value"
+          }],
+        "startup-timeout": "120s"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Please refer to the <a href="configurationreference.html#io.micronaut.testresources.testcontainers.TestContainersConfiguration">configuration properties reference</a> for details.</p>
+</div>
+<div class="sect1">
+<h2 id="advanced-networking">Advanced networking</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, each container is spawned in its own network.
+It is possible to let containers communicate with each other by declaring the network they belong to:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.producer.image-name=alpine:3.14
+test-resources.containers.producer.command[0]=/bin/sh
+test-resources.containers.producer.command[1]=-c
+test-resources.containers.producer.command[2]=while true ; do printf 'HTTP/1.1 200 OK\n\nyay' | nc -l -p 8080; done
+test-resources.containers.producer.network=custom
+test-resources.containers.producer.network-aliases=bob
+test-resources.containers.producer.hostnames=producer.host
+test-resources.containers.consumer.image-name=alpine:3.14
+test-resources.containers.consumer.command=top
+test-resources.containers.consumer.network=custom
+test-resources.containers.consumer.network-aliases=alice
+test-resources.containers.consumer.hostnames=consumer.host</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    producer:
+      image-name: alpine:3.14
+      command:
+        - /bin/sh
+        - "-c"
+        - "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"
+      network: custom
+      network-aliases: bob
+      hostnames: producer.host
+    consumer:
+      image-name: alpine:3.14
+      command: top
+      network: custom
+      network-aliases: alice
+      hostnames: consumer.host</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.producer]
+      image-name="alpine:3.14"
+      command=[
+        "/bin/sh",
+        "-c",
+        "while true ; do printf \'HTTP/1.1 200 OK\\n\\nyay\' | nc -l -p 8080; done"
+      ]
+      network="custom"
+      network-aliases="bob"
+      hostnames="producer.host"
+    [test-resources.containers.consumer]
+      image-name="alpine:3.14"
+      command="top"
+      network="custom"
+      network-aliases="alice"
+      hostnames="consumer.host"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    producer {
+      imageName = "alpine:3.14"
+      command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+      network = "custom"
+      networkAliases = "bob"
+      hostnames = "producer.host"
+    }
+    consumer {
+      imageName = "alpine:3.14"
+      command = "top"
+      network = "custom"
+      networkAliases = "alice"
+      hostnames = "consumer.host"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      producer {
+        image-name = "alpine:3.14"
+        command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+        network = "custom"
+        network-aliases = "bob"
+        hostnames = "producer.host"
+      }
+      consumer {
+        image-name = "alpine:3.14"
+        command = "top"
+        network = "custom"
+        network-aliases = "alice"
+        hostnames = "consumer.host"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "producer": {
+        "image-name": "alpine:3.14",
+        "command": ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"],
+        "network": "custom",
+        "network-aliases": "bob",
+        "hostnames": "producer.host"
+      },
+      "consumer": {
+        "image-name": "alpine:3.14",
+        "command": "top",
+        "network": "custom",
+        "network-aliases": "alice",
+        "hostnames": "consumer.host"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>network</code> key is used to declare the network containers use.
+The <code>network-aliases</code> can be used to assign host names to the containers.</p>
+</div>
+<div class="paragraph">
+<p>The <code>network-mode</code> can be used to set the network mode (e.g. including 'host', 'bridge', 'none' or the name of an existing named network.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wait_strategies">Wait strategies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Micronaut Test Resources uses the default <a href="https://www.testcontainers.org/features/startup_and_waits/">Testcontainers wait strategies</a>.</p>
+</div>
+<div class="paragraph">
+<p>It is however possible to override the default by configuration.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            log:
+                regex: ".*Started.*"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.log]
+          regex=".*Started.*"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      waitStrategy {
+        log {
+          regex = ".*Started.*"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        wait-strategy {
+          log {
+            regex = ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "wait-strategy": {
+          "log": {
+            "regex": ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The following wait strategies are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>log</code> strategy with the following properties:</p>
+</li>
+<li>
+<p><code>regex</code>: the regular expression to match</p>
+</li>
+<li>
+<p><code>times</code>: the number of times the regex should be matched</p>
+</li>
+<li>
+<p><code>http</code> strategy with the following properties:</p>
+</li>
+<li>
+<p><code>path</code>: the path to check</p>
+</li>
+<li>
+<p><code>tls</code>: if TLS should be enabled</p>
+</li>
+<li>
+<p><code>port</code>: the port to listen on</p>
+</li>
+<li>
+<p><code>status-code</code>: the list of expected status codes</p>
+</li>
+<li>
+<p><code>port</code> strategy (this is the default strategy)</p>
+</li>
+<li>
+<p><code>healthcheck</code>: Docker healthcheck strategy</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.wait-strategy.port=null
+test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.log]
+          regex=".*Started.*"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      waitStrategy {
+        port = null
+        log {
+          regex = ".*Started.*"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        wait-strategy {
+          port = null
+          log {
+            regex = ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "wait-strategy": {
+          "port": null,
+          "log": {
+            "regex": ".*Started.*"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>It is possible to configure the <code>all</code> strategy itself:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.wait-strategy.port=null
+test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*
+test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: my/container
+        wait-strategy:
+            port:
+            log:
+                regex: ".*Started.*"
+            all:
+              timeout: 120s</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.log]
+          regex=".*Started.*"
+        [test-resources.containers.mycontainer.wait-strategy.all]
+          timeout="120s"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      waitStrategy {
+        port = null
+        log {
+          regex = ".*Started.*"
+        }
+        all {
+          timeout = "120s"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        wait-strategy {
+          port = null
+          log {
+            regex = ".*Started.*"
+          }
+          all {
+            timeout = "120s"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "wait-strategy": {
+          "port": null,
+          "log": {
+            "regex": ".*Started.*"
+          },
+          "all": {
+            "timeout": "120s"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependencies_between_containers">Dependencies between containers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In some cases, your containers may require other containers to be started before they start.
+You can declare such dependencies with the <code>depends-on</code> property:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.depends-on=other
+test-resources.containers.other.image-name=my/other</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+        image-name: "my/container"
+        depends-on: other
+        # ...
+    other:
+        image-name: "my/other"
+        # ...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      depends-on="other"
+    [test-resources.containers.other]
+      image-name="my/other"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      dependsOn = "other"
+    }
+    other {
+      imageName = "my/other"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        depends-on = "other"
+      }
+      other {
+        image-name = "my/other"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "depends-on": "other"
+      },
+      "other": {
+        "image-name": "my/other"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s worth noting that such containers need to be declared on the <a href="#advanced-networking">same network</a> in order to be able to communicate with each other.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Dependencies between containers <strong>only work between generic containers</strong>. It is not possible to create a dependency between a generic container and a container created with the other test resources resolvers. For example, you cannot add a dependency on a container which provides a MySQL database by adding a <code>depends-on: mysql</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+
+<h1 id="extensions"><a class="anchor" href="#extensions"></a>5 Micronaut Test extensions</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/extensions.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Test Resources also provides extensions to <a href="https://github.com/micronaut-projects/micronaut-test">Micronaut Test</a> to support more advanced use cases.
+The core extension provides a way to expand the set of test properties available to tests, while the JUnit Platform extension provides ways to isolate resources needed by different tests.</p>
+</div>
+
+<h2 id="extensions-core"><a class="anchor" href="#extensions-core"></a>5.1 Core extension</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/extensions-core.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In order to use the core extension, you need to add this dependency to your build:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">testImplementation(<span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-extensions-core")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.testresources&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-test-resources-extensions-core&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+<div class="sect1">
+<h2 id="_expanding_the_set_of_test_properties">Expanding the set of test properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Micronaut Test resources is capable of supplying the values of properties which are missing from your configuration when you execute tests.
+For example, if the property <code>datasources.default.url</code> is missing, then the service will be called, a database will be provisioned and made available to your application.
+However, there is one assumption: these properties are only available once the application context is available.</p>
+</div>
+<div class="paragraph">
+<p>In some cases, you may need to expand the set of properties available to tests <em>before</em> the application under test is started (or before the application context is available).
+In Micronaut, a test property can be supplied by implementing the <code>io.micronaut.test.support.TestPropertyProvider</code> interface, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class MyTest implements TestPropertyProvider {
+
+    // ...
+    Map&lt;String, String&gt; getProperties() {
+        return Map.of(
+                "myapp.someProperty", "value"
+        );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, a <code>TestPropertyProvider</code> cannot access values which are provided by Micronaut Test Resources, or values which are available in your configuration files, which means that you cannot compute a new property based on the value of other properties.</p>
+</div>
+<div class="paragraph">
+<p>The Micronaut test core extension offers an alternative mechanism to solve this problem: you can annotate a test with <code>@TestResourcesProperties</code> and provide a couple arguments:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the list of test resource properties which you need to compute your property</p>
+</li>
+<li>
+<p>a class which is responsible for deriving new values from the set of available test properties</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To illustrate this, imagine a test which needs to access a RabbitMQ cluster.
+Micronaut test resources will not provide a <code>rabbitmq.servers.product-cluster.port</code>, but does provide a <code>rabbitmq.url</code> property.
+What we need is therefore a provider which will compute the value of <code>rabbitmq.servers.product-cluster.port</code> from that <code>rabbitmq.url</code> property.</p>
+</div>
+<div class="paragraph">
+<p>This has to be done <em>before</em> the application is started, so we can use <code>@TestResourcesProperties</code> for this.
+First, annotate your test with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@MicronautTest
+@TestResourcesProperties(
+    value = "rabbitmq.uri",
+    providers = ConnectionSpec.RabbitMQProvider.class
+)
+class ConnectionSpec {
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next implement the <code>RabbitMQProvider</code> type (here it&#8217;s done as a nested class in the test but there&#8217;s no limitation about where to find it):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @ReflectiveAccess
+    public static class RabbitMQProvider implements TestResourcesPropertyProvider {
+        @Override
+        public Map&lt;String, String&gt; provide(Map&lt;String, Object&gt; testProperties) {
+            String uri = (String) testProperties.get("rabbitmq.uri");
+            return Map.of(
+                "rabbitmq.servers.product-cluster.port", String.valueOf(URI.create(uri).getPort())
+            );
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A test resources property provider can access:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the list of properties requested via the <code>value</code> of <code>@TestResourcesProperties</code></p>
+</li>
+<li>
+<p>the list of properties which are available in your configuration files</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In this case, we are computing the value of <code>rabbitmq.servers.product-cluster.port</code> from the <code>rabbitmq.uri</code> and return it as a single map entry, which will be added to the set of test properties.</p>
+</div>
+</div>
+</div>
+
+<h2 id="extensions-junit-platform"><a class="anchor" href="#extensions-junit-platform"></a>5.2 JUnit Platform</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/extensions-junit-platform.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In order to use the JUnit Platform extension, you need to add this dependency to your build:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">testImplementation(<span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-extensions-junit-platform")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.testresources&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-test-resources-extensions-junit-platform&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+<div class="paragraph">
+<p>This extension is compatible with test frameworks which use JUnit Platform, which means in particular all test frameworks supported by Micronaut:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://junit.org/junit5/">JUnit 5</a></p>
+</li>
+<li>
+<p><a href="https://spockframework.org">Spock Framework</a></p>
+</li>
+<li>
+<p><a href="https://kotest.io/">Kotest</a></p>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_isolating_test_resources">Isolating test resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, Micronaut Test Resources will share test resources for a whole test suite.
+For example, if 2 tests need a MySQL container, then the first test will start the container, and the next step will reuse that container.
+The main advantage is that you don&#8217;t pay the cost of starting a container twice (or more), which can dramatically speed up test suites.
+The responsibility of shutting down resources is delegated to the build tools (e.g Gradle or Maven), which do this at the end of the build.
+The advantage of this is that not only a test container can be shared by different tests of a test suite, but it can be shared by different tasks of a single build.
+In particular, this allows sharing a container between JVM tests and native tests: the container will be started at the beginning of the build, and reused for native tests.</p>
+</div>
+<div class="paragraph">
+<p>While this behavior is usually preferred, there are situations where you may want to isolate tests, for example:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>when your test requires a dedicated container with a different configuration from the other tests</p>
+</li>
+<li>
+<p>when it&#8217;s difficult to clean up the state of a container after a test is executed</p>
+</li>
+<li>
+<p>when your tests spawn many different containers and that resource consumption becomes too high</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For example, you may have an application which runs tests on different databases.
+By using the default behavior, it would mean that a database container would be started for each database, then left over even when the suite which tests that database is done.
+In order to reduce consumption, you can now use the <code>@TestResourcesScope</code> annotation to declare the <em>scope of test resources</em>.</p>
+</div>
+<div class="paragraph">
+<p>The easiest is to use an explicit name for a scope:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@TestResourcesScope("my scope")
+class MyTest {
+    @Test
+    void testSomething() {
+        // ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using this annotation, all tests which are using the same scope will share the test resources of that scope.
+Once the last test which requires that scope is finished, <strong>test resources of that scope are automatically closed</strong>.</p>
+</div>
+<div class="paragraph">
+<p>In addition to an explicit name, it is possible to supply a naming strategy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@TestResourcesScope(namingStrategy = MyStrategy)
+class MyTest {
+    @Test
+    void testSomething() {
+        // ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Test resources come with 2 built-in strategies:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ScopeNamingStrategy.TestClassName</code> will use the name of the test class as the scope, which means in practice that the resources are exclusive to this test class</p>
+</li>
+<li>
+<p><code>ScopeNamingStrategy.PackageName</code> will use the name of the package of the test, which can be handy if all the tests which are in a common package share the same resources.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_known_limitations_of_testresourcesscope">Known limitations of @TestResourcesScope</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>a test can only use single scope: it is not possible to have a test which requires multiple scopes, but nested test classes can override the scope of their parent test class</p>
+</li>
+<li>
+<p>scopes are handled <em>per process</em> (e.g per JVM), which means that if 2 tests use the same scope but are executed on different JVMs, then the scope will be closed independently in these JVMs.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The 2nd point is important to understand as the test resources service runs independently of your test suite.
+This means in practice that if 2 tests executed in 2 different processes, then as soon as the first process has finished all tests which use that scope, the scope will be closed on the <em>common server</em>.
+While test resources can recover from that situation by spawning a new test resource when the 2nd process will need it, it is possible that a scope is closed <em>while a test is running in a different process</em>.</p>
+</div>
+<div class="paragraph">
+<p>For this reason, we recommend to make sure that you only use this feature if you are not splitting your test suite on multiple processes, which can happen if you use <code>forkEvery</code> in Gradle or parallel test execution with the Surefire Maven plugin.
+Similarly, using the test distribution plugin of Gradle will trigger the same problem.</p>
+</div>
+<div class="paragraph">
+<p>In practice, this may not be an issue for your use cases, depending on how you use scopes.</p>
+</div>
+</div>
+</div>
+
+<h1 id="debugging"><a class="anchor" href="#debugging"></a>6 Debugging</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/debugging.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+
+
+<h2 id="debugging-intro"><a class="anchor" href="#debugging-intro"></a>6.1 Running the test resources service in debug mode</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/debugging-intro.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The test resources service runs as a separate service, on its own process.</p>
+</div>
+<div class="paragraph">
+<p>Debugging the test resources service is currently only supported via the Gradle plugin.
+This can be configured using the following code:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">tasks.named("internalStartTestResourcesService") {
+    debugServer = true
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">tasks.internalStartTestResourcesService {
+    debugServer.set(true)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you may want to add the test resources control panel.</p>
+</div>
+
+<h2 id="modules-control-panel"><a class="anchor" href="#modules-control-panel"></a>6.2 Control Panel</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/modules-control-panel.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This module adds a <a href="https://github.com/micronaut-projects/micronaut-control-panel/">Micronaut Control Panel</a> to the test resources server.</p>
+</div>
+<div class="paragraph">
+<p>When added, the control panel module will be available on <code>/control-panel</code> of the test resources service.
+For example, at startup, you will see the following message:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Test Resources control panel can be browsed at <a href="http://localhost:40701/control-panel" class="bare">http://localhost:40701/control-panel</a></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>This URL can only be accessed from the local host.
+It provides information about:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the Docker environment (status and containers which have been started)</p>
+</li>
+<li>
+<p>the test resources modules which are loaded in the test resources service (one for each test resource)</p>
+</li>
+<li>
+<p>the properties which have been resolved by each test resources provider</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, it is possible to determine the database URL, username and password which were resolved by browsing to the corresponding test resources panel:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/test-resources-panel.jpg" alt="test resources panel">
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the control panel <em>cannot</em> show properties before the application has tried to resolve them, because the value of the properties depends on the request context.
+That request context is displayed</p>
+</div>
+
+<h1 id="architecture"><a class="anchor" href="#architecture"></a>7 Architecture</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Micronaut Test Resources essentially consists of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a test resource server, which is responsible for service "test provisioning requests"</p>
+</li>
+<li>
+<p>a thin test resource client, which is injected in the classpath of the application under test</p>
+</li>
+<li>
+<p>test resources support modules, which are injected on the server classpath by build tools, based on inference and configuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The client is responsible for resolving "missing properties".
+For example, if a bean needs the value of the <code>datasources.default.url</code> property and that this property isn&#8217;t set, then the client will issue a request on the test resources server to give the value of that property.
+As a side effect of providing the value, a database container may be started.</p>
+</div>
+
+<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>7.1 The test resources server</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-server.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The Micronaut Test Resources server is a service which is responsible for handling the lifecycle of test resources.</p>
+</div>
+<div class="paragraph">
+<p>For example, a MySQL database may need to be started when the tests start, and shutdown at the end of the build.</p>
+</div>
+<div class="paragraph">
+<p>For this purpose, the test resource server must be started before the application under test starts, and shutdown after test resources are no longer needed.</p>
+</div>
+<div class="paragraph">
+<p>It means, for example, that with <a href="https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build">Gradle continuous builds</a>, the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.</p>
+</div>
+
+<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>7.1.1 Sharing containers between independent builds</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-shared-server.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>By default, a server will be spawned for each build, and shutdown at the end of a build (or after several builds if using the continuous mode in Gradle).</p>
+</div>
+<div class="paragraph">
+<p>However, what if you have several projects and that you want to share test resources between them?
+As an example, you might have a project which consists of a Kafka publisher and another project with a Kafka consumer.
+If they don&#8217;t use the <em>same</em> Kafka server, then they won&#8217;t be able to communicate with each other.</p>
+</div>
+<div class="paragraph">
+<p>The solution to this problem is to use a <em>shared server</em>.
+By default builds would spawn a server per build on a different port, but if you specify a port explicitly, then both builds will use the same server.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If you use a shared server, then you must make sure that the <em>first build</em> to start the server provides all the support modules.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>7.2 The test resources client</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-client.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The Micronaut Test Resources client is a lightweight client which connects to the test resources server.
+It basically delegates requests of property resolution from Micronaut to the server.</p>
+</div>
+<div class="paragraph">
+<p>This client is automatically injected on the application classpath in development mode or during tests.
+As a user, you should never have to deal with this module directly.</p>
+</div>
+
+<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>7.3 Embedded test resources</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/architecture-embedded.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>The embedded test resources module is used by the Test Resources Server internally.
+It is responsible for aggregating several test resources resolvers and providing a unified interface to the test resources.</p>
+</div>
+<div class="paragraph">
+<p>It is possible for an application to use the embedded test resources module directly instead of using the server and the client.
+However, we don&#8217;t recommend it because it would enhance the application classpath with unnecessary dependencies: each of the test resource resolver would add dependencies on the application that you may not want, potentially introducing conflicts.</p>
+</div>
+<div class="paragraph">
+<p>The client/server model is designed to avoid this situation, while offering a more fine-grained control over the lifecycle of the test resources.</p>
+</div>
+
+<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>7.4 Implementing a test resource</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/implementing-test-resources.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>In case the provided test resources are not enough, or if you have to tweak the configuration of test resources in such a way that is not possible via simple configuration (for example, you might need to execute commands in a test container, which is not supported), you can implement your own test resource resolver.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In the general case, test resources are not loaded in the same process as your tests: they will be loaded in a service which runs independently.
+As a consequence, it is a mistake to put their implementation in your <em>test</em> source set (that is to say in <code>src/test/java</code> for example).
+Therefore, depending on the build tool you use, test resources must either be implemented in the <code>src/testResources</code> source set (Gradle) or in a separate project/module (Maven or Gradle).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A test resource resolver is loaded <em>at application startup</em>, before the <code>ApplicationContext</code> is available, and therefore cannot use traditional Micronaut dependency injection.</p>
+</div>
+<div class="paragraph">
+<p>Therefore, a test resource resolver is a service implementing the <a href="../api/io/micronaut/testresources/core/TestResourcesResolver.html">TestResourcesResolver</a> interface.</p>
+</div>
+<div class="paragraph">
+<p>For test resources which make use of Testcontainers, you may extend the base <a href="../api/io/micronaut/testresources/testcontainers/AbstractTestContainersProvider.html">AbstractTestContainersProvider</a> class.</p>
+</div>
+<div class="paragraph">
+<p>In addition, you need to declare the resolver for service loading, by adding your implementation type name in the <code>META-INF/services/io.micronaut.testresources.core.TestResourcesResolver</code> file.</p>
+</div>
+<div class="sect1">
+<h2 id="_lifecycle">Lifecycle</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_at_application_startup">At application startup</h3>
+<div class="paragraph">
+<p>Implementing a test resources resolver requires to understand the lifecycle of resolvers. An initial step is done when the resolvers are <em>loaded</em> (for example in the server process)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>test resource resolvers are loaded via service loading</p>
+</li>
+<li>
+<p>the <code>TestResourcesResolver#getRequiredPropertyEntries()</code> method is called on a resolver. This method should return a list of property entries that the resolver needs to know about in order to determine which properties it can resolve. For example, a datasource URL resolver must know the names of the datasources before it can tell what properties it can resolve. Therefore, it would return <code>datasources</code> to this method.</p>
+</li>
+<li>
+<p>the <code>TestResourcesResolver#getResolvableProperties</code> method is called, with a couple maps:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>the first map contains at the key the name of a "required property entry" from the call in 2. For example, <code>datasources</code>. The value is the list of entries for that property. For example, <code>[default, users, books]</code>.</p>
+</li>
+<li>
+<p>the second map contains the whole <code>test-resources</code> configuration from the application, as a flat map of properties.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The resolver can then return a <em>list of properties</em> that it can resolve. For example, <code>datasources.default.url</code>, <code>datasources.users.url</code>, <code>datasources.books.url</code>, etc.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_when_a_property_needs_to_be_resolved">When a property needs to be resolved</h3>
+<div class="paragraph">
+<p>At this stage, we know <em>all properties</em> that resolvers are able to resolve.
+So whenever Micronaut will encounter a property without value, it will ask the resolvers to resolve it.
+This is done in 2 steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>the <code>TestResourceResolver#getRequiredProperties</code> is called with the expression being resolved. It gives a chance to the resolver to tell what other properties it needs to read <em>before</em> resolving the expression. For example, a database resolver may need to read the <code>datasources.default.db-type</code> property before it can resolve the <code>datasources.default.url</code> property, so that it can tell if it&#8217;s actually capable of handling that database type or not.</p>
+</li>
+<li>
+<p>the <code>resolve</code> method is called with the expression being resolved, the map of resolved properties from 1. and the whole configuration map of the <code>test-resources</code> from the application.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It is the responsibility of the <code>TestResourcesResolver</code> to check, when <code>resolve</code> is called, that it can actually resolve the supplied expression. Do <strong>not</strong> assume that it will be called with an expression that it can resolve.
+If, for some reason, the resolver cannot resolve the expression then <code>Optional#empty()</code> should be returned, otherwise the test resource resolver can return the resolved value.</p>
+</div>
+<div class="paragraph">
+<p>As part of the resolution, a test resource may be started (for example a container).</p>
+</div>
+</div>
+</div>
+</div>
+
+<h1 id="testResourcesGuides"><a class="anchor" href="#testResourcesGuides"></a>8 Guides</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/testResourcesGuides.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>See the following guides to learn more. They demonstrate using Testcontainers, followed by the simplification of using Test Resources instead.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://guides.micronaut.io/latest/replace-h2-with-real-database-for-testing.html">Replace H2 with a Real Database for Testing</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html">Testing Kafka Listener using Testcontainers with the Micronaut Framework</a></p>
+</li>
+<li>
+<p><a href="https://guides.micronaut.io/latest/working-with-jooq-flyway-using-testcontainers.html">Working with JOOQ and Flyway using Testcontainers</a></p>
+</li>
+</ul>
+</div>
+
+<h1 id="repository"><a class="anchor" href="#repository"></a>9 Repository</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/master/src/main/docs/guide/repository.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can find the source code of this project in this repository:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/micronaut-projects/micronaut-test-resources">https://github.com/micronaut-projects/micronaut-test-resources</a></p>
+</div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

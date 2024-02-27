@@ -44,7 +44,6 @@ public class InternalTestResourcesServiceResolver implements InjectableTestResou
         this.server = server;
     }
 
-
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         return List.of(SERVER_URI);

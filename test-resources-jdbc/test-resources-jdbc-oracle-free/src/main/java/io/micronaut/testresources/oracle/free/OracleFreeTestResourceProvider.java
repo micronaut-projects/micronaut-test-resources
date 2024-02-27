@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.oracle.xe;
+package io.micronaut.testresources.oracle.free;
 
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
-import org.testcontainers.containers.OracleContainer;
+import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A test resource provider which will spawn an Oracle XE test container.
+ * A test resource provider which will spawn an Oracle Free test container.
  *
- * @deprecated Use <code>oracle-free</code> instead.
+ * @since 2.4.0
  */
-@Deprecated(since = "2.4.0", forRemoval = true)
-public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvider<OracleContainer> {
+public class OracleFreeTestResourceProvider extends AbstractJdbcTestResourceProvider<OracleContainer> {
     private static final String OCID = "ocid";
     public static final String DISPLAY_NAME = "Oracle Database";
 
@@ -70,12 +68,12 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
 
     @Override
     protected String getSimpleName() {
-        return "oracle-xe";
+        return "oracle";
     }
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe:slim-faststart";
+        return "gvenzl/oracle-free:slim-faststart";
     }
 
     @Override

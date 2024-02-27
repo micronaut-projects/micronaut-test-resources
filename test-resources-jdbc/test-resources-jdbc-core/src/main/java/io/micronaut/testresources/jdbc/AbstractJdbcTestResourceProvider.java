@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  * @param <T> the type of the container
  */
 public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseContainer<? extends T>> extends AbstractTestContainersProvider<T> {
-    private static final String PREFIX = "datasources";
+    public static final String PREFIX = "datasources";
     private static final String URL = "url";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -45,9 +45,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
 
     private static final String TYPE = "db-type";
 
-    private static final List<String> SUPPORTED_LIST = Collections.unmodifiableList(
-        Arrays.asList(URL, USERNAME, PASSWORD, DRIVER)
-    );
+    private static final List<String> SUPPORTED_LIST = List.of(URL, USERNAME, PASSWORD, DRIVER);
 
     /**
      * Returns the list of db-types supported by this provider.
@@ -62,7 +60,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         Collection<String> datasources = propertyEntries.getOrDefault(PREFIX, Collections.emptyList());
         return datasources.stream()
             .flatMap(ds -> SUPPORTED_LIST.stream().map(p -> PREFIX + "." + ds + "." + p))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Override
@@ -79,7 +77,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         return Stream.of(
                 datasourceExpressionOf(datasource, TYPE),
                 datasourceExpressionOf(datasource, DIALECT)
-            ).collect(Collectors.toList());
+            ).toList();
     }
 
     @Override
@@ -93,31 +91,18 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
             return getDbTypes().stream().anyMatch(type::equalsIgnoreCase);
         }
         String dialect = stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, DIALECT)));
-        if (dialect != null && dialect.equalsIgnoreCase(getSimpleName())) {
-            return true;
-        }
-        return false;
+        return dialect != null && dialect.equalsIgnoreCase(getSimpleName());
     }
 
     @Override
     protected Optional<String> resolveProperty(String expression, T container) {
-        String value;
-        switch (datasourcePropertyFrom(expression)) {
-            case URL:
-                value = container.getJdbcUrl();
-                break;
-            case USERNAME:
-                value = container.getUsername();
-                break;
-            case PASSWORD:
-                value = container.getPassword();
-                break;
-            case DRIVER:
-                value = container.getDriverClassName();
-                break;
-            default:
-                value = resolveDbSpecificProperty(expression, container);
-        }
+        String value = switch (datasourcePropertyFrom(expression)) {
+            case URL -> container.getJdbcUrl();
+            case USERNAME -> container.getUsername();
+            case PASSWORD -> container.getPassword();
+            case DRIVER -> container.getDriverClassName();
+            default -> resolveDbSpecificProperty(expression, container);
+        };
         return Optional.ofNullable(value);
     }
 

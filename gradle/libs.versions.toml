@@ -45,6 +45,7 @@ spock = "2.3-groovy-4.0"
 vertx-client = "4.5.4"
 amazon-awssdk-v1 = "1.12.667"
 amazon-awssdk-v2 = "2.24.11"
+jansi = "1.18"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.19.6"
@@ -110,6 +111,8 @@ amazon-awssdk-v1-sqs = { module = "com.amazonaws:aws-java-sdk-sqs", version.ref 
 amazon-awssdk-v2-dynamodb = { module = "software.amazon.awssdk:dynamodb", version.ref = "amazon-awssdk-v2" }
 amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "amazon-awssdk-v2" }
 amazon-awssdk-v2-sqs = { module = "software.amazon.awssdk:sqs", version.ref = "amazon-awssdk-v2" }
+
+jansi = { module = "org.fusesource.jansi:jansi", version.ref = "jansi" }
 #
 # Managed dependencies appear in the BOM
 #

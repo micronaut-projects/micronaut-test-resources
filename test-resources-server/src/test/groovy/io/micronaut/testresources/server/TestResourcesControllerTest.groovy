@@ -90,6 +90,15 @@ class TestResourcesControllerTest extends Specification {
         client.listContainers().empty
     }
 
+    def "can resolve the server URL"() {
+        when:
+        def url = client.resolve("micronaut.test.resources.server.uri", [:], [:])
+
+        then:
+        url.isPresent()
+        url.get() == "http://localhost:8080"
+    }
+
     @Client("/")
     static interface DiagnosticsClient extends TestResourcesClient {
         @Get("/testcontainers")

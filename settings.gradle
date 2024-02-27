@@ -38,6 +38,7 @@ def r2dbcModules = [
         'mariadb',
         'mysql',
         'oracle-xe',
+        'oracle-free',
         'postgresql',
         'mssql',
         'pool'

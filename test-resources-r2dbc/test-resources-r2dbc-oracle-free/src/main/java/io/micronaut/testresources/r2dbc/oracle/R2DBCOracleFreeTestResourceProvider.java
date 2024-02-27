@@ -19,7 +19,7 @@ import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.micronaut.testresources.r2dbc.core.R2dbcSupport;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.OracleContainer;
+import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
@@ -32,16 +32,13 @@ import static io.micronaut.testresources.r2dbc.core.R2dbcSupport.datasourceNameF
 import static io.micronaut.testresources.r2dbc.core.R2dbcSupport.r2dbDatasourceExpressionOf;
 
 /**
- * A test resource provider which will spawn an Oracle XE reactive test container.
- *
- * @deprecated Use <code>oracle</code> instead.
+ * A test resource provider which will spawn an Oracle Free reactive test container.
  */
-@Deprecated(since = "2.4.0", forRemoval = true)
-public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResourceProvider<OracleContainer> {
+public class R2DBCOracleFreeTestResourceProvider extends AbstractR2DBCTestResourceProvider<OracleContainer> {
 
+    public static final String DISPLAY_NAME = "Oracle Database (R2DBC)";
     private static final String R2DBC_ORACLE_DRIVER = "oracle";
     private static final String OCID = "ocid";
-    public static final String DISPLAY_NAME = "Oracle Database (R2DBC)";
 
     @Override
     public List<String> getRequiredProperties(String expression) {
@@ -51,7 +48,7 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
         return Stream.concat(
             requiredProperties.stream(),
             Stream.of(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, OCID))
-        ).collect(Collectors.toList());
+        ).toList();
     }
 
     @Override
@@ -82,13 +79,12 @@ public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResource
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe:slim-faststart";
+        return "gvenzl/oracle-free:slim-faststart";
     }
 
     @Override
     protected Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container) {
-        if (container instanceof OracleContainer) {
-            OracleContainer oracle = (OracleContainer) container;
+        if (container instanceof OracleContainer oracle) {
             ConnectionFactoryOptions options = ConnectionFactoryOptions.builder()
                 .option(ConnectionFactoryOptions.USER, oracle.getUsername())
                 .option(ConnectionFactoryOptions.PASSWORD, oracle.getPassword())

@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * A test resource provider which will spawn an Oracle XE test container.
  *
- * @deprecated Use <code>oracle-free</code> instead.
+ * @deprecated Use <code>oracle</code> instead.
  */
 @Deprecated(since = "2.4.0", forRemoval = true)
 public class HibernateReactiveOracleXETestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<OracleContainer> {

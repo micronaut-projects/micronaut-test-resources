@@ -30,8 +30,8 @@ import java.util.stream.Stream;
  * @since 2.4.0
  */
 public class OracleFreeTestResourceProvider extends AbstractJdbcTestResourceProvider<OracleContainer> {
-    private static final String OCID = "ocid";
     public static final String DISPLAY_NAME = "Oracle Database";
+    private static final String OCID = "ocid";
 
     @Override
     public String getDisplayName() {

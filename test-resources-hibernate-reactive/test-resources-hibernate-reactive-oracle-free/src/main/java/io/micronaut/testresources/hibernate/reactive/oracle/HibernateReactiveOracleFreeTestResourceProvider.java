@@ -16,18 +16,15 @@
 package io.micronaut.testresources.hibernate.reactive.oracle;
 
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
-import org.testcontainers.containers.OracleContainer;
+import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 
 /**
- * A test resource provider which will spawn an Oracle XE test container.
- *
- * @deprecated Use <code>oracle-free</code> instead.
+ * A test resource provider which will spawn an Oracle Free test container.
  */
-@Deprecated(since = "2.4.0", forRemoval = true)
-public class HibernateReactiveOracleXETestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<OracleContainer> {
+public class HibernateReactiveOracleFreeTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<OracleContainer> {
     public static final String DISPLAY_NAME = "Oracle Database (Hibernate Reactive)";
 
     @Override
@@ -37,12 +34,12 @@ public class HibernateReactiveOracleXETestResourceProvider extends AbstractHiber
 
     @Override
     protected String getSimpleName() {
-        return "oracle-xe";
+        return "oracle";
     }
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe:slim-faststart";
+        return "gvenzl/oracle-free:slim-faststart";
     }
 
     @Override

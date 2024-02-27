@@ -91,7 +91,7 @@ class TestResourcesClasspathTest extends Specification {
         'com.mysql:mysql-connector-j'          | 'mysql'
         'org.postgresql:postgresql'            | 'postgresql'
         'org.mariadb.jdbc:mariadb-java-client' | 'mariadb'
-        'com.oracle.database.jdbc:ojdbc8'      | 'oracle-xe'
+        'com.oracle.database.jdbc:ojdbc8'      | 'oracle-free'
         'com.microsoft.sqlserver:mssql-jdbc'   | 'mssql'
     }
 
@@ -138,7 +138,7 @@ class TestResourcesClasspathTest extends Specification {
         'io.asyncer:r2dbc-mysql'                 | 'mysql'
         'org.mariadb:r2dbc-mariadb'              | 'mariadb'
         'org.postgresql:r2dbc-postgresql'        | 'postgresql'
-        'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-xe'
+        'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-free'
         'io.r2dbc:r2dbc-mssql'                   | 'mssql'
         'io.r2dbc:r2dbc-pool'                    | 'pool'
     }

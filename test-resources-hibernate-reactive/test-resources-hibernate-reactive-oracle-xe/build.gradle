@@ -8,7 +8,7 @@ Provides support for launching an Oracle XE test container for Hibernate Reactiv
 
 dependencies {
     implementation(libs.managed.testcontainers.oracle.xe)
-    runtimeOnly(project(":micronaut-test-resources-jdbc-oracle-xe"))
+    runtimeOnly(projects.micronautTestResourcesJdbcOracleXe)
 
     testRuntimeOnly(libs.vertx.oracle)
 }

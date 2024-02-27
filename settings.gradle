@@ -48,7 +48,8 @@ def hibernateReactiveModules = [
         'mssql',
         'mysql',
         'postgresql',
-        'oracle-xe'
+        'oracle-xe',
+        'oracle-free'
 ]
 
 def localstackModules = [

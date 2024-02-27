@@ -34,7 +34,7 @@ public class ElasticsearchTestResourceProvider extends AbstractTestContainersPro
     public static final String SIMPLE_NAME = "elasticsearch";
     public static final String DEFAULT_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch";
     public static final String DEFAULT_TAG = "8.4.3";
-    public static final String DISPLAY_NAME = "kafka";
+    public static final String DISPLAY_NAME = "Elasticsearch";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

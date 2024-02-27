@@ -5,6 +5,9 @@ The following properties will automatically be set when using a JDBC database:
 - `datasources.*.password`
 - `datasources.*.dialect`
 
+Additionally, the MySQL resolver will automatically set the property `datasources.*.x-protocol-url` to be used with the
+https://dev.mysql.com/doc/connector-j/en/connector-j-using-xdevapi.html[MySQL X DevAPI].
+
 In order for the database to be properly detected, _one of_ the following properties has to be set:
 
 - `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `postgres`)

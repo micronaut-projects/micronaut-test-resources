@@ -8,7 +8,7 @@ Micronaut Test Resources provides support for the following databases:
 
 | https://mariadb.org/[MariaDB] | Yes | Yes | `mariadb` | `mariadb`
 | https://www.mysql.com/[MySQL] | Yes | Yes | `mysql` | `container-registry.oracle.com/mysql/community-server`
-| https://www.oracle.com/database/[Oracle Database] | Yes | Yes | `oracle-xe` | `gvenzl/oracle-xe:slim-faststart`
+| https://www.oracle.com/database/technologies/appdev/xe.html[Oracle Database XE] | Yes | Yes | `oracle-xe` | `gvenzl/oracle-xe:slim-faststart`
 | https://www.oracle.com/database/free/[Oracle Database Free] | Yes | Yes | `oracle` | `gvenzl/oracle-free:slim-faststart`
 | https://www.postgresql.org/[PostgreSQL] | Yes | Yes | `postgres` | `postgres`
 | https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | `mssql` | `mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04`

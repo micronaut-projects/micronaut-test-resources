@@ -23,10 +23,10 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.micronaut.testresources.core.ResolverLoader;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
-import io.micronaut.testresources.embedded.TestResourcesResolverLoader;
 import io.micronaut.testresources.testcontainers.TestContainers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class TestResourcesController implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
     private static final int MAX_STOP_TIMEOUT = 5000;
 
-    private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
+    private final ResolverLoader loader;
 
     private final List<PropertyResolutionListener> propertyResolutionListeners;
     private final EmbeddedServer embeddedServer;
@@ -58,14 +58,16 @@ public class TestResourcesController implements TestResourcesResolver {
 
     public TestResourcesController(List<PropertyResolutionListener> propertyResolutionListeners,
                                    EmbeddedServer embeddedServer,
-                                   ApplicationContext applicationContext) {
+                                   ApplicationContext applicationContext,
+                                   ResolverLoader loader) {
         this.propertyResolutionListeners = propertyResolutionListeners;
         this.embeddedServer = embeddedServer;
         this.applicationContext = applicationContext;
+        this.loader = loader;
     }
 
     /**
-     * Lists all resolvable properties. Prefer {@link #getResolvableProperties()} to list
+     * Lists all resolvable properties. Prefer {@link #getResolvableProperties(Map, Map)} to list
      * all properties which can be resolved for a particular configuration.
      *
      * @return the list of resolvable properties which do not depend on the application configuration

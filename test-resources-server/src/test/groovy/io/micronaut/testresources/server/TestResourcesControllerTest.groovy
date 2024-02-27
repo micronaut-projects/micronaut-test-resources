@@ -20,7 +20,7 @@ class TestResourcesControllerTest extends Specification {
 
     def "verifies that server can instantiate container"() {
         expect:
-        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container']
+        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container', 'micronaut.test.resources.server.uri']
         client.listContainers().empty
 
         when:
@@ -40,7 +40,7 @@ class TestResourcesControllerTest extends Specification {
 
     def "can resolve a valid property after an error in a regular test resource"() {
         expect:
-        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container']
+        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container', 'micronaut.test.resources.server.uri']
         client.listContainers().empty
 
         when: "resolution of a property fails"
@@ -66,7 +66,7 @@ class TestResourcesControllerTest extends Specification {
 
     def "can resolve a valid property after an error in a container test resource"() {
         expect:
-        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container']
+        client.resolvableProperties ==~ ['kafka.bootstrap.servers', 'failing.message', 'failing.container', 'micronaut.test.resources.server.uri']
         client.listContainers().empty
 
         when: "resolution of a property which starts a container"
@@ -88,6 +88,15 @@ class TestResourcesControllerTest extends Specification {
 
         then:
         client.listContainers().empty
+    }
+
+    def "can resolve the server URL"() {
+        when:
+        def url = client.resolve("micronaut.test.resources.server.uri", [:], [:])
+
+        then:
+        url.isPresent()
+        url.get().startsWith("http://localhost:")
     }
 
     @Client("/")

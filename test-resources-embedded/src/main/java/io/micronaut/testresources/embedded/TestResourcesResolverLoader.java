@@ -17,6 +17,7 @@ package io.micronaut.testresources.embedded;
 
 import io.micronaut.core.io.service.SoftServiceLoader;
 import io.micronaut.core.order.OrderUtil;
+import io.micronaut.testresources.core.ResolverLoader;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  * This class is responsible for loading {@link TestResourcesResolver} instances
  * via service loading and caching them.
  */
-public final class TestResourcesResolverLoader {
+public final class TestResourcesResolverLoader implements ResolverLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesResolverLoader.class);
 
     private final List<TestResourcesResolver> resolvers;
@@ -53,6 +54,7 @@ public final class TestResourcesResolverLoader {
         }
     }
 
+    @Override
     public List<TestResourcesResolver> getResolvers() {
         return resolvers;
     }

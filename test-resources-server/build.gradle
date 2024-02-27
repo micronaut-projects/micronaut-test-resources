@@ -17,23 +17,23 @@ client.
 dependencies {
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.reactor)
-    implementation(project(':micronaut-test-resources-core'))
-    implementation(project(':micronaut-test-resources-embedded'))
-    implementation(project(':micronaut-test-resources-testcontainers'))
+    implementation(projects.micronautTestResourcesCore)
+    implementation(projects.micronautTestResourcesEmbedded)
+    implementation(projects.micronautTestResourcesTestcontainers)
     runtimeOnly(mnLogging.logback.classic)
     runtimeOnly(mn.micronaut.management)
     runtimeOnly(mnSerde.micronaut.serde.jackson)
 
-    testFixturesImplementation(project(':micronaut-test-resources-core'))
-    testFixturesImplementation(project(':micronaut-test-resources-testcontainers'))
+    testFixturesImplementation(projects.micronautTestResourcesCore)
+    testFixturesImplementation(projects.micronautTestResourcesTestcontainers)
     testImplementation(mn.micronaut.http.client)
-    testImplementation(project(':micronaut-test-resources-client'))
-    testRuntimeOnly(project(':micronaut-test-resources-kafka'))
+    testImplementation(projects.micronautTestResourcesClient)
+    testRuntimeOnly(projects.micronautTestResourcesKafka)
 
     // For logback conversion
     aotPlugins(mnLogging.logback.classic)
-    aotPlugins("org.fusesource.jansi:jansi:1.18")
-    aotPlugins(testFixtures(project(":micronaut-test-resources-server")))
+    aotPlugins(libs.jansi)
+    aotPlugins(testFixtures(projects.micronautTestResourcesServer))
 
     // In order to support the control panel at runtime
     aotApplication projects.micronautTestResourcesControlPanel

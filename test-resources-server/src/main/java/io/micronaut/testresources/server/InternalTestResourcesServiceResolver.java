@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @Internal
 @Singleton
-public class InternalTestResourcesServiceResolver implements TestResourcesResolver {
+public class InternalTestResourcesServiceResolver implements InjectableTestResourcesResolver {
 
     public static final String SERVER_URI = "micronaut.test.resources.server.uri";
 

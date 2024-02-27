@@ -35,7 +35,7 @@ public class CompositeResolverLoader implements ResolverLoader {
 
     private final List<TestResourcesResolver> resolvers;
 
-    public CompositeResolverLoader(List<TestResourcesResolver> resolverBeans) {
+    public CompositeResolverLoader(List<InjectableTestResourcesResolver> resolverBeans) {
         var loader = TestResourcesResolverLoader.getInstance();
         this.resolvers = new ArrayList<>(resolverBeans.size() + loader.getResolvers().size());
         this.resolvers.addAll(resolverBeans);

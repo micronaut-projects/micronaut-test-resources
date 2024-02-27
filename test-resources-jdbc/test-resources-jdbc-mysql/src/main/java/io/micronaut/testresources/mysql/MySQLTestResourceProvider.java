@@ -26,6 +26,8 @@ import java.util.Map;
  */
 public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<MySQLContainer<?>> {
     public static final String DISPLAY_NAME = "MySQL";
+    public static final String MYSQL_OFFICIAL_IMAGE = "container-registry.oracle.com/mysql/community-server";
+    public static final String DOCKER_OFFICIAL_IMAGE = "mysql";
 
     @Override
     public String getDisplayName() {
@@ -39,11 +41,15 @@ public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
 
     @Override
     protected String getDefaultImageName() {
-        return "mysql";
+        return MYSQL_OFFICIAL_IMAGE;
     }
 
     @Override
     protected MySQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        // Testcontainers uses by default the Docker Hub official image, so the MySQL official image needs to be set as compatible substitute
+        if (imageName.asCanonicalNameString().startsWith(MYSQL_OFFICIAL_IMAGE)) {
+            imageName = imageName.asCompatibleSubstituteFor(DOCKER_OFFICIAL_IMAGE);
+        }
         return new MySQLContainer<>(imageName);
     }
 

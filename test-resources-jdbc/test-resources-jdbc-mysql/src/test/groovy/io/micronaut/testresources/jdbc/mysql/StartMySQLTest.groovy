@@ -3,6 +3,7 @@ package io.micronaut.testresources.jdbc.mysql
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.jdbc.AbstractJDBCSpec
 import io.micronaut.testresources.jdbc.Book
+import io.micronaut.testresources.mysql.MySQLTestResourceProvider
 import jakarta.inject.Inject
 
 @MicronautTest
@@ -23,6 +24,6 @@ class StartMySQLTest extends AbstractJDBCSpec {
 
     @Override
     String getImageName() {
-        "mysql"
+        MySQLTestResourceProvider.MYSQL_OFFICIAL_IMAGE
     }
 }

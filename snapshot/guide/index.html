@@ -295,36 +295,36 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://mariadb.org/">MariaDB</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mariadb</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mariadb</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.mysql.com/">MySQL</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mysql</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mysql</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mysql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/">Oracle Database</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">oracle</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">gvenzl/oracle-xe:slim-faststart</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oracle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gvenzl/oracle-xe:slim-faststart</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.postgresql.org/">PostgreSQL</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">postgres</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">postgres</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.microsoft.com/sql-server">Microsoft SQL Server</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mssql</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mssql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mcr.microsoft.com/mssql/server:2019-CU16-GDR1-ubuntu-20.04</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -544,6 +544,10 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <p><code>datasources.*.dialect</code></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Additionally, the MySQL resolver will automatically set the property <code>datasources.*.x-protocol-url</code> to be used with the
+<a href="https://dev.mysql.com/doc/connector-j/en/connector-j-using-xdevapi.html">MySQL X DevAPI</a>.</p>
 </div>
 <div class="paragraph">
 <p>In order for the database to be properly detected, <em>one of</em> the following properties has to be set:</p>

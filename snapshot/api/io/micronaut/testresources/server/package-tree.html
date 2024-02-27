@@ -61,7 +61,9 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">io.micronaut.testresources.server.<a href="AccessConfiguration.html" class="type-name-link" title="class in io.micronaut.testresources.server">AccessConfiguration</a></li>
 <li class="circle">io.micronaut.testresources.server.<a href="AccessFilter.html" class="type-name-link" title="class in io.micronaut.testresources.server">AccessFilter</a> (implements io.micronaut.http.filter.HttpServerFilter)</li>
+<li class="circle">io.micronaut.testresources.server.<a href="CompositeResolverLoader.html" class="type-name-link" title="class in io.micronaut.testresources.server">CompositeResolverLoader</a> (implements io.micronaut.testresources.core.<a href="../core/ResolverLoader.html" title="interface in io.micronaut.testresources.core">ResolverLoader</a>)</li>
 <li class="circle">io.micronaut.testresources.server.<a href="ExpiryManager.html" class="type-name-link" title="class in io.micronaut.testresources.server">ExpiryManager</a> (implements io.micronaut.aop.MethodInterceptor&lt;T,<wbr>R&gt;)</li>
+<li class="circle">io.micronaut.testresources.server.<a href="InternalTestResourcesServiceResolver.html" class="type-name-link" title="class in io.micronaut.testresources.server">InternalTestResourcesServiceResolver</a> (implements io.micronaut.testresources.server.<a href="InjectableTestResourcesResolver.html" title="interface in io.micronaut.testresources.server">InjectableTestResourcesResolver</a>)</li>
 <li class="circle">io.micronaut.testresources.server.<a href="TestContainer.html" class="type-name-link" title="class in io.micronaut.testresources.server">TestContainer</a></li>
 <li class="circle">io.micronaut.testresources.server.<a href="TestResourcesController.html" class="type-name-link" title="class in io.micronaut.testresources.server">TestResourcesController</a> (implements io.micronaut.testresources.core.<a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>)</li>
 <li class="circle">io.micronaut.testresources.server.<a href="TestResourcesService.html" class="type-name-link" title="class in io.micronaut.testresources.server">TestResourcesService</a></li>
@@ -73,6 +75,15 @@ loadScripts(document, 'script');</script>
 <section class="hierarchy">
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
+<li class="circle">io.micronaut.core.order.Ordered
+<ul>
+<li class="circle">io.micronaut.testresources.core.<a href="../core/TestResourcesResolver.html" class="type-name-link" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a>
+<ul>
+<li class="circle">io.micronaut.testresources.server.<a href="InjectableTestResourcesResolver.html" class="type-name-link" title="interface in io.micronaut.testresources.server">InjectableTestResourcesResolver</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="circle">io.micronaut.testresources.server.<a href="PropertyResolutionListener.html" class="type-name-link" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a></li>
 </ul>
 </section>

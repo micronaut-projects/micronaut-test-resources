@@ -85,34 +85,48 @@ loadScripts(document, 'script');</script>
  if an access token is specified, then the request should
  include the access token header.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ExpiryManager.html" title="class in io.micronaut.testresources.server">ExpiryManager</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CompositeResolverLoader.html" title="class in io.micronaut.testresources.server">CompositeResolverLoader</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A <a href="../core/ResolverLoader.html" title="interface in io.micronaut.testresources.core"><code>ResolverLoader</code></a> that loads <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a> instances from both Java
+ service loading and the Micronaut application context.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ExpiryManager.html" title="class in io.micronaut.testresources.server">ExpiryManager</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The expiry manager will handle pings from the client to keep the server alive.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="Ping.html" title="annotation interface in io.micronaut.testresources.server">Ping</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab7">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="InjectableTestResourcesResolver.html" title="interface in io.micronaut.testresources.server">InjectableTestResourcesResolver</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Marker interface for a <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a> implementations that can be injected.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InternalTestResourcesServiceResolver.html" title="class in io.micronaut.testresources.server">InternalTestResourcesServiceResolver</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a> that resolves properties regarding the Test Resource Service itself,
+ such as <code>micronaut.test.resources.server.uri</code>.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab7"><a href="Ping.html" title="annotation interface in io.micronaut.testresources.server">Ping</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab7">
 <div class="block">Annotation for controllers which participate to keeping the server alive.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="PropertyResolutionListener.html" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PropertyResolutionListener.html" title="interface in io.micronaut.testresources.server">PropertyResolutionListener</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">A test resources property resolution listener will be notified
  whenever a property is resolved by a <a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TestContainer.html" title="class in io.micronaut.testresources.server">TestContainer</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TestContainer.html" title="class in io.micronaut.testresources.server">TestContainer</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Stores metadata about a running test container.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The main test resources controller, which will answer requests performed by the
  test resources client to resolve properties or close test resources.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TestResourcesService.html" title="class in io.micronaut.testresources.server">TestResourcesService</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TestResourcesService.html" title="class in io.micronaut.testresources.server">TestResourcesService</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Main entry point for the server.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TestResourcesService.Configurer.html" title="class in io.micronaut.testresources.server">TestResourcesService.Configurer</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TestResourcesService.Configurer.html" title="class in io.micronaut.testresources.server">TestResourcesService.Configurer</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The application context configurer.</div>
 </div>
 </div>

@@ -163,6 +163,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/testresources/testcontainers/TestContainers.html#closeScope(java.lang.String)" class="member-name-link">closeScope(String)</a> - Static method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/TestContainers.html" title="class in io.micronaut.testresources.testcontainers">TestContainers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/server/CompositeResolverLoader.html" class="type-name-link" title="class in io.micronaut.testresources.server">CompositeResolverLoader</a> - Class in <a href="io/micronaut/testresources/server/package-summary.html">io.micronaut.testresources.server</a></dt>
+<dd>
+<div class="block">A <a href="io/micronaut/testresources/core/ResolverLoader.html" title="interface in io.micronaut.testresources.core"><code>ResolverLoader</code></a> that loads <a href="io/micronaut/testresources/core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a> instances from both Java
+ service loading and the Micronaut application context.</div>
+</dd>
+<dt><a href="io/micronaut/testresources/server/CompositeResolverLoader.html#%3Cinit%3E(java.util.List)" class="member-name-link">CompositeResolverLoader(List&lt;InjectableTestResourcesResolver&gt;)</a> - Constructor for class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/CompositeResolverLoader.html" title="class in io.micronaut.testresources.server">CompositeResolverLoader</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/TestResourcesService.Configurer.html#configure(io.micronaut.context.ApplicationContextBuilder)" class="member-name-link">configure(ApplicationContextBuilder)</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesService.Configurer.html" title="class in io.micronaut.testresources.server">TestResourcesService.Configurer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mysql/MySQLTestResourceProvider.html#configureContainer(org.testcontainers.containers.MySQLContainer,java.util.Map,java.util.Map)" class="member-name-link">configureContainer(MySQLContainer&lt;?&gt;, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.mysql.<a href="io/micronaut/testresources/mysql/MySQLTestResourceProvider.html" title="class in io.micronaut.testresources.mysql">MySQLTestResourceProvider</a></dt>
@@ -890,13 +897,19 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/redis/RedisTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.redis.<a href="io/micronaut/testresources/redis/RedisTestResourceProvider.html" title="class in io.micronaut.testresources.redis">RedisTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html" title="class in io.micronaut.testresources.server">InternalTestResourcesServiceResolver</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/TestResourcesController.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></dt>
 <dd>
 <div class="block">Lists all resolvable properties for a particular configuration.</div>
 </dd>
 <dt><a href="io/micronaut/testresources/testcontainers/GenericTestContainerProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map&lt;String, Collection&lt;String&gt;&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.testcontainers.<a href="io/micronaut/testresources/testcontainers/GenericTestContainerProvider.html" title="class in io.micronaut.testresources.testcontainers">GenericTestContainerProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/core/ResolverLoader.html#getResolvers()" class="member-name-link">getResolvers()</a> - Method in interface io.micronaut.testresources.core.<a href="io/micronaut/testresources/core/ResolverLoader.html" title="interface in io.micronaut.testresources.core">ResolverLoader</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/embedded/TestResourcesResolverLoader.html#getResolvers()" class="member-name-link">getResolvers()</a> - Method in class io.micronaut.testresources.embedded.<a href="io/micronaut/testresources/embedded/TestResourcesResolverLoader.html" title="class in io.micronaut.testresources.embedded">TestResourcesResolverLoader</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/server/CompositeResolverLoader.html#getResolvers()" class="member-name-link">getResolvers()</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/CompositeResolverLoader.html" title="class in io.micronaut.testresources.server">CompositeResolverLoader</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/TestContainer.html#getScope()" class="member-name-link">getScope()</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestContainer.html" title="class in io.micronaut.testresources.server">TestContainer</a></dt>
 <dd>
@@ -1101,7 +1114,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the value of the <a href="./io/micronaut/testresources/controlpanel/DockerHealth.html#param-info"><code>info</code></a> record component.</div>
 </dd>
+<dt><a href="io/micronaut/testresources/server/InjectableTestResourcesResolver.html" class="type-name-link" title="interface in io.micronaut.testresources.server">InjectableTestResourcesResolver</a> - Interface in <a href="io/micronaut/testresources/server/package-summary.html">io.micronaut.testresources.server</a></dt>
+<dd>
+<div class="block">Marker interface for a <a href="io/micronaut/testresources/core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a> implementations that can be injected.</div>
+</dd>
 <dt><a href="io/micronaut/testresources/server/ExpiryManager.html#intercept(io.micronaut.aop.MethodInvocationContext)" class="member-name-link">intercept(MethodInvocationContext&lt;Object, Object&gt;)</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/ExpiryManager.html" title="class in io.micronaut.testresources.server">ExpiryManager</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html" class="type-name-link" title="class in io.micronaut.testresources.server">InternalTestResourcesServiceResolver</a> - Class in <a href="io/micronaut/testresources/server/package-summary.html">io.micronaut.testresources.server</a></dt>
+<dd>
+<div class="block">A <a href="io/micronaut/testresources/core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a> that resolves properties regarding the Test Resource Service itself,
+ such as <code>micronaut.test.resources.server.uri</code>.</div>
+</dd>
+<dt><a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html#%3Cinit%3E(io.micronaut.runtime.server.EmbeddedServer)" class="member-name-link">InternalTestResourcesServiceResolver(EmbeddedServer)</a> - Constructor for class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html" title="class in io.micronaut.testresources.server">InternalTestResourcesServiceResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/test/extensions/junit5/package-summary.html">io.micronaut.test.extensions.junit5</a> - package io.micronaut.test.extensions.junit5</dt>
 <dd>&nbsp;</dd>
@@ -1637,6 +1661,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/testresources/r2dbc/pool/R2DBCPoolTestResourceProvider.html#resolve(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolve(String, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.r2dbc.pool.<a href="io/micronaut/testresources/r2dbc/pool/R2DBCPoolTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.pool">R2DBCPoolTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html#resolve(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolve(String, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html" title="class in io.micronaut.testresources.server">InternalTestResourcesServiceResolver</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/server/TestResourcesController.html#resolve(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolve(String, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></dt>
 <dd>
 <div class="block">Resolves a property.</div>
@@ -1709,6 +1735,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Resolves the required properties for a particular test resources
  resolver.</div>
 </dd>
+<dt><a href="io/micronaut/testresources/core/ResolverLoader.html" class="type-name-link" title="interface in io.micronaut.testresources.core">ResolverLoader</a> - Interface in <a href="io/micronaut/testresources/core/package-summary.html">io.micronaut.testresources.core</a></dt>
+<dd>
+<div class="block">Interface for loading <a href="io/micronaut/testresources/core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core"><code>TestResourcesResolver</code></a> instances.</div>
+</dd>
 <dt><a href="io/micronaut/testresources/hibernate/reactive/core/AbstractHibernateReactiveTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer(String, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.hibernate.reactive.core.<a href="io/micronaut/testresources/hibernate/reactive/core/AbstractHibernateReactiveTestResourceProvider.html" title="class in io.micronaut.testresources.hibernate.reactive.core">AbstractHibernateReactiveTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer(String, Map&lt;String, Object&gt;, Map&lt;String, Object&gt;)</a> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
@@ -1768,6 +1798,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Used only in tests to skip actual port checking.</div>
 </dd>
 <dt><a href="io/micronaut/testresources/client/TestResourcesClient.html#SERVER_URI" class="member-name-link">SERVER_URI</a> - Static variable in interface io.micronaut.testresources.client.<a href="io/micronaut/testresources/client/TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html#SERVER_URI" class="member-name-link">SERVER_URI</a> - Static variable in class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/InternalTestResourcesServiceResolver.html" title="class in io.micronaut.testresources.server">InternalTestResourcesServiceResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/buildtools/ServerFactory.html" class="type-name-link" title="interface in io.micronaut.testresources.buildtools">ServerFactory</a> - Interface in <a href="io/micronaut/testresources/buildtools/package-summary.html">io.micronaut.testresources.buildtools</a></dt>
 <dd>
@@ -1979,7 +2011,7 @@ loadScripts(document, 'script');</script>
 <div class="block">The main test resources controller, which will answer requests performed by the
  test resources client to resolve properties or close test resources.</div>
 </dd>
-<dt><a href="io/micronaut/testresources/server/TestResourcesController.html#%3Cinit%3E(java.util.List,io.micronaut.runtime.server.EmbeddedServer,io.micronaut.context.ApplicationContext)" class="member-name-link">TestResourcesController(List&lt;PropertyResolutionListener&gt;, EmbeddedServer, ApplicationContext)</a> - Constructor for class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></dt>
+<dt><a href="io/micronaut/testresources/server/TestResourcesController.html#%3Cinit%3E(java.util.List,io.micronaut.runtime.server.EmbeddedServer,io.micronaut.context.ApplicationContext,io.micronaut.testresources.core.ResolverLoader)" class="member-name-link">TestResourcesController(List&lt;PropertyResolutionListener&gt;, EmbeddedServer, ApplicationContext, ResolverLoader)</a> - Constructor for class io.micronaut.testresources.server.<a href="io/micronaut/testresources/server/TestResourcesController.html" title="class in io.micronaut.testresources.server">TestResourcesController</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/controlpanel/TestResourcesControlPanel.html" class="type-name-link" title="class in io.micronaut.testresources.controlpanel">TestResourcesControlPanel</a> - Class in <a href="io/micronaut/testresources/controlpanel/package-summary.html">io.micronaut.testresources.controlpanel</a></dt>
 <dd>

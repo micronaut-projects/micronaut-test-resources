@@ -306,11 +306,18 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/">Oracle Database</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/technologies/appdev/xe.html">Oracle Database XE</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oracle-xe</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gvenzl/oracle-xe:slim-faststart</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/free/">Oracle Database Free</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>oracle</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gvenzl/oracle-xe:slim-faststart</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gvenzl/oracle-free:slim-faststart</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.postgresql.org/">PostgreSQL</a></p></td>
@@ -555,7 +562,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <div class="ulist">
 <ul>
 <li>
-<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgres</code>)</p>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgres</code>)</p>
 </li>
 <li>
 <p><code>datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
@@ -600,7 +607,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <div class="ulist">
 <ul>
 <li>
-<p><code>r2dbc.datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>)</p>
+<p><code>r2dbc.datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgresql</code>)</p>
 </li>
 <li>
 <p><code>r2dbc.datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
@@ -616,7 +623,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <div class="ulist">
 <ul>
 <li>
-<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>postgresql</code>)</p>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgresql</code>)</p>
 </li>
 <li>
 <p><code>datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>

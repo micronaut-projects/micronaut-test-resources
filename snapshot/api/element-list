@@ -27,6 +27,7 @@ io.micronaut.testresources.mongodb
 io.micronaut.testresources.mssql
 io.micronaut.testresources.mysql
 io.micronaut.testresources.neo4j
+io.micronaut.testresources.oracle.free
 io.micronaut.testresources.oracle.xe
 io.micronaut.testresources.postgres
 io.micronaut.testresources.r2dbc.core

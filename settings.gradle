@@ -29,6 +29,7 @@ def jdbcModules = [
         'mysql',
         'mariadb',
         'oracle-xe',
+        'oracle-free',
         'postgresql',
         'mssql'
 ]
@@ -37,6 +38,7 @@ def r2dbcModules = [
         'mariadb',
         'mysql',
         'oracle-xe',
+        'oracle-free',
         'postgresql',
         'mssql',
         'pool'
@@ -47,7 +49,8 @@ def hibernateReactiveModules = [
         'mssql',
         'mysql',
         'postgresql',
-        'oracle-xe'
+        'oracle-xe',
+        'oracle-free'
 ]
 
 def localstackModules = [

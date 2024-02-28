@@ -23,7 +23,10 @@ import java.util.Map;
 
 /**
  * A test resource provider which will spawn an Oracle XE test container.
+ *
+ * @deprecated Use <code>oracle</code> instead.
  */
+@Deprecated(since = "2.4.0", forRemoval = true)
 public class HibernateReactiveOracleXETestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<OracleContainer> {
     public static final String DISPLAY_NAME = "Oracle Database (Hibernate Reactive)";
 
@@ -34,7 +37,7 @@ public class HibernateReactiveOracleXETestResourceProvider extends AbstractHiber
 
     @Override
     protected String getSimpleName() {
-        return "oracle";
+        return "oracle-xe";
     }
 
     @Override

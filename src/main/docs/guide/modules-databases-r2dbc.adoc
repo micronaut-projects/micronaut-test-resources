@@ -8,13 +8,13 @@ The following properties will automatically be set when using a JDBC database:
 
 In order for the database to be properly detected, _one of_ the following properties has to be set:
 
-- `r2dbc.datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `postgresql`)
+- `r2dbc.datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `oracle-xe`, `postgresql`)
 - `r2dbc.datasources.*.driverClassName`: the class name of the driver (fallback)
 - `r2dbc.datasources.*.dialect`: the dialect to use for the database (fallback)
 
 In addition, R2DBC databases can be configured simply by reading the traditional JDBC properties:
 
-- `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `postgresql`)
+- `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `oracle-xe`, `postgresql`)
 - `datasources.*.driverClassName`: the class name of the driver (fallback)
 - `datasources.*.dialect`: the dialect to use for the database (fallback)
 - `datasources.*.db-name`: overrides the default test database name

@@ -1,0 +1,20 @@
+plugins {
+    id 'io.micronaut.build.internal.r2dbc-module'
+}
+
+description = """
+Provides support for Oracle Free R2DBC test resources.
+"""
+
+dependencies {
+    implementation(libs.managed.testcontainers.oracle.free)
+    runtimeOnly(projects.micronautTestResourcesJdbcOracleFree)
+
+    testRuntimeOnly(mnR2dbc.r2dbc.oracle)
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabled = version != '2.5.0-SNAPSHOT'
+    }
+}

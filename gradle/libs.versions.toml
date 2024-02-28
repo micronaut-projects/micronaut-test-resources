@@ -67,6 +67,7 @@ managed-testcontainers-mssql = { module = "org.testcontainers:mssqlserver", vers
 managed-testcontainers-mysql = { module = "org.testcontainers:mysql", version.ref = "managed-testcontainers" }
 managed-testcontainers-neo4j = { module = "org.testcontainers:neo4j", version.ref = "managed-testcontainers" }
 managed-testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version.ref = "managed-testcontainers" }
+managed-testcontainers-oracle-free = { module = "org.testcontainers:oracle-free", version.ref = "managed-testcontainers" }
 managed-testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "managed-testcontainers" }
 managed-testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version.ref = "managed-testcontainers" }
 managed-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "managed-testcontainers-redis" }

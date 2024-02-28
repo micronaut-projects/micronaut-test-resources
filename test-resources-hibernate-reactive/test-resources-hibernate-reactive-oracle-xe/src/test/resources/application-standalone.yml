@@ -6,6 +6,6 @@ jpa:
     properties:
       hibernate:
         connection:
-          db-type: oracle
+          db-type: oracle-xe
         hbm2ddl:
           auto: update

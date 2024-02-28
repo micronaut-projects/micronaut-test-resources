@@ -22,15 +22,17 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * A test resource provider which will spawn an Oracle XE test container.
+ *
+ * @deprecated Use <code>oracle</code> instead.
  */
+@Deprecated(since = "2.4.0", forRemoval = true)
 public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvider<OracleContainer> {
-    private static final String OCID = "ocid";
     public static final String DISPLAY_NAME = "Oracle Database";
+    private static final String OCID = "ocid";
 
     @Override
     public String getDisplayName() {
@@ -47,7 +49,7 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
         return Stream.concat(
             requiredProperties.stream(),
             Stream.of(datasourceExpressionOf(datasource, OCID))
-        ).collect(Collectors.toList());
+        ).toList();
     }
 
     @Override
@@ -67,7 +69,7 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
 
     @Override
     protected String getSimpleName() {
-        return "oracle";
+        return "oracle-xe";
     }
 
     @Override

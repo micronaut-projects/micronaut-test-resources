@@ -33,7 +33,10 @@ import static io.micronaut.testresources.r2dbc.core.R2dbcSupport.r2dbDatasourceE
 
 /**
  * A test resource provider which will spawn an Oracle XE reactive test container.
+ *
+ * @deprecated Use <code>oracle</code> instead.
  */
+@Deprecated(since = "2.4.0", forRemoval = true)
 public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResourceProvider<OracleContainer> {
 
     private static final String R2DBC_ORACLE_DRIVER = "oracle";

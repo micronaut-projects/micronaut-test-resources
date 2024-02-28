@@ -1,0 +1,20 @@
+plugins {
+    id 'io.micronaut.build.internal.hibernate-reactive-module'
+}
+
+description = """
+Provides support for launching an Oracle Free test container for Hibernate Reactive.
+"""
+
+dependencies {
+    implementation(libs.managed.testcontainers.oracle.free)
+    runtimeOnly(projects.micronautTestResourcesJdbcOracleFree)
+
+    testRuntimeOnly(libs.vertx.oracle)
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabled = version != '2.5.0-SNAPSHOT'
+    }
+}

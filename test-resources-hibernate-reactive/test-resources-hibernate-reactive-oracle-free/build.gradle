@@ -12,3 +12,9 @@ dependencies {
 
     testRuntimeOnly(libs.vertx.oracle)
 }
+
+micronautBuild {
+    binaryCompatibility {
+        enabled = version != '2.5.0-SNAPSHOT'
+    }
+}

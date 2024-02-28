@@ -12,3 +12,9 @@ dependencies {
 
     testRuntimeOnly(mnR2dbc.r2dbc.oracle)
 }
+
+micronautBuild {
+    binaryCompatibility {
+        enabled = version != '2.5.0-SNAPSHOT'
+    }
+}

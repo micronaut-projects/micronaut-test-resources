@@ -11,3 +11,9 @@ dependencies {
 
     testRuntimeOnly(mnSql.ojdbc8)
 }
+
+micronautBuild {
+    binaryCompatibility {
+        enabled = version != '2.5.0-SNAPSHOT'
+    }
+}

@@ -45,7 +45,7 @@ spock = "2.3-groovy-4.0"
 vertx-client = "4.5.4"
 amazon-awssdk-v1 = "1.12.669"
 amazon-awssdk-v2 = "2.24.13"
-jansi = "1.18"
+jansi = "2.4.1"
 
 # Managed versions appear in the BOM
 managed-testcontainers = "1.19.6"

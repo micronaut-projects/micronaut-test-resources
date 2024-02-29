@@ -44,7 +44,7 @@ groovy = "4.0.13"
 spock = "2.3-groovy-4.0"
 vertx-client = "4.5.4"
 amazon-awssdk-v1 = "1.12.669"
-amazon-awssdk-v2 = "2.24.11"
+amazon-awssdk-v2 = "2.24.13"
 jansi = "1.18"
 
 # Managed versions appear in the BOM

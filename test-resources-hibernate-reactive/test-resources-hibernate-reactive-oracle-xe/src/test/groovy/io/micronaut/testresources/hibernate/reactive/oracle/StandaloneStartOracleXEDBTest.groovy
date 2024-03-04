@@ -32,6 +32,6 @@ class StandaloneStartOracleXEDBTest extends AbstractTestContainersSpec {
 
     @Override
     String getImageName() {
-        "oracle"
+        "oracle-xe"
     }
 }

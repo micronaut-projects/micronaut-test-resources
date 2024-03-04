@@ -32,6 +32,6 @@ class StandaloneStartOracleFreeDBTest extends AbstractTestContainersSpec {
 
     @Override
     String getImageName() {
-        "oracle"
+        "oracle-free"
     }
 }

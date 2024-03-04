@@ -161,7 +161,7 @@
         <h1>Micronaut Test Resources</h1>
         <p></p>
         <p>Test resources integration (like Testcontainers) for Micronaut</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-test-resources/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/index.html'>LATEST</option></select> </p>
+        <p><strong>Version:</strong> 2.4.1-SNAPSHOT </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -1394,14 +1394,14 @@ test-resources.containers.mycontainer.rw-tmpfs-mappings[0]=/path/to/readwrite/co
       hostnames=[
         "my.service.host"
       ]
-      [[test-resources.containers.mycontainer.exposed-ports]]
-        "my.service.port"=1883
       ro-tmpfs-mappings=[
         "/path/to/readonly/container/file"
       ]
       rw-tmpfs-mappings=[
         "/path/to/readwrite/container/file"
-      ]</code></pre>
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1638,14 +1638,14 @@ test-resources.containers.mycontainer.startup-timeout=120s</code></pre>
       hostnames=[
         "my.service.host"
       ]
+      command="some.sh"
+      startup-timeout="120s"
       [[test-resources.containers.mycontainer.exposed-ports]]
         "my.service.port"=1883
-      command="some.sh"
       [[test-resources.containers.mycontainer.env]]
         MY_ENV_VAR="my value"
       [[test-resources.containers.mycontainer.labels]]
-        "my.label"="my value"
-      startup-timeout="120s"</code></pre>
+        "my.label"="my value"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">

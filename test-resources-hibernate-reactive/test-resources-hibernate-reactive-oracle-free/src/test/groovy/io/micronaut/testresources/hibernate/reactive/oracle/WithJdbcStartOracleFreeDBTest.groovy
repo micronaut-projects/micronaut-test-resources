@@ -32,6 +32,6 @@ class WithJdbcStartOracleFreeDBTest extends AbstractTestContainersSpec {
 
     @Override
     String getImageName() {
-        "oracle"
+        "oracle-free"
     }
 }

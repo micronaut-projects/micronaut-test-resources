@@ -6,6 +6,7 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 import jakarta.inject.Inject
 import jakarta.inject.Named
+import org.testcontainers.DockerClientFactory
 
 @MicronautTest
 class VaultStartedTest extends AbstractTestContainersSpec {
@@ -23,8 +24,13 @@ class VaultStartedTest extends AbstractTestContainersSpec {
     }
 
     def "automatically starts a Vault container"() {
+        given:
+        // host is different on different platforms (localhost on linux, but 127.0.0.1 on osx)
+        def host = DockerClientFactory.instance().dockerHostIpAddress()
+
         expect:
-        listContainers().collectMany { it.ports as List }.any { uri == "http://localhost:$it.publicPort" }
+        host in ["localhost", "127.0.0.1"]
+        listContainers().collectMany { it.ports as List }.any { uri == "http://$host:$it.publicPort" }
     }
 
     def "secretsAreUsedForConfiguration"() {

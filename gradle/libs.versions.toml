@@ -48,12 +48,15 @@ amazon-awssdk-v2 = "2.24.13"
 jansi = "2.4.1"
 
 # Managed versions appear in the BOM
+managed-opensearch-testcontainers = "2.0.1"
 managed-testcontainers = "1.19.6"
 managed-testcontainers-redis = "1.6.4"
 
 [libraries]
 # Testcontainers
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
+
+managed-opensearch-testcontainers = { module = "org.opensearch:opensearch-testcontainers", version.ref = "managed-opensearch-testcontainers" }
 
 managed-testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "managed-testcontainers" }
 managed-testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version.ref = "managed-testcontainers" }
@@ -66,6 +69,7 @@ managed-testcontainers-mongodb = { module = "org.testcontainers:mongodb", versio
 managed-testcontainers-mssql = { module = "org.testcontainers:mssqlserver", version.ref = "managed-testcontainers" }
 managed-testcontainers-mysql = { module = "org.testcontainers:mysql", version.ref = "managed-testcontainers" }
 managed-testcontainers-neo4j = { module = "org.testcontainers:neo4j", version.ref = "managed-testcontainers" }
+managed-testcontainers-opensearch = { module = "org.testcontainers:oracle-xe", version.ref = "managed-testcontainers" }
 managed-testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version.ref = "managed-testcontainers" }
 managed-testcontainers-oracle-free = { module = "org.testcontainers:oracle-free", version.ref = "managed-testcontainers" }
 managed-testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "managed-testcontainers" }

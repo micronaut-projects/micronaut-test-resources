@@ -21,9 +21,12 @@ import io.micronaut.test.support.TestPropertyProviderFactory;
 import io.micronaut.testresources.client.TestResourcesClientFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,7 +37,7 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
 
     }
 
-    private static TestResourcesPropertyProvider instantitateProvider(Class<? extends TestResourcesPropertyProvider> provider) {
+    private static TestResourcesPropertyProvider instantiateProvider(Class<? extends TestResourcesPropertyProvider> provider) {
         try {
             return provider.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
@@ -55,40 +58,50 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
 
         @Override
         public Map<String, String> getProperties() {
-            TestResourcesProperties annotation = testClass.getAnnotation(TestResourcesProperties.class);
-            if (annotation != null) {
-                String[] requestedProperties = annotation.value();
-                var client = TestResourcesClientFactory.fromSystemProperties()
-                    .orElse(TestResourcesClientHolder.lazy());
-                var testResourcesConfig = properties.entrySet()
-                    .stream()
-                    .filter(e -> e.getKey().startsWith(TEST_RESOURCES_PROPERTY_PREFIX))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                Map<String, String> resolvedProperties = Stream.of(requestedProperties)
-                    .map(v -> new Object() {
-                        private final String key = v;
-                        private final String value = client.resolve(v, Map.of(), testResourcesConfig).orElse(null);
-                    })
-                    .filter(o -> o.value != null)
-                    .collect(Collectors.toMap(e -> e.key, e -> e.value));
-
-                // Result represents what properties we're going to expose to tests
-                Map<String, String> result = new HashMap<>(resolvedProperties);
-                // Context represents what is available to resolvers for them to
-                // compute results
-                Map<String, Object> context = new HashMap<>(properties);
-                context.putAll(resolvedProperties);
-                result.putAll(resolvedProperties);
-                Class<? extends TestResourcesPropertyProvider>[] providers = annotation.providers();
-                for (Class<? extends TestResourcesPropertyProvider> provider : providers) {
-                    var testResourcesPropertyProvider = instantitateProvider(provider);
-                    Map<String, String> map = testResourcesPropertyProvider.provide(Collections.unmodifiableMap(context));
-                    context.putAll(map);
-                    result.putAll(map);
-                }
-                return result;
+            TestResourcesProperties directAnnotation = testClass.getAnnotation(TestResourcesProperties.class);
+            if (directAnnotation != null) {
+                return extractAnnotationProperties(directAnnotation);
+            } else {
+                Optional<TestResourcesProperties> metaAnnotation = Arrays.stream(testClass.getAnnotations())
+                    .map(annotation -> annotation.annotationType().getAnnotation(TestResourcesProperties.class))
+                    .filter(Objects::nonNull)
+                    .findFirst();
+                return metaAnnotation.map(this::extractAnnotationProperties)
+                    .orElse(Map.of());
             }
-            return Map.of();
+        }
+
+        private Map<String, String> extractAnnotationProperties(TestResourcesProperties annotation) {
+            String[] requestedProperties = annotation.value();
+            var client = TestResourcesClientFactory.fromSystemProperties()
+                .orElse(TestResourcesClientHolder.lazy());
+            var testResourcesConfig = properties.entrySet()
+                .stream()
+                .filter(e -> e.getKey().startsWith(TEST_RESOURCES_PROPERTY_PREFIX))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            Map<String, String> resolvedProperties = Stream.of(requestedProperties)
+                .map(v -> new Object() {
+                    private final String key = v;
+                    private final String value = client.resolve(v, Map.of(), testResourcesConfig).orElse(null);
+                })
+                .filter(o -> o.value != null)
+                .collect(Collectors.toMap(e -> e.key, e -> e.value));
+
+            // Result represents what properties we're going to expose to tests
+            Map<String, String> result = new HashMap<>(resolvedProperties);
+            // Context represents what is available to resolvers for them to
+            // compute results
+            Map<String, Object> context = new HashMap<>(properties);
+            context.putAll(resolvedProperties);
+            result.putAll(resolvedProperties);
+            Class<? extends TestResourcesPropertyProvider>[] providers = annotation.providers();
+            for (Class<? extends TestResourcesPropertyProvider> provider : providers) {
+                var testResourcesPropertyProvider = instantiateProvider(provider);
+                Map<String, String> map = testResourcesPropertyProvider.provide(Collections.unmodifiableMap(context));
+                context.putAll(map);
+                result.putAll(map);
+            }
+            return result;
         }
     }
 }

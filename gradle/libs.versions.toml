@@ -17,10 +17,10 @@
 
 [versions]
 micronaut = "4.4.1"
-micronaut-aws = "4.4.3"
 micronaut-control-panel = "1.2.0"
 micronaut-platform = "4.3.7"
 micronaut-aot = "2.4.0"
+micronaut-aws = "4.5.0"
 micronaut-data = "4.6.2"
 micronaut-discovery = "4.2.0"
 micronaut-docs = "2.0.0"

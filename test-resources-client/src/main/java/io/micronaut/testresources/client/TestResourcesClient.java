@@ -64,7 +64,7 @@ public interface TestResourcesClient extends TestResourcesResolver {
     boolean closeAll();
 
     /**
-     * Closes a test resource scope
+     * Closes a test resource scope.
      * @param id the scope id
      * @return true if the operation was successful
      */

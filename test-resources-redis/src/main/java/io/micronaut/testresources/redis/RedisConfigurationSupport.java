@@ -18,6 +18,7 @@ package io.micronaut.testresources.redis;
 import com.redis.testcontainers.RedisClusterContainer;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Internal class to deal with the test resources
@@ -27,6 +28,9 @@ abstract class RedisConfigurationSupport {
     public static final String CONFIG_REDIS_CLUSTER_MODE = "containers.redis.cluster-mode";
     public static final String CONFIG_REDIS_CLUSTER_MASTERS = "containers.redis.cluster.masters";
     public static final String CONFIG_REDIS_CLUSTER_SLAVES = "containers.redis.cluster.slaves-per-master";
+    public static final String CONFIG_REDIS_CLUSTER_INITIAL_PORT = "containers.redis.cluster.initial-port";
+    public static final String CONFIG_REDIS_CLUSTER_IP = "containers.redis.cluster.ip";
+    public static final String CONFIG_REDIS_CLUSTER_NOTIFY_KEYSPACE_EVENTS = "containers.redis.cluster.notify-keyspace-events";
 
     private RedisConfigurationSupport() {
 
@@ -37,11 +41,24 @@ abstract class RedisConfigurationSupport {
         return Boolean.TRUE.equals(clusterMode);
     }
 
-    static int findMasterCound(Map<String, Object> testResourcesConfig) {
+    static int findMasterCount(Map<String, Object> testResourcesConfig) {
         return (Integer) testResourcesConfig.getOrDefault(CONFIG_REDIS_CLUSTER_MASTERS, RedisClusterContainer.DEFAULT_MASTERS);
     }
 
     static int findSlavesPerMasterCount(Map<String, Object> testResourcesConfig) {
         return (Integer) testResourcesConfig.getOrDefault(CONFIG_REDIS_CLUSTER_SLAVES, RedisClusterContainer.DEFAULT_SLAVES_PER_MASTER);
+    }
+
+    static int findInitialPort(Map<String, Object> testResourcesConfig) {
+        return (Integer) testResourcesConfig.getOrDefault(CONFIG_REDIS_CLUSTER_INITIAL_PORT, RedisClusterContainer.DEFAULT_INITIAL_PORT);
+    }
+
+    static String findIp(Map<String, Object> testResourcesConfig) {
+        return (String) testResourcesConfig.getOrDefault(CONFIG_REDIS_CLUSTER_IP, RedisClusterContainer.DEFAULT_IP);
+    }
+
+    static Optional<String> findNotifyKeyspaceEvents(Map<String, Object> testResourcesConfig) {
+        String notifyKeyspaceEvents = (String) testResourcesConfig.getOrDefault(CONFIG_REDIS_CLUSTER_NOTIFY_KEYSPACE_EVENTS, null);
+        return Optional.ofNullable(notifyKeyspaceEvents);
     }
 }

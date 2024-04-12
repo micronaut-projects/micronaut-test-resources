@@ -2,3 +2,7 @@ test-resources:
   containers:
     redis:
       cluster-mode: true
+      cluster:
+        masters: 3
+        initial-port: 7015
+        notify-keyspace-events: Ex

@@ -13,6 +13,8 @@ modules:
       title: R2DBC
   modules-elasticsearch:
     title: Elasticsearch
+  modules-opensearch:
+    title: OpenSearch
   modules-kafka:
     title: Kafka
   modules-localstack:

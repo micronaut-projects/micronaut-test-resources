@@ -51,6 +51,8 @@ architecture:
       title: The test resources server
       architecture-shared-server:
         title: Sharing containers between independent builds
+      architecture-configuration:
+        title: Configuring the server
     architecture-client:
       title: The test resources client
     architecture-embedded:

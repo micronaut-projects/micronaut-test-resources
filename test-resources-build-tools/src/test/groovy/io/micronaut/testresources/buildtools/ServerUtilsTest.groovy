@@ -95,6 +95,23 @@ class ServerUtilsTest extends Specification {
     }
 
     @RestoreSystemProperties
+    def "can set the docker check timeout"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        System.setProperty('docker.check.timeout.seconds', "100")
+
+        when:
+        ServerUtils.startOrConnectToExistingServer(9999, portFile, settingsDir, null, null, null, null, factory)
+
+        then:
+        1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
+            assert params.mainClass == 'io.micronaut.testresources.server.TestResourcesService'
+            assert params.systemProperties['docker.check.timeout.seconds'] == '100'
+        }
+    }
+
+    @RestoreSystemProperties
     def "waits for the server to be available when using an explicit port"() {
         def portFile = tmpDir.resolve("port-file")
         def settingsDir = tmpDir.resolve("settings")

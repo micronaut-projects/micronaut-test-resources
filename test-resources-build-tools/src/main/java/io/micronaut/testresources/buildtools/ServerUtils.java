@@ -81,7 +81,8 @@ public class ServerUtils {
     private static final String FLAT_JAR = "flat.jar";
 
     // See io.micronaut.testresources.testcontainers.DockerSupport.TIMEOUT
-    private static final String DOCKER_CHECK_TIMEOUT_SECONDS = "docker.check.timeout.seconds";
+    private static final String DOCKER_CHECK_TIMEOUT_SECONDS_ENV = "TEST_RESOURCES_DOCKER_CHECK_TIMEOUT_SECONDS";
+    private static final String DOCKER_CHECK_TIMEOUT_SECONDS_PROPERTY = "docker.check.timeout.seconds";
 
     /**
      * Writes the server settings in an output directory.
@@ -464,9 +465,12 @@ public class ServerUtils {
         public Map<String, String> getSystemProperties() {
             Map<String, String> systemProperties = new HashMap<>();
             systemProperties.put(JMX_SYSTEM_PROPERTY, null);
-            String dockerCheckTimeout = System.getProperty(DOCKER_CHECK_TIMEOUT_SECONDS);
+            String dockerCheckTimeout = System.getProperty(DOCKER_CHECK_TIMEOUT_SECONDS_PROPERTY);
+            if (dockerCheckTimeout == null) {
+                dockerCheckTimeout = System.getenv(DOCKER_CHECK_TIMEOUT_SECONDS_ENV);
+            }
             if (dockerCheckTimeout != null) {
-                systemProperties.put(DOCKER_CHECK_TIMEOUT_SECONDS, dockerCheckTimeout);
+                systemProperties.put(DOCKER_CHECK_TIMEOUT_SECONDS_PROPERTY, dockerCheckTimeout);
             }
             if (explicitPort != null) {
                 systemProperties.put(MICRONAUT_SERVER_PORT, String.valueOf(explicitPort));

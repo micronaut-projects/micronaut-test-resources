@@ -145,6 +145,8 @@
         
         <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>7.1.1</strong><span>Sharing containers between independent builds</span></a></div>
         
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-configuration"><a href="#architecture-configuration"><strong>7.1.2</strong><span>Configuring the server</span></a></div>
+        
         <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>7.2</strong><span>The test resources client</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>7.3</strong><span>Embedded test resources</span></a></div>
@@ -2808,6 +2810,25 @@ If you use a shared server, then you must make sure that the <em>first build</em
 </td>
 </tr>
 </table>
+</div>
+
+<h2 id="architecture-configuration"><a class="anchor" href="#architecture-configuration"></a>7.1.2 Configuring the server</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.5.x/src/main/docs/guide/architecture-configuration.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect2">
+<h3 id="_docker_client_creation_timeout">Docker Client creation timeout</h3>
+<div class="paragraph">
+<p>The test-resources server communicates with Docker via a docker client.
+By default, creation of this client is expected to take less than 10 seconds.
+However, under certain circumstances (limited resources, docker in docker, etc.), this may take longer.
+To configure the timeout, you can pass a system property <code>docker.check.timeout.seconds</code> or an environment variable <code>TEST_RESOURCES_DOCKER_CHECK_TIMEOUT_SECONDS</code> with the number of seconds you require.</p>
+</div>
 </div>
 
 <h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>7.2 The test resources client</h2>

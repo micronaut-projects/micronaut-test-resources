@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static io.micronaut.testresources.redis.RedisConfigurationSupport.findMasterCound;
+import static io.micronaut.testresources.redis.RedisConfigurationSupport.findInitialPort;
+import static io.micronaut.testresources.redis.RedisConfigurationSupport.findIp;
+import static io.micronaut.testresources.redis.RedisConfigurationSupport.findMasterCount;
+import static io.micronaut.testresources.redis.RedisConfigurationSupport.findNotifyKeyspaceEvents;
 import static io.micronaut.testresources.redis.RedisConfigurationSupport.findSlavesPerMasterCount;
 import static io.micronaut.testresources.redis.RedisConfigurationSupport.isClusterMode;
 
@@ -42,6 +45,7 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
 
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URIS);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URIS);
+    private static final String NOTIFY_KEYSPACE_EVENTS_CONFIG_FORMAT = "notify-keyspace-events %s\n";
     /**
      * Alternate cluster configuration file, workaround for
      * https://github.com/Grokzen/docker-redis-cluster/discussions/149 .
@@ -81,9 +85,16 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     @Override
     protected RedisClusterContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         RedisClusterContainer redisClusterContainer = new RedisClusterContainer(imageName);
-        redisClusterContainer.withCopyToContainer(Transferable.of(CLUSTER_CONFIG), "/redis-conf/redis-cluster.tmpl");
-        redisClusterContainer.withMasters(findMasterCound(testResourcesConfig));
+        redisClusterContainer.withMasters(findMasterCount(testResourcesConfig));
         redisClusterContainer.withSlavesPerMaster(findSlavesPerMasterCount(testResourcesConfig));
+        redisClusterContainer.withInitialPort(findInitialPort(testResourcesConfig));
+        redisClusterContainer.withIP(findIp(testResourcesConfig));
+
+        String clusterConfig = CLUSTER_CONFIG + findNotifyKeyspaceEvents(testResourcesConfig)
+            .map(NOTIFY_KEYSPACE_EVENTS_CONFIG_FORMAT::formatted)
+            .orElse("");
+        redisClusterContainer.withCopyToContainer(Transferable.of(clusterConfig), "/redis-conf/redis-cluster.tmpl");
+
         return redisClusterContainer;
     }
 

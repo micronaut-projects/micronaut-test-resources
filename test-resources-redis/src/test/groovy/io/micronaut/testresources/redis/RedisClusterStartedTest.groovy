@@ -22,7 +22,10 @@ class RedisClusterStartedTest extends AbstractRedisSpec {
 
         then:
         value == 'bar'
-        listContainers().size() == 1
+        def containers = listContainers()
+        containers.size() == 1
+        containers[0].ports.collect { it.publicPort }
+                .containsAll([7015, 7016, 7017])
     }
 
 }

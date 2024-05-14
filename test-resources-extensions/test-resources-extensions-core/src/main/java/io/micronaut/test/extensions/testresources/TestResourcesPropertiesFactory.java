@@ -92,7 +92,7 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
                                 private final Object value = properties.get(e);
                             })
                             .filter(o -> o.value != null)
-                            .collect(Collectors.toMap(e -> e.key, e-> e.value));
+                            .collect(Collectors.toMap(e -> e.key, e -> e.value));
                         return client.resolve(v, props, testResourcesConfig).orElse(null);
                     }
                 })

@@ -1,0 +1,6 @@
+=== Docker Client creation timeout
+
+The test-resources server communicates with Docker via a docker client.
+By default, creation of this client is expected to take less than 10 seconds.
+However, under certain circumstances (limited resources, docker in docker, etc.), this may take longer.
+To configure the timeout, you can pass a system property `docker.check.timeout.seconds` or an environment variable `TEST_RESOURCES_DOCKER_CHECK_TIMEOUT_SECONDS` with the number of seconds you require.

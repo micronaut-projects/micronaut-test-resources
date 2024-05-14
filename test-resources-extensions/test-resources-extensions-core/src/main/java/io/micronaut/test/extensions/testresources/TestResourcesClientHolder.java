@@ -30,18 +30,18 @@ import java.util.function.Supplier;
  */
 @Internal
 public final class TestResourcesClientHolder {
-    private static TestResourcesClient CLIENT;
+    private static TestResourcesClient client;
 
     private TestResourcesClientHolder() {
 
     }
 
     public static void set(TestResourcesClient client) {
-        CLIENT = client;
+        TestResourcesClientHolder.client = client;
     }
 
     public static TestResourcesClient get() {
-        return CLIENT;
+        return client;
     }
 
     public static TestResourcesClient lazy() {
@@ -51,7 +51,7 @@ public final class TestResourcesClientHolder {
     private static class LazyTestResourcesClient implements TestResourcesClient {
 
         private static <T> T nullSafe(Supplier<T> value) {
-            if (CLIENT == null) {
+            if (client == null) {
                 return null;
             }
             return value.get();
@@ -59,37 +59,37 @@ public final class TestResourcesClientHolder {
 
         @Override
         public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-            return nullSafe(CLIENT::getResolvableProperties);
+            return nullSafe(client::getResolvableProperties);
         }
 
         @Override
         public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
-            return nullSafe(() -> CLIENT.resolve(name, properties, testResourcesConfig));
+            return nullSafe(() -> client.resolve(name, properties, testResourcesConfig));
         }
 
         @Override
         public List<String> getRequiredProperties(String expression) {
-            return nullSafe(() -> CLIENT.getRequiredProperties(expression));
+            return nullSafe(() -> client.getRequiredProperties(expression));
         }
 
         @Override
         public List<String> getRequiredPropertyEntries() {
-            return nullSafe(CLIENT::getRequiredPropertyEntries);
+            return nullSafe(client::getRequiredPropertyEntries);
         }
 
         @Override
         public boolean closeAll() {
-            return nullSafe(CLIENT::closeAll);
+            return nullSafe(client::closeAll);
         }
 
         @Override
         public boolean closeScope(String id) {
-            return nullSafe(() -> CLIENT.closeScope(id));
+            return nullSafe(() -> client.closeScope(id));
         }
 
         @Override
         public List<String> getResolvableProperties() {
-            return nullSafe(CLIENT::getResolvableProperties);
+            return nullSafe(client::getResolvableProperties);
         }
 
     }

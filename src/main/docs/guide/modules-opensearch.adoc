@@ -1,0 +1,3 @@
+OpenSearch support will automatically start an https://opensearch.org/[OpenSearch] container and provide the value of the `micronaut.opensearch.rest-client.http-hosts` or `micronaut.opensearch.httpclient5.http-hosts` properties.
+
+The default image (`opensearchproject/opensearch:latest`) can be overwritten by setting the `test-resources.containers.opensearch.image-name` property.

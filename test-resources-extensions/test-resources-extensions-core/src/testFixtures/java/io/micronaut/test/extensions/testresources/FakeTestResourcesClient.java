@@ -26,7 +26,8 @@ public class FakeTestResourcesClient implements TestResourcesClient {
     private static final Map<String, String> MOCK_PROPERTIES = Map.of(
             "first-property", "first supplied by test resources",
             "second-property", "second supplied by test resources",
-            "some-property", "supplied by test resources"
+            "some-property", "supplied by test resources",
+            "property-with-requirements", "supplied by test resources with requirements"
     );
 
     @Override
@@ -36,11 +37,22 @@ public class FakeTestResourcesClient implements TestResourcesClient {
 
     @Override
     public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
-        return Optional.ofNullable(MOCK_PROPERTIES.get(name));
+        var value = MOCK_PROPERTIES.get(name);
+        if ("property-with-requirements".equals(name)) {
+            if (!properties.containsKey("required-property")) {
+                return Optional.empty();
+            } else {
+                value += ": " + properties.get("required-property");
+            }
+        }
+        return Optional.ofNullable(value);
     }
 
     @Override
     public List<String> getRequiredProperties(String expression) {
+        if ("property-with-requirements".equals(expression)) {
+            return List.of("required-property");
+        }
         return List.of();
     }
 

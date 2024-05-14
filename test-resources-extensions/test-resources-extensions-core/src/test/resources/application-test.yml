@@ -10,3 +10,4 @@ test-resources:
         log:
           regex: ".*Server is ready.*"
 toto: 40
+required-property: 42

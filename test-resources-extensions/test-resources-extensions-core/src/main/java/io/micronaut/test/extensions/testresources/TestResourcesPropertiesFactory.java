@@ -82,7 +82,19 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
             Map<String, String> resolvedProperties = Stream.of(requestedProperties)
                 .map(v -> new Object() {
                     private final String key = v;
-                    private final String value = client.resolve(v, Map.of(), testResourcesConfig).orElse(null);
+                    private final String value = resolveProperty();
+
+                    private String resolveProperty() {
+                        var props = client.getRequiredProperties(v)
+                            .stream()
+                            .map(e -> new Object() {
+                                private final String key = e;
+                                private final Object value = properties.get(e);
+                            })
+                            .filter(o -> o.value != null)
+                            .collect(Collectors.toMap(e -> e.key, e-> e.value));
+                        return client.resolve(v, props, testResourcesConfig).orElse(null);
+                    }
                 })
                 .filter(o -> o.value != null)
                 .collect(Collectors.toMap(e -> e.key, e -> e.value));

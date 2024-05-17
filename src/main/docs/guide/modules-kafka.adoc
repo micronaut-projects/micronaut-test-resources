@@ -3,3 +3,16 @@ Kafka support will automatically start a https://kafka.apache.org[Kafka containe
 The default image can be overwritten by setting the `test-resources.containers.kafka.image-name` property.
 
 TIP: See the guide for https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html[Testing Kafka Listener using Testcontainers with the Micronaut Framework] to learn more.
+
+
+https://docs.confluent.io/platform/current/kafka-metadata/kraft.html#kraft-overview[Kraft Mode] is supported via the `test-resources.containers.kafka.kraft` property.
+
+[configuration]
+----
+test-resources:
+  containers:
+    kafka:
+      kraft: true
+----
+
+NOTE: This switches to the https://docs.confluent.io/platform/current/installation/docker/image-reference.html#ak-images[confluent-local] Docker image with https://java.testcontainers.org/modules/kafka/#using-kraft-mode[TestContainer Kraft Support]

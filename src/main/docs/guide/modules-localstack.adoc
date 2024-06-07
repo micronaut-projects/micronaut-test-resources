@@ -7,6 +7,7 @@ The following services are supported:
 - S3, by providing the `aws.services.s3.endpoint-override` property
 - DynamoDB, by providing the `aws.services.dynamodb.endpoint-override` property
 - SQS, by providing the `aws.services.sqs.endpoint-override` property
+- SNS, by providing the `aws.services.sns.endpoint-override` property
 
 In addition, the following properties will be resolved by test resources:
 

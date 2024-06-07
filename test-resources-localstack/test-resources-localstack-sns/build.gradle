@@ -13,6 +13,4 @@ dependencies {
     }
     testImplementation(testFixtures(project(":micronaut-test-resources-localstack-core")))
     testImplementation(libs.amazon.awssdk.v2.sns)
-    testImplementation("io.micronaut:micronaut-http-server-netty")
-    testImplementation(mn.micronaut.jackson.databind)
 }

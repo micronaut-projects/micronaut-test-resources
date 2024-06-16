@@ -49,7 +49,7 @@ jansi = "2.4.1"
 
 # Managed versions appear in the BOM
 managed-opensearch-testcontainers = "2.0.1"
-managed-testcontainers = "1.19.7"
+managed-testcontainers = "1.19.8"
 managed-testcontainers-redis = "1.6.4"
 
 [libraries]

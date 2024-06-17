@@ -2,6 +2,12 @@ plugins {
     id 'io.micronaut.build.internal.localstack-module'
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter '2.6.0'
+    }
+}
+
 description = """
 Provides support for Localstack SNS.
 """

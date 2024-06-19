@@ -1,0 +1,22 @@
+plugins {
+    id 'io.micronaut.build.internal.localstack-module'
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter '2.6.0'
+    }
+}
+
+description = """
+Provides support for Localstack SNS.
+"""
+
+dependencies {
+    implementation(project(":micronaut-test-resources-localstack-core"))
+    runtimeOnly(libs.amazon.awssdk.v1.sns) {
+        because "Localstack requires the AWS SDK in version 1 at runtime"
+    }
+    testImplementation(testFixtures(project(":micronaut-test-resources-localstack-core")))
+    testImplementation(libs.amazon.awssdk.v2.sns)
+}

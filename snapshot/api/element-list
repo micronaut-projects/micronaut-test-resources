@@ -21,6 +21,7 @@ io.micronaut.testresources.kafka
 io.micronaut.testresources.localstack
 io.micronaut.testresources.localstack.dynamodb
 io.micronaut.testresources.localstack.s3
+io.micronaut.testresources.localstack.sns
 io.micronaut.testresources.localstack.sqs
 io.micronaut.testresources.mariadb
 io.micronaut.testresources.mongodb

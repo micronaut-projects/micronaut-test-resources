@@ -18,4 +18,5 @@ dependencies {
     testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
     testImplementation(libs.micronaut.discovery)
     testImplementation(mn.micronaut.http.client)
+    testImplementation(mnReactor.micronaut.reactor)
 }

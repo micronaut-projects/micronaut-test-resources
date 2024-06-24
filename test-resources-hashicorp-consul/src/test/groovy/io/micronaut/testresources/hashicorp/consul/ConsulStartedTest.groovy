@@ -6,6 +6,7 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 import jakarta.inject.Inject
 import org.testcontainers.DockerClientFactory
+import reactor.core.publisher.Flux
 
 @MicronautTest
 class ConsulStartedTest extends AbstractTestContainersSpec {
@@ -40,15 +41,12 @@ class ConsulStartedTest extends AbstractTestContainersSpec {
     }
 
     def "get consul kv properties"() {
-        expect:
-        consulClient.readValues("test-key").subscribe((key, value) -> {
-            key == "test-key"
-            value == "test-value"
-        })
+        given:
+        def testKeyKeyValues = Flux.from(consulClient.readValues("test-key")).blockFirst()
+        def testKey2KeyValues = Flux.from(consulClient.readValues("test-key2")).blockFirst()
 
-        consulClient.readValues("test-key2").subscribe((key, value) -> {
-            key == "test-key2"
-            value == "test-value2"
-        })
+        expect:
+        "test-value" == new String(Base64.getDecoder().decode(testKeyKeyValues[0].value))
+        "test-value2" == new String(Base64.getDecoder().decode(testKey2KeyValues[0].value))
     }
 }

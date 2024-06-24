@@ -11,4 +11,6 @@ consul:
 test-resources:
   containers:
     hashicorp-consul:
-      enabled: true
+      kv-properties:
+        - "test-key=test-value"
+        - "test-key2=test-value2"

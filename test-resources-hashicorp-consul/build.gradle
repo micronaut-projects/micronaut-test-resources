@@ -6,6 +6,12 @@ description = """
 Provides support for launching a Consul test container.
 """
 
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter '2.6.0'
+    }
+}
+
 dependencies {
     implementation(libs.managed.testcontainers.consul)
 

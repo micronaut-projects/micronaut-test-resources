@@ -35,7 +35,7 @@ public class ConsulTestResourceProvider extends AbstractTestContainersProvider<C
         PROPERTY_CONSUL_CLIENT_HOST,
         PROPERTY_CONSUL_CLIENT_PORT
     ));
-    public static final Set<String> RESOLVABLE_PROPERTIES_SET = Collections.unmodifiableSet(new HashSet<>(RESOLVABLE_PROPERTIES_LIST));
+    public static final String HASHICORP_CONSUL_KV_PROPERTIES_KEY = "containers.hashicorp-consul.kv-properties";
     public static final String SIMPLE_NAME = "hashicorp-consul";
     public static final String DEFAULT_IMAGE = "hashicorp/consul";
     public static final String DISPLAY_NAME = "Consul";
@@ -67,6 +67,16 @@ public class ConsulTestResourceProvider extends AbstractTestContainersProvider<C
         ConsulContainer consulContainer = new ConsulContainer(imageName);
         // Micronaut Discovery Consul will only listen to the default port 8500
         consulContainer.setPortBindings(Collections.singletonList(CONSUL_HTTP_PORT + ":" + CONSUL_HTTP_PORT));
+
+        // Set startup properties
+        if (testResourcesConfig.containsKey(HASHICORP_CONSUL_KV_PROPERTIES_KEY)) {
+            @SuppressWarnings("unchecked")
+            List<String> properties = (List<String>) testResourcesConfig.get(HASHICORP_CONSUL_KV_PROPERTIES_KEY);
+            if(null != properties && !properties.isEmpty()) {
+                properties.stream().forEach((property) -> consulContainer.withConsulCommand("kv put " + property.replace("=", " ")));
+            }
+        }
+
         return consulContainer;
     }
 

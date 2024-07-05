@@ -1,0 +1,15 @@
+Consul support will automatically start a https://www.consul.io/[Hashicorp Consul container] and provide the value of `consul.client.default-zone` property.
+
+- The default image can be overwritten by setting the `test-resources.containers.hashicorp-consul.image-name` property.
+- Properties should be inserted into Hashicorp Consul at startup by adding the config:
+
+[configuration]
+----
+test-resources:
+  containers:
+    hashicorp-consul:
+      image-name: "hashicorp/consul:1.9.3"
+      properties:
+        - "key1=value1"
+        - "key2=value2"
+----

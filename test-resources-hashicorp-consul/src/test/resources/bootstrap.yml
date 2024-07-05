@@ -1,0 +1,16 @@
+micronaut:
+  application:
+    name: consul-test
+  config-client:
+    enabled: true
+consul:
+  client:
+    config:
+      enabled: true
+    default-zone: "localhost:8500"
+test-resources:
+  containers:
+    hashicorp-consul:
+      kv-properties:
+        - "test-key=test-value"
+        - "test-key2=test-value2"

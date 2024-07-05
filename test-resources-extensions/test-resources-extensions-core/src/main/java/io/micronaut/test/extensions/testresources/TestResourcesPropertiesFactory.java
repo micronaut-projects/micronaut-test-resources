@@ -85,8 +85,9 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
                     private final String value = resolveProperty();
 
                     private String resolveProperty() {
-                        var props = client.getRequiredProperties(v)
+                        var props = Optional.ofNullable(client.getRequiredProperties(v))
                             .stream()
+                            .flatMap(Collection::stream)
                             .map(e -> new Object() {
                                 private final String key = e;
                                 private final Object value = properties.get(e);

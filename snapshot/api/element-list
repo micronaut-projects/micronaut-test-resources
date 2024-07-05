@@ -4,6 +4,7 @@ io.micronaut.test.extensions.testresources
 io.micronaut.test.extensions.testresources.annotation
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
+io.micronaut.testresources.consul
 io.micronaut.testresources.controlpanel
 io.micronaut.testresources.core
 io.micronaut.testresources.elasticsearch
@@ -21,6 +22,7 @@ io.micronaut.testresources.kafka
 io.micronaut.testresources.localstack
 io.micronaut.testresources.localstack.dynamodb
 io.micronaut.testresources.localstack.s3
+io.micronaut.testresources.localstack.sns
 io.micronaut.testresources.localstack.sqs
 io.micronaut.testresources.mariadb
 io.micronaut.testresources.mongodb

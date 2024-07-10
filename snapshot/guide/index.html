@@ -569,12 +569,12 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgres</code>)</p>
 </li>
 <li>
-<p><code>datasources.*.driverClassName</code>: the class name of the driver (fallback)</p>
-</li>
-<li>
 <p><code>datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><code>datasources.*.driverClassName</code> should be empty because JDBC driver from testcontainers has to be used for working with URI like 'jdcb:tc:postgres:14///db'</p>
 </div>
 
 <h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>4.1.2 R2DBC</h2>

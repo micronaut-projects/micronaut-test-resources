@@ -11,5 +11,6 @@ https://dev.mysql.com/doc/connector-j/en/connector-j-using-xdevapi.html[MySQL X 
 In order for the database to be properly detected, _one of_ the following properties has to be set:
 
 - `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `oracle-xe`, `postgres`)
-- `datasources.*.driverClassName`: the class name of the driver (fallback)
 - `datasources.*.dialect`: the dialect to use for the database (fallback)
+
+`datasources.*.driverClassName` should be empty because JDBC driver from testcontainers has to be used for working with URI like 'jdcb:tc:postgres:14///db'

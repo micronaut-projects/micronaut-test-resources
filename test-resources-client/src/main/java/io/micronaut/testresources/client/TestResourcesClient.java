@@ -31,6 +31,7 @@ import java.util.Optional;
  * server.
  */
 public interface TestResourcesClient extends TestResourcesResolver {
+    String ENABLED = "enabled";
     String SERVER_URI = "server.uri";
     String ACCESS_TOKEN = "server.access.token";
     String CLIENT_READ_TIMEOUT = "server.client.read.timeout";

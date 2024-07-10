@@ -50,46 +50,46 @@ public final class TestResourcesClientHolder {
 
     private static class LazyTestResourcesClient implements TestResourcesClient {
 
-        private static <T> T nullSafe(Supplier<T> value) {
+        private static <T> T nullSafe(Supplier<T> value, T defaultValue) {
             if (client == null) {
-                return null;
+                return defaultValue;
             }
             return value.get();
         }
 
         @Override
         public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-            return nullSafe(client::getResolvableProperties);
+            return nullSafe(client::getResolvableProperties, List.of());
         }
 
         @Override
         public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
-            return nullSafe(() -> client.resolve(name, properties, testResourcesConfig));
+            return nullSafe(() -> client.resolve(name, properties, testResourcesConfig), Optional.empty());
         }
 
         @Override
         public List<String> getRequiredProperties(String expression) {
-            return nullSafe(() -> client.getRequiredProperties(expression));
+            return nullSafe(() -> client.getRequiredProperties(expression), List.of());
         }
 
         @Override
         public List<String> getRequiredPropertyEntries() {
-            return nullSafe(client::getRequiredPropertyEntries);
+            return nullSafe(client::getRequiredPropertyEntries, List.of());
         }
 
         @Override
         public boolean closeAll() {
-            return nullSafe(client::closeAll);
+            return nullSafe(client::closeAll, true);
         }
 
         @Override
         public boolean closeScope(String id) {
-            return nullSafe(() -> client.closeScope(id));
+            return nullSafe(() -> client.closeScope(id), true);
         }
 
         @Override
         public List<String> getResolvableProperties() {
-            return nullSafe(client::getResolvableProperties);
+            return nullSafe(client::getResolvableProperties, List.of());
         }
 
     }

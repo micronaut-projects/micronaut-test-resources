@@ -22,4 +22,5 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly(mn.micronaut.context)
     testRuntimeOnly(mn.snakeyaml)
+    testRuntimeOnly(mnSerde.micronaut.serde.jackson)
 }

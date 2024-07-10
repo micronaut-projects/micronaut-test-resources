@@ -92,6 +92,10 @@ public final class TestResourcesClientFactory {
             } catch (IOException e) {
                 throw new TestResourcesException(e);
             }
+            String enabled = props.getProperty(TestResourcesClient.ENABLED);
+            if (enabled != null && !Boolean.parseBoolean(enabled)) {
+                return Optional.of(NoOpClient.INSTANCE);
+            }
             String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
             String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
             int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, DEFAULT_TIMEOUT_SECONDS));
@@ -109,6 +113,11 @@ public final class TestResourcesClientFactory {
         var client = cachedClient != null ? cachedClient.get() : null;
         if (client != null) {
             return Optional.of(client);
+        }
+        boolean enabled = Boolean.parseBoolean(System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ENABLED), "true"));
+        if (!enabled) {
+            System.err.println("Test resources are disabled");
+            return Optional.of(NoOpClient.INSTANCE);
         }
         String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));
         if (serverUri != null) {

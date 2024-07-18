@@ -126,7 +126,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
     }
 
     private void ifPresent(String key, Map<String, Object> testResourcesConfig, Consumer<String> consumer) {
-        Object value = testResourcesConfig.get("containers." + getSimpleName() + "." + key);
+        Object value = testResourcesConfig.get("test-resources.containers." + getSimpleName() + "." + key);
         if (value != null) {
             consumer.accept(value.toString());
         }

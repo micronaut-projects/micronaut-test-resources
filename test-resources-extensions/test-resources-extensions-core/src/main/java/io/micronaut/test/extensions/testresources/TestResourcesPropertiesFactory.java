@@ -78,7 +78,7 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
             var testResourcesConfig = properties.entrySet()
                 .stream()
                 .filter(e -> e.getKey().startsWith(TEST_RESOURCES_PROPERTY_PREFIX))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(e -> e.getKey().substring(TEST_RESOURCES_PROPERTY_PREFIX.length()), Map.Entry::getValue));
             Map<String, String> resolvedProperties = Stream.of(requestedProperties)
                 .map(v -> new Object() {
                     private final String key = v;

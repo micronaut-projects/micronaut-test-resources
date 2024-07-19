@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The main test resources controller, which will answer requests performed by the
@@ -49,6 +50,7 @@ import java.util.Optional;
 public class TestResourcesController implements TestResourcesResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesController.class);
     private static final int MAX_STOP_TIMEOUT = 5000;
+    private static final String TEST_RESOURCES_PREFIX = "test-resources.";
 
     private final ResolverLoader loader;
 
@@ -87,15 +89,16 @@ public class TestResourcesController implements TestResourcesResolver {
     @Post("/list")
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
                                                 Map<String, Object> testResourcesConfig) {
+        var sanitizedTestResourcesConfig = sanitizeTestResourcesConfig(testResourcesConfig);
         return loader.getResolvers()
             .stream()
-            .filter(testResourcesResolver -> isEnabled(testResourcesResolver, testResourcesConfig))
-            .map(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig))
+            .filter(testResourcesResolver -> isEnabled(testResourcesResolver, sanitizedTestResourcesConfig))
+            .map(r -> r.getResolvableProperties(propertyEntries, sanitizedTestResourcesConfig))
             .flatMap(Collection::stream)
             .distinct()
             .peek(p -> LOGGER.debug(
                 "For configuration {} and property entries {} , resolvable property: {}",
-                testResourcesConfig, propertyEntries, p))
+                sanitizedTestResourcesConfig, propertyEntries, p))
             .toList();
     }
 
@@ -144,17 +147,18 @@ public class TestResourcesController implements TestResourcesResolver {
     public Optional<String> resolve(String name,
                                     Map<String, Object> properties,
                                     Map<String, Object> testResourcesConfig) {
+        var sanitizedTestResourcesConfig = sanitizeTestResourcesConfig(testResourcesConfig);
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {
             if (resolver instanceof ToggableTestResourcesResolver toggable &&
-                !toggable.isEnabled(testResourcesConfig)) {
+                !toggable.isEnabled(sanitizedTestResourcesConfig)) {
                 continue;
             }
             try {
-                result = resolver.resolve(name, properties, testResourcesConfig);
+                result = resolver.resolve(name, properties, sanitizedTestResourcesConfig);
                 LOGGER.debug(
                     "Attempt to resolve {} with resolver {}, properties {} and test resources configuration {} : {}",
-                    name, resolver.getClass(), properties, testResourcesConfig,
+                    name, resolver.getClass(), properties, sanitizedTestResourcesConfig,
                     result.orElse("\uD83D\uDEAB"));
             } catch (Exception ex) {
                 for (PropertyResolutionListener listener : propertyResolutionListeners) {
@@ -165,7 +169,7 @@ public class TestResourcesController implements TestResourcesResolver {
             if (result.isPresent()) {
                 for (PropertyResolutionListener listener : propertyResolutionListeners) {
                     listener.resolved(name, result.get(), resolver, properties,
-                        testResourcesConfig);
+                        sanitizedTestResourcesConfig);
                 }
                 return result;
             }
@@ -273,5 +277,34 @@ public class TestResourcesController implements TestResourcesResolver {
             return toggable.isEnabled(testResourcesConfig);
         }
         return true;
+    }
+
+    /**
+     * This method is responsible of making sure that the test resources configuration
+     * map doesn't contain any entry which starts with `test-resources.` since the prefix
+     * is supposed to be removed. However, depending on how the client is used, or even
+     * if the service is called directly, it may be possible to pass in such configuration.
+     * This is therefore a "best effort" to cleanup the configuration in case this happens.
+     *
+     * @param testResourcesConfig the configuration map
+     * @return a cleanup map
+     */
+    private static Map<String, Object> sanitizeTestResourcesConfig(Map<String, Object> testResourcesConfig) {
+        if (testResourcesConfig.keySet().stream().noneMatch(k -> k.startsWith(TEST_RESOURCES_PREFIX))) {
+            return testResourcesConfig;
+        }
+        return testResourcesConfig.entrySet()
+            .stream()
+            .collect(Collectors.toMap(
+                e -> {
+                    var key = e.getKey();
+                    if (key.startsWith(TEST_RESOURCES_PREFIX)) {
+                        LOGGER.warn("Test resources configuration key '{}' should be passed without the '{}' prefix", key, TEST_RESOURCES_PREFIX);
+                        return key.substring(TEST_RESOURCES_PREFIX.length());
+                    }
+                    return key;
+                },
+                Map.Entry::getValue
+            ));
     }
 }

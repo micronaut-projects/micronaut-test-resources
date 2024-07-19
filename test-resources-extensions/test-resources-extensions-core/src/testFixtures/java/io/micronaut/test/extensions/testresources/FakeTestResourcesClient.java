@@ -45,6 +45,13 @@ public class FakeTestResourcesClient implements TestResourcesClient {
                 value += ": " + properties.get("required-property");
             }
         }
+        testResourcesConfig.
+            keySet()
+            .forEach(k -> {
+                if (k.startsWith("test-resources.")) {
+                    throw new AssertionError("Test resources properties must be passed without the prefix \"test-resources.\"");
+                }
+            });
         return Optional.ofNullable(value);
     }
 

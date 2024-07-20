@@ -59,6 +59,7 @@ boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", versio
 managed-opensearch-testcontainers = { module = "org.opensearch:opensearch-testcontainers", version.ref = "managed-opensearch-testcontainers" }
 
 managed-testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "managed-testcontainers" }
+managed-testcontainers-azure = { module = "org.testcontainers:azure", version.ref = "managed-testcontainers" }
 managed-testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version.ref = "managed-testcontainers" }
 managed-testcontainers-jdbc = { module = "org.testcontainers:jdbc", version.ref = "managed-testcontainers" }
 managed-testcontainers-hivemq = { module = "org.testcontainers:hivemq", version.ref = "managed-testcontainers" }

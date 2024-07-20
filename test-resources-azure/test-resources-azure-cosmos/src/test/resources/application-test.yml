@@ -1,0 +1,6 @@
+azure:
+  cosmos:
+    database:
+      packages: io.micronaut.testresources.azure.cosmos
+    default-gateway-mode: true
+    endpoint-discovery-enabled: false

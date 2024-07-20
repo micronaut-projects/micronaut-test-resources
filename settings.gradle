@@ -60,6 +60,10 @@ def localstackModules = [
         'sqs'
 ]
 
+def azureModules = [
+        'cosmos'
+]
+
 include 'test-resources-bom'
 include 'test-resources-build-tools'
 include 'test-resources-core'
@@ -99,11 +103,16 @@ localstackModules.each {
     project(":test-resources-localstack-$it").projectDir = file("test-resources-localstack/$projectName")
 }
 
-
 hibernateReactiveModules.each {
     String projectName = "test-resources-hibernate-reactive-$it"
     include projectName
     project(":test-resources-hibernate-reactive-$it").projectDir = file("test-resources-hibernate-reactive/$projectName")
+}
+
+azureModules.each {
+    String projectName = "test-resources-azure-$it"
+    include projectName
+    project(":test-resources-azure-$it").projectDir = file("test-resources-azure/$projectName")
 }
 
 micronautBuild {

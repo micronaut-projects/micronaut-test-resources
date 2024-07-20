@@ -1,0 +1,16 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for launching a MinIO test container.
+"""
+
+dependencies {
+    api(project(':micronaut-test-resources-core'))
+    api(project(':micronaut-test-resources-testcontainers'))
+    api(libs.managed.testcontainers.minio)
+
+    testImplementation(project(":micronaut-test-resources-embedded"))
+    testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
+}

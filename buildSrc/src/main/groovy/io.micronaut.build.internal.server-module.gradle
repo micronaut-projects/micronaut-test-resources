@@ -58,6 +58,22 @@ afterEvaluate {
     }
 }
 
+def writeDependenciesList = tasks.register("writeDependenciesList", io.micronaut.internal.GenerateModuleList) {
+    dependencies = configurations.runtimeClasspath.incoming.artifacts.resolvedArtifacts.map {
+        it.id
+    }
+    outputDirectory = layout.buildDirectory.file("dependencies")
+    fileName = "dependency-list.txt"
+}
+
+configurations {
+    embeddedDependencies {
+        canBeResolved = false
+        canBeConsumed = true
+        outgoing.artifact(writeDependenciesList)
+    }
+}
+
 static void prepareAttributesForPublication(Configuration src, Configuration dest) {
     dest.attributes { attrs ->
         src.attributes.keySet().each { k ->

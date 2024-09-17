@@ -15,8 +15,13 @@
  */
 package io.micronaut.testresources.buildtools;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -32,6 +37,7 @@ import java.util.stream.Stream;
 public final class TestResourcesClasspath implements KnownModules {
     private static final String TEST_RESOURCES_GROUP = "io.micronaut.testresources";
     private static final String TEST_RESOURCES_ARTIFACT_PREFIX = "micronaut-test-resources-";
+    private static final Set<ModuleIdentifier> FORBIDDEN_MODULES;
 
     private static final List<String> CORE_SUPPORT = Arrays.asList(
         SERVER,
@@ -45,7 +51,8 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_REDIS = "micronaut-redis-lettuce";
     private static final String MICRONAUT_DISCOVERY_CLIENT = "micronaut-discovery-client";
     private static final String MICRONAUT_MONGO_SYNC = "io.micronaut.mongodb:micronaut-mongo-sync";
-    private static final String MICRONAUT_MONGO_REACTIVE = "io.micronaut.mongodb:micronaut-mongo-reactive";
+    private static final String MICRONAUT_MONGO_REACTIVE =
+        "io.micronaut.mongodb:micronaut-mongo-reactive";
 
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
@@ -101,6 +108,23 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String HASHICORP_VAULT_MODULE = "hashicorp-vault";
     private static final String REACTIVE_POOL_MODULE = "r2dbc-pool";
 
+    static {
+        List<ModuleIdentifier> embeddedModules = new ArrayList<>();
+        try (var reader = new BufferedReader(new InputStreamReader(
+            TestResourcesClasspath.class.getResourceAsStream("/dependency-list.txt")))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                var ga = line.split(":");
+                if (ga.length == 2) {
+                    embeddedModules.add(new ModuleIdentifier(ga[0], ga[1]));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        FORBIDDEN_MODULES = embeddedModules.stream().collect(Collectors.toUnmodifiableSet());
+    }
+
     private TestResourcesClasspath() {
 
     }
@@ -133,6 +157,16 @@ public final class TestResourcesClasspath implements KnownModules {
             CORE_SUPPORT.stream().flatMap(m -> singleTestResourceModule(m, testResourcesVersion)),
             input.stream().flatMap(current -> inferSingle(current, input, testResourcesVersion))
         ).collect(Collectors.toList());
+    }
+
+    /**
+     * Tells if a dependency should be added to the server classpath. This is used
+     * to avoid dependency conflicts between what is embedded in the server and what
+     * additional modules can bring.
+     * @return the filtered dependencies
+     */
+    public static boolean isDependencyAllowedOnServerClasspath(ModuleIdentifier id) {
+        return !FORBIDDEN_MODULES.contains(id);
     }
 
     private static Stream<MavenDependency> inferSingle(MavenDependency input, List<MavenDependency> allDependencies, String testResourcesVersion) {

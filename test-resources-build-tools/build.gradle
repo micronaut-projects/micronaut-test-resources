@@ -54,6 +54,13 @@ def writeModuleList = tasks.register("writeModuleList", WriteModuleList) {
 
 sourceSets.main.java.srcDirs(writeVersion, writeModuleList)
 
+configurations {
+    embeddedDependencies {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
 dependencies {
     implementation(mnLogging.slf4j.api)
     testImplementation(platform(mn.micronaut.core.bom))
@@ -61,4 +68,7 @@ dependencies {
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.spock)
     testRuntimeOnly(mnSerde.micronaut.serde.jackson)
+    embeddedDependencies(project(path: ":micronaut-test-resources-server", configuration: "embeddedDependencies"))
 }
+
+sourceSets.main.resources.srcDir(configurations.embeddedDependencies)

@@ -22,6 +22,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.TaskScheduler;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.testresources.core.ResolverLoader;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -57,15 +59,18 @@ public class TestResourcesController implements TestResourcesResolver {
     private final List<PropertyResolutionListener> propertyResolutionListeners;
     private final EmbeddedServer embeddedServer;
     private final ApplicationContext applicationContext;
+    private final TaskScheduler taskScheduler;
 
     public TestResourcesController(List<PropertyResolutionListener> propertyResolutionListeners,
                                    EmbeddedServer embeddedServer,
                                    ApplicationContext applicationContext,
-                                   ResolverLoader loader) {
+                                   ResolverLoader loader,
+                                   TaskScheduler taskScheduler) {
         this.propertyResolutionListeners = propertyResolutionListeners;
         this.embeddedServer = embeddedServer;
         this.applicationContext = applicationContext;
         this.loader = loader;
+        this.taskScheduler = taskScheduler;
     }
 
     /**
@@ -235,8 +240,8 @@ public class TestResourcesController implements TestResourcesResolver {
      * Requests a test resources service shutdown.
      */
     @Post("/stop")
-    public void stopService() {
-        var makeSureServerIsStopped = new Thread(() -> {
+    public boolean stopService() {
+        taskScheduler.schedule(Duration.ofMillis(200), () -> {
             try {
                 try {
                     embeddedServer.stop();
@@ -252,8 +257,7 @@ public class TestResourcesController implements TestResourcesResolver {
                 System.exit(0);
             }
         });
-        makeSureServerIsStopped.setDaemon(true);
-        makeSureServerIsStopped.start();
+        return true;
     }
 
     private void closeResolvers() {

@@ -19,11 +19,9 @@ import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import static io.micronaut.testresources.kafka.KafkaConfigurationSupport.isKraftMode;
 
 /**
  * A test resource provider which will spawn a Kafka test container.
@@ -32,7 +30,16 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
     public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:7.0.4";
+    /**
+     * Leverage confluent-local image as it is optimized for local development and the image enables
+     * KRaft mode with no configuration setup.
+     * See: <a href="https://docs.confluent.io/platform/current/installation/docker/image-reference.html#ak-images">Confluent Kafka Images</a>
+     */
+    public static final String DEFAULT_KRAFT_IMAGE = "confluentinc/confluent-local:7.6.0";
+
     public static final String DISPLAY_NAME = "Kafka";
+    public static final String SIMPLE_NAME = "kafka";
+    public static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(KAFKA_BOOTSTRAP_SERVERS);
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -46,7 +53,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     @Override
     protected String getSimpleName() {
-        return "kafka";
+        return SIMPLE_NAME;
     }
 
     @Override
@@ -56,7 +63,10 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     @Override
     protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new KafkaContainer(imageName);
+        boolean isCustomImage = !imageName.toString().equals(getDefaultImageName());
+        return isKraftMode(testResourcesConfig) ?
+            new KafkaContainer(isCustomImage ? imageName : DockerImageName.parse(DEFAULT_KRAFT_IMAGE).asCompatibleSubstituteFor("confluentinc/cp-kafka")).withKraft() :
+            new KafkaContainer(imageName);
     }
 
     @Override

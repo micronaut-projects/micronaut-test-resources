@@ -19,6 +19,8 @@ modules:
     title: Kafka
   modules-localstack:
     title: Localstack
+  modules-minio:
+    title: MinIO
   modules-mongodb:
     title: MongoDB
   modules-mqtt:

@@ -77,6 +77,7 @@ managed-testcontainers-oracle-free = { module = "org.testcontainers:oracle-free"
 managed-testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "managed-testcontainers" }
 managed-testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version.ref = "managed-testcontainers" }
 managed-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "managed-testcontainers-redis" }
+managed-testcontainers-minio = { module = "org.testcontainers:minio", version.ref = "managed-testcontainers" }
 managed-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "managed-testcontainers" }
 managed-testcontainers-vault = { module = "org.testcontainers:vault", version.ref = "managed-testcontainers" }
 

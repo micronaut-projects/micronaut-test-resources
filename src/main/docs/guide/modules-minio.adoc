@@ -1,0 +1,8 @@
+MinIO support will automatically start a https://min.io[MinIO] container via https://java.testcontainers.org/modules/minio/[Testcontainers] and provide the value of the `minio.url` property.
+
+The default image can be overwritten by setting the `test-resources.containers.minio.image-name` property.
+
+In addition, the following properties will be resolved by test resources:
+
+- `minio.access-key`
+- `minio.secret-key`

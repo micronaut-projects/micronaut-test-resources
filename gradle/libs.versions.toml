@@ -43,7 +43,7 @@ micronaut-test = "4.5.0"
 groovy = "4.0.22"
 spock = "2.3-groovy-4.0"
 vertx-client = "4.5.10"
-amazon-awssdk-v1 = "1.12.773"
+amazon-awssdk-v1 = "1.12.775"
 amazon-awssdk-v2 = "2.28.21"
 jansi = "2.4.1"
 

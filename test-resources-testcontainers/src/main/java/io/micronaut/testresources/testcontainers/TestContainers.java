@@ -126,7 +126,8 @@ public final class TestContainers {
                             LOGGER.info("Starting test container {}", name);
                             container.start();
                         } else {
-                            throw new TestResourcesResolutionException("Cannot start container " + name + " as Docker doesn't seem to be available");
+                            LOGGER.info("Trying to start container {} but it is likely to fail as Docker doesn't seem to be available", name);
+                            container.start();
                         }
                     } finally {
                         notifyEndOperation(STARTING, dockerImageName);

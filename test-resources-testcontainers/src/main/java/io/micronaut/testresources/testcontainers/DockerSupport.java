@@ -77,7 +77,8 @@ public final class DockerSupport {
         LOCK.lock();
         try {
             available = AVAILABLE.get();
-            if (available != null) {
+            // Allow re-checking later in time
+            if (Boolean.TRUE.equals(available)) {
                 return available;
             }
             available = performDockerCheck();

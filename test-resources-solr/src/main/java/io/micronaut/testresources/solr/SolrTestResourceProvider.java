@@ -80,7 +80,12 @@ public class SolrTestResourceProvider extends AbstractTestContainersProvider<Sol
     @Override
     protected SolrContainer createContainer(DockerImageName imageName,
                                             Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        SolrContainer container = new SolrContainer(DockerImageName.parse(DEFAULT_IMAGE).asCompatibleSubstituteFor("solr")) {
+        // Apply Zookeeper configuration
+        // Set the collection name if provided
+        // Set configuration if both name and URL are provided
+        // Set schema if URL is provided
+
+        return new SolrContainer(DockerImageName.parse(DEFAULT_IMAGE).asCompatibleSubstituteFor("solr")) {
             @Override
             protected void configure() {
                 this.addExposedPorts(8983, 9983);
@@ -129,8 +134,6 @@ public class SolrTestResourceProvider extends AbstractTestContainersProvider<Sol
                         .withStartupTimeout(Duration.of(180, ChronoUnit.SECONDS));
             }
         };
-
-        return container;
     }
 
 

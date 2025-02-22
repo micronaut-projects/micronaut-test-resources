@@ -24,6 +24,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,16 +39,14 @@ public class SolrTestResourceProvider extends AbstractTestContainersProvider<Sol
     public static final String DISPLAY_NAME = "Solr Search Server";
     public static final String MICRONAUT_SOLR_ENDPOINT = "micronaut.solr.hosts";
     public static final String MICRONAUT_ZOOKEEPER_HOSTS = "micronaut.solr.zk-hosts";
-    public static final List<String> RESOLVABLE_PROPERTIES = List.of(
-        MICRONAUT_SOLR_ENDPOINT,
-        MICRONAUT_ZOOKEEPER_HOSTS
-    );
 
     private static final String COLLECTION_NAME_PROPERTY = "solr.collection";
     private static final String CONFIG_NAME_PROPERTY = "solr.config.name";
     private static final String CONFIG_URL_PROPERTY = "solr.config.url";
     private static final String SCHEMA_URL_PROPERTY = "solr.schema.url";
     private static final String ZOOKEEPER_ENABLED_PROPERTY = "solr.zookeeper.enabled";
+
+    private Map<String, Object> configuredProperties;
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -79,11 +78,10 @@ public class SolrTestResourceProvider extends AbstractTestContainersProvider<Sol
 
     @Override
     protected SolrContainer createContainer(DockerImageName imageName,
-                                            Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        // Apply Zookeeper configuration
-        // Set the collection name if provided
-        // Set configuration if both name and URL are provided
-        // Set schema if URL is provided
+                                            Map<String, Object> requestedProperties,
+                                            Map<String, Object> testResourcesConfig) {
+        // Store the properties for later resolution
+        this.configuredProperties = new HashMap<>(requestedProperties);
 
         return new SolrContainer(DockerImageName.parse(DEFAULT_IMAGE).asCompatibleSubstituteFor("solr")) {
             @Override
@@ -136,21 +134,20 @@ public class SolrTestResourceProvider extends AbstractTestContainersProvider<Sol
         };
     }
 
-
     @Override
     protected Optional<String> resolveProperty(String propertyName, SolrContainer container) {
         if (MICRONAUT_SOLR_ENDPOINT.equals(propertyName)) {
             return Optional.of("http://" + container.getHost() + ":" + container.getSolrPort() + "/solr");
         } else if (MICRONAUT_ZOOKEEPER_HOSTS.equals(propertyName)) {
             return Optional.of(container.getHost() + ":" + container.getZookeeperPort());
+        } else if (configuredProperties != null && configuredProperties.containsKey(propertyName)) {
+            return Optional.ofNullable(String.valueOf(configuredProperties.get(propertyName)));
         }
         return Optional.empty();
     }
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return RESOLVABLE_PROPERTIES.contains(propertyName);
+        return getResolvableProperties(null, null).contains(propertyName);
     }
-
-
 }

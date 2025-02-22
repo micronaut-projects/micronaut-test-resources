@@ -1,7 +1,6 @@
 package io.micronaut.testresources.solr
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Value
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.core.Scope
@@ -11,11 +10,6 @@ import jakarta.inject.Singleton
 import spock.lang.Shared
 
 @MicronautTest
-@Property(name = 'solr.collection', value = 'testcollection')
-@Property(name = 'solr.config.name', value = 'testconfig')
-@Property(name = 'solr.config.url', value = 'http://localhost:8983/solr/testconfig')
-@Property(name = 'solr.schema.url', value = 'http://localhost:8983/solr/schema.xml')
-@Property(name = 'solr.zookeeper.enabled', value = 'true')
 class SolrConfigurationSpec extends AbstractSolrSpec {
 
     @Inject

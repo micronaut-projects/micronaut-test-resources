@@ -57,6 +57,7 @@ managed-testcontainers-redis = "1.6.4"
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
 
 managed-opensearch-testcontainers = { module = "org.opensearch:opensearch-testcontainers", version.ref = "managed-opensearch-testcontainers" }
+managed-solr-testcontainers = { module = "org.testcontainers:solr", version.ref = "managed-testcontainers" }
 
 
 managed-testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "managed-testcontainers" }

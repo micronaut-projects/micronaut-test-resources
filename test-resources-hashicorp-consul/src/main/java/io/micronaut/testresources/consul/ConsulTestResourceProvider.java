@@ -33,14 +33,16 @@ public class ConsulTestResourceProvider extends AbstractTestContainersProvider<C
 
     public static final List<String> RESOLVABLE_PROPERTIES_LIST = Collections.unmodifiableList(Arrays.asList(
         PROPERTY_CONSUL_CLIENT_HOST,
-        PROPERTY_CONSUL_CLIENT_PORT
+        PROPERTY_CONSUL_CLIENT_PORT,
+        PROPERTY_CONSUL_CLIENT_DEFAULT_ZONE
     ));
+
     public static final String HASHICORP_CONSUL_KV_PROPERTIES_KEY = "containers.hashicorp-consul.kv-properties";
-    public static final String SIMPLE_NAME = "hashicorp-consul";
     public static final String DEFAULT_IMAGE = "hashicorp/consul";
+    public static final int CONSUL_HTTP_PORT = 8500;
+    public static final String SIMPLE_NAME = "hashicorp-consul";
     public static final String DISPLAY_NAME = "Consul";
 
-    public static final int CONSUL_HTTP_PORT = 8500;
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -65,29 +67,35 @@ public class ConsulTestResourceProvider extends AbstractTestContainersProvider<C
     @Override
     protected ConsulContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         ConsulContainer consulContainer = new ConsulContainer(imageName);
-        // Micronaut Discovery Consul will only listen to the default port 8500
-        consulContainer.setPortBindings(Collections.singletonList(CONSUL_HTTP_PORT + ":" + CONSUL_HTTP_PORT));
+
+        // We intentionally do NOT set port bindings here, allowing Testcontainers to assign a random port
 
         // Set startup properties
         if (testResourcesConfig.containsKey(HASHICORP_CONSUL_KV_PROPERTIES_KEY)) {
             @SuppressWarnings("unchecked")
             List<String> properties = (List<String>) testResourcesConfig.get(HASHICORP_CONSUL_KV_PROPERTIES_KEY);
             if(null != properties && !properties.isEmpty()) {
-                properties.stream().forEach((property) -> consulContainer.withConsulCommand("kv put " + property.replace("=", " ")));
+                properties.forEach((property) -> consulContainer.withConsulCommand("kv put " + property.replace("=", " ")));
             }
         }
-
         return consulContainer;
     }
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, ConsulContainer container) {
-        if (PROPERTY_CONSUL_CLIENT_HOST.equals(propertyName)) {
-            return Optional.of(container.getHost());
-        } else if (PROPERTY_CONSUL_CLIENT_PORT.equals(propertyName)) {
-            return Optional.of(container.getMappedPort(CONSUL_HTTP_PORT).toString());
-        } else if (PROPERTY_CONSUL_CLIENT_DEFAULT_ZONE.equals(propertyName)) {
-            return Optional.of(container.getHost() + ":" + container.getMappedPort(CONSUL_HTTP_PORT));
+        if (propertyName != null && propertyName.startsWith(PREFIX)) {
+            // Resolve the property
+            switch (propertyName) {
+                case PROPERTY_CONSUL_CLIENT_HOST -> {
+                    return Optional.of(container.getHost());
+                }
+                case PROPERTY_CONSUL_CLIENT_PORT -> {
+                    return Optional.of(container.getMappedPort(CONSUL_HTTP_PORT).toString());
+                }
+                case PROPERTY_CONSUL_CLIENT_DEFAULT_ZONE -> {
+                    return Optional.of(container.getHost() + ":" + container.getMappedPort(CONSUL_HTTP_PORT));
+                }
+            }
         }
         return Optional.empty();
     }

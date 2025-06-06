@@ -1,0 +1,4 @@
+test-resources:
+  containers:
+    wiremock:
+      cli-args: "--port 8080 --verbose --global-response-templating"

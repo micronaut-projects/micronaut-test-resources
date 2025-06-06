@@ -51,6 +51,7 @@ jansi = "2.4.1"
 managed-opensearch-testcontainers = "2.1.3"
 managed-testcontainers = "1.20.6"
 managed-testcontainers-redis = "1.6.4"
+managed-testcontainers-wiremock = "1.0-alpha-13"
 
 [libraries]
 # Testcontainers
@@ -80,6 +81,7 @@ managed-testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", vers
 managed-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "managed-testcontainers-redis" }
 managed-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "managed-testcontainers" }
 managed-testcontainers-vault = { module = "org.testcontainers:vault", version.ref = "managed-testcontainers" }
+managed-testcontainers-wiremock = { module = "org.wiremock.integrations.testcontainers:wiremock-testcontainers-module", version.ref = "managed-testcontainers-wiremock" }
 
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }

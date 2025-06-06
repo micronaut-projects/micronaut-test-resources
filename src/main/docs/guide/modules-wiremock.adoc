@@ -1,0 +1,12 @@
+Wiremock support will automatically start a https://https://wiremock.org/[Wiremock container] and provide the value of the `wiremock.port`, `wiremock.host` and `wiremock.url` properties.
+
+The default image can be overwritten by setting the `test-resources.containers.wiremock.image-name` property.
+
+You can pass https://wiremock.org/docs/standalone/docker/#start-with-command-line-arguments[cli arguments] to the Wiremock container by setting the `test-resources.containers.wiremock.cli-args` property.
+
+---
+test-resources:
+  containers:
+    wiremock:
+      cli-args: "--verbose --global-response-templating"
+---

@@ -80,6 +80,7 @@ include 'test-resources-solr'
 include 'test-resources-testcontainers'
 include 'test-resources-hashicorp-vault'
 include 'test-resources-hashicorp-consul'
+include 'test-resources-wiremock'
 
 extensionModules.each {
     String projectName = "test-resources-extensions-$it"

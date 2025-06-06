@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A test resource provider which will spawn an OpenSearch test container.
+ * A test resource provider which will spawn an Wiremock test container.
  */
 public class WiremockTestResourceProvider extends AbstractTestContainersProvider<WireMockContainer> {
 

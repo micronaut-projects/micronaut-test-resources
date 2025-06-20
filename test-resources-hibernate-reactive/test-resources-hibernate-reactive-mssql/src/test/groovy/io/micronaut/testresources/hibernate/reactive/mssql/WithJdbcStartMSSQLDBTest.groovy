@@ -13,6 +13,10 @@ import java.time.temporal.ChronoUnit
 class WithJdbcStartMSSQLDBTest extends AbstractTestContainersSpec {
     private static final Duration TEST_TIMEOUT = Duration.of(10, ChronoUnit.SECONDS)
 
+    static {
+        setDefaultEndpointVerificationAlgorithmToNone()
+    }
+
     @Inject
     BookRepository repository
 

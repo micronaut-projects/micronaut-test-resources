@@ -47,4 +47,11 @@ abstract class AbstractTestContainersSpec extends Specification implements TestP
                 .findAll { it.image.contains(imageName) }
     }
 
+    static void setDefaultEndpointVerificationAlgorithmToNone() {
+        // In netty 4.2.2 SslContextBuilder defaults endpointIdentificationAlgorithm to "HTTPS" if system property
+        // "io.netty.handler.ssl.defaultEndpointVerificationAlgorithm" is not set. This makes sun.security.util.HostnameChecker.match(String expectedName, X509Certificate cert, boolean chainsToPublicCA)
+        // method to throw error "javax.net.ssl.SSLHandshakeException: No name matching localhost found" and this is workaround.
+        // Which could be documented or suggested if users experience this issue
+        System.setProperty("io.netty.handler.ssl.defaultEndpointVerificationAlgorithm", "NONE");
+    }
 }

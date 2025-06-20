@@ -39,7 +39,7 @@ public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernat
 
     @Override
     protected String getDefaultImageName() {
-        return "mysql";
+        return "mysql:8.4.5";
     }
 
     @Override

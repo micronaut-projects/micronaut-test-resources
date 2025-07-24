@@ -1,0 +1,26 @@
+plugins {
+    id 'io.micronaut.build.internal.jdbc-module'
+}
+
+description = """
+Provides support for Oracle Test Pilot for Third-Party Software Test Resource.
+"""
+
+dependencies {
+    testRuntimeOnly(mnSql.ojdbc8)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testImplementation(mnTest.micronaut.test.junit5)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabled = version != '2.5.0-SNAPSHOT'
+    }
+}

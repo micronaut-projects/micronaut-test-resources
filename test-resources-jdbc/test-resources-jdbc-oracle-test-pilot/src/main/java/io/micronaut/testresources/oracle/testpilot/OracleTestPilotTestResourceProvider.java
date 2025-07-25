@@ -22,13 +22,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
  * A test resource provider which will integrate with Oracle Test Pilot for Third-Party Software.
  *
- * @since 2.9.0
  * @author Loïc Lefèvre
+ * @since 2.9.0
  */
 public class OracleTestPilotTestResourceProvider implements ToggableTestResourcesResolver {
     public static final String DISPLAY_NAME = "Oracle Test Pilot Database";
@@ -44,6 +45,15 @@ public class OracleTestPilotTestResourceProvider implements ToggableTestResource
     private static final String SCHEMA_GENERATE = "schema-generate";
 
     private static final List<String> SUPPORTED_LIST = List.of(URL, USERNAME, PASSWORD, DRIVER, DIALECT, SCHEMA_GENERATE);
+
+    private Function<String, String> propertySupplier = System::getenv;
+
+    public OracleTestPilotTestResourceProvider() {
+    }
+
+    public OracleTestPilotTestResourceProvider(final Function<String, String> propertySupplier) {
+        this.propertySupplier = propertySupplier;
+    }
 
     @Override
     public final String getDisplayName() {
@@ -70,7 +80,7 @@ public class OracleTestPilotTestResourceProvider implements ToggableTestResource
     }
 
     protected static String datasourceExpressionOf(final String datasource, final String property) {
-        return String.format("%s.%s.%s",PREFIX, datasource, property );
+        return String.format("%s.%s.%s", PREFIX, datasource, property);
     }
 
     @Override
@@ -89,7 +99,7 @@ public class OracleTestPilotTestResourceProvider implements ToggableTestResource
     public final List<String> getResolvableProperties(final Map<String, Collection<String>> propertyEntries, final Map<String, Object> testResourcesConfig) {
         Collection<String> datasources = propertyEntries.getOrDefault(PREFIX, Collections.emptyList());
         return datasources.stream()
-            .flatMap(ds -> SUPPORTED_LIST.stream().map(p -> String.format("%s.%s.%s",PREFIX, ds, p )))
+            .flatMap(ds -> SUPPORTED_LIST.stream().map(p -> String.format("%s.%s.%s", PREFIX, ds, p)))
             .toList();
     }
 
@@ -101,9 +111,10 @@ public class OracleTestPilotTestResourceProvider implements ToggableTestResource
     @Override
     public final Optional<String> resolve(final String propertyName, final Map<String, Object> properties, final Map<String, Object> testResourcesConfig) {
         final String value = switch (datasourcePropertyFrom(propertyName)) {
-            case URL -> "jdbc:oracle:thin:@"+System.getenv("TESTPILOT_CONNECTION_STRING_SUFFIX").replace("\"", "");
-            case USERNAME -> System.getenv("TESTPILOT_USERNAME");
-            case PASSWORD -> System.getenv("TESTPILOT_PASSWORD");
+            case URL ->
+                "jdbc:oracle:thin:@" + propertySupplier.apply("TESTPILOT_CONNECTION_STRING_SUFFIX").replace("\"", "");
+            case USERNAME -> propertySupplier.apply("TESTPILOT_USERNAME");
+            case PASSWORD -> propertySupplier.apply("TESTPILOT_PASSWORD");
             case DRIVER -> "oracle.jdbc.OracleDriver";
             case DIALECT -> "ORACLE";
             case SCHEMA_GENERATE -> "CREATE_DROP";

@@ -21,6 +21,6 @@ tasks.withType(Test).configureEach {
 
 micronautBuild {
     binaryCompatibility {
-        enabled = version != '2.5.0-SNAPSHOT'
+        enabledAfter '2.9.0'
     }
 }

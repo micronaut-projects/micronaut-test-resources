@@ -14,13 +14,8 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
-}
-
 micronautBuild {
     binaryCompatibility {
-        enabledAfter '2.9.0'
+        enabledAfter '2.9.1'
     }
 }

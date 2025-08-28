@@ -7,7 +7,6 @@ consul:
   client:
     config:
       enabled: true
-    default-zone: "localhost:8500"
 test-resources:
   containers:
     hashicorp-consul:

@@ -43,7 +43,7 @@ public class EmbeddedTestResourcesPropertyExpressionResolver extends LazyTestRes
         super(new Delegate());
     }
 
-    private static class Delegate implements PropertyExpressionResolver {
+    private static final class Delegate implements PropertyExpressionResolver {
         private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
 
         @Override

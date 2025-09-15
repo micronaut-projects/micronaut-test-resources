@@ -46,7 +46,7 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
         }
     }
 
-    private static class TestResourcesTestPropertyProvider implements TestPropertyProvider {
+    private static final class TestResourcesTestPropertyProvider implements TestPropertyProvider {
         public static final String TEST_RESOURCES_PROPERTY_PREFIX = "test-resources.";
         private final Class<?> testClass;
         private final Map<String, Object> properties;

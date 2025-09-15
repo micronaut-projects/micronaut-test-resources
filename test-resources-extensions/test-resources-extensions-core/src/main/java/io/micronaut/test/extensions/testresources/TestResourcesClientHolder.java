@@ -48,7 +48,7 @@ public final class TestResourcesClientHolder {
         return new LazyTestResourcesClient();
     }
 
-    private static class LazyTestResourcesClient implements TestResourcesClient {
+    private static final class LazyTestResourcesClient implements TestResourcesClient {
 
         private static <T> T nullSafe(Supplier<T> value, T defaultValue) {
             if (client == null) {

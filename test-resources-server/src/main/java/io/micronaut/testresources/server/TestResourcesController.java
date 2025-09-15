@@ -238,6 +238,8 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Requests a test resources service shutdown.
+     *
+     * @return a boolean indicating if shutdown was successful.
      */
     @Post("/stop")
     public boolean stopService() {

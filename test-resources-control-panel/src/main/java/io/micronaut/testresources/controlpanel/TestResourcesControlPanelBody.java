@@ -19,6 +19,11 @@ import io.micronaut.core.annotation.Introspected;
 
 import java.util.List;
 
+/**
+ * Bean for control panel properties.
+ * @param resolvedProperties the resolved properties
+ * @param errors the list of errors
+ */
 @Introspected
 public record TestResourcesControlPanelBody(
     List<ControlPanelPropertyResolutionListener.Resolution> resolvedProperties,

@@ -46,7 +46,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         return TestResourcesClientFactory.findByConvention().orElse(NoOpClient.INSTANCE);
     }
 
-    private static class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {
+    private static final class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {
         private final Map<Environment, TestResourcesClient> clients = new ConcurrentHashMap<>();
 
         @Override

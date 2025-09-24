@@ -15,6 +15,9 @@
  */
 package io.micronaut.testresources.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 /**
@@ -22,6 +25,9 @@ import java.util.Map;
  * on demand.
  */
 public interface ToggableTestResourcesResolver extends TestResourcesResolver {
+
+    Logger LOGGER = LoggerFactory.getLogger(ToggableTestResourcesResolver.class);
+
     String getName();
 
     default String getDisplayName() {
@@ -34,6 +40,9 @@ public interface ToggableTestResourcesResolver extends TestResourcesResolver {
             return true;
         }
         if (o instanceof Boolean b) {
+            if (!b) {
+                LOGGER.warn("Test resources provider for " + getDisplayName() + " is disabled");
+            }
             return b;
         }
         return Boolean.parseBoolean(String.valueOf(o));

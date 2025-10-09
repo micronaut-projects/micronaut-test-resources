@@ -6,10 +6,11 @@ pluginManagement {
 //            url "https://s01.oss.sonatype.org/content/repositories/snapshots"
 //        }
     }
+    includeBuild "../micronaut-build"
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '8.0.0-M1'
+    id 'io.micronaut.build.shared.settings' version '8.0.0-M4'
 }
 rootProject.name = 'testresources-parent'
 

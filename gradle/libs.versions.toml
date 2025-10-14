@@ -17,40 +17,43 @@
 
 [versions]
 micronaut = "4.9.10"
-micronaut-platform = "4.8.3"
+micronaut-platform = "4.9.4"
 micronaut-aot = "2.5.0"
 micronaut-aws = "4.11.0"
-micronaut-control-panel = "1.8.0"
-micronaut-data = "4.13.4"
-micronaut-discovery = "4.5.2"
-micronaut-docs = "2.0.0"
+micronaut-control-panel = "1.9.1"
+micronaut-data = "4.13.7"
+micronaut-discovery = "4.7.1"
+micronaut-docs = "3.0.0"
 micronaut-elasticsearch = "5.9.0"
-micronaut-email = "2.8.0"
-micronaut-kafka = "5.8.0"
-micronaut-logging = "1.7.0"
+micronaut-email = "2.9.1"
+micronaut-kafka = "5.9.0"
+micronaut-logging = "1.7.1"
 micronaut-mongodb = "5.7.0"
 micronaut-gradle-plugin = "4.5.4"
 micronaut-mqtt = "3.7.0"
 micronaut-neo4j = "6.10.0"
 micronaut-rabbitmq = "4.8.0"
 micronaut-r2dbc = "6.1.0"
-micronaut-reactor = "3.8.0"
-micronaut-redis = "6.8.0"
-micronaut-security = "4.13.1"
-micronaut-serde = "2.15.1"
-micronaut-sql = "6.2.1"
-micronaut-test = "4.8.0"
-groovy = "4.0.27"
+micronaut-reactor = "3.9.0"
+micronaut-redis = "6.9.0"
+micronaut-security = "4.15.0"
+micronaut-serde = "2.15.5"
+micronaut-sql = "6.3.1"
+micronaut-test = "4.9.0"
+groovy = "4.0.28"
 spock = "2.3-groovy-4.0"
 vertx-client = "4.5.14"
-amazon-awssdk-v1 = "1.12.788"
-amazon-awssdk-v2 = "2.31.72"
-jansi = "2.4.1"
+amazon-awssdk-v1 = "1.12.792"
+amazon-awssdk-v2 = "2.35.6"
+jansi = "2.4.2"
 
 # Managed versions appear in the BOM
-managed-opensearch-testcontainers = "2.1.3"
-managed-testcontainers = "1.20.6"
+managed-opensearch-testcontainers = "3.0.2"
+managed-testcontainers = "1.21.3"
 managed-testcontainers-redis = "1.6.4"
+
+# Transitive dependencies upgrades
+commons-compress="1.28.0"
 
 [libraries]
 # Testcontainers
@@ -137,6 +140,8 @@ jansi = { module = "org.fusesource.jansi:jansi", version.ref = "jansi" }
 
 # micronaut-bom = { module = "io.micronaut:micronaut-bom", version.ref = "micronaut" }
 # jdoctor = { module = "me.champeau.jdoctor:jdoctor-core", version.ref="jdoctor" }
+
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress"}
 
 [bundles]
 

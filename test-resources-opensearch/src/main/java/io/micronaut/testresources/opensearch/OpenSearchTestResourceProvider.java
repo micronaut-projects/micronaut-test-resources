@@ -16,7 +16,7 @@
 package io.micronaut.testresources.opensearch;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.opensearch.testcontainers.OpensearchContainer;
+import org.opensearch.testcontainers.OpenSearchContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
@@ -27,7 +27,7 @@ import java.util.Optional;
 /**
  * A test resource provider which will spawn an OpenSearch test container.
  */
-public class OpenSearchTestResourceProvider extends AbstractTestContainersProvider<OpensearchContainer<?>> {
+public class OpenSearchTestResourceProvider extends AbstractTestContainersProvider<OpenSearchContainer<?>> {
 
     public static final String SIMPLE_NAME = "opensearch";
     public static final String DEFAULT_IMAGE = "opensearchproject/opensearch";
@@ -61,13 +61,13 @@ public class OpenSearchTestResourceProvider extends AbstractTestContainersProvid
 
     @Override
     @SuppressWarnings("resource") // The container is long-lived and closed elsewhere
-    protected OpensearchContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OpensearchContainer<>(imageName)
+    protected OpenSearchContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new OpenSearchContainer<>(imageName)
             .withAccessToHost(true); // Necessary for host address and startup checks.
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, OpensearchContainer<?> container) {
+    protected Optional<String> resolveProperty(String propertyName, OpenSearchContainer<?> container) {
         if (RESOLVABLE_PROPERTIES.contains(propertyName)) {
             return Optional.of(container.getHttpHostAddress());
         }

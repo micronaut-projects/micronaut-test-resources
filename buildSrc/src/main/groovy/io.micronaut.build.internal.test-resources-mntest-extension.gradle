@@ -1,7 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.test-resources-simple-module'
     id 'io.micronaut.build.internal.test-fixtures'
-    id "io.micronaut.build.internal.kotlin-base"
 }
 
 components.java.withVariantsFromConfiguration(configurations.testFixturesApiElements) { skip() }

@@ -16,7 +16,7 @@
 package io.micronaut.testresources.server;
 
 import io.micronaut.core.annotation.Introspected;
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Stores metadata about a running test container.

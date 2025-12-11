@@ -1,8 +1,8 @@
 package io.micronaut.testresources.server
 
 import io.micronaut.context.annotation.Property
-import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.annotation.Get
+import org.jspecify.annotations.Nullable
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.spock.annotation.MicronautTest

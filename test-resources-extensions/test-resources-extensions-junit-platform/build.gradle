@@ -16,7 +16,11 @@ testing {
             dependencies {
                 implementation project(project.path)
                 implementation(testFixtures(project(project.path)))
-                implementation(mnTest.micronaut.test.spock)
+                implementation(mnTest.micronaut.test.spock) {
+                    // temporary fix because Micronaut Test not yet compiled with Spock groovy 5
+                    exclude group: 'org.spockframewoek'
+                }
+                implementation(libs.spock)
                 compileOnly(mn.micronaut.inject.groovy)
             }
             targets.all {

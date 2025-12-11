@@ -46,7 +46,7 @@ jansi = "2.4.2"
 
 # Managed versions appear in the BOM
 managed-opensearch-testcontainers = "3.0.2"
-managed-testcontainers = "1.21.3"
+managed-testcontainers = "2.0.2"
 managed-testcontainers-redis = "1.6.4"
 
 # Transitive dependencies upgrades
@@ -57,29 +57,29 @@ commons-compress="1.28.0"
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
 
 managed-opensearch-testcontainers = { module = "org.opensearch:opensearch-testcontainers", version.ref = "managed-opensearch-testcontainers" }
-managed-solr-testcontainers = { module = "org.testcontainers:solr", version.ref = "managed-testcontainers" }
+managed-solr-testcontainers = { module = "org.testcontainers:testcontainers-solr", version.ref = "managed-testcontainers" }
 
 
 managed-testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "managed-testcontainers" }
-managed-testcontainers-consul = { module = "org.testcontainers:consul", version.ref = "managed-testcontainers" }
-managed-testcontainers-elasticsearch = { module = "org.testcontainers:elasticsearch", version.ref = "managed-testcontainers" }
-managed-testcontainers-jdbc = { module = "org.testcontainers:jdbc", version.ref = "managed-testcontainers" }
-managed-testcontainers-hivemq = { module = "org.testcontainers:hivemq", version.ref = "managed-testcontainers" }
-managed-testcontainers-kafka = { module = "org.testcontainers:kafka", version.ref = "managed-testcontainers" }
-managed-testcontainers-localstack = { module = "org.testcontainers:localstack", version.ref = "managed-testcontainers" }
-managed-testcontainers-mariadb = { module = "org.testcontainers:mariadb", version.ref = "managed-testcontainers" }
-managed-testcontainers-mongodb = { module = "org.testcontainers:mongodb", version.ref = "managed-testcontainers" }
-managed-testcontainers-mssql = { module = "org.testcontainers:mssqlserver", version.ref = "managed-testcontainers" }
-managed-testcontainers-mysql = { module = "org.testcontainers:mysql", version.ref = "managed-testcontainers" }
-managed-testcontainers-neo4j = { module = "org.testcontainers:neo4j", version.ref = "managed-testcontainers" }
-managed-testcontainers-opensearch = { module = "org.testcontainers:oracle-xe", version.ref = "managed-testcontainers" }
-managed-testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version.ref = "managed-testcontainers" }
-managed-testcontainers-oracle-free = { module = "org.testcontainers:oracle-free", version.ref = "managed-testcontainers" }
-managed-testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "managed-testcontainers" }
-managed-testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version.ref = "managed-testcontainers" }
+managed-testcontainers-consul = { module = "org.testcontainers:testcontainers-consul", version.ref = "managed-testcontainers" }
+managed-testcontainers-elasticsearch = { module = "org.testcontainers:testcontainers-elasticsearch", version.ref = "managed-testcontainers" }
+managed-testcontainers-jdbc = { module = "org.testcontainers:testcontainers-jdbc", version.ref = "managed-testcontainers" }
+managed-testcontainers-hivemq = { module = "org.testcontainers:testcontainers-hivemq", version.ref = "managed-testcontainers" }
+managed-testcontainers-kafka = { module = "org.testcontainers:testcontainers-kafka", version.ref = "managed-testcontainers" }
+managed-testcontainers-localstack = { module = "org.testcontainers:testcontainers-localstack", version.ref = "managed-testcontainers" }
+managed-testcontainers-mariadb = { module = "org.testcontainers:testcontainers-mariadb", version.ref = "managed-testcontainers" }
+managed-testcontainers-mongodb = { module = "org.testcontainers:testcontainers-mongodb", version.ref = "managed-testcontainers" }
+managed-testcontainers-mssql = { module = "org.testcontainers:testcontainers-mssqlserver", version.ref = "managed-testcontainers" }
+managed-testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql", version.ref = "managed-testcontainers" }
+managed-testcontainers-neo4j = { module = "org.testcontainers:testcontainers-neo4j", version.ref = "managed-testcontainers" }
+managed-testcontainers-opensearch = { module = "org.testcontainers:testcontainers-oracle-xe", version.ref = "managed-testcontainers" }
+managed-testcontainers-oracle-xe = { module = "org.testcontainers:testcontainers-oracle-xe", version.ref = "managed-testcontainers" }
+managed-testcontainers-oracle-free = { module = "org.testcontainers:testcontainers-oracle-free", version.ref = "managed-testcontainers" }
+managed-testcontainers-postgres = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "managed-testcontainers" }
+managed-testcontainers-rabbitmq = { module = "org.testcontainers:testcontainers-rabbitmq", version.ref = "managed-testcontainers" }
 managed-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "managed-testcontainers-redis" }
-managed-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "managed-testcontainers" }
-managed-testcontainers-vault = { module = "org.testcontainers:vault", version.ref = "managed-testcontainers" }
+managed-testcontainers-r2dbc = { module = "org.testcontainers:testcontainers-r2dbc", version.ref = "managed-testcontainers" }
+managed-testcontainers-vault = { module = "org.testcontainers:testcontainers-vault", version.ref = "managed-testcontainers" }
 
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }

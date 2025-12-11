@@ -3,7 +3,6 @@ package io.micronaut.testresources.localstack.sns
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.localstack.AbstractLocalStackSpec
 import jakarta.inject.Inject
-import org.junit.Assert
 import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sns.model.Topic
 
@@ -21,7 +20,7 @@ class LocalStackSNSTest extends AbstractLocalStackSpec {
 
         then:
         List<Topic> topics = client.listTopics().topics()
-        Assert.assertEquals(1, topics.size())
-        Assert.assertTrue(topics[0].topicArn().endsWith("test-topic"))
+        topics.size() == 1
+        topics[0].topicArn().endsWith("test-topic")
     }
 }

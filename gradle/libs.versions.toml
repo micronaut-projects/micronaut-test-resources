@@ -43,6 +43,7 @@ vertx-client = "4.5.22"
 amazon-awssdk-v1 = "1.12.794"
 amazon-awssdk-v2 = "2.40.6"
 jansi = "2.4.2"
+micronaut-test = "5.0.0-M1"
 
 # Managed versions appear in the BOM
 managed-opensearch-testcontainers = "3.0.2"

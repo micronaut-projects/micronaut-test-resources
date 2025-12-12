@@ -1,9 +1,10 @@
 package io.micronaut.testresources.hivemq
 
-import groovy.test.NotYetImplemented
+
 import io.micronaut.context.ApplicationContext
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
+import spock.lang.PendingFeature
 
 @MicronautTest
 class HiveMQNotStartedTest extends AbstractHiveMQSpec {
@@ -11,7 +12,7 @@ class HiveMQNotStartedTest extends AbstractHiveMQSpec {
     @Inject
     ApplicationContext applicationContext
 
-    @NotYetImplemented
+    @PendingFeature
     def "doesn't start a HiveMQ container if bean is not requested"() {
 
         when:

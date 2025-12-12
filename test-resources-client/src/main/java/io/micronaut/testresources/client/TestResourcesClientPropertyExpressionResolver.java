@@ -15,7 +15,6 @@
  */
 package io.micronaut.testresources.client;
 
-import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
@@ -42,30 +41,34 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         super(new DelegateResolver());
     }
 
-    private static TestResourcesClient createClient(Environment env) {
+    private static TestResourcesClient createClient() {
         return TestResourcesClientFactory.findByConvention().orElse(NoOpClient.INSTANCE);
     }
 
     private static final class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {
-        private final Map<Environment, TestResourcesClient> clients = new ConcurrentHashMap<>();
+
+        // Using a dummy hashmap for convenience
+        private final Map<Boolean, TestResourcesClient> clientHolder = new ConcurrentHashMap<>();
+
+        private TestResourcesClient client() {
+            return clientHolder.computeIfAbsent(Boolean.TRUE, unused -> createClient());
+        }
 
         @Override
         public <T> Optional<T> resolve(PropertyResolver propertyResolver,
                                        ConversionService conversionService,
                                        String expression,
                                        Class<T> requiredType) {
-            if (propertyResolver instanceof Environment) {
-                TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
-                Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
-                Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
-                Optional<String> resolved = callClient(expression, client, props, properties);
-                if (resolved.isPresent()) {
-                    String resolvedValue = resolved.get();
-                    LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
-                    return conversionService.convert(resolvedValue, requiredType);
-                } else if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Test resources cannot resolve expression '{}'", expression);
-                }
+            TestResourcesClient client = client();
+            Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
+            Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+            Optional<String> resolved = callClient(expression, client, props, properties);
+            if (resolved.isPresent()) {
+                String resolvedValue = resolved.get();
+                LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
+                return conversionService.convert(resolvedValue, requiredType);
+            } else if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Test resources cannot resolve expression '{}'", expression);
             }
             return Optional.empty();
         }
@@ -94,10 +97,9 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         @Override
-        public void close() throws Exception {
-            for (TestResourcesClient client : clients.values()) {
-                client.closeAll();
-            }
+        public synchronized void close() {
+            client().closeAll();
+            clientHolder.clear();
         }
     }
 }

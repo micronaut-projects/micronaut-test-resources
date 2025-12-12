@@ -15,8 +15,8 @@
  */
 package io.micronaut.testresources.client;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Get;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.testresources.core.TestResourcesResolver;
 

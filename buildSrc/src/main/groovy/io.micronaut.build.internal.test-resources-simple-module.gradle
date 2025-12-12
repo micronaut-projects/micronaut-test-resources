@@ -7,3 +7,13 @@ plugins {
     id 'io.micronaut.build.internal.test-resources-base'
     id 'io.micronaut.build.internal.base-module'
 }
+
+micronautBuild {
+    descriptor {
+        parentModuleId = "io.micronaut.testresources:micronaut-test-resources-core"
+    }
+    binaryCompatibility {
+        // preparing major version
+        enabledAfter("3.0.0")
+    }
+}

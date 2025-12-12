@@ -10,7 +10,11 @@ dependencies {
     api(project(':micronaut-test-resources-core'))
     api(project(':micronaut-test-resources-testcontainers'))
     api(libs.managed.testcontainers.redis)
-
+    constraints {
+        implementation("com.fasterxml.jackson.core:jackson-core:2.15.0"){
+            because("Older versions has CVE Vulnerability CVE-2025-52999")
+        }
+    }
     testImplementation(project(":micronaut-test-resources-embedded"))
     testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
     testImplementation(mnRedis.micronaut.redis.lettuce)

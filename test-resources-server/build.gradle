@@ -28,7 +28,8 @@ dependencies {
     testFixturesImplementation(projects.micronautTestResourcesTestcontainers)
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautTestResourcesClient)
-    testRuntimeOnly(projects.micronautTestResourcesKafka)
+    // TODO: MN5 Requires Micronaut Kafka release
+//    testRuntimeOnly(projects.micronautTestResourcesKafka)
 
     // For logback conversion
     aotPlugins(mnLogging.logback.classic)

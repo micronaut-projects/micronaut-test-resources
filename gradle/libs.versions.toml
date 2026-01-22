@@ -37,7 +37,7 @@ micronaut-reactor = "4.0.0-M1"
 micronaut-redis = "6.9.0"
 micronaut-security = "4.16.0"
 micronaut-serde = "3.0.0-M2"
-micronaut-sql = "7.0.0"
+micronaut-sql = "7.0.0-M4"
 micronaut-test = "5.0.0-M2"
 spock = "2.4-M7-groovy-5.0"
 vertx-client = "4.5.22"
@@ -111,7 +111,7 @@ vertx-mysql = { module = "io.vertx:vertx-mysql-client", version.ref = "vertx.cli
 vertx-mssql = { module = "io.vertx:vertx-mssql-client", version.ref = "vertx.client" }
 vertx-postgres = { module = "io.vertx:vertx-pg-client", version.ref = "vertx.client" }
 vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.client" }
-scram = { module = "com.ongres.scram:client", version = "2.1" }
+scram = { module = "com.ongres.scram:scram-client", version = "3.2" }
 spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
 
 amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1" }

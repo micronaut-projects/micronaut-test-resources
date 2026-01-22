@@ -12,7 +12,7 @@ class CustomKafkaImageTest extends AbstractKafkaSpec {
     @Override
     Map<String, String> getProperties() {
         super.properties + [
-                "test-resources.containers.kafka.image-name": "confluentinc/cp-kafka:6.2.2"
+                 "test-resources.containers.kafka.image-name": "apache/kafka"
         ]
     }
 
@@ -29,7 +29,7 @@ class CustomKafkaImageTest extends AbstractKafkaSpec {
         result.block() == "oh yeah!"
         with(TestContainers.listByScope("kafka").get(Scope.of("kafka"))) {
             size() == 1
-            get(0).dockerImageName == "confluentinc/cp-kafka:6.2.2"
+            get(0).dockerImageName == "apache/kafka:latest"
         }
     }
 

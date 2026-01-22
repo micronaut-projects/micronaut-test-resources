@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-Generated: 2026-01-20T11:56:32Z
-Commit: 8d7a43fd
+Generated: 2026-01-22T12:14:22Z
+Commit: da5801d0
 Branch: kafka-native
 
 ## OVERVIEW
@@ -11,19 +11,33 @@ Micronaut Test Resources: Gradle multi-module suite providing automatic test res
 ```
 ./
 ├── buildSrc/                             # Internal Gradle build logic
-├── test-resources-core/                  # Resolver SPI and core model
-├── test-resources-testcontainers/        # Base abstractions for container-backed providers
-├── test-resources-server/                # Micronaut app (sole main) serving test resources remotely
-├── test-resources-client/                # Client API to the server
+├── config/                               # Repo configs
+├── gradle/                               # Gradle wrapper and scripts
+├── src/                                  # Project docs under src/main/docs/ (Micronaut site)
+├── test-resources-bom/                   # Dependency BOM module
 ├── test-resources-build-tools/           # Build-time helpers (classpath/server utils)
-├── test-resources-extensions/
-│   └── test-resources-extensions-junit-platform/  # JUnit Platform integration; Spock/Kotest-style tests
-├── test-resources-jdbc/                  # Aggregator: mysql/postgresql/mariadb/mssql/oracle-*
-├── test-resources-r2dbc/                 # Aggregator: r2dbc-* (core + db variants + pool)
+├── test-resources-client/                # Client API to the server
+├── test-resources-control-panel/         # Control Panel UI for server
+├── test-resources-core/                  # Resolver SPI and core model
+├── test-resources-elasticsearch/         # Elasticsearch provider
+├── test-resources-embedded/              # Embedded/in-process mode
+├── test-resources-extensions/            # Aggregator: core + JUnit Platform adapter
+├── test-resources-hashicorp-consul/      # Consul provider
+├── test-resources-hashicorp-vault/       # Vault provider
 ├── test-resources-hibernate-reactive/    # Aggregator: HR core + db variants
+├── test-resources-hivemq/                # HiveMQ MQTT provider
+├── test-resources-jdbc/                  # Aggregator: mysql/postgresql/mariadb/mssql/oracle-*
+├── test-resources-kafka/                 # Kafka provider
 ├── test-resources-localstack/            # Aggregator: core + s3/sqs/sns/dynamodb
-├── test-resources-mongodb/ neo4j/ kafka/ redis/ rabbitmq/ hivemq/ opensearch/ solr/
-└── src/main/docs/                        # Project docs (Micronaut site generator)
+├── test-resources-mongodb/               # MongoDB provider
+├── test-resources-neo4j/                 # Neo4j provider
+├── test-resources-opensearch/            # OpenSearch provider
+├── test-resources-r2dbc/                 # Aggregator: r2dbc-* (core + db variants + pool)
+├── test-resources-rabbitmq/              # RabbitMQ provider
+├── test-resources-redis/                 # Redis provider
+├── test-resources-server/                # Micronaut app (sole main) serving test resources remotely
+├── test-resources-solr/                  # Solr provider
+└── test-resources-testcontainers/        # Base abstractions for container-backed providers
 ```
 
 ## WHERE TO LOOK

@@ -16,6 +16,6 @@ dependencies {
     testImplementation(mnRedis.micronaut.redis.lettuce)
 
     constraints {
-        implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
+        implementation("com.fasterxml.jackson.core:jackson-core:2.21.0")
     }
 }

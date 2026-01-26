@@ -16,7 +16,7 @@
 package io.micronaut.testresources.mariadb;
 
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
-import org.testcontainers.containers.MariaDBContainer;
+import org.testcontainers.mariadb.MariaDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * A test resource provider which will spawn a MariaDB test container.
  */
-public class MariaDBTestResourceProvider extends AbstractJdbcTestResourceProvider<MariaDBContainer<?>> {
+public class MariaDBTestResourceProvider extends AbstractJdbcTestResourceProvider<MariaDBContainer> {
     public static final String DISPLAY_NAME = "MariaDB";
 
     @Override
@@ -43,8 +43,8 @@ public class MariaDBTestResourceProvider extends AbstractJdbcTestResourceProvide
     }
 
     @Override
-    protected MariaDBContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new MariaDBContainer<>(imageName);
+    protected MariaDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new MariaDBContainer(imageName);
     }
 
 }

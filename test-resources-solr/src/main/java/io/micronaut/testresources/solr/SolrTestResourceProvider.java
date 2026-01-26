@@ -16,7 +16,7 @@
 package io.micronaut.testresources.solr;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.SolrContainer;
+import org.testcontainers.solr.SolrContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.utility.DockerImageName;
 

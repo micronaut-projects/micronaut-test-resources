@@ -19,8 +19,8 @@ import io.micronaut.testresources.mssql.MSSQLTestResourceProvider;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MSSQLR2DBCDatabaseContainer;
-import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.mssqlserver.MSSQLR2DBCDatabaseContainer;
+import org.testcontainers.mssqlserver.MSSQLServerContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * A test resource provider for reactive PostgreSQL.
  */
-public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<MSSQLServerContainer<?>> {
+public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<MSSQLServerContainer> {
 
     public static final String DISPLAY_NAME = "MSSQL (R2DBC)";
 
@@ -51,14 +51,14 @@ public class R2DBCMSSQLTestResourceProvider extends AbstractR2DBCTestResourcePro
     @Override
     protected Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container) {
         if (container instanceof MSSQLServerContainer) {
-            MSSQLServerContainer<?> mssql = (MSSQLServerContainer<?>) container;
+            MSSQLServerContainer mssql = (MSSQLServerContainer) container;
             return Optional.of(MSSQLR2DBCDatabaseContainer.getOptions(mssql));
         }
         return Optional.empty();
     }
 
     @Override
-    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+    protected MSSQLServerContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return MSSQLTestResourceProvider.createMSSQLContainer(imageName, getSimpleName(), testResourcesConfig);
     }
 

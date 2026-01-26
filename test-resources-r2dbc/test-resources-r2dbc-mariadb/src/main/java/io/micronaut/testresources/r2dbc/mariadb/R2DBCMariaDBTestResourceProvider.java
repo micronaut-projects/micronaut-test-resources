@@ -18,8 +18,8 @@ package io.micronaut.testresources.r2dbc.mariadb;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MariaDBContainer;
-import org.testcontainers.containers.MariaDBR2DBCDatabaseContainer;
+import org.testcontainers.mariadb.MariaDBContainer;
+import org.testcontainers.mariadb.MariaDBR2DBCDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * A test resource provider for reactive MariaDB.
  */
-public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceProvider<MariaDBContainer<?>> {
+public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceProvider<MariaDBContainer> {
     public static final String DISPLAY_NAME = "MariaDB (R2DBC)";
 
     @Override
@@ -49,14 +49,14 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
     @Override
     protected Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container) {
         if (container instanceof MariaDBContainer) {
-            return Optional.of(MariaDBR2DBCDatabaseContainer.getOptions((MariaDBContainer<?>) container));
+            return Optional.of(MariaDBR2DBCDatabaseContainer.getOptions((MariaDBContainer) container));
         }
         return Optional.empty();
     }
 
     @Override
-    protected MariaDBContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new MariaDBContainer<>(imageName);
+    protected MariaDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new MariaDBContainer(imageName);
     }
 
 }

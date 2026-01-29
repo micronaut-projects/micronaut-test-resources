@@ -82,6 +82,7 @@ include 'test-resources-solr'
 include 'test-resources-testcontainers'
 include 'test-resources-hashicorp-vault'
 include 'test-resources-hashicorp-consul'
+include 'test-resources-infinispan'
 
 extensionModules.each {
     String projectName = "test-resources-extensions-$it"
@@ -115,6 +116,7 @@ micronautBuild {
     useStandardizedProjectNames = true
     importMicronautCatalog()
     importMicronautCatalog("micronaut-aws")
+    importMicronautCatalog("micronaut-cache")
     importMicronautCatalog("micronaut-control-panel")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-elasticsearch")

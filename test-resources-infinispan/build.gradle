@@ -9,7 +9,7 @@ Provides support for launching an Infinispan test container.
 dependencies {
     api(projects.micronautTestResourcesCore)
     api(projects.micronautTestResourcesTestcontainers)
-    api("org.infinispan:infinispan-server-testdriver-core:${mnCache.versions.infinispan.get()}")
+    api(mnCache.versions.infinispan.map {"org.infinispan:infinispan-server-testdriver-core:$it" })
 
     testImplementation(projects.micronautTestResourcesEmbedded)
     testImplementation(testFixtures(projects.micronautTestResourcesTestcontainers))

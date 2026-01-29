@@ -1,7 +1,7 @@
 package io.micronaut.testresources.infinispan
 
 import io.micronaut.cache.CacheManager
-import io.micronaut.context.annotation.Value;
+import io.micronaut.context.annotation.Value
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import org.infinispan.testcontainers.InfinispanContainer

@@ -1,6 +1,6 @@
 package io.micronaut.testresources.infinispan
 
-import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec;
+import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 
 abstract class AbstractInfinispanSpec extends AbstractTestContainersSpec {
 

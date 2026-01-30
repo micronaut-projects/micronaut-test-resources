@@ -1,0 +1,10 @@
+infinispan:
+  enabled: true
+  client:
+    hotrod:
+      force-return-values: true
+      security:
+        authentication:
+          realm: default
+          sasl-mechanism: DIGEST-MD5
+          server-name: infinispan

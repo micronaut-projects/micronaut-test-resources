@@ -1,0 +1,16 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for launching a Hazelcast test container.
+"""
+
+dependencies {
+    api(projects.micronautTestResourcesCore)
+    api(projects.micronautTestResourcesTestcontainers)
+
+    testImplementation(projects.micronautTestResourcesEmbedded)
+    testImplementation(testFixtures(projects.micronautTestResourcesTestcontainers))
+    testImplementation(mnCache.micronaut.cache.hazelcast)
+}

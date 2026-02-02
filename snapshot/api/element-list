@@ -9,6 +9,7 @@ io.micronaut.testresources.controlpanel
 io.micronaut.testresources.core
 io.micronaut.testresources.embedded
 io.micronaut.testresources.hashicorp.vault
+io.micronaut.testresources.hazelcast
 io.micronaut.testresources.hibernate.reactive.core
 io.micronaut.testresources.hibernate.reactive.mariadb
 io.micronaut.testresources.hibernate.reactive.mssql

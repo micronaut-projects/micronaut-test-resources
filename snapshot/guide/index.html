@@ -125,9 +125,11 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>4.10</strong><span>Redis</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>4.11</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>4.11</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.12</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>4.12</strong><span>Hashicorp Vault</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.13</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
         
@@ -1105,7 +1107,38 @@ This provider can be configured with a variety of parameters:</p>
 </ul>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>4.11 Hashicorp Vault</h2>
+<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>4.11 Hazelcast</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-hazelcast.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Hazelcast support</p>
+</div>
+<div class="paragraph">
+<p>Hazelcast support will automatically start a Hazelcast container and provide the values of the <code>hazelcast.client.network.addresses</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.hazelcast.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.hazelcast.image-tag</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="hazelcast-client-network-addresses" class="dlist">
+<dl>
+<dt class="hdlist1"><code>hazelcast.client.network.addresses</code></dt>
+<dd>
+<p>The list of Hazelcast client addresses (host:port) to connect to.</p>
+</dd>
+</dl>
+</div>
+
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>4.12 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -1205,7 +1238,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.12 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.13 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>

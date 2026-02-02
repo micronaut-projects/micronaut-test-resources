@@ -73,7 +73,7 @@ public class HazelcastTestResourceProvider extends AbstractTestContainersProvide
     @Override
     protected Optional<String> resolveProperty(String propertyName, GenericContainer<?> container) {
         if (HAZELCAST_ADDRESSES.equals(propertyName)) {
-            String address = container.getHost() + ":" + container.getMappedPort(DEFAULT_PORT));
+            String address = container.getHost() + ":" + container.getMappedPort(DEFAULT_PORT);
             return Optional.of(address);
         }
         return Optional.empty();

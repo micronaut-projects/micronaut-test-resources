@@ -25,6 +25,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Provides a TestContainers-based resource provider for Hazelcast, allowing integration tests
+ * to use Hazelcast instances within isolated environments.
+ *
+ * This class extends the AbstractTestContainersProvider, leveraging the capabilities of
+ * TestContainers to create and manage Hazelcast Docker containers. It resolves Hazelcast-related
+ * properties required by the application's integration tests.
+ */
 public class HazelcastTestResourceProvider extends AbstractTestContainersProvider<GenericContainer<?>> {
 
     public static final String HAZELCAST_ADDRESSES = "hazelcast.client.network.addresses";
@@ -65,7 +73,7 @@ public class HazelcastTestResourceProvider extends AbstractTestContainersProvide
     @Override
     protected Optional<String> resolveProperty(String propertyName, GenericContainer<?> container) {
         if (HAZELCAST_ADDRESSES.equals(propertyName)) {
-            String address = "%s:%d".formatted(container.getHost(), container.getMappedPort(DEFAULT_PORT));
+            String address = container.getHost() + ":" + container.getMappedPort(DEFAULT_PORT));
             return Optional.of(address);
         }
         return Optional.empty();

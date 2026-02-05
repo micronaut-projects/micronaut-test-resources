@@ -75,7 +75,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
         if (configuredDbName != null) {
             this.dbName = configuredDbName.toString();
         }
-        return new MongoDBContainer(imageName);
+        return new MongoDBContainer(imageName).withReplicaSet();
     }
 
     @Override

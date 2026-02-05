@@ -32,7 +32,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
 
     public static final String MONGODB_SERVERS = "mongodb.servers";
     public static final String MONGODB_SERVER_URI = "mongodb.uri";
-    public static final String DEFAULT_IMAGE = "mongo:5";
+    public static final String DEFAULT_IMAGE = "mongo:latest";
     public static final String SIMPLE_NAME = "mongodb";
     public static final String DB_NAME = "containers." + SIMPLE_NAME + ".db-name";
     public static final String DISPLAY_NAME = "MongoDB";

@@ -16,7 +16,7 @@
 package io.micronaut.testresources.mongodb;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.mongodb.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
@@ -75,7 +75,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
         if (configuredDbName != null) {
             this.dbName = configuredDbName.toString();
         }
-        return new MongoDBContainer(imageName);
+        return new MongoDBContainer(imageName).withReplicaSet();
     }
 
     @Override

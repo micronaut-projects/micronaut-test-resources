@@ -16,7 +16,7 @@
 package io.micronaut.testresources.hibernate.reactive.mariadb;
 
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
-import org.testcontainers.containers.MariaDBContainer;
+import org.testcontainers.mariadb.MariaDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * A test resource provider which will spawn a MariaDB test container.
  */
-public class HibernateReactiveMariaDBTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MariaDBContainer<?>> {
+public class HibernateReactiveMariaDBTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MariaDBContainer> {
     public static final String DISPLAY_NAME = "MariaDB (Hibernate reactive)";
 
     @Override
@@ -43,8 +43,8 @@ public class HibernateReactiveMariaDBTestResourceProvider extends AbstractHibern
     }
 
     @Override
-    protected MariaDBContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new MariaDBContainer<>(imageName);
+    protected MariaDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new MariaDBContainer(imageName);
     }
 
 }

@@ -18,8 +18,8 @@ package io.micronaut.testresources.r2dbc.mysql;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.containers.MySQLR2DBCDatabaseContainer;
+import org.testcontainers.mysql.MySQLContainer;
+import org.testcontainers.mysql.MySQLR2DBCDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * A test resource provider for reactive MySQL.
  */
-public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<MySQLContainer<?>> {
+public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<MySQLContainer> {
     public static final String DISPLAY_NAME = "MySQL (R2DBC)";
 
     @Override
@@ -49,14 +49,14 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
     @Override
     protected Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container) {
         if (container instanceof MySQLContainer) {
-            return Optional.of(MySQLR2DBCDatabaseContainer.getOptions((MySQLContainer<?>) container));
+            return Optional.of(MySQLR2DBCDatabaseContainer.getOptions((MySQLContainer) container));
         }
         return Optional.empty();
     }
 
     @Override
-    protected MySQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new MySQLContainer<>(imageName);
+    protected MySQLContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new MySQLContainer(imageName);
     }
 
 }

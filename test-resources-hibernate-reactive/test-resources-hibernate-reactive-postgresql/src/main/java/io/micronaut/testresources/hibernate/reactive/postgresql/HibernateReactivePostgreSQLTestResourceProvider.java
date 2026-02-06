@@ -16,7 +16,7 @@
 package io.micronaut.testresources.hibernate.reactive.postgresql;
 
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * A test resource provider which will spawn a PostgreSQL test container.
  */
-public class HibernateReactivePostgreSQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<PostgreSQLContainer<?>> {
+public class HibernateReactivePostgreSQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<PostgreSQLContainer> {
     public static final String DISPLAY_NAME = "PostgreSQL (Hibernate reactive)";
 
     @Override
@@ -43,8 +43,8 @@ public class HibernateReactivePostgreSQLTestResourceProvider extends AbstractHib
     }
 
     @Override
-    protected PostgreSQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new PostgreSQLContainer<>(imageName);
+    protected PostgreSQLContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new PostgreSQLContainer(imageName);
     }
 
 }

@@ -16,7 +16,7 @@
 package io.micronaut.testresources.postgres;
 
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * A test resource provider which will spawn a MySQL test container.
  */
-public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<PostgreSQLContainer<?>> {
+public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<PostgreSQLContainer> {
     private static final List<String> SUPPORTED_DB_TYPES = Collections.unmodifiableList(
         Arrays.asList("postgresql", "postgres", "pg")
     );
@@ -54,8 +54,8 @@ public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProv
     }
 
     @Override
-    protected PostgreSQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new PostgreSQLContainer<>(imageName);
+    protected PostgreSQLContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new PostgreSQLContainer(imageName);
     }
 
 }

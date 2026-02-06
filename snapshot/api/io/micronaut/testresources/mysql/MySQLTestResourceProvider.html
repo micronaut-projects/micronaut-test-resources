@@ -78,7 +78,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getSimpleName()" tabindex="0">getSimpleName()</a></li>
 <li><a href="#getDefaultImageName()" tabindex="0">getDefaultImageName()</a></li>
 <li><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" tabindex="0">createContainer(DockerImageName, Map, Map)</a></li>
-<li><a href="#configureContainer(org.testcontainers.containers.MySQLContainer,java.util.Map,java.util.Map)" tabindex="0">configureContainer(MySQLContainer, Map, Map)</a></li>
+<li><a href="#configureContainer(org.testcontainers.mysql.MySQLContainer,java.util.Map,java.util.Map)" tabindex="0">configureContainer(MySQLContainer, Map, Map)</a></li>
 <li><a href="#getResolvableProperties(java.util.Map,java.util.Map)" tabindex="0">getResolvableProperties(Map, Map)</a></li>
 <li><a href="#resolveDbSpecificProperty(java.lang.String,org.testcontainers.containers.JdbcDatabaseContainer)" tabindex="0">resolveDbSpecificProperty(String, JdbcDatabaseContainer)</a></li>
 </ol>
@@ -91,8 +91,8 @@ loadScripts(document, 'script');</script>
 <h1 title="Class MySQLTestResourceProvider" class="title">Class MySQLTestResourceProvider</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">io.micronaut.testresources.testcontainers.AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;
-<div class="inheritance"><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;
+<div class="inheritance"><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">io.micronaut.testresources.testcontainers.AbstractTestContainersProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;
+<div class="inheritance"><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;
 <div class="inheritance">io.micronaut.testresources.mysql.MySQLTestResourceProvider</div>
 </div>
 </div>
@@ -105,7 +105,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MySQLTestResourceProvider</span>
-<span class="extends-implements">extends <a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;</span></div>
+<span class="extends-implements">extends <a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;</span></div>
 <div class="block">A test resource provider which will spawn a MySQL test container.</div>
 </div>
 </section>
@@ -175,11 +175,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#configureContainer(org.testcontainers.containers.MySQLContainer,java.util.Map,java.util.Map)" class="member-name-link">configureContainer</a><wbr>(org.testcontainers.containers.MySQLContainer&lt;?&gt;&nbsp;container,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#configureContainer(org.testcontainers.mysql.MySQLContainer,java.util.Map,java.util.Map)" class="member-name-link">configureContainer</a><wbr>(org.testcontainers.mysql.MySQLContainer&nbsp;container,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.containers.MySQLContainer<wbr>&lt;?&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.mysql.MySQLContainer</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" class="member-name-link">createContainer</a><wbr>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
@@ -389,7 +389,7 @@ for debugging purposes.</div>
 <div class="block">Returns the name of the resource resolver, for example "kafka" or "mysql".</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getSimpleName()">getSimpleName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getSimpleName()">getSimpleName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>the name of the resolver</dd>
 </dl>
@@ -405,7 +405,7 @@ for debugging purposes.</div>
 <div class="block">Returns the default image name.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getDefaultImageName()">getDefaultImageName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getDefaultImageName()">getDefaultImageName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>the default image name.</dd>
 </dl>
@@ -416,14 +416,14 @@ for debugging purposes.</div>
 <section class="detail" id="createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">
 <h3>createContainer</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.testcontainers.containers.MySQLContainer&lt;?&gt;</span>&nbsp;<span class="element-name">createContainer</span><wbr><span class="parameters">(org.testcontainers.utility.DockerImageName&nbsp;imageName,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.testcontainers.mysql.MySQLContainer</span>&nbsp;<span class="element-name">createContainer</span><wbr><span class="parameters">(org.testcontainers.utility.DockerImageName&nbsp;imageName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">AbstractTestContainersProvider</a></code></span></div>
 <div class="block">Creates the test container.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>imageName</code> - the docker image name</dd>
 <dd><code>requestedProperties</code> - the resolved properties</dd>
@@ -435,15 +435,15 @@ for debugging purposes.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="configureContainer(org.testcontainers.containers.MySQLContainer,java.util.Map,java.util.Map)">
+<section class="detail" id="configureContainer(org.testcontainers.mysql.MySQLContainer,java.util.Map,java.util.Map)">
 <h3>configureContainer</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configureContainer</span><wbr><span class="parameters">(org.testcontainers.containers.MySQLContainer&lt;?&gt;&nbsp;container,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configureContainer</span><wbr><span class="parameters">(org.testcontainers.mysql.MySQLContainer&nbsp;container,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="../jdbc/AbstractJdbcTestResourceProvider.html#configureContainer(T,java.util.Map,java.util.Map)">configureContainer</a></code>&nbsp;in class&nbsp;<code><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;</code></dd>
+<dd><code><a href="../jdbc/AbstractJdbcTestResourceProvider.html#configureContainer(T,java.util.Map,java.util.Map)">configureContainer</a></code>&nbsp;in class&nbsp;<code><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -464,7 +464,7 @@ values are those property entries resolved.</div>
 <dt>Specified by:</dt>
 <dd><code><a href="../core/TestResourcesResolver.html#getResolvableProperties(java.util.Map,java.util.Map)">getResolvableProperties</a></code>&nbsp;in interface&nbsp;<code><a href="../core/TestResourcesResolver.html" title="interface in io.micronaut.testresources.core">TestResourcesResolver</a></code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="../jdbc/AbstractJdbcTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)">getResolvableProperties</a></code>&nbsp;in class&nbsp;<code><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;</code></dd>
+<dd><code><a href="../jdbc/AbstractJdbcTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)">getResolvableProperties</a></code>&nbsp;in class&nbsp;<code><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>propertyEntries</code> - the property entries</dd>
 <dd><code>testResourcesConfig</code> - the test resources configuration</dd>
@@ -485,7 +485,7 @@ values are those property entries resolved.</div>
 a particular JDBC implementation.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="../jdbc/AbstractJdbcTestResourceProvider.html#resolveDbSpecificProperty(java.lang.String,org.testcontainers.containers.JdbcDatabaseContainer)">resolveDbSpecificProperty</a></code>&nbsp;in class&nbsp;<code><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.containers.MySQLContainer&lt;?&gt;&gt;</code></dd>
+<dd><code><a href="../jdbc/AbstractJdbcTestResourceProvider.html#resolveDbSpecificProperty(java.lang.String,org.testcontainers.containers.JdbcDatabaseContainer)">resolveDbSpecificProperty</a></code>&nbsp;in class&nbsp;<code><a href="../jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a>&lt;org.testcontainers.mysql.MySQLContainer&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>propertyName</code> - the property to resolve</dd>
 <dd><code>container</code> - the started container</dd>

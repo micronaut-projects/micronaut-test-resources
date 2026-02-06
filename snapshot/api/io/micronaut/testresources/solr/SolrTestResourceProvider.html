@@ -78,7 +78,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getSimpleName()" tabindex="0">getSimpleName()</a></li>
 <li><a href="#getDefaultImageName()" tabindex="0">getDefaultImageName()</a></li>
 <li><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" tabindex="0">createContainer(DockerImageName, Map, Map)</a></li>
-<li><a href="#resolveProperty(java.lang.String,org.testcontainers.containers.SolrContainer)" tabindex="0">resolveProperty(String, SolrContainer)</a></li>
+<li><a href="#resolveProperty(java.lang.String,org.testcontainers.solr.SolrContainer)" tabindex="0">resolveProperty(String, SolrContainer)</a></li>
 <li><a href="#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" tabindex="0">shouldAnswer(String, Map, Map)</a></li>
 </ol>
 </li>
@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class SolrTestResourceProvider" class="title">Class SolrTestResourceProvider</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">io.micronaut.testresources.testcontainers.AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.SolrContainer&gt;
+<div class="inheritance"><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">io.micronaut.testresources.testcontainers.AbstractTestContainersProvider</a>&lt;org.testcontainers.solr.SolrContainer&gt;
 <div class="inheritance">io.micronaut.testresources.solr.SolrTestResourceProvider</div>
 </div>
 </div>
@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SolrTestResourceProvider</span>
-<span class="extends-implements">extends <a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.SolrContainer&gt;</span></div>
+<span class="extends-implements">extends <a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.solr.SolrContainer&gt;</span></div>
 <div class="block">A test resource provider which will spawn an OpenSearch test container.</div>
 </div>
 </section>
@@ -165,7 +165,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.containers.SolrContainer</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.solr.SolrContainer</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" class="member-name-link">createContainer</a><wbr>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
@@ -196,8 +196,8 @@ is able to support.</div>
 <div class="block">Returns the name of the resource resolver, for example "kafka" or "mysql".</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveProperty(java.lang.String,org.testcontainers.containers.SolrContainer)" class="member-name-link">resolveProperty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
- org.testcontainers.containers.SolrContainer&nbsp;container)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveProperty(java.lang.String,org.testcontainers.solr.SolrContainer)" class="member-name-link">resolveProperty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ org.testcontainers.solr.SolrContainer&nbsp;container)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">shouldAnswer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
@@ -382,7 +382,7 @@ for debugging purposes.</div>
 <div class="block">Returns the name of the resource resolver, for example "kafka" or "mysql".</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getSimpleName()">getSimpleName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.SolrContainer&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getSimpleName()">getSimpleName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.solr.SolrContainer&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>the name of the resolver</dd>
 </dl>
@@ -398,7 +398,7 @@ for debugging purposes.</div>
 <div class="block">Returns the default image name.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getDefaultImageName()">getDefaultImageName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.SolrContainer&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#getDefaultImageName()">getDefaultImageName</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.solr.SolrContainer&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>the default image name.</dd>
 </dl>
@@ -409,14 +409,14 @@ for debugging purposes.</div>
 <section class="detail" id="createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">
 <h3>createContainer</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.testcontainers.containers.SolrContainer</span>&nbsp;<span class="element-name">createContainer</span><wbr><span class="parameters">(org.testcontainers.utility.DockerImageName&nbsp;imageName,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.testcontainers.solr.SolrContainer</span>&nbsp;<span class="element-name">createContainer</span><wbr><span class="parameters">(org.testcontainers.utility.DockerImageName&nbsp;imageName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">AbstractTestContainersProvider</a></code></span></div>
 <div class="block">Creates the test container.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.SolrContainer&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)">createContainer</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.solr.SolrContainer&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>imageName</code> - the docker image name</dd>
 <dd><code>requestedProperties</code> - the resolved properties</dd>
@@ -428,14 +428,14 @@ for debugging purposes.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="resolveProperty(java.lang.String,org.testcontainers.containers.SolrContainer)">
+<section class="detail" id="resolveProperty(java.lang.String,org.testcontainers.solr.SolrContainer)">
 <h3>resolveProperty</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveProperty</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
- org.testcontainers.containers.SolrContainer&nbsp;container)</span></div>
+ org.testcontainers.solr.SolrContainer&nbsp;container)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#resolveProperty(java.lang.String,T)">resolveProperty</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.SolrContainer&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#resolveProperty(java.lang.String,T)">resolveProperty</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.solr.SolrContainer&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -454,7 +454,7 @@ provide a value if the requested container type is for MySQL, for
 example.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)">shouldAnswer</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.containers.SolrContainer&gt;</code></dd>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)">shouldAnswer</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.solr.SolrContainer&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>propertyName</code> - the property to resolve</dd>
 <dd><code>requestedProperties</code> - the resolved properties</dd>

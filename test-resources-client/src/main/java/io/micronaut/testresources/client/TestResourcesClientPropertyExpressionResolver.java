@@ -35,8 +35,6 @@ import static io.micronaut.testresources.core.PropertyResolverSupport.resolveReq
  * properties.
  */
 public class TestResourcesClientPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesClientPropertyExpressionResolver.class);
-
     public TestResourcesClientPropertyExpressionResolver() {
         super(new DelegateResolver());
     }
@@ -65,10 +63,10 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
             Optional<String> resolved = callClient(expression, client, props, properties);
             if (resolved.isPresent()) {
                 String resolvedValue = resolved.get();
-                LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
+                Holder.LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
                 return conversionService.convert(resolvedValue, requiredType);
-            } else if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Test resources cannot resolve expression '{}'", expression);
+            } else if (Holder.LOGGER.isDebugEnabled()) {
+                Holder.LOGGER.debug("Test resources cannot resolve expression '{}'", expression);
             }
             return Optional.empty();
         }
@@ -101,5 +99,11 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
             client().closeAll();
             clientHolder.clear();
         }
+    }
+
+    private static class Holder {
+        // This is a workaround to avoid that the logger ends up in image heap
+        // in native-image
+        private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesClientPropertyExpressionResolver.class);
     }
 }

@@ -41,7 +41,7 @@ micronaut-sql = "7.0.0"
 spock = "2.4-groovy-5.0"
 vertx-client = "4.5.24"
 amazon-awssdk-v1 = "1.12.797"
-amazon-awssdk-v2 = "2.41.30"
+amazon-awssdk-v2 = "2.41.34"
 jansi = "2.4.2"
 
 # Managed versions appear in the BOM

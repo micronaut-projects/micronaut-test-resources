@@ -6,6 +6,6 @@ plugins {
 micronautBuild {
     binaryCompatibility {
         // preparing major version
-        enabledAfter("3.0.0")
+        enabledAfter("4.0.0")
     }
 }

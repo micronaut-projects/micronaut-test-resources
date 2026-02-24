@@ -16,7 +16,7 @@
 package io.micronaut.testresources.neo4j;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.Neo4jContainer;
+import org.testcontainers.neo4j.Neo4jContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * A test resource provider which will spawn a MongoDB test container.
  */
-public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Neo4jContainer<?>> {
+public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Neo4jContainer> {
 
     public static final String NEO4J_SERVER_URI = "neo4j.uri";
     public static final String DEFAULT_IMAGE = "neo4j";
@@ -65,14 +65,14 @@ public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Ne
     }
 
     @Override
-    protected Neo4jContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        Neo4jContainer<?> container = new Neo4jContainer<>(imageName);
+    protected Neo4jContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        Neo4jContainer container = new Neo4jContainer(imageName);
         container.withoutAuthentication();
         return container;
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, Neo4jContainer<?> container) {
+    protected Optional<String> resolveProperty(String propertyName, Neo4jContainer container) {
         if (NEO4J_SERVER_URI.equals(propertyName)) {
             return Optional.of(container.getBoltUrl());
         }

@@ -17,7 +17,7 @@ package io.micronaut.testresources.hibernate.reactive.mssql;
 
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
 import io.micronaut.testresources.mssql.MSSQLTestResourceProvider;
-import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.mssqlserver.MSSQLServerContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ import static io.micronaut.testresources.mssql.MSSQLTestResourceProvider.createM
 /**
  * A test resource provider which will spawn a MSSQL test container.
  */
-public class HibernateReactiveMSSQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MSSQLServerContainer<?>> {
+public class HibernateReactiveMSSQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MSSQLServerContainer> {
     public static final String DISPLAY_NAME = "MSSQL (Hibernate reactive)";
 
     @Override
@@ -46,7 +46,7 @@ public class HibernateReactiveMSSQLTestResourceProvider extends AbstractHibernat
     }
 
     @Override
-    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+    protected MSSQLServerContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return createMSSQLContainer(imageName, getSimpleName(), testResourcesConfig);
     }
 

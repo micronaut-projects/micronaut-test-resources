@@ -16,7 +16,7 @@
 package io.micronaut.testresources.kafka;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.*;
@@ -65,7 +65,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         boolean isCustomImage = !imageName.toString().equals(getDefaultImageName());
         return isKraftMode(testResourcesConfig) ?
-            new KafkaContainer(isCustomImage ? imageName : DockerImageName.parse(DEFAULT_KRAFT_IMAGE).asCompatibleSubstituteFor("confluentinc/cp-kafka")).withKraft() :
+            new KafkaContainer(isCustomImage ? imageName : DockerImageName.parse(DEFAULT_KRAFT_IMAGE).asCompatibleSubstituteFor("confluentinc/cp-kafka")):
             new KafkaContainer(imageName);
     }
 

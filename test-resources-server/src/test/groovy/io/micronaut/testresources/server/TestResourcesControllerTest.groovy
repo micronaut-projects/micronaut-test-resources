@@ -29,7 +29,7 @@ class TestResourcesControllerTest extends Specification {
         then:
         def containers = client.listContainers()
         containers.size() == 1
-        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+        containers[0].imageName.startsWith 'apache/kafka'
 
         when:
         client.closeAll()
@@ -55,7 +55,7 @@ class TestResourcesControllerTest extends Specification {
         then:
         def containers = client.listContainers()
         containers.size() == 1
-        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+        containers[0].imageName.startsWith 'apache/kafka'
 
         when:
         client.closeAll()
@@ -81,7 +81,7 @@ class TestResourcesControllerTest extends Specification {
         then:
         def containers = client.listContainers()
         containers.size() == 1
-        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+        containers[0].imageName.startsWith 'apache/kafka'
 
         when:
         client.closeAll()

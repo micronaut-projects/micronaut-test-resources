@@ -16,6 +16,7 @@
 package io.micronaut.testresources.kafka;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -26,7 +27,7 @@ import static io.micronaut.testresources.kafka.KafkaConfigurationSupport.isKraft
 /**
  * A test resource provider which will spawn a Kafka test container.
  */
-public class KafkaTestResourceProvider extends AbstractTestContainersProvider<KafkaContainer> {
+public class KafkaTestResourceProvider extends AbstractTestContainersProvider<ConfluentKafkaContainer> {
 
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
     public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka:7.0.4";
@@ -62,15 +63,15 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     @Override
-    protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+    protected ConfluentKafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         boolean isCustomImage = !imageName.toString().equals(getDefaultImageName());
         return isKraftMode(testResourcesConfig) ?
-            new KafkaContainer(isCustomImage ? imageName : DockerImageName.parse(DEFAULT_KRAFT_IMAGE).asCompatibleSubstituteFor("confluentinc/cp-kafka")):
-            new KafkaContainer(imageName);
+            new ConfluentKafkaContainer(isCustomImage ? imageName : DockerImageName.parse(DEFAULT_KRAFT_IMAGE).asCompatibleSubstituteFor("confluentinc/cp-kafka")):
+            new ConfluentKafkaContainer(imageName);
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, KafkaContainer container) {
+    protected Optional<String> resolveProperty(String propertyName, ConfluentKafkaContainer container) {
         return Optional.of(container.getBootstrapServers());
     }
 

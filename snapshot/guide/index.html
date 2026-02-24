@@ -15,7 +15,7 @@
     <script>hljs.initHighlightingOnLoad();</script>
     <link rel="stylesheet" href="../css/multi-language-sample.css"/>
     <script src="../js/docs.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
     <script type="text/javascript">
         function addJsClass(el) {
             var classes = document.body.className.split(" ");
@@ -23,9 +23,7 @@
             document.body.className = classes.join(" ");
         }
     </script>
-    <style type="text/css">
-        .lang-java { display: block }; .lang-python { display: block }; .lang-kotlin { display: block }; .lang-groovy { display: block }; 
-    </style>
+
 </head>
 
 <body class="body" id="docs" onload="addJsClass();" onhashchange="highlightMenu()">
@@ -50,21 +48,19 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#breaks"><strong>3</strong><span>Breaking Changes</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>4</strong><span>Quick Start</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#modules"><strong>5</strong><span>Supported Modules</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#debugging"><strong>7</strong><span>Debugging</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>8</strong><span>Architecture</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#testResourcesGuides"><strong>9</strong><span>Guides</span></a></div>
-                                
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -99,71 +95,67 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-releaseHistory"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-breaks"><a href="#breaks"><strong>3</strong><span>Breaking Changes</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>4</strong><span>Quick Start</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-modules"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-modules"><a href="#modules"><strong>5</strong><span>Supported Modules</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-databases"><a href="#modules-databases"><strong>4.1</strong><span>Databases</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-databases"><a href="#modules-databases"><strong>5.1</strong><span>Databases</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-jdbc"><a href="#modules-databases-jdbc"><strong>4.1.1</strong><span>JDBC</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-jdbc"><a href="#modules-databases-jdbc"><strong>5.1.1</strong><span>JDBC</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-r2dbc"><a href="#modules-databases-r2dbc"><strong>4.1.2</strong><span>R2DBC</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-r2dbc"><a href="#modules-databases-r2dbc"><strong>5.1.2</strong><span>R2DBC</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-elasticsearch"><a href="#modules-elasticsearch"><strong>4.2</strong><span>Elasticsearch</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-elasticsearch"><a href="#modules-elasticsearch"><strong>5.2</strong><span>Elasticsearch</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opensearch"><a href="#modules-opensearch"><strong>4.3</strong><span>OpenSearch</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opensearch"><a href="#modules-opensearch"><strong>5.3</strong><span>OpenSearch</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>4.4</strong><span>Kafka</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>5.4</strong><span>Kafka</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>4.5</strong><span>Localstack</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>5.5</strong><span>Localstack</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>4.6</strong><span>MongoDB</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.6</strong><span>MongoDB</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>4.7</strong><span>MQTT</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.7</strong><span>MQTT</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>4.8</strong><span>Neo4j</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.8</strong><span>Neo4j</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>4.9</strong><span>RabbitMQ</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.9</strong><span>RabbitMQ</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>4.10</strong><span>Redis</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.10</strong><span>Redis</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>4.11</strong><span>Hashicorp Vault</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.11</strong><span>Hazelcast</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.12</strong><span>Generic Testcontainers support</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.12</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.13</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-core"><a href="#extensions-core"><strong>5.1</strong><span>Core extension</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-junit-platform"><a href="#extensions-junit-platform"><strong>5.2</strong><span>JUnit Platform</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-core"><a href="#extensions-core"><strong>6.1</strong><span>Core extension</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-debugging"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-junit-platform"><a href="#extensions-junit-platform"><strong>6.2</strong><span>JUnit Platform</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-debugging-intro"><a href="#debugging-intro"><strong>6.1</strong><span>Running the test resources service in debug mode</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-debugging"><a href="#debugging"><strong>7</strong><span>Debugging</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-control-panel"><a href="#modules-control-panel"><strong>6.2</strong><span>Control Panel</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-debugging-intro"><a href="#debugging-intro"><strong>7.1</strong><span>Running the test resources service in debug mode</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-control-panel"><a href="#modules-control-panel"><strong>7.2</strong><span>Control Panel</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>7.1</strong><span>The test resources server</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>8</strong><span>Architecture</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>7.1.1</strong><span>Sharing containers between independent builds</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>8.1</strong><span>The test resources server</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-configuration"><a href="#architecture-configuration"><strong>7.1.2</strong><span>Configuring the server</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>8.1.1</strong><span>Sharing containers between independent builds</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>7.2</strong><span>The test resources client</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-configuration"><a href="#architecture-configuration"><strong>8.1.2</strong><span>Configuring the server</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>7.3</strong><span>Embedded test resources</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>8.2</strong><span>The test resources client</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>7.4</strong><span>Implementing a test resource</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>8.3</strong><span>Embedded test resources</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-testResourcesGuides"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>8.4</strong><span>Implementing a test resource</span></a></div>
-        
-        <div class="toc-item" style="margin-left:0px" id="toc-item-testResourcesGuides"><a href="#testResourcesGuides"><strong>9</strong><span>Guides</span></a></div>
-        
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -219,23 +211,7 @@ If that property is set, then the test resource will not be used.</p>
 <p><a href="https://github.com/micronaut-projects/micronaut-test-resources/releases">https://github.com/micronaut-projects/micronaut-test-resources/releases</a></p>
 </div>
 
-<h1 id="breaks"><a class="anchor" href="#breaks"></a>3 Breaking Changes</h1>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/breaks.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
-<div class="sect2">
-<h3 id="_version_3_0_0">Version 3.0.0</h3>
-<div class="paragraph">
-<p>MongoDB now defaults to using the latest image. Previously it used MongoDB 5.</p>
-</div>
-</div>
-
-<h1 id="quickStart"><a class="anchor" href="#quickStart"></a>4 Quick Start</h1>
+<h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/quickStart.adoc"'>
@@ -273,7 +249,7 @@ POM or via the command-line).</p>
 <p>Please refer to the <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/test-resources.html">Maven plugin&#8217;s Test Resources documentation</a> for more information about configuring the test resources plugin.</p>
 </div>
 
-<h1 id="modules"><a class="anchor" href="#modules"></a>5 Supported Modules</h1>
+<h1 id="modules"><a class="anchor" href="#modules"></a>4 Supported Modules</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules.adoc"'>
@@ -286,7 +262,7 @@ POM or via the command-line).</p>
 <p>The following modules are provided with Micronaut Test Resources.</p>
 </div>
 
-<h2 id="modules-databases"><a class="anchor" href="#modules-databases"></a>5.1 Databases</h2>
+<h2 id="modules-databases"><a class="anchor" href="#modules-databases"></a>4.1 Databases</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-databases.adoc"'>
@@ -552,7 +528,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 </div>
 </div>
 
-<h2 id="modules-databases-jdbc"><a class="anchor" href="#modules-databases-jdbc"></a>5.1.1 JDBC</h2>
+<h2 id="modules-databases-jdbc"><a class="anchor" href="#modules-databases-jdbc"></a>4.1.1 JDBC</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-databases-jdbc.adoc"'>
@@ -601,7 +577,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <p><code>datasources.*.driverClassName</code> should be empty because JDBC driver from testcontainers has to be used for working with URI like 'jdcb:tc:postgres:14///db'</p>
 </div>
 
-<h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>5.1.2 R2DBC</h2>
+<h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>4.1.2 R2DBC</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-databases-r2dbc.adoc"'>
@@ -678,7 +654,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.</p>
 </div>
 
-<h2 id="modules-elasticsearch"><a class="anchor" href="#modules-elasticsearch"></a>5.2 Elasticsearch</h2>
+<h2 id="modules-elasticsearch"><a class="anchor" href="#modules-elasticsearch"></a>4.2 Elasticsearch</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-elasticsearch.adoc"'>
@@ -695,7 +671,7 @@ This can be useful when using modules like Flyway which only support JDBC for up
 The default version can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
 </div>
 
-<h2 id="modules-opensearch"><a class="anchor" href="#modules-opensearch"></a>5.3 OpenSearch</h2>
+<h2 id="modules-opensearch"><a class="anchor" href="#modules-opensearch"></a>4.3 OpenSearch</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-opensearch.adoc"'>
@@ -711,7 +687,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <p>The default image (<code>opensearchproject/opensearch:latest</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>5.4 Kafka</h2>
+<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>4.4 Kafka</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-kafka.adoc"'>
@@ -816,7 +792,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 </table>
 </div>
 
-<h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>5.5 Localstack</h2>
+<h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>4.5 Localstack</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-localstack.adoc"'>
@@ -867,7 +843,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 </ul>
 </div>
 
-<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.6 MongoDB</h2>
+<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>4.6 MongoDB</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-mongodb.adoc"'>
@@ -878,9 +854,6 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 
 <div class="paragraph">
 <p>MongoDB support will automatically start a <a href="https://www.mongodb.com">MongoDB container</a> and provide the value of the <code>mongodb.uri</code> property.</p>
-</div>
-<div class="paragraph">
-<p>The container is configured with replica set functionality enabled.</p>
 </div>
 <div class="paragraph">
 <p>The default image can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
@@ -898,7 +871,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
 </div>
 
-<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.7 MQTT</h2>
+<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>4.7 MQTT</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-mqtt.adoc"'>
@@ -1055,7 +1028,7 @@ listener 1883</code></pre>
 </div>
 </div>
 
-<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.8 Neo4j</h2>
+<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>4.8 Neo4j</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-neo4j.adoc"'>
@@ -1071,7 +1044,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.9 RabbitMQ</h2>
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>4.9 RabbitMQ</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
@@ -1087,7 +1060,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.10 Redis</h2>
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>4.10 Redis</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-redis.adoc"'>
@@ -1130,38 +1103,7 @@ This provider can be configured with a variety of parameters:</p>
 </ul>
 </div>
 
-<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.11 Hazelcast</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-hazelcast.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
-<div class="paragraph">
-<p>Hazelcast support</p>
-</div>
-<div class="paragraph">
-<p>Hazelcast support will automatically start a Hazelcast container and provide the values of the <code>hazelcast.client.network.addresses</code> property.</p>
-</div>
-<div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.hazelcast.image-name</code> property.
-The default version can be overwritten by setting the <code>test-resources.containers.hazelcast.image-tag</code> property.</p>
-</div>
-<div class="paragraph">
-<p>Resolved properties:</p>
-</div>
-<div id="hazelcast-client-network-addresses" class="dlist">
-<dl>
-<dt class="hdlist1"><code>hazelcast.client.network.addresses</code></dt>
-<dd>
-<p>The list of Hazelcast client addresses (host:port) to connect to.</p>
-</dd>
-</dl>
-</div>
-
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.12 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>4.11 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -1261,7 +1203,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.13 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.12 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>
@@ -2490,7 +2432,7 @@ Dependencies between containers <strong>only work between generic containers</st
 </div>
 </div>
 
-<h1 id="extensions"><a class="anchor" href="#extensions"></a>6 Micronaut Test extensions</h1>
+<h1 id="extensions"><a class="anchor" href="#extensions"></a>5 Micronaut Test extensions</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/extensions.adoc"'>
@@ -2504,7 +2446,7 @@ Dependencies between containers <strong>only work between generic containers</st
 The core extension provides a way to expand the set of test properties available to tests, while the JUnit Platform extension provides ways to isolate resources needed by different tests.</p>
 </div>
 
-<h2 id="extensions-core"><a class="anchor" href="#extensions-core"></a>6.1 Core extension</h2>
+<h2 id="extensions-core"><a class="anchor" href="#extensions-core"></a>5.1 Core extension</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/extensions-core.adoc"'>
@@ -2531,8 +2473,7 @@ The core extension provides a way to expand the set of test properties available
     &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="sect1">
 <h2 id="_expanding_the_set_of_test_properties">Expanding the set of test properties</h2>
@@ -2632,7 +2573,7 @@ class ConnectionSpec {
 </div>
 </div>
 
-<h2 id="extensions-junit-platform"><a class="anchor" href="#extensions-junit-platform"></a>6.2 JUnit Platform</h2>
+<h2 id="extensions-junit-platform"><a class="anchor" href="#extensions-junit-platform"></a>5.2 JUnit Platform</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/extensions-junit-platform.adoc"'>
@@ -2659,8 +2600,7 @@ class ConnectionSpec {
     &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div>
-</p>
+</div></p>
 </div>
 <div class="paragraph">
 <p>This extension is compatible with test frameworks which use JUnit Platform, which means in particular all test frameworks supported by Micronaut:</p>
@@ -2785,7 +2725,7 @@ Similarly, using the test distribution plugin of Gradle will trigger the same pr
 </div>
 </div>
 
-<h1 id="debugging"><a class="anchor" href="#debugging"></a>7 Debugging</h1>
+<h1 id="debugging"><a class="anchor" href="#debugging"></a>6 Debugging</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/debugging.adoc"'>
@@ -2796,7 +2736,7 @@ Similarly, using the test distribution plugin of Gradle will trigger the same pr
 
 
 
-<h2 id="debugging-intro"><a class="anchor" href="#debugging-intro"></a>7.1 Running the test resources service in debug mode</h2>
+<h2 id="debugging-intro"><a class="anchor" href="#debugging-intro"></a>6.1 Running the test resources service in debug mode</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/debugging-intro.adoc"'>
@@ -2830,7 +2770,7 @@ This can be configured using the following code:</p>
 <p>Alternatively, you may want to add the test resources control panel.</p>
 </div>
 
-<h2 id="modules-control-panel"><a class="anchor" href="#modules-control-panel"></a>7.2 Control Panel</h2>
+<h2 id="modules-control-panel"><a class="anchor" href="#modules-control-panel"></a>6.2 Control Panel</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/modules-control-panel.adoc"'>
@@ -2883,7 +2823,7 @@ It provides information about:</p>
 That request context is displayed</p>
 </div>
 
-<h1 id="architecture"><a class="anchor" href="#architecture"></a>8 Architecture</h1>
+<h1 id="architecture"><a class="anchor" href="#architecture"></a>7 Architecture</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/architecture.adoc"'>
@@ -2914,7 +2854,7 @@ For example, if a bean needs the value of the <code>datasources.default.url</cod
 As a side effect of providing the value, a database container may be started.</p>
 </div>
 
-<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>8.1 The test resources server</h2>
+<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>7.1 The test resources server</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/architecture-server.adoc"'>
@@ -2936,7 +2876,7 @@ As a side effect of providing the value, a database container may be started.</p
 <p>It means, for example, that with <a href="https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build">Gradle continuous builds</a>, the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.</p>
 </div>
 
-<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>8.1.1 Sharing containers between independent builds</h2>
+<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>7.1.1 Sharing containers between independent builds</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/architecture-shared-server.adoc"'>
@@ -2970,7 +2910,7 @@ If you use a shared server, then you must make sure that the <em>first build</em
 </table>
 </div>
 
-<h2 id="architecture-configuration"><a class="anchor" href="#architecture-configuration"></a>8.1.2 Configuring the server</h2>
+<h2 id="architecture-configuration"><a class="anchor" href="#architecture-configuration"></a>7.1.2 Configuring the server</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/architecture-configuration.adoc"'>
@@ -2989,7 +2929,7 @@ To configure the timeout, you can pass a system property <code>docker.check.time
 </div>
 </div>
 
-<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>8.2 The test resources client</h2>
+<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>7.2 The test resources client</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/architecture-client.adoc"'>
@@ -3007,7 +2947,7 @@ It basically delegates requests of property resolution from Micronaut to the ser
 As a user, you should never have to deal with this module directly.</p>
 </div>
 
-<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>8.3 Embedded test resources</h2>
+<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>7.3 Embedded test resources</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/architecture-embedded.adoc"'>
@@ -3028,7 +2968,7 @@ However, we don&#8217;t recommend it because it would enhance the application cl
 <p>The client/server model is designed to avoid this situation, while offering a more fine-grained control over the lifecycle of the test resources.</p>
 </div>
 
-<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>8.4 Implementing a test resource</h2>
+<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>7.4 Implementing a test resource</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/implementing-test-resources.adoc"'>
@@ -3131,7 +3071,7 @@ If, for some reason, the resolver cannot resolve the expression then <code>Optio
 </div>
 </div>
 
-<h1 id="testResourcesGuides"><a class="anchor" href="#testResourcesGuides"></a>9 Guides</h1>
+<h1 id="testResourcesGuides"><a class="anchor" href="#testResourcesGuides"></a>8 Guides</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/testResourcesGuides.adoc"'>
@@ -3157,7 +3097,7 @@ If, for some reason, the resolver cannot resolve the expression then <code>Optio
 </ul>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>10 Repository</h1>
+<h1 id="repository"><a class="anchor" href="#repository"></a>9 Repository</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/3.0.x/src/main/docs/guide/repository.adoc"'>

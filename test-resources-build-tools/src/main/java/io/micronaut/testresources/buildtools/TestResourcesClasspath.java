@@ -163,7 +163,6 @@ public final class TestResourcesClasspath implements KnownModules {
      * Tells if a dependency should be added to the server classpath. This is used
      * to avoid dependency conflicts between what is embedded in the server and what
      * additional modules can bring.
-     * @param id the module to test
      * @return the filtered dependencies
      */
     public static boolean isDependencyAllowedOnServerClasspath(ModuleIdentifier id) {

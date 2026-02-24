@@ -28,8 +28,11 @@ dependencies {
     testFixturesImplementation(projects.micronautTestResourcesTestcontainers)
     testImplementation(mn.micronaut.http.client)
     testImplementation(projects.micronautTestResourcesClient)
-    // TODO: MN5 Requires Micronaut Kafka release
-//    testRuntimeOnly(projects.micronautTestResourcesKafka)
+    testRuntimeOnly(projects.micronautTestResourcesKafka)
+
+    constraints {implementation("io.netty:netty-codec-http:4.2.8.Final") because("CVE:  CVE-2025-58056")
+        implementation("ch.qos.logback:logback-core:1.5.25") because("CVE:  CVE-2025-11226")
+    }
 
     // For logback conversion
     aotPlugins(mnLogging.logback.classic)

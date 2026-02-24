@@ -1,20 +1,18 @@
 package io.micronaut.testresources.server
 
 import io.micronaut.context.annotation.Property
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.annotation.Get
-import org.jspecify.annotations.Nullable
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.client.TestResourcesClient
 import jakarta.inject.Inject
-import spock.lang.Ignore
 import spock.lang.Specification
 
 @MicronautTest
 @Property(name = "micronaut.testresources.server.url", value = "")
 @Property(name = "micronaut.http.client.read-timeout", value = "120s")
-@Ignore("TODO: MN5 Requires Micronaut Kafka upgrade")
 class TestResourcesControllerTest extends Specification {
 
     @Inject
@@ -31,7 +29,7 @@ class TestResourcesControllerTest extends Specification {
         then:
         def containers = client.listContainers()
         containers.size() == 1
-        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+        containers[0].imageName.startsWith 'apache/kafka'
 
         when:
         client.closeAll()
@@ -57,7 +55,7 @@ class TestResourcesControllerTest extends Specification {
         then:
         def containers = client.listContainers()
         containers.size() == 1
-        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+        containers[0].imageName.startsWith 'apache/kafka'
 
         when:
         client.closeAll()
@@ -83,7 +81,7 @@ class TestResourcesControllerTest extends Specification {
         then:
         def containers = client.listContainers()
         containers.size() == 1
-        containers[0].imageName.startsWith 'confluentinc/cp-kafka'
+        containers[0].imageName.startsWith 'apache/kafka'
 
         when:
         client.closeAll()

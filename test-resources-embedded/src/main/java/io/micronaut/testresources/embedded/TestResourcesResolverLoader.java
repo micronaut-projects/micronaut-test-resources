@@ -63,7 +63,7 @@ public final class TestResourcesResolverLoader implements ResolverLoader {
         return Initializer.INSTANCE;
     }
 
-    private static final class Initializer {
+    private static class Initializer {
         private static final TestResourcesResolverLoader INSTANCE = new TestResourcesResolverLoader();
     }
 }

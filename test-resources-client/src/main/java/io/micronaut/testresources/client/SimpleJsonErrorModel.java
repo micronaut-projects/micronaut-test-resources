@@ -20,12 +20,6 @@ import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.List;
 
-/**
- * Model for error messages.
- *
- * @param message the error message
- * @param embedded the embedded error messages
- */
 @Serdeable
 public record SimpleJsonErrorModel(
     @JsonProperty("message") String message,

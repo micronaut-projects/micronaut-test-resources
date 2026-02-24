@@ -434,7 +434,7 @@ public class ServerUtils {
         }
     }
 
-    private static final class DefaultProcessParameters implements ProcessParameters {
+    private static class DefaultProcessParameters implements ProcessParameters {
         private final Integer explicitPort;
         private final String accessToken;
         private final Path cdsDirectory;

@@ -14,8 +14,4 @@ dependencies {
     testImplementation(project(":micronaut-test-resources-embedded"))
     testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
     testImplementation(mnRedis.micronaut.redis.lettuce)
-
-    constraints {
-        implementation("com.fasterxml.jackson.core:jackson-core:2.21.0")
-    }
 }

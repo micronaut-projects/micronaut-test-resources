@@ -39,7 +39,7 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
         super(new EmbeddedTestResourcesProducer());
     }
 
-    private static final class EmbeddedTestResourcesProducer implements PropertyExpressionProducer {
+    private static class EmbeddedTestResourcesProducer implements PropertyExpressionProducer {
         private final TestResourcesResolverLoader loader = TestResourcesResolverLoader.getInstance();
 
         @Override

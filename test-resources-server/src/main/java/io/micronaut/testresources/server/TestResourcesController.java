@@ -16,7 +16,7 @@
 package io.micronaut.testresources.server;
 
 import io.micronaut.context.ApplicationContext;
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
@@ -238,8 +238,6 @@ public class TestResourcesController implements TestResourcesResolver {
 
     /**
      * Requests a test resources service shutdown.
-     *
-     * @return a boolean indicating if shutdown was successful.
      */
     @Post("/stop")
     public boolean stopService() {

@@ -1,2 +1,0 @@
-=== Version 3.0.0
-MongoDB now defaults to using the latest image. Previously it used MongoDB 5.

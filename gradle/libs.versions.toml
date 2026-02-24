@@ -1,3 +1,4 @@
+#
 # This file is used to declare the list of libraries
 # which are used as dependencies in the project.
 # See https://docs.gradle.org/7.4.2/userguide/platforms.html#sub:central-declaration-of-dependencies
@@ -15,42 +16,41 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "5.0.0-M13"
-micronaut-platform = "4.10.8"
+micronaut = "4.9.10"
+micronaut-platform = "4.8.3"
 micronaut-aot = "2.5.0"
-micronaut-aws = "5.0.0-M1"
-micronaut-cache = "6.0.0-M2"
-micronaut-control-panel = "1.10.0"
-micronaut-data = "5.0.0-M2"
-micronaut-discovery = "4.7.2"
-micronaut-elasticsearch = "6.0.0-M1"
-micronaut-email = "3.0.0-M1"
-micronaut-kafka = "6.0.0-M1"
-micronaut-logging = "2.0.0-M2"
-micronaut-mongodb = "6.0.1-M1"
-micronaut-gradle-plugin = "4.6.2"
+micronaut-aws = "4.11.0"
+micronaut-control-panel = "1.8.0"
+micronaut-data = "4.13.4"
+micronaut-discovery = "4.5.2"
+micronaut-docs = "3.0.0"
+micronaut-elasticsearch = "5.9.0"
+micronaut-email = "2.8.0"
+micronaut-kafka = "5.8.0"
+micronaut-logging = "1.7.0"
+micronaut-mongodb = "5.7.0"
+micronaut-gradle-plugin = "4.5.5"
 micronaut-mqtt = "3.7.0"
-micronaut-neo4j = "8.0.0-M1"
-micronaut-rabbitmq = "5.0.0-M1"
-micronaut-r2dbc = "7.0.0-M3"
-micronaut-reactor = "4.0.0-M1"
-micronaut-redis = "7.0.0-M1"
-micronaut-security = "5.0.0-M1"
-micronaut-serde = "3.0.0-M2"
-micronaut-sql = "7.0.0-M7"
-spock = "2.4-groovy-5.0"
-vertx-client = "5.0.8"
-amazon-awssdk-v1 = "1.12.797"
-amazon-awssdk-v2 = "2.41.34"
-jansi = "2.4.2"
+micronaut-neo4j = "6.10.0"
+micronaut-rabbitmq = "4.8.0"
+micronaut-r2dbc = "6.1.0"
+micronaut-reactor = "3.8.0"
+micronaut-redis = "6.8.0"
+micronaut-security = "4.13.1"
+micronaut-serde = "2.15.1"
+micronaut-sql = "6.2.1"
+micronaut-test = "4.8.0"
+groovy = "4.0.27"
+spock = "2.3-groovy-4.0"
+vertx-client = "4.5.14"
+amazon-awssdk-v1 = "1.12.792"
+amazon-awssdk-v2 = "2.31.72"
+jansi = "2.4.1"
 
 # Managed versions appear in the BOM
-managed-opensearch-testcontainers = "4.1.0"
-managed-testcontainers = "2.0.3"
+managed-opensearch-testcontainers = "2.1.3"
+managed-testcontainers = "2.0.2"
 managed-testcontainers-redis = "1.6.4"
-
-# Transitive dependencies upgrades
-commons-compress="1.28.0"
 
 [libraries]
 # Testcontainers
@@ -88,7 +88,6 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
 micronaut-aws = { module = "io.micronaut.aws:micronaut-aws-bom", version.ref = "micronaut-aws" }
-micronaut-cache = { module = "io.micronaut.cache:micronaut-cache-bom", version.ref = "micronaut-cache" }
 micronaut-control-panel = { module = "io.micronaut.controlpanel:micronaut-control-panel-bom", version.ref = "micronaut-control-panel" }
 micronaut-data = { module = "io.micronaut.data:micronaut-data-bom", version.ref = "micronaut-data" }
 micronaut-discovery = { module = "io.micronaut.discovery:micronaut-discovery-client", version.ref = "micronaut-discovery" }
@@ -111,7 +110,7 @@ vertx-mysql = { module = "io.vertx:vertx-mysql-client", version.ref = "vertx.cli
 vertx-mssql = { module = "io.vertx:vertx-mssql-client", version.ref = "vertx.client" }
 vertx-postgres = { module = "io.vertx:vertx-pg-client", version.ref = "vertx.client" }
 vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.client" }
-scram = { module = "com.ongres.scram:scram-client", version = "3.2" }
+scram = { module = "com.ongres.scram:client", version = "2.1" }
 spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
 
 amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1" }
@@ -138,8 +137,6 @@ jansi = { module = "org.fusesource.jansi:jansi", version.ref = "jansi" }
 
 # micronaut-bom = { module = "io.micronaut:micronaut-bom", version.ref = "micronaut" }
 # jdoctor = { module = "me.champeau.jdoctor:jdoctor-core", version.ref="jdoctor" }
-
-commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress"}
 
 [bundles]
 

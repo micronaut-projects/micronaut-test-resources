@@ -1,7 +1,8 @@
 plugins {
     id 'io.micronaut.build.internal.test-resources-mntest-extension'
     id 'jvm-test-suite'
-    id("io.micronaut.build.internal.kotlin-ksp")
+    id("org.jetbrains.kotlin.jvm") version "1.9.25"
+    id("com.google.devtools.ksp") version "1.9.25-1.0.20"
 }
 
 description = """
@@ -15,11 +16,7 @@ testing {
             dependencies {
                 implementation project(project.path)
                 implementation(testFixtures(project(project.path)))
-                implementation(mnTest.micronaut.test.spock) {
-                    // temporary fix because Micronaut Test not yet compiled with Spock groovy 5
-                    exclude group: 'org.spockframewoek'
-                }
-                implementation(libs.spock)
+                implementation(mnTest.micronaut.test.spock)
                 compileOnly(mn.micronaut.inject.groovy)
             }
             targets.all {
@@ -64,4 +61,14 @@ dependencies {
     testRuntimeOnly(mn.snakeyaml)
     testRuntimeOnly(mnSerde.micronaut.serde.jackson)
     kspKoTest(mn.micronaut.inject.kotlin)
+}
+
+tasks.named("spockTest", Test) {
+    classpath = classpath.filter {
+        println(it.name)
+        if (it.name.endsWith(".jar") && it.name.startsWith("micronaut-test-resources-extensions-junit-platform-") && !it.name.contains("fixtures")) {
+            return false
+        }
+        return true
+    }
 }

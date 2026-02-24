@@ -49,7 +49,6 @@ public class TestResourcesPanelRegistration {
                             () -> new TestResourcesControlPanel(e.getId(), e.getDisplayName(),
                                 resolutionListener)
                         ).singleton(true)
-                        .exposedTypes(ControlPanel.class)
                         // Must use a qualifier or only a single panel will show up
                         .qualifier(Qualifiers.byName("testResources" + e.getId()))
                         .build()

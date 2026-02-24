@@ -15,7 +15,7 @@
  */
 package io.micronaut.test.extensions.testresources;
 
-import org.jspecify.annotations.NonNull;
+import io.micronaut.core.annotation.NonNull;
 
 import java.util.Map;
 

@@ -6,7 +6,6 @@ pluginManager.apply(io.micronaut.build.catalogs.MicronautVersionCatalogUpdatePlu
 
 tasks.withType(io.micronaut.build.catalogs.tasks.VersionCatalogUpdate).configureEach {
     outputDirectory = file("gradle")
-    failWhenNoVersionFound = false
 }
 
 tasks.named("publishGuide") {

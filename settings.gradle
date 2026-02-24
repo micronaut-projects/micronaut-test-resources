@@ -9,7 +9,7 @@ pluginManagement {
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '8.0.0-M17'
+    id 'io.micronaut.build.shared.settings' version '7.6.6'
 }
 rootProject.name = 'testresources-parent'
 
@@ -67,8 +67,7 @@ include 'test-resources-build-tools'
 include 'test-resources-core'
 include 'test-resources-client'
 include 'test-resources-control-panel'
-// TODO: MN5 Needs Micronaut Test milestone release
-//include 'test-resources-elasticsearch'
+include 'test-resources-elasticsearch'
 include 'test-resources-embedded'
 include 'test-resources-hivemq'
 include 'test-resources-kafka'
@@ -82,8 +81,6 @@ include 'test-resources-solr'
 include 'test-resources-testcontainers'
 include 'test-resources-hashicorp-vault'
 include 'test-resources-hashicorp-consul'
-include 'test-resources-infinispan'
-include 'test-resources-hazelcast'
 
 extensionModules.each {
     String projectName = "test-resources-extensions-$it"
@@ -117,7 +114,6 @@ micronautBuild {
     useStandardizedProjectNames = true
     importMicronautCatalog()
     importMicronautCatalog("micronaut-aws")
-    importMicronautCatalog("micronaut-cache")
     importMicronautCatalog("micronaut-control-panel")
     importMicronautCatalog("micronaut-data")
     importMicronautCatalog("micronaut-elasticsearch")

@@ -1,7 +1,6 @@
 introduction:
   title: Introduction
 releaseHistory: Release History
-breaks: Breaking Changes
 quickStart:
   title: Quick Start
 modules:
@@ -30,8 +29,6 @@ modules:
     title: RabbitMQ
   modules-redis:
     title: Redis
-  modules-hazelcast:
-    title: Hazelcast
   modules-hashicorp-vault:
     title: Hashicorp Vault
   modules-testcontainers:

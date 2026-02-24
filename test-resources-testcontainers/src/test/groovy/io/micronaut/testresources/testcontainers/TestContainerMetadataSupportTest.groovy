@@ -27,12 +27,12 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md1.present
-        with(md1.get()) {
-            imageName.get() == "some/image"
+        md1.get().with {
+            assert it.imageName.get() == "some/image"
         }
         md2.present
-        with(md2.get()) {
-            imageName.get() == "some/other/image"
+        md2.get().with {
+            assert it.imageName.get() == "some/other/image"
         }
     }
 
@@ -53,12 +53,12 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md1.present
-        with(md1.get()) {
-            hostNames == ["some.host.name"] as Set
+        md1.get().with {
+            assert it.hostNames == ["some.host.name"] as Set
         }
         md2.present
-        with(md2.get()) {
-            hostNames == ["some.host.name", "some.other.host.name"] as Set
+        md2.get().with {
+            assert it.hostNames == ["some.host.name", "some.other.host.name"] as Set
         }
     }
 
@@ -80,13 +80,13 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md1.present
-        with(md1.get()) {
-            exposedPorts == ['some.port': 8080]
+        md1.get().with {
+            assert it.exposedPorts == ['some.port': 8080]
         }
         md2.present
-        with(md2.get()) {
-            exposedPorts == [
-                    'some.port'      : 1234,
+        md2.get().with {
+            assert it.exposedPorts == [
+                    'some.port': 1234,
                     'some.other.port': 5678
             ]
         }
@@ -110,9 +110,9 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            roFsBinds == ['/some/path': '/some/container/path', 'classpath:/some/file.txt': '/some/container/file.txt']
-            rwFsBinds == ['/some/other/path': '/some/other/container/path', '../relative': '/absolute/path', 'classpath:/some/other-file.txt': '/some/container/other-file.txt']
+        md.get().with {
+            assert it.roFsBinds == ['/some/path': '/some/container/path', 'classpath:/some/file.txt': '/some/container/file.txt']
+            assert it.rwFsBinds == ['/some/other/path': '/some/other/container/path', '../relative': '/absolute/path', 'classpath:/some/other-file.txt': '/some/container/other-file.txt']
         }
     }
 
@@ -133,9 +133,9 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            roTmpfsMappings.containsAll(['/some/path', '/some/other/path'])
-            rwTmpfsMappings.containsAll(['/yet/another/path', '/yet/another/other/path'])
+        md.get().with {
+            assert it.roTmpfsMappings.containsAll(['/some/path', '/some/other/path'])
+            assert it.rwTmpfsMappings.containsAll(['/yet/another/path', '/yet/another/other/path'])
         }
     }
 
@@ -151,8 +151,8 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            command == ["./gradlew run"]
+        md.get().with {
+            assert it.command == ["./gradlew run"]
         }
     }
 
@@ -168,8 +168,8 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            workingDirectory.get() == "/working/directory"
+        md.get().with {
+            assert it.workingDirectory.get() == "/working/directory"
         }
     }
 
@@ -186,9 +186,9 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            env == [
-                    'SOME_ENV_VAR'      : 'some value',
+        md.get().with {
+            assert it.env == [
+                    'SOME_ENV_VAR': 'some value',
                     'SOME_OTHER_ENV_VAR': 'some other value'
             ]
         }
@@ -207,8 +207,8 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            labels == [
+        md.get().with {
+            assert it.labels == [
                     'label1': 'value',
                     'label2': 'value 2'
             ]
@@ -226,8 +226,8 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            startupTimeout.get() == expectedDuration
+        md.get().with {
+            assert it.startupTimeout.get() == expectedDuration
         }
 
         where:
@@ -250,7 +250,7 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
+        md.get().with {
             def copies = it.fileCopies
             assert copies.size() == 2
             assert copies.findAll { it.destination == "/some/container/file.txt" }.size() == 1
@@ -262,24 +262,24 @@ class TestContainerMetadataSupportTest extends Specification {
         def config = """
                 containers:
                     foo:
-                        memory: $configuredMemory
+                        memory: $memory
 """
         when:
         def md = metadataFrom(config, "foo")
 
         then:
         md.present
-        with(md.get()) {
-            memory.get() == expectedMemory
+        md.get().with {
+            assert it.memory.get() == expectedMemory
         }
 
         where:
-        configuredMemory | expectedMemory
-        '12345'          | 12345L
-        '300k'           | 307200L
-        '128m'           | 134217728L
-        '2g'             | 2147483648L
-        '2.5G'           | 2684354560L
+        memory  | expectedMemory
+        '12345' | 12345L
+        '300k'  | 307200L
+        '128m'  | 134217728L
+        '2g'    | 2147483648L
+        '2.5G'  | 2684354560L
     }
 
     def "reads swap memory parameters"() {
@@ -293,8 +293,8 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            swapMemory.get() == expectedMemory
+        md.get().with {
+            assert it.swapMemory.get() == expectedMemory
         }
 
         where:
@@ -317,8 +317,8 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
-            sharedMemory.get() == expectedMemory
+        md.get().with {
+            assert it.sharedMemory.get() == expectedMemory
         }
 
         where:
@@ -352,18 +352,18 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md1.present
-        with(md1.get()) {
-            network.get() == 'first'
-            networkAliases == ['main'] as Set
+        md1.get().with {
+            assert it.network.get() == 'first'
+            assert it.networkAliases == ['main'] as Set
         }
         md2.present
-        with(md2.get()) {
-            network.get() == 'second'
-            networkAliases == ['tarzan', 'jane'] as Set
+        md2.get().with {
+            assert it.network.get() == 'second'
+            assert it.networkAliases == ['tarzan', 'jane'] as Set
         }
         md3.present
         md3.get().with {
-            networkMode.get() == 'third'
+            assert it.networkMode.get() == 'third'
         }
     }
 
@@ -382,7 +382,7 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
+        md.get().with {
             def strategy = it.waitStrategy.get()
             assert strategy instanceof LogMessageWaitStrategy
         }
@@ -405,7 +405,7 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
+        md.get().with {
             def strategy = it.waitStrategy.get()
             assert strategy instanceof HttpWaitStrategy
         }
@@ -423,7 +423,7 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
+        md.get().with {
             def strategy = it.waitStrategy.get()
             assert strategy instanceof HostPortWaitStrategy
         }
@@ -441,7 +441,7 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
+        md.get().with {
             def strategy = it.waitStrategy.get()
             assert strategy instanceof DockerHealthcheckWaitStrategy
         }
@@ -462,7 +462,7 @@ class TestContainerMetadataSupportTest extends Specification {
 
         then:
         md.present
-        with(md.get()) {
+        md.get().with {
             def strategy = it.waitStrategy.get()
             assert strategy instanceof WaitAllStrategy
         }

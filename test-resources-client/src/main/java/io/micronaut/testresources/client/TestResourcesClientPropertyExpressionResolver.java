@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.client;
 
+import io.micronaut.context.env.Environment;
 import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
@@ -35,38 +36,36 @@ import static io.micronaut.testresources.core.PropertyResolverSupport.resolveReq
  * properties.
  */
 public class TestResourcesClientPropertyExpressionResolver extends LazyTestResourcesExpressionResolver {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesClientPropertyExpressionResolver.class);
+
     public TestResourcesClientPropertyExpressionResolver() {
         super(new DelegateResolver());
     }
 
-    private static TestResourcesClient createClient() {
+    private static TestResourcesClient createClient(Environment env) {
         return TestResourcesClientFactory.findByConvention().orElse(NoOpClient.INSTANCE);
     }
 
-    private static final class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {
-
-        // Using a dummy hashmap for convenience
-        private final Map<Boolean, TestResourcesClient> clientHolder = new ConcurrentHashMap<>();
-
-        private TestResourcesClient client() {
-            return clientHolder.computeIfAbsent(Boolean.TRUE, unused -> createClient());
-        }
+    private static class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {
+        private final Map<Environment, TestResourcesClient> clients = new ConcurrentHashMap<>();
 
         @Override
         public <T> Optional<T> resolve(PropertyResolver propertyResolver,
                                        ConversionService conversionService,
                                        String expression,
                                        Class<T> requiredType) {
-            TestResourcesClient client = client();
-            Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
-            Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
-            Optional<String> resolved = callClient(expression, client, props, properties);
-            if (resolved.isPresent()) {
-                String resolvedValue = resolved.get();
-                Holder.LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
-                return conversionService.convert(resolvedValue, requiredType);
-            } else if (Holder.LOGGER.isDebugEnabled()) {
-                Holder.LOGGER.debug("Test resources cannot resolve expression '{}'", expression);
+            if (propertyResolver instanceof Environment) {
+                TestResourcesClient client = clients.computeIfAbsent((Environment) propertyResolver, TestResourcesClientPropertyExpressionResolver::createClient);
+                Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
+                Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+                Optional<String> resolved = callClient(expression, client, props, properties);
+                if (resolved.isPresent()) {
+                    String resolvedValue = resolved.get();
+                    LOGGER.debug("Resolved expression '{}' to '{}'", expression, resolvedValue);
+                    return conversionService.convert(resolvedValue, requiredType);
+                } else if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Test resources cannot resolve expression '{}'", expression);
+                }
             }
             return Optional.empty();
         }
@@ -95,15 +94,10 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
 
         @Override
-        public synchronized void close() {
-            client().closeAll();
-            clientHolder.clear();
+        public void close() throws Exception {
+            for (TestResourcesClient client : clients.values()) {
+                client.closeAll();
+            }
         }
-    }
-
-    private static class Holder {
-        // This is a workaround to avoid that the logger ends up in image heap
-        // in native-image
-        private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesClientPropertyExpressionResolver.class);
     }
 }

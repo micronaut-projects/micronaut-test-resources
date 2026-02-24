@@ -8,6 +8,5 @@ repositories {
 }
 
 dependencies {
-    implementation("com.gradleup.shadow:shadow-gradle-plugin:9.3.1")
-    implementation(providers.gradleProperty("micronaut-build-version").map { "io.micronaut.build.internal:micronaut-kotlin-build-plugins:${it}" }.get())
+    implementation("com.gradleup.shadow:shadow-gradle-plugin:8.3.9")
 }

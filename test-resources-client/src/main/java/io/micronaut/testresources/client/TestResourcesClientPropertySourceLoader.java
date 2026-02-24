@@ -40,7 +40,7 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
         return Optional.ofNullable(((ClientTestResourcesResolver) getProducer()).client);
     }
 
-    private static final class ClientTestResourcesResolver implements PropertyExpressionProducer {
+    private static class ClientTestResourcesResolver implements PropertyExpressionProducer {
         private final ReentrantLock lock = new ReentrantLock();
         private TestResourcesClient client;
 

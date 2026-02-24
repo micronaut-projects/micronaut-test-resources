@@ -62,7 +62,6 @@ configurations {
 }
 
 dependencies {
-    implementation(platform(mn.micronaut.core.bom))
     implementation(mnLogging.slf4j.api)
     testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(mn.micronaut.inject.groovy)

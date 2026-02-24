@@ -12,7 +12,7 @@ class CustomKafkaImageTest extends AbstractKafkaSpec {
     @Override
     Map<String, String> getProperties() {
         super.properties + [
-                 "test-resources.containers.kafka.image-name": "apache/kafka"
+                "test-resources.containers.kafka.image-name": "apache/kafka"
         ]
     }
 

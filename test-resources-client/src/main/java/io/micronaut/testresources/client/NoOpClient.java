@@ -15,7 +15,7 @@
  */
 package io.micronaut.testresources.client;
 
-import org.jspecify.annotations.Nullable;
+import io.micronaut.core.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -16,7 +16,7 @@
 package io.micronaut.testresources.hibernate.reactive.mysql;
 
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.mysql.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * A test resource provider which will spawn a MySQL test container.
  */
-public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MySQLContainer<?>> {
+public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernateReactiveTestResourceProvider<MySQLContainer> {
     public static final String DISPLAY_NAME = "MySQL (Hibernate reactive)";
 
     @Override
@@ -43,8 +43,8 @@ public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernat
     }
 
     @Override
-    protected MySQLContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new MySQLContainer<>(imageName);
+    protected MySQLContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return new MySQLContainer(imageName);
     }
 
 }

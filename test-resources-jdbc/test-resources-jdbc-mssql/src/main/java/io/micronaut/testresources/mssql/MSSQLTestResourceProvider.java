@@ -16,7 +16,7 @@
 package io.micronaut.testresources.mssql;
 
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
-import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.mssqlserver.MSSQLServerContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.LicenseAcceptance;
 
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * A test resource provider which will spawn a MS SQL test container.
  */
-public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<MSSQLServerContainer<?>> {
+public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<MSSQLServerContainer> {
 
     public static final String DEFAULT_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-latest";
     public static final String DISPLAY_NAME = "MSSQL";
@@ -46,12 +46,12 @@ public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
     }
 
     @Override
-    protected MSSQLServerContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+    protected MSSQLServerContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return createMSSQLContainer(imageName, getSimpleName(), testResourcesConfig);
     }
 
-    public static MSSQLServerContainer<?> createMSSQLContainer(DockerImageName imageName, String simpleName, Map<String, Object> testResourcesConfig) {
-        MSSQLServerContainer<?> container = new MSSQLServerContainer<>(imageName);
+    public static MSSQLServerContainer createMSSQLContainer(DockerImageName imageName, String simpleName, Map<String, Object> testResourcesConfig) {
+        MSSQLServerContainer container = new MSSQLServerContainer(imageName);
         String licenseKey = "containers." + simpleName + ".accept-license";
         if (shouldAcceptLicense(licenseKey, testResourcesConfig)) {
             container.acceptLicense();

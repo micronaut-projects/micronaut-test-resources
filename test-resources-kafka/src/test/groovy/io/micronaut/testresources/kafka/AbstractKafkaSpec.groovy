@@ -16,7 +16,7 @@ abstract class AbstractKafkaSpec  extends AbstractTestContainersSpec {
 
     @Override
     String getImageName() {
-        'cp-kafka'
+        'kafka'
     }
 
     @Prototype

@@ -13,6 +13,11 @@ dependencies {
     implementation(projects.micronautTestResourcesEmbedded)
     implementation(projects.micronautTestResourcesServer)
     runtimeOnly(mn.micronaut.management)
+    constraints {
+        implementation("ch.qos.logback:logback-core:1.5.25") {
+            because "CVE:  CVE-2025-11226"
+        }
+    }
 }
 
 micronautBuild {

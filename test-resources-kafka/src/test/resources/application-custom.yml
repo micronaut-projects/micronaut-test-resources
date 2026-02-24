@@ -1,8 +1,9 @@
 test-resources:
   containers:
     kafka:
+      image-name: apache/kafka:4.1.1
       env:
-        - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "BROKER:PLAINTEXT,PLAINTEXT:SASL_PLAINTEXT"
+        - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT,PLAINTEXT:SASL_PLAINTEXT,CONTROLLER:PLAINTEXT
         - KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
         - KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
         - KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"

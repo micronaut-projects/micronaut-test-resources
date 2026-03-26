@@ -38,7 +38,7 @@ import java.util.stream.StreamSupport;
  */
 public class LocalStackTestResourceProvider extends AbstractTestContainersProvider<LocalStackContainer> {
 
-    private static final String DEFAULT_IMAGE = "localstack/localstack";
+    private static final String DEFAULT_IMAGE = "localstack/localstack:4.14.0";
     private static final String NAME = "localstack";
 
     private static final String AWS_ACCESS_KEY_ID = "aws.access-key-id";

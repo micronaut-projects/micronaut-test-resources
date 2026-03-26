@@ -16,7 +16,7 @@
 package io.micronaut.testresources.localstack.sqs;
 
 import io.micronaut.testresources.localstack.LocalStackService;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,18 +28,19 @@ import java.util.Optional;
 public class LocalStackSQSService implements LocalStackService {
 
     private static final String AWS_SQS_ENDPOINT_OVERRIDE = "aws.services.sqs.endpoint-override";
+    private static final String SERVICE = "sqs";
 
     @Override
     public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {
         if (AWS_SQS_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpointOverride(LocalStackContainer.Service.SQS).toString());
+            return Optional.of(container.getEndpoint().toString());
         }
         return Optional.empty();
     }
 
     @Override
-    public LocalStackContainer.Service getServiceKind() {
-        return LocalStackContainer.Service.SQS;
+    public String getServiceKind() {
+        return SERVICE;
     }
 
     @Override

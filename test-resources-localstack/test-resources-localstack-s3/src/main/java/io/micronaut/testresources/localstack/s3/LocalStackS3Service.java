@@ -16,7 +16,7 @@
 package io.micronaut.testresources.localstack.s3;
 
 import io.micronaut.testresources.localstack.LocalStackService;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,18 +28,19 @@ import java.util.Optional;
 public class LocalStackS3Service implements LocalStackService {
 
     private static final String AWS_S3_ENDPOINT_OVERRIDE = "aws.services.s3.endpoint-override";
+    private static final String SERVICE = "s3";
 
     @Override
     public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {
         if (AWS_S3_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpointOverride(LocalStackContainer.Service.S3).toString());
+            return Optional.of(container.getEndpoint().toString());
         }
         return Optional.empty();
     }
 
     @Override
-    public LocalStackContainer.Service getServiceKind() {
-        return LocalStackContainer.Service.S3;
+    public String getServiceKind() {
+        return SERVICE;
     }
 
     @Override

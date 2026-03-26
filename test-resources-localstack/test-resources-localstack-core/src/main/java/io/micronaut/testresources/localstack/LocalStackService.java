@@ -15,7 +15,7 @@
  */
 package io.micronaut.testresources.localstack;
 
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public interface LocalStackService {
      * Returns the service kind.
      * @return the service kind.
      */
-    LocalStackContainer.Service getServiceKind();
+    String getServiceKind();
 
     /**
      * Returns the list of properties that this service

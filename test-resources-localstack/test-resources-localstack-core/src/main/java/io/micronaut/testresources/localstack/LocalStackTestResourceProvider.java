@@ -16,13 +16,12 @@
 package io.micronaut.testresources.localstack;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,16 +46,16 @@ public class LocalStackTestResourceProvider extends AbstractTestContainersProvid
 
     private static final List<String> COMMON_PROPERTIES;
 
-    private static final Map<LocalStackContainer.Service, List<String>> RESOLVABLE_PROPERTIES;
+    private static final Map<String, List<String>> RESOLVABLE_PROPERTIES;
     private static final Set<String> ALL_SUPPORTED_KEYS;
     private static final List<LocalStackService> SERVICES;
-    private static final Map<String, LocalStackService> PROPERTY_TO_SERVICE;
     public static final String DISPLAY_NAME = "LocalStack";
+    private static final Map<String, LocalStackService> PROPERTY_TO_SERVICE;
 
     static {
         SERVICES = StreamSupport.stream(ServiceLoader.load(LocalStackService.class).spliterator(), false)
-                .collect(Collectors.toList());
-        Map<LocalStackContainer.Service, List<String>> resolvableProperties = new EnumMap<>(LocalStackContainer.Service.class);
+            .collect(Collectors.toList());
+        Map<String, List<String>> resolvableProperties = new HashMap<>();
         Map<String, LocalStackService> propertyToService = new HashMap<>();
         COMMON_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
             AWS_ACCESS_KEY_ID,
@@ -105,7 +104,7 @@ public class LocalStackTestResourceProvider extends AbstractTestContainersProvid
     @Override
     protected LocalStackContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         LocalStackContainer localStackContainer = new LocalStackContainer(imageName);
-        localStackContainer.withServices(SERVICES.stream().map(LocalStackService::getServiceKind).toArray(LocalStackContainer.Service[]::new));
+        localStackContainer.withServices(SERVICES.stream().map(LocalStackService::getServiceKind).toArray(String[]::new));
         return localStackContainer;
     }
 

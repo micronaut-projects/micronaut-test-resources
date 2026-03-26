@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package io.micronaut.testresources.localstack.sns;
 
 import io.micronaut.testresources.localstack.LocalStackService;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,22 +28,23 @@ import java.util.Optional;
 public class LocalStackSNSService implements LocalStackService {
 
     private static final String AWS_SNS_ENDPOINT_OVERRIDE = "aws.services.sns.endpoint-override";
+    private static final String SERVICE = "sns";
 
     @Override
-    public LocalStackContainer.Service getServiceKind() {
-        return LocalStackContainer.Service.SNS;
+    public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {
+        if (AWS_SNS_ENDPOINT_OVERRIDE.equals(propertyName)) {
+            return Optional.of(container.getEndpoint().toString());
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public String getServiceKind() {
+        return SERVICE;
     }
 
     @Override
     public List<String> getResolvableProperties() {
         return Collections.singletonList(AWS_SNS_ENDPOINT_OVERRIDE);
-    }
-
-    @Override
-    public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {
-        if (AWS_SNS_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpointOverride(LocalStackContainer.Service.SNS).toString());
-        }
-        return Optional.empty();
     }
 }

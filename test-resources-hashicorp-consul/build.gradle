@@ -19,4 +19,5 @@ dependencies {
     testImplementation(libs.micronaut.discovery)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mnReactor.micronaut.reactor)
+    testImplementation(mn.micronaut.jackson.databind)
 }

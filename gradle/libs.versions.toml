@@ -15,7 +15,7 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "5.0.0-M18"
+micronaut = "5.0.0-M19"
 micronaut-platform = "4.10.10"
 micronaut-aot = "3.0.0-M2"
 micronaut-aws = "5.0.0-M1"
@@ -36,13 +36,13 @@ micronaut-r2dbc = "7.0.0"
 micronaut-reactor = "4.0.0-M1"
 micronaut-redis = "7.0.0-M1"
 micronaut-security = "5.0.0-M1"
-micronaut-serde = "3.0.0-M4"
+micronaut-serde = "3.0.0-M5"
 micronaut-sql = "7.0.0-M7"
 spock = "2.4-groovy-5.0"
-vertx-client = "5.0.8"
+vertx-client = "5.0.10"
 amazon-awssdk-v1 = "1.12.797"
 amazon-awssdk-v2 = "2.41.34"
-jansi = "2.4.2"
+jansi = "2.4.3"
 
 # Managed versions appear in the BOM
 managed-opensearch-testcontainers = "4.1.0"

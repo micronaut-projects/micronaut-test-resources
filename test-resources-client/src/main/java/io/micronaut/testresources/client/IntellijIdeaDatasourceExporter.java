@@ -63,23 +63,40 @@ final class IntellijIdeaDatasourceExporter {
         JdbcDatasourceProperty.parse(propertyName)
             .ifPresent(property -> {
                 var sessionState = sessions.computeIfAbsent(sessionId, unused -> new ExportSessionState(config.outputPath()));
+                var previousOutputPath = sessionState.outputPath;
                 sessionState.outputPath = config.outputPath();
                 var state = sessionState.datasources.computeIfAbsent(property.datasourceName(), JdbcDatasourceState::new);
                 state.record(property.propertyName(), value);
-                writeExport(sessionState.outputPath, completeDatasources(sessionState.datasources));
+                if (previousOutputPath != null && !previousOutputPath.equals(sessionState.outputPath)) {
+                    rewriteExport(previousOutputPath);
+                }
+                rewriteExport(sessionState.outputPath);
             });
     }
 
     synchronized void clearSession(String sessionId) {
-        sessions.remove(sessionId);
+        var sessionState = sessions.remove(sessionId);
+        if (sessionState != null) {
+            rewriteExport(sessionState.outputPath);
+        }
     }
 
-    private List<JdbcDatasourceState> completeDatasources(Map<String, JdbcDatasourceState> datasources) {
+    private List<JdbcDatasourceState> completeDatasources(Path outputPath) {
+        var datasources = new LinkedHashMap<String, JdbcDatasourceState>();
+        for (ExportSessionState sessionState : sessions.values()) {
+            if (outputPath.equals(sessionState.outputPath)) {
+                sessionState.datasources.forEach(datasources::put);
+            }
+        }
         return datasources.values()
             .stream()
             .filter(JdbcDatasourceState::isComplete)
             .sorted(Comparator.comparing(JdbcDatasourceState::name))
             .toList();
+    }
+
+    private void rewriteExport(Path outputPath) {
+        writeExport(outputPath, completeDatasources(outputPath));
     }
 
     private void writeExport(Path outputPath, List<JdbcDatasourceState> completeDatasources) {

@@ -110,6 +110,42 @@ class IntellijIdeaDatasourceExporterTest extends Specification {
         !Files.exists(tempDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH))
     }
 
+    def "overlapping sessions sharing an output path merge and rewrite live datasource state"() {
+        given:
+        def exporter = new IntellijIdeaDatasourceExporter(tempDir)
+        def config = [(IntellijIdeaDatasourceExporter.ENABLED): true]
+        def outputFile = tempDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH)
+
+        when:
+        exporter.export("datasources.default.url", "jdbc:postgresql://localhost:5432/demo", config, "first")
+        exporter.export("datasources.default.username", "demo_user", config, "first")
+        exporter.export("datasources.default.password", "demo_secret", config, "first")
+        exporter.export("datasources.default.driver-class-name", "org.postgresql.Driver", config, "first")
+        exporter.export("datasources.analytics.url", "jdbc:mysql://localhost:3306/analytics", config, "second")
+        exporter.export("datasources.analytics.username", "analytics_user", config, "second")
+        exporter.export("datasources.analytics.password", "analytics_secret", config, "second")
+        exporter.export("datasources.analytics.driver-class-name", "com.mysql.cj.jdbc.Driver", config, "second")
+
+        then:
+        def combinedOutput = Files.readString(outputFile)
+        combinedOutput.contains("#LocalDataSource: default")
+        combinedOutput.contains("#LocalDataSource: analytics")
+
+        when:
+        exporter.clearSession("second")
+
+        then:
+        def firstOnlyOutput = Files.readString(outputFile)
+        firstOnlyOutput.contains("#LocalDataSource: default")
+        !firstOnlyOutput.contains("#LocalDataSource: analytics")
+
+        when:
+        exporter.clearSession("first")
+
+        then:
+        !Files.exists(outputFile)
+    }
+
     @RestoreSystemProperties
     def "system properties can enable the exporter"() {
         given:

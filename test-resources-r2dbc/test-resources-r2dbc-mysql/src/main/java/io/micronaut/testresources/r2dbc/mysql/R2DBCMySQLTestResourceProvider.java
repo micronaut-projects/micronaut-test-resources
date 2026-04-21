@@ -43,7 +43,7 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
 
     @Override
     protected String getDefaultImageName() {
-        return "mysql:8.4.5";
+        return "mysql:8.4.8";
     }
 
     @Override

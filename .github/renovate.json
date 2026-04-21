@@ -11,6 +11,38 @@
   "prHourlyLimit": 1,
   "prConcurrentLimit": 20,
   "timezone": "Europe/Prague",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Docker image tags pinned in Java provider defaults",
+      "managerFilePatterns": [
+        "/^test-resources-hashicorp-consul\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-hashicorp-vault\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-hivemq\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-kafka\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-localstack\\/test-resources-localstack-core\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-solr\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-jdbc\\/test-resources-jdbc-(mssql|oracle-free|oracle-xe)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-r2dbc\\/test-resources-r2dbc-(mysql|oracle-free|oracle-xe)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-hibernate-reactive\\/test-resources-hibernate-reactive-(mysql|oracle-free|oracle-xe)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/"
+      ],
+      "matchStrings": [
+        "(?:DEFAULT_IMAGE(?:_NAME)?\\s*=\\s*|return\\s+)\"(?<depName>[a-z0-9.-]+(?:\\/[a-z0-9._-]+)*):(?<currentValue>[A-Za-z0-9_.-]+)\""
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Split Elasticsearch image tag pinned in Java provider defaults",
+      "managerFilePatterns": [
+        "/^test-resources-elasticsearch\\/src\\/main\\/java\\/.*ElasticsearchTestResourceProvider\\.java$/"
+      ],
+      "matchStrings": [
+        "DEFAULT_IMAGE\\s*=\\s*\"(?<depName>docker\\.elastic\\.co\\/elasticsearch\\/elasticsearch)\";[\\s\\S]*?DEFAULT_TAG\\s*=\\s*\"(?<currentValue>[A-Za-z0-9_.-]+)\";"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
   "packageRules": [
     {
       "dependencyDashboardApproval": true,

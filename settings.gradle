@@ -26,6 +26,7 @@ def extensionModules = [
 
 def jdbcModules = [
         'core',
+        'h2',
         'mysql',
         'mariadb',
         'oracle-xe',

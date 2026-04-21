@@ -6,6 +6,7 @@ Micronaut Test Resources provides support for the following databases:
 |===
 |Database | JDBC | R2DBC | Database identifier | Default image
 
+| https://www.h2database.com/html/main.html[H2] | Yes | No | `h2` | n/a
 | https://mariadb.org/[MariaDB] | Yes | Yes | `mariadb` | `mariadb`
 | https://www.mysql.com/[MySQL] | Yes | Yes | `mysql` | `container-registry.oracle.com/mysql/community-server`
 | https://www.oracle.com/database/technologies/appdev/xe.html[Oracle Database XE] | Yes | Yes | `oracle-xe` | `gvenzl/oracle-xe:slim-faststart`
@@ -15,7 +16,9 @@ Micronaut Test Resources provides support for the following databases:
 
 |===
 
-Databases are supplied via a https://www.testcontainers.com/[Testcontainers] container.
+Most databases are supplied via a https://www.testcontainers.com/[Testcontainers] container.
+H2 is containerless and starts a loopback-only in-memory TCP server for the lifetime of the test-resources process.
+Shared or remote H2 test resources are not supported at this time, so the H2 resolver stays disabled when `micronaut.test.resources.server.uri` is configured.
 It is possible to override the default image of the container by setting the following property in your application configuration:
 
 - `test-resources.containers.[db-type].image-name`

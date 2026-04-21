@@ -1,0 +1,19 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+    id 'io.micronaut.build.internal.database-testing'
+}
+
+description = """
+Provides support for H2 JDBC test resources.
+"""
+
+dependencies {
+    api(project(':micronaut-test-resources-core'))
+
+    implementation(mnSql.h2)
+
+    testCompileOnly(mnData.micronaut.data.processor)
+    testImplementation(project(":micronaut-test-resources-embedded"))
+    testImplementation(testFixtures(project(":micronaut-test-resources-jdbc-core")))
+    testRuntimeOnly(mnSql.micronaut.jdbc.hikari)
+}

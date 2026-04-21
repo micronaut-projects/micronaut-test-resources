@@ -146,6 +146,47 @@ class IntellijIdeaDatasourceExporterTest extends Specification {
         !Files.exists(outputFile)
     }
 
+    def "overlapping sessions sharing an output path preserve same-name datasources"() {
+        given:
+        def exporter = new IntellijIdeaDatasourceExporter(tempDir)
+        def config = [(IntellijIdeaDatasourceExporter.ENABLED): true]
+        def outputFile = tempDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH)
+
+        when:
+        exporter.export("datasources.default.url", "jdbc:postgresql://localhost:5432/first", config, "first")
+        exporter.export("datasources.default.username", "first_user", config, "first")
+        exporter.export("datasources.default.password", "first_secret", config, "first")
+        exporter.export("datasources.default.driver-class-name", "org.postgresql.Driver", config, "first")
+        exporter.export("datasources.default.url", "jdbc:mysql://localhost:3306/second", config, "second")
+        exporter.export("datasources.default.username", "second_user", config, "second")
+        exporter.export("datasources.default.password", "second_secret", config, "second")
+        exporter.export("datasources.default.driver-class-name", "com.mysql.cj.jdbc.Driver", config, "second")
+
+        then:
+        def combinedOutput = Files.readString(outputFile)
+        combinedOutput.contains("#LocalDataSource: default\n")
+        combinedOutput.contains("#LocalDataSource: default (2)\n")
+        combinedOutput.contains("<jdbc-url>jdbc:postgresql://localhost:5432/first</jdbc-url>")
+        combinedOutput.contains("<jdbc-url>jdbc:mysql://localhost:3306/second</jdbc-url>")
+        combinedOutput.readLines().count { it == "#BEGIN#" } == 2
+
+        when:
+        exporter.clearSession("first")
+
+        then:
+        def secondOnlyOutput = Files.readString(outputFile)
+        secondOnlyOutput.contains("#LocalDataSource: default\n")
+        !secondOnlyOutput.contains("#LocalDataSource: default (2)\n")
+        secondOnlyOutput.contains("<jdbc-url>jdbc:mysql://localhost:3306/second</jdbc-url>")
+        !secondOnlyOutput.contains("<jdbc-url>jdbc:postgresql://localhost:5432/first</jdbc-url>")
+
+        when:
+        exporter.clearSession("second")
+
+        then:
+        !Files.exists(outputFile)
+    }
+
     @RestoreSystemProperties
     def "system properties can enable the exporter"() {
         given:

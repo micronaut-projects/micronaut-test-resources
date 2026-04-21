@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,17 +83,25 @@ final class IntellijIdeaDatasourceExporter {
         }
     }
 
-    private List<JdbcDatasourceState> completeDatasources(Path outputPath) {
-        var datasources = new LinkedHashMap<String, JdbcDatasourceState>();
-        for (ExportSessionState sessionState : sessions.values()) {
+    private List<RenderedDatasource> completeDatasources(Path outputPath) {
+        var datasources = new ArrayList<SessionDatasourceState>();
+        var datasourceCounts = new HashMap<String, Integer>();
+        for (var sessionEntry : sessions.entrySet()) {
+            var sessionId = sessionEntry.getKey();
+            var sessionState = sessionEntry.getValue();
             if (outputPath.equals(sessionState.outputPath)) {
-                sessionState.datasources.forEach(datasources::put);
+                for (JdbcDatasourceState datasource : sessionState.datasources.values()) {
+                    if (datasource.isComplete()) {
+                        datasources.add(new SessionDatasourceState(sessionId, datasource));
+                        datasourceCounts.merge(datasource.name(), 1, Integer::sum);
+                    }
+                }
             }
         }
-        return datasources.values()
-            .stream()
-            .filter(JdbcDatasourceState::isComplete)
-            .sorted(Comparator.comparing(JdbcDatasourceState::name))
+        datasources.sort(Comparator.comparing(SessionDatasourceState::datasourceName));
+        var renderedNameIndexes = new HashMap<String, Integer>();
+        return datasources.stream()
+            .map(datasource -> datasource.render(datasourceCounts, renderedNameIndexes))
             .toList();
     }
 
@@ -99,7 +109,7 @@ final class IntellijIdeaDatasourceExporter {
         writeExport(outputPath, completeDatasources(outputPath));
     }
 
-    private void writeExport(Path outputPath, List<JdbcDatasourceState> completeDatasources) {
+    private void writeExport(Path outputPath, List<RenderedDatasource> completeDatasources) {
         try {
             if (completeDatasources.isEmpty()) {
                 Files.deleteIfExists(outputPath);
@@ -115,14 +125,14 @@ final class IntellijIdeaDatasourceExporter {
         }
     }
 
-    private String render(List<JdbcDatasourceState> completeDatasources) {
+    private String render(List<RenderedDatasource> completeDatasources) {
         var sb = new StringBuilder("#DataSourceSettings#\n");
-        for (JdbcDatasourceState datasource : completeDatasources) {
+        for (RenderedDatasource datasource : completeDatasources) {
             var driverMetadata = DriverMetadata.from(datasource.url, datasource.driverClassName);
-            sb.append("#LocalDataSource: ").append(datasource.name).append('\n');
+            sb.append("#LocalDataSource: ").append(datasource.displayName).append('\n');
             sb.append("#BEGIN#\n");
             sb.append("<data-source source=\"LOCAL\" name=\"")
-                .append(escape(datasource.name))
+                .append(escape(datasource.displayName))
                 .append("\" uuid=\"")
                 .append(datasource.uuid())
                 .append("\">");
@@ -257,9 +267,31 @@ final class IntellijIdeaDatasourceExporter {
         private String name() {
             return name;
         }
+    }
 
+    private record SessionDatasourceState(String sessionId, JdbcDatasourceState datasource) {
+        private String datasourceName() {
+            return datasource.name();
+        }
+
+        private RenderedDatasource render(Map<String, Integer> datasourceCounts, Map<String, Integer> renderedNameIndexes) {
+            String datasourceName = datasource.name();
+            int totalCount = datasourceCounts.getOrDefault(datasourceName, 0);
+            int occurrence = renderedNameIndexes.merge(datasourceName, 1, Integer::sum);
+            String displayName = totalCount > 1 && occurrence > 1 ? datasourceName + " (" + occurrence + ")" : datasourceName;
+            String uuidSeed = totalCount > 1 ? sessionId + ":" + datasourceName : datasourceName;
+            return new RenderedDatasource(displayName, uuidSeed, datasource.url, datasource.username, datasource.password, datasource.driverClassName);
+        }
+    }
+
+    private record RenderedDatasource(String displayName,
+                                      String uuidSeed,
+                                      String url,
+                                      String username,
+                                      String password,
+                                      String driverClassName) {
         private String uuid() {
-            return UUID.nameUUIDFromBytes(("intellij-idea-datasource:" + name).getBytes(StandardCharsets.UTF_8)).toString();
+            return UUID.nameUUIDFromBytes(("intellij-idea-datasource:" + uuidSeed).getBytes(StandardCharsets.UTF_8)).toString();
         }
     }
 

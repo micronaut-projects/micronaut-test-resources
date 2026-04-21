@@ -165,6 +165,40 @@ class TestResourcesClientTest extends Specification implements ClientCleanup {
         firstApp?.close()
     }
 
+    @RestoreSystemProperties
+    def "overlapping application contexts sharing an IntelliJ IDEA output path preserve same-name datasource exports"() {
+        given:
+        def sharedOutput = tempDir.resolve("generated/shared-default/intellij-idea-datasources.xml")
+        def firstApp = createApplication([
+            'test-resources.intellij-idea.enabled'    : 'true',
+            'test-resources.intellij-idea.output-path': sharedOutput.toString()
+        ])
+        def secondApp = createApplication([
+            'test-resources.intellij-idea.enabled'    : 'true',
+            'test-resources.intellij-idea.output-path': sharedOutput.toString()
+        ])
+
+        when:
+        resolveDatasource(firstApp, "default")
+        def cachedClient = TestResourcesClientFactory.fromSystemProperties().orElseThrow()
+        resolveDatasource(secondApp, "default")
+        def reusedClient = TestResourcesClientFactory.fromSystemProperties().orElseThrow()
+
+        then:
+        reusedClient.is(cachedClient)
+        Files.exists(sharedOutput)
+
+        and:
+        def combinedExport = Files.readString(sharedOutput)
+        combinedExport.contains("#LocalDataSource: default\n")
+        combinedExport.contains("#LocalDataSource: default (2)\n")
+        combinedExport.readLines().count { it == "#BEGIN#" } == 2
+
+        cleanup:
+        secondApp?.close()
+        firstApp?.close()
+    }
+
     private ApplicationContext createApplication(Map<String, Object> properties = [:]) {
         System.setProperty(systemPropertyNameOf(TestResourcesClient.SERVER_URI), server.getURI().toString())
         def app = ApplicationContext.builder()

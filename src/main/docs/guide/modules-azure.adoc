@@ -1,0 +1,23 @@
+Azure Storage support will automatically start an https://learn.microsoft.com/azure/storage/common/storage-use-azurite[Azurite] container and resolve the Micronaut Azure shared-key properties needed to talk to the emulator.
+
+The default image can be overwritten by setting the `test-resources.containers.azurite.image-name` property.
+
+The following properties are resolved automatically:
+
+- `azure.credential.storage-shared-key.account-name`
+- `azure.credential.storage-shared-key.account-key`
+- `azure.credential.storage-shared-key.connection-string`
+
+The generated connection string uses Azurite's mapped Testcontainers ports for the blob, queue, and table endpoints, so no fixed host port configuration is required.
+
+By default, the provider starts `mcr.microsoft.com/azure-storage/azurite:3.35.0` with blob, queue, and table listeners bound to all interfaces inside the container.
+
+[configuration]
+----
+azure:
+  credential:
+    storage-shared-key:
+      connection-string: ${azure.credential.storage-shared-key.connection-string}
+----
+
+NOTE: If you need Azurite behavior outside these shared-key properties, the generic Testcontainers support remains available.

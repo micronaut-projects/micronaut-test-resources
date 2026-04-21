@@ -110,7 +110,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         }
     }
 
-    private static class Holder {
+    private static final class Holder {
         // This is a workaround to avoid that the logger ends up in image heap
         // in native-image
         private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesClientPropertyExpressionResolver.class);

@@ -41,7 +41,7 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("unchecked")
 @Internal
-public class DefaultTestResourcesClient implements TestResourcesClient {
+public final class DefaultTestResourcesClient implements TestResourcesClient {
     public static final String ACCESS_TOKEN = "Access-Token";
 
     private static final String RESOLVABLE_PROPERTIES_URI = "/list";
@@ -54,7 +54,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     private static final Argument<String> STRING = Argument.STRING;
     private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
-    private static final String INTERNAL_SERVER_ERROR_PREFIX = INTERNAL_SERVER_ERROR + ": ";    
+    private static final String INTERNAL_SERVER_ERROR_PREFIX = INTERNAL_SERVER_ERROR + ": ";
 
     private final JsonMapper jsonMapper;
     private final String baseUri;

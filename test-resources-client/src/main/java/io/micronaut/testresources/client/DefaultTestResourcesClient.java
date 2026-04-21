@@ -62,8 +62,16 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
 
     private final String accessToken;
     private final Duration clientTimeout;
+    private final IntellijIdeaDatasourceExporter intellijIdeaDatasourceExporter;
 
     public DefaultTestResourcesClient(String baseUri, String accessToken, int clientReadTimeout) {
+        this(baseUri, accessToken, clientReadTimeout, new IntellijIdeaDatasourceExporter());
+    }
+
+    DefaultTestResourcesClient(String baseUri,
+                               String accessToken,
+                               int clientReadTimeout,
+                               IntellijIdeaDatasourceExporter intellijIdeaDatasourceExporter) {
         this.baseUri = baseUri;
         clientTimeout = Duration.ofSeconds(clientReadTimeout);
         this.client = HttpClient.newBuilder()
@@ -71,6 +79,7 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
             .build();
         this.accessToken = accessToken;
         this.jsonMapper = JsonMapper.createDefault();
+        this.intellijIdeaDatasourceExporter = intellijIdeaDatasourceExporter;
     }
 
     @Override
@@ -87,11 +96,20 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     @Override
     public Optional<String> resolve(String name, Map<String, Object> properties,
                                     Map<String, Object> testResourcesConfig) {
+        return resolve(name, properties, testResourcesConfig, "default");
+    }
+
+    Optional<String> resolve(String name,
+                             Map<String, Object> properties,
+                             Map<String, Object> testResourcesConfig,
+                             String exporterSessionId) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("properties", properties);
         params.put("testResourcesConfig", testResourcesConfig);
-        return Optional.ofNullable(request(RESOLVE_URI, STRING, r -> POST(r, params)));
+        Optional<String> resolved = Optional.ofNullable(request(RESOLVE_URI, STRING, r -> POST(r, params)));
+        resolved.ifPresent(value -> intellijIdeaDatasourceExporter.export(name, value, testResourcesConfig, exporterSessionId));
+        return resolved;
     }
 
     @Override
@@ -112,6 +130,10 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     @Override
     public boolean closeScope(@Nullable String id) {
         return request(CLOSE_URI + "/" + id, BOOLEAN, this::GET);
+    }
+
+    void clearIntellijIdeaDatasourceExport(String exporterSessionId) {
+        intellijIdeaDatasourceExporter.clearSession(exporterSessionId);
     }
 
     @SuppressWarnings({"java:S100", "checkstyle:MethodName"})

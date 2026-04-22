@@ -3,6 +3,15 @@ package io.micronaut.testresources.h2
 import io.micronaut.testresources.core.Scope
 import spock.lang.Specification
 
+import java.net.ConnectException
+import java.net.Inet4Address
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.NetworkInterface
+import java.net.NoRouteToHostException
+import java.net.Socket
+import java.net.SocketTimeoutException
+
 class H2TestResourceProviderSpec extends Specification {
     private final H2TestResourceProvider provider = new H2TestResourceProvider()
 
@@ -92,6 +101,33 @@ class H2TestResourceProviderSpec extends Specification {
         provider.serverCount() == 1
     }
 
+    void "binds the H2 TCP listener to loopback only"() {
+        given:
+        Map<String, Object> properties = [
+            (Scope.PROPERTY_KEY)           : 'loopback',
+            'datasources.default.db-type'  : 'h2'
+        ]
+
+        when:
+        String url = provider.resolve('datasources.default.url', properties, [:]).orElseThrow()
+        InetAddress nonLoopbackAddress = findNonLoopbackAddress()
+        if (nonLoopbackAddress == null) {
+            return
+        }
+        int port = tcpPortOf(url)
+        Socket socket = new Socket()
+        try {
+            socket.connect(new InetSocketAddress(nonLoopbackAddress, port), 500)
+        } finally {
+            socket.close()
+        }
+
+        then:
+        IOException e = thrown()
+        e instanceof ConnectException || e instanceof NoRouteToHostException || e instanceof SocketTimeoutException
+        provider.serverCount() == 1
+    }
+
     void "matches the H2 dialect fallback"() {
         given:
         Map<String, Object> properties = [
@@ -170,5 +206,29 @@ class H2TestResourceProviderSpec extends Specification {
         IllegalStateException e = thrown()
         e.message == 'H2 test resource provider is closed'
         provider.serverCount() == 0
+    }
+
+    private static int tcpPortOf(String url) {
+        def matcher = url =~ /jdbc:h2:tcp:\/\/localhost:(\d+)\/mem:.+/
+        assert matcher.matches()
+        matcher.group(1) as int
+    }
+
+    private static InetAddress findNonLoopbackAddress() {
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces()
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface networkInterface = interfaces.nextElement()
+            if (!networkInterface.isUp() || networkInterface.isLoopback() || networkInterface.isVirtual()) {
+                continue
+            }
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses()
+            while (addresses.hasMoreElements()) {
+                InetAddress address = addresses.nextElement()
+                if (address instanceof Inet4Address && !address.isLoopbackAddress() && !address.isLinkLocalAddress() && !address.isAnyLocalAddress()) {
+                    return address
+                }
+            }
+        }
+        null
     }
 }

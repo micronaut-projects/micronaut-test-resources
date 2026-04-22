@@ -17,12 +17,14 @@ package io.micronaut.testresources.h2;
 
 import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
+import org.h2.engine.SysProperties;
 import org.h2.tools.Server;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.BindException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -55,8 +57,11 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
     private static final String DEFAULT_PASSWORD = "";
     private static final String DEFAULT_DRIVER = "org.h2.Driver";
     private static final String JDBC_OPTIONS = "DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DATABASE_TO_UPPER=FALSE";
+    private static final String BIND_ADDRESS_PROPERTY = "h2.bindAddress";
+    private static final String LOOPBACK_HOST = InetAddress.getLoopbackAddress().getHostAddress();
     private static final int MAX_START_ATTEMPTS = 10;
     private static final List<String> SUPPORTED_PROPERTIES = List.of(URL, USERNAME, PASSWORD, DRIVER);
+    private static final Object H2_SYSTEM_PROPERTIES_MONITOR = new Object();
 
     private final Object lifecycleMonitor = new Object();
     private final Map<Scope, H2Server> servers = new ConcurrentHashMap<>();
@@ -241,11 +246,20 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
 
         private static Server startServer() throws SQLException {
             int port = findAvailablePort();
-            return Server.createTcpServer(
-                "-tcp",
-                "-tcpPort", Integer.toString(port),
-                "-ifNotExists"
-            ).start();
+            synchronized (H2_SYSTEM_PROPERTIES_MONITOR) {
+                String previousBindAddress = System.getProperty(BIND_ADDRESS_PROPERTY);
+                System.setProperty(BIND_ADDRESS_PROPERTY, LOOPBACK_HOST);
+                try {
+                    verifyLoopbackBinding();
+                    return Server.createTcpServer(
+                        "-tcp",
+                        "-tcpPort", Integer.toString(port),
+                        "-ifNotExists"
+                    ).start();
+                } finally {
+                    restoreBindAddress(previousBindAddress);
+                }
+            }
         }
 
         private static boolean isBindFailure(SQLException e) {
@@ -262,6 +276,28 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
 
         private static String newDatabaseName(String datasource) {
             return datasource + "_" + UUID.randomUUID().toString().replace("-", "");
+        }
+
+        private static void verifyLoopbackBinding() throws SQLException {
+            String bindAddress = SysProperties.BIND_ADDRESS;
+            if (bindAddress == null || bindAddress.isBlank()) {
+                throw new SQLException("Unable to enforce a loopback-only H2 bind address");
+            }
+            try {
+                if (!InetAddress.getByName(bindAddress).isLoopbackAddress()) {
+                    throw new SQLException("Unable to enforce a loopback-only H2 bind address");
+                }
+            } catch (IOException e) {
+                throw new SQLException("Unable to enforce a loopback-only H2 bind address", e);
+            }
+        }
+
+        private static void restoreBindAddress(String previousBindAddress) {
+            if (previousBindAddress == null) {
+                System.clearProperty(BIND_ADDRESS_PROPERTY);
+            } else {
+                System.setProperty(BIND_ADDRESS_PROPERTY, previousBindAddress);
+            }
         }
 
         private static int findAvailablePort() {

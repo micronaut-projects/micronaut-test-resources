@@ -299,7 +299,7 @@ public class ServerUtils {
                     return ServiceProbeResult.runningButInvalid("it did not return the expected JSON array payload");
                 }
             }
-            return ServiceProbeResult.reusable();
+            return ServiceProbeResult.reusableServer();
         } catch (IOException e) {
             return ServiceProbeResult.runningButInvalid("probing failed with " + e.getClass().getSimpleName());
         } finally {
@@ -575,18 +575,8 @@ public class ServerUtils {
         }
     }
 
-    private static final class ServiceProbeResult {
-        private final boolean reusable;
-        private final boolean running;
-        private final String failureReason;
-
-        private ServiceProbeResult(boolean reusable, boolean running, String failureReason) {
-            this.reusable = reusable;
-            this.running = running;
-            this.failureReason = failureReason;
-        }
-
-        private static ServiceProbeResult reusable() {
+    private record ServiceProbeResult(boolean reusable, boolean running, String failureReason) {
+        private static ServiceProbeResult reusableServer() {
             return new ServiceProbeResult(true, true, null);
         }
 

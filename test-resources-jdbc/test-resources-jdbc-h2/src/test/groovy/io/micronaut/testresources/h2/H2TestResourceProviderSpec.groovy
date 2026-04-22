@@ -70,6 +70,28 @@ class H2TestResourceProviderSpec extends Specification {
         provider.serverCount() == 2
     }
 
+    void "reuses the same server for multiple datasource names in the same scope"() {
+        given:
+        Map<String, Object> properties = [
+            (Scope.PROPERTY_KEY)         : 'shared',
+            'datasources.alpha.db-type'  : 'h2',
+            'datasources.beta.db-type'   : 'h2'
+        ]
+
+        when:
+        String alphaUrl = provider.resolve('datasources.alpha.url', properties, [:]).orElseThrow()
+        String betaUrl = provider.resolve('datasources.beta.url', properties, [:]).orElseThrow()
+
+        then:
+        alphaUrl.startsWith('jdbc:h2:tcp://localhost:')
+        betaUrl.startsWith('jdbc:h2:tcp://localhost:')
+        alphaUrl.contains('/mem:alpha_')
+        betaUrl.contains('/mem:beta_')
+        alphaUrl != betaUrl
+        alphaUrl.substring(0, alphaUrl.indexOf('/mem:')) == betaUrl.substring(0, betaUrl.indexOf('/mem:'))
+        provider.serverCount() == 1
+    }
+
     void "matches the H2 dialect fallback"() {
         given:
         Map<String, Object> properties = [
@@ -130,6 +152,23 @@ class H2TestResourceProviderSpec extends Specification {
         provider.close()
 
         then:
+        provider.serverCount() == 0
+    }
+
+    void "does not create new servers after close"() {
+        given:
+        Map<String, Object> properties = [
+            (Scope.PROPERTY_KEY)           : 'closed',
+            'datasources.default.db-type'  : 'h2'
+        ]
+
+        when:
+        provider.close()
+        provider.resolve('datasources.default.url', properties, [:])
+
+        then:
+        IllegalStateException e = thrown()
+        e.message == 'H2 test resource provider is closed'
         provider.serverCount() == 0
     }
 }

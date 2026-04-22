@@ -22,14 +22,17 @@ import org.h2.tools.Server;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -52,9 +55,12 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
     private static final String DEFAULT_PASSWORD = "";
     private static final String DEFAULT_DRIVER = "org.h2.Driver";
     private static final String JDBC_OPTIONS = "DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DATABASE_TO_UPPER=FALSE";
+    private static final int MAX_START_ATTEMPTS = 10;
     private static final List<String> SUPPORTED_PROPERTIES = List.of(URL, USERNAME, PASSWORD, DRIVER);
 
-    private final Map<Key, H2Server> servers = new ConcurrentHashMap<>();
+    private final Object lifecycleMonitor = new Object();
+    private final Map<Scope, H2Server> servers = new ConcurrentHashMap<>();
+    private final AtomicBoolean closed = new AtomicBoolean();
 
     @Override
     public String getDisplayName() {
@@ -99,7 +105,7 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
         }
         String datasource = datasourceNameFrom(propertyName);
         return Optional.ofNullable(switch (datasourcePropertyFrom(propertyName)) {
-            case URL -> server(properties, datasource).getJdbcUrl();
+            case URL -> server(properties).getJdbcUrl(datasource);
             case USERNAME -> DEFAULT_USERNAME;
             case PASSWORD -> DEFAULT_PASSWORD;
             case DRIVER -> DEFAULT_DRIVER;
@@ -109,8 +115,16 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
 
     @Override
     public void close() throws IOException {
+        if (!closed.compareAndSet(false, true)) {
+            return;
+        }
+        List<H2Server> activeServers;
+        synchronized (lifecycleMonitor) {
+            activeServers = List.copyOf(servers.values());
+            servers.clear();
+        }
         IOException failure = null;
-        for (H2Server server : servers.values()) {
+        for (H2Server server : activeServers) {
             try {
                 server.close();
             } catch (IOException e) {
@@ -121,7 +135,6 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
                 }
             }
         }
-        servers.clear();
         if (failure != null) {
             throw failure;
         }
@@ -129,13 +142,6 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
 
     int serverCount() {
         return servers.size();
-    }
-
-    private H2Server server(Map<String, Object> properties, String datasource) {
-        return servers.computeIfAbsent(
-            new Key(Scope.from(properties), datasource),
-            key -> H2Server.start(datasource)
-        );
     }
 
     private static boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties) {
@@ -184,34 +190,43 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
         return PREFIX + "." + datasource + "." + property;
     }
 
-    private record Key(Scope scope, String datasource) {
+    private H2Server server(Map<String, Object> properties) {
+        synchronized (lifecycleMonitor) {
+            if (closed.get()) {
+                throw new IllegalStateException("H2 test resource provider is closed");
+            }
+            return servers.computeIfAbsent(
+                Scope.from(properties),
+                ignored -> H2Server.start()
+            );
+        }
     }
 
     private static final class H2Server implements Closeable {
-        private final String databaseName;
         private final Server server;
+        private final Map<String, String> databaseNames = new ConcurrentHashMap<>();
 
-        private H2Server(String databaseName, Server server) {
-            this.databaseName = databaseName;
+        private H2Server(Server server) {
             this.server = server;
         }
 
-        private static H2Server start(String datasource) {
-            String databaseName = datasource + "_" + UUID.randomUUID().toString().replace("-", "");
-            int port = findAvailablePort();
-            try {
-                Server server = Server.createTcpServer(
-                    "-tcp",
-                    "-tcpPort", Integer.toString(port),
-                    "-ifNotExists"
-                ).start();
-                return new H2Server(databaseName, server);
-            } catch (SQLException e) {
-                throw new IllegalStateException("Unable to start H2 TCP server", e);
+        private static H2Server start() {
+            SQLException failure = null;
+            for (int attempt = 0; attempt < MAX_START_ATTEMPTS; attempt++) {
+                try {
+                    return new H2Server(startServer());
+                } catch (SQLException e) {
+                    if (!isBindFailure(e) || attempt == MAX_START_ATTEMPTS - 1) {
+                        throw new IllegalStateException("Unable to start H2 TCP server", e);
+                    }
+                    failure = e;
+                }
             }
+            throw new IllegalStateException("Unable to start H2 TCP server", failure);
         }
 
-        private String getJdbcUrl() {
+        private String getJdbcUrl(String datasource) {
+            String databaseName = databaseNames.computeIfAbsent(datasource, H2Server::newDatabaseName);
             return "jdbc:h2:tcp://%s:%d/mem:%s;%s".formatted(DEFAULT_HOST, server.getPort(), databaseName, JDBC_OPTIONS);
         }
 
@@ -222,6 +237,31 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
             } catch (RuntimeException e) {
                 throw new IOException("Unable to stop H2 TCP server", e);
             }
+        }
+
+        private static Server startServer() throws SQLException {
+            int port = findAvailablePort();
+            return Server.createTcpServer(
+                "-tcp",
+                "-tcpPort", Integer.toString(port),
+                "-ifNotExists"
+            ).start();
+        }
+
+        private static boolean isBindFailure(SQLException e) {
+            Throwable current = e;
+            while (current != null) {
+                if (current instanceof BindException) {
+                    return true;
+                }
+                current = current.getCause();
+            }
+            String message = e.getMessage();
+            return message != null && message.toLowerCase(Locale.ROOT).contains("already in use");
+        }
+
+        private static String newDatabaseName(String datasource) {
+            return datasource + "_" + UUID.randomUUID().toString().replace("-", "");
         }
 
         private static int findAvailablePort() {

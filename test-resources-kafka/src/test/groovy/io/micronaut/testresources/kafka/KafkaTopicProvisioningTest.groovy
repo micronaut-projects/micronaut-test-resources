@@ -99,6 +99,28 @@ class KafkaPartitionsWithoutTopicsTest extends AbstractKafkaTopicProvisioningSpe
     }
 }
 
+class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvisioningSpec {
+
+    def "provisions configured Kafka topics when reusing a cached broker in the same scope"() {
+        given:
+        def provider = new KafkaTestResourceProvider()
+        def requestedProperties = properties
+
+        when:
+        def bootstrapServers = provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, requestedProperties, [:]).orElseThrow()
+        def reusedBootstrapServers = provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, requestedProperties, [
+            (KafkaTestResourceProvider.KAFKA_TOPICS)    : "orders",
+            (KafkaTestResourceProvider.KAFKA_PARTITIONS): "2"
+        ]).orElseThrow()
+        def topics = describeTopics(reusedBootstrapServers, "orders")
+
+        then:
+        bootstrapServers == reusedBootstrapServers
+        topics.orders.partitions().size() == 2
+        listContainers().size() == 1
+    }
+}
+
 class KafkaInvalidTopicProvisioningConfigTest extends Specification {
 
     def "rejects blank Kafka topic names"() {

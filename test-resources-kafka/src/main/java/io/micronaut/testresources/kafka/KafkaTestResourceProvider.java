@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
@@ -53,9 +54,12 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String DISPLAY_NAME = "Kafka";
     public static final String SIMPLE_NAME = "kafka";
     private static final long ADMIN_TIMEOUT_SECONDS = 30;
+    private static final TopicProvisioningConfiguration NO_TOPICS =
+        new TopicProvisioningConfiguration(Collections.emptyList(), DEFAULT_PARTITIONS);
 
     private final Object topicProvisioningMonitor = new Object();
-    private final Map<KafkaContainer, TopicProvisioningConfiguration> topicProvisioningConfigurations =
+    private final ThreadLocal<TopicProvisioningConfiguration> requestedTopicProvisioningConfiguration = new ThreadLocal<>();
+    private final Map<KafkaContainer, Set<TopicProvisioningConfiguration>> provisionedTopicConfigurations =
         Collections.synchronizedMap(new WeakHashMap<>());
 
     @Override
@@ -80,15 +84,18 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     @Override
     protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        KafkaContainer container = new KafkaContainer(imageName);
-        topicProvisioningConfigurations.put(container, topicProvisioningConfiguration(testResourcesConfig));
-        return container;
+        return new KafkaContainer(imageName);
     }
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, KafkaContainer container) {
-        ensureTopicsExist(container);
-        return Optional.of(container.getBootstrapServers());
+        TopicProvisioningConfiguration configuration = Optional.ofNullable(requestedTopicProvisioningConfiguration.get()).orElse(NO_TOPICS);
+        try {
+            ensureTopicsExist(container, configuration);
+            return Optional.of(container.getBootstrapServers());
+        } finally {
+            requestedTopicProvisioningConfiguration.remove();
+        }
     }
 
     @Override
@@ -96,18 +103,24 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         return KAFKA_BOOTSTRAP_SERVERS.equals(propertyName);
     }
 
-    private void ensureTopicsExist(KafkaContainer container) {
-        TopicProvisioningConfiguration configuration = topicProvisioningConfigurations.get(container);
-        if (configuration == null || configuration.provisioned() || configuration.topics().isEmpty()) {
+    @Override
+    protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        requestedTopicProvisioningConfiguration.set(topicProvisioningConfiguration(testResourcesConfig));
+        return Optional.empty();
+    }
+
+    private void ensureTopicsExist(KafkaContainer container, TopicProvisioningConfiguration configuration) {
+        if (configuration.topics().isEmpty()) {
             return;
         }
         synchronized (topicProvisioningMonitor) {
-            TopicProvisioningConfiguration currentConfiguration = topicProvisioningConfigurations.get(container);
-            if (currentConfiguration == null || currentConfiguration.provisioned() || currentConfiguration.topics().isEmpty()) {
+            Set<TopicProvisioningConfiguration> provisionedConfigurations =
+                provisionedTopicConfigurations.computeIfAbsent(container, ignored -> new HashSet<>());
+            if (provisionedConfigurations.contains(configuration)) {
                 return;
             }
-            provisionTopics(container, currentConfiguration);
-            topicProvisioningConfigurations.put(container, currentConfiguration.markProvisioned());
+            provisionTopics(container, configuration);
+            provisionedConfigurations.add(configuration);
         }
     }
 
@@ -153,9 +166,9 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     private TopicProvisioningConfiguration topicProvisioningConfiguration(Map<String, Object> testResourcesConfig) {
         List<String> topics = configuredTopics(testResourcesConfig);
         if (topics.isEmpty()) {
-            return new TopicProvisioningConfiguration(topics, DEFAULT_PARTITIONS, false);
+            return NO_TOPICS;
         }
-        return new TopicProvisioningConfiguration(topics, configuredPartitions(testResourcesConfig), false);
+        return new TopicProvisioningConfiguration(topics, configuredPartitions(testResourcesConfig));
     }
 
     static List<String> configuredTopics(Map<String, Object> testResourcesConfig) {
@@ -204,9 +217,6 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         }
     }
 
-    private record TopicProvisioningConfiguration(List<String> topics, int partitions, boolean provisioned) {
-        private TopicProvisioningConfiguration markProvisioned() {
-            return new TopicProvisioningConfiguration(topics, partitions, true);
-        }
+    private record TopicProvisioningConfiguration(List<String> topics, int partitions) {
     }
 }

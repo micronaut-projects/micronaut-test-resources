@@ -52,16 +52,25 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
     public static final int TABLE_PORT = 10002;
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) { return RESOLVABLE_PROPERTIES_LIST; }
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
+                                                Map<String, Object> testResourcesConfig) {
+        return RESOLVABLE_PROPERTIES_LIST;
+    }
 
     @Override
-    public String getDisplayName() { return DISPLAY_NAME; }
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
 
     @Override
-    protected String getSimpleName() { return SIMPLE_NAME; }
+    protected String getSimpleName() {
+        return SIMPLE_NAME;
+    }
 
     @Override
-    protected String getDefaultImageName() { return DEFAULT_IMAGE; }
+    protected String getDefaultImageName() {
+        return DEFAULT_IMAGE;
+    }
 
     @Override
     @SuppressWarnings("java:S2095") // Container lifecycle is managed by AbstractTestContainersProvider/TestContainers.

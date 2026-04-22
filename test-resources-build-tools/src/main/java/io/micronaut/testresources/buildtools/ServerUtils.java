@@ -69,16 +69,20 @@ public class ServerUtils {
     private static final String SERVER_URI = "server.uri";
     private static final String SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY = "server.access-token";
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
+    private static final String ACCESS_TOKEN_HEADER = "Access-Token";
     private static final String SERVER_CLIENT_READ_TIMEOUT = "server.client.read.timeout";
     private static final String SERVER_IDLE_TIMEOUT_MINUTES = "server.idle.timeout.minutes";
     private static final String SERVER_ENTRY_POINT =
         "io.micronaut.testresources.server.TestResourcesService";
+    private static final String REQUIREMENTS_ENTRIES_PATH = "/requirements/entries";
     private static final String MICRONAUT_SERVER_PORT = "micronaut.server.port";
     private static final String JMX_SYSTEM_PROPERTY = "com.sun.management.jmxremote";
     private static final String CDS_HASH = "cds.bin";
     private static final String CDS_FILE = "cds.jsa";
     private static final String CDS_CLASS_LST = "cds.classlist";
     private static final String FLAT_JAR = "flat.jar";
+    private static final String JSON_CONTENT_TYPE = "application/json";
+    private static final int SERVER_PROBE_TIMEOUT_MS = 1000;
 
     // See io.micronaut.testresources.testcontainers.DockerSupport.TIMEOUT
     private static final String DOCKER_CHECK_TIMEOUT_SECONDS_ENV =
@@ -184,17 +188,39 @@ public class ServerUtils {
         Optional<ServerSettings> maybeServerSettings = readServerSettings(serverSettingsDirectory);
         if (maybeServerSettings.isPresent()) {
             LOGGER.info("Server settings found in {}", serverSettingsDirectory);
-            ServerSettings serverSettings = maybeServerSettings.get();
-            if (explicitPort != null && isServerStarted(explicitPort)) {
-                if (serverSettings.getPort() == explicitPort) {
+        }
+        if (explicitPort != null) {
+            ServiceProbeResult savedServerProbe = null;
+            if (maybeServerSettings.isPresent() && maybeServerSettings.get().getPort() == explicitPort) {
+                ServerSettings serverSettings = maybeServerSettings.get();
+                savedServerProbe = probeServer(serverSettings);
+                if (savedServerProbe.isReusable()) {
                     return serverSettings;
                 }
-                throw new IllegalStateException("Server already started on port " + explicitPort +
-                                                " but settings file says it should be on port " +
-                                                serverSettings.getPort());
             }
-            if (isServerStarted(serverSettings.getPort())) {
+            ServiceProbeResult explicitPortProbe =
+                probeServer(new ServerSettings(explicitPort, accessToken, clientTimeoutMs, serverIdleTimeoutMinutes));
+            if (explicitPortProbe.isReusable()) {
+                ServerSettings settings =
+                    new ServerSettings(explicitPort, accessToken, clientTimeoutMs, serverIdleTimeoutMinutes);
+                writeServerSettings(serverSettingsDirectory, settings);
+                return settings;
+            }
+            if (explicitPortProbe.isRunning()) {
+                throw explicitPortReuseFailure(explicitPort, explicitPortProbe.getFailureReason());
+            }
+            if (savedServerProbe != null && savedServerProbe.isRunning()) {
+                throw explicitPortReuseFailure(explicitPort, savedServerProbe.getFailureReason());
+            }
+        } else if (maybeServerSettings.isPresent()) {
+            ServerSettings serverSettings = maybeServerSettings.get();
+            ServiceProbeResult serverProbe = probeServer(serverSettings);
+            if (serverProbe.isReusable()) {
                 return serverSettings;
+            }
+            if (serverProbe.isRunning()) {
+                LOGGER.warn("Ignoring stale test resources server settings in {} because {}",
+                    serverSettingsDirectory, serverProbe.getFailureReason());
             }
         }
         if (Files.exists(portFilePath)) {
@@ -230,6 +256,118 @@ public class ServerUtils {
             new ServerSettings(port, accessToken, clientTimeoutMs, serverIdleTimeoutMinutes);
         writeServerSettings(serverSettingsDirectory, settings);
         return settings;
+    }
+
+    private static IllegalStateException explicitPortReuseFailure(int explicitPort, String failureReason) {
+        return new IllegalStateException("Explicit test resources port " + explicitPort + " is already in use "
+            + "by a service that could not be validated as Micronaut Test Resources: " + failureReason);
+    }
+
+    private static ServiceProbeResult probeServer(ServerSettings serverSettings) {
+        int port = serverSettings.getPort();
+        if (!isServerStarted(port)) {
+            return ServiceProbeResult.notRunning();
+        }
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL("http://localhost:" + port + REQUIREMENTS_ENTRIES_PATH);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(SERVER_PROBE_TIMEOUT_MS);
+            conn.setReadTimeout(SERVER_PROBE_TIMEOUT_MS);
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", JSON_CONTENT_TYPE);
+            String accessToken = serverSettings.getAccessToken().orElse(null);
+            if (accessToken != null) {
+                conn.setRequestProperty(ACCESS_TOKEN_HEADER, accessToken);
+            }
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                return ServiceProbeResult.runningButInvalid("the saved access token was rejected");
+            }
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                return ServiceProbeResult.runningButInvalid("it responded with HTTP " + responseCode);
+            }
+            if (!isJsonContentType(conn.getContentType())) {
+                return ServiceProbeResult.runningButInvalid("it did not return JSON");
+            }
+            try (InputStream inputStream = conn.getInputStream()) {
+                String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                if (!isJsonStringArray(body)) {
+                    return ServiceProbeResult.runningButInvalid("it did not return the expected JSON array payload");
+                }
+            }
+            return ServiceProbeResult.reusable();
+        } catch (IOException e) {
+            return ServiceProbeResult.runningButInvalid("probing failed with " + e.getClass().getSimpleName());
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+    }
+
+    private static boolean isJsonContentType(String contentType) {
+        return contentType != null && contentType.toLowerCase().contains(JSON_CONTENT_TYPE);
+    }
+
+    private static boolean isJsonStringArray(String body) {
+        int cursor = skipWhitespace(body, 0);
+        if (cursor >= body.length() || body.charAt(cursor) != '[') {
+            return false;
+        }
+        cursor = skipWhitespace(body, cursor + 1);
+        if (cursor < body.length() && body.charAt(cursor) == ']') {
+            return skipWhitespace(body, cursor + 1) == body.length();
+        }
+        while (cursor < body.length()) {
+            cursor = consumeJsonString(body, cursor);
+            if (cursor < 0) {
+                return false;
+            }
+            cursor = skipWhitespace(body, cursor);
+            if (cursor >= body.length()) {
+                return false;
+            }
+            char next = body.charAt(cursor);
+            if (next == ']') {
+                return skipWhitespace(body, cursor + 1) == body.length();
+            }
+            if (next != ',') {
+                return false;
+            }
+            cursor = skipWhitespace(body, cursor + 1);
+        }
+        return false;
+    }
+
+    private static int skipWhitespace(String body, int cursor) {
+        while (cursor < body.length() && Character.isWhitespace(body.charAt(cursor))) {
+            cursor++;
+        }
+        return cursor;
+    }
+
+    private static int consumeJsonString(String body, int cursor) {
+        if (cursor >= body.length() || body.charAt(cursor) != '"') {
+            return -1;
+        }
+        cursor++;
+        while (cursor < body.length()) {
+            char current = body.charAt(cursor);
+            if (current == '"') {
+                return cursor + 1;
+            }
+            if (current == '\\') {
+                cursor++;
+                if (cursor >= body.length()) {
+                    return -1;
+                }
+            } else if (Character.isISOControl(current)) {
+                return -1;
+            }
+            cursor++;
+        }
+        return -1;
     }
 
     /**
@@ -431,6 +569,42 @@ public class ServerUtils {
 
         default boolean isCDSDumpInvocation() {
             return false;
+        }
+    }
+
+    private static final class ServiceProbeResult {
+        private final boolean reusable;
+        private final boolean running;
+        private final String failureReason;
+
+        private ServiceProbeResult(boolean reusable, boolean running, String failureReason) {
+            this.reusable = reusable;
+            this.running = running;
+            this.failureReason = failureReason;
+        }
+
+        private static ServiceProbeResult reusable() {
+            return new ServiceProbeResult(true, true, null);
+        }
+
+        private static ServiceProbeResult notRunning() {
+            return new ServiceProbeResult(false, false, "it is not running");
+        }
+
+        private static ServiceProbeResult runningButInvalid(String failureReason) {
+            return new ServiceProbeResult(false, true, failureReason);
+        }
+
+        private boolean isReusable() {
+            return reusable;
+        }
+
+        private boolean isRunning() {
+            return running;
+        }
+
+        private String getFailureReason() {
+            return failureReason;
         }
     }
 

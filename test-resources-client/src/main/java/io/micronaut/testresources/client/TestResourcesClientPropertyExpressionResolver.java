@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static io.micronaut.testresources.core.PropertyResolverSupport.resolveRequiredProperties;
@@ -39,17 +40,14 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
         super(new DelegateResolver());
     }
 
-    private static TestResourcesClient createClient() {
-        return TestResourcesClientFactory.findByConvention().orElse(NoOpClient.INSTANCE);
-    }
-
     private static final class DelegateResolver implements PropertyExpressionResolver, AutoCloseable {
 
         // Using a dummy hashmap for convenience
         private final Map<Boolean, TestResourcesClient> clientHolder = new ConcurrentHashMap<>();
+        private final String intellijIdeaExportSessionId = UUID.randomUUID().toString();
 
         private TestResourcesClient client() {
-            return clientHolder.computeIfAbsent(Boolean.TRUE, unused -> createClient());
+            return clientHolder.computeIfAbsent(Boolean.TRUE, unused -> TestResourcesClientFactory.findByConvention().orElse(NoOpClient.INSTANCE));
         }
 
         @Override
@@ -71,10 +69,16 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
             return Optional.empty();
         }
 
-        private static Optional<String> callClient(String expression, TestResourcesClient client, Map<String, Object> props, Map<String, Object> properties) {
+        private Optional<String> callClient(String expression, TestResourcesClient client, Map<String, Object> props, Map<String, Object> properties) {
+            if (client instanceof DefaultTestResourcesClient defaultClient) {
+                return withErrorHandling(
+                    () -> defaultClient.resolve(expression, props, properties, intellijIdeaExportSessionId),
+                    () -> "Test resources service wasn't able to resolve expression '" + expression + "'"
+                );
+            }
             return withErrorHandling(
                 () -> client.resolve(expression, props, properties),
-                () -> "Test resources service wasn't able to revolve expression '" + expression + "'"
+                () -> "Test resources service wasn't able to resolve expression '" + expression + "'"
             );
         }
 
@@ -96,12 +100,17 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
 
         @Override
         public synchronized void close() {
-            client().closeAll();
-            clientHolder.clear();
+            TestResourcesClient client = clientHolder.remove(Boolean.TRUE);
+            if (client instanceof DefaultTestResourcesClient defaultClient) {
+                defaultClient.clearIntellijIdeaDatasourceExport(intellijIdeaExportSessionId);
+            }
+            if (client != null) {
+                client.closeAll();
+            }
         }
     }
 
-    private static class Holder {
+    private static final class Holder {
         // This is a workaround to avoid that the logger ends up in image heap
         // in native-image
         private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesClientPropertyExpressionResolver.class);

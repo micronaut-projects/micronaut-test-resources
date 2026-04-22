@@ -70,6 +70,7 @@ public class ServerUtils {
     private static final String SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY = "server.access-token";
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
     private static final String SERVER_CLIENT_READ_TIMEOUT = "server.client.read.timeout";
+    private static final String CLIENT_PROJECT_PATH_URI = "micronaut.test.resources.project-path-uri";
     private static final String SERVER_IDLE_TIMEOUT_MINUTES = "server.idle.timeout.minutes";
     private static final String SERVER_ENTRY_POINT =
         "io.micronaut.testresources.server.TestResourcesService";
@@ -103,6 +104,8 @@ public class ServerUtils {
                 .ifPresent(token -> prn.println(SERVER_ACCESS_TOKEN + "=" + token));
             settings.getClientTimeout()
                 .ifPresent(timeout -> prn.println(SERVER_CLIENT_READ_TIMEOUT + "=" + timeout));
+            inferProjectDirectory(destinationDirectory)
+                .ifPresent(projectDirectory -> prn.println(CLIENT_PROJECT_PATH_URI + "=" + projectDirectory.toUri()));
         }
     }
 
@@ -314,6 +317,20 @@ public class ServerUtils {
     public static Path getDefaultSharedSettingsPath(String namespace) {
         String ns = namespace == null ? "test-resources" : "test-resources-" + namespace;
         return Paths.get(System.getProperty("user.home"), ".micronaut/" + ns);
+    }
+
+    private static Optional<Path> inferProjectDirectory(Path settingsDirectory) {
+        Path current = settingsDirectory.toAbsolutePath().normalize();
+        while (current != null) {
+            if (Files.exists(current.resolve("settings.gradle"))
+                || Files.exists(current.resolve("settings.gradle.kts"))
+                || Files.exists(current.resolve("gradlew"))
+                || Files.exists(current.resolve("gradlew.bat"))) {
+                return Optional.of(current);
+            }
+            current = current.getParent();
+        }
+        return Optional.empty();
     }
 
     private static void startAndWait(ServerFactory serverFactory,

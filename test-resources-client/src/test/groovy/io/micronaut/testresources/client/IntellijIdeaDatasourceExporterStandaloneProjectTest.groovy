@@ -33,7 +33,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
         String projectVersion = propertyValue(repoRoot.resolve("gradle.properties"), "projectVersion")
         String micronautPlatformVersion = versionCatalogValue(repoRoot.resolve("gradle/libs.versions.toml"), "micronaut-platform")
         String micronautGradlePluginVersion = versionCatalogValue(repoRoot.resolve("gradle/libs.versions.toml"), "micronaut-gradle-plugin")
-        writeStandaloneProject(sampleProject, outputFile, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
+        writeStandaloneProject(sampleProject, "intellij-export-sample", outputFile, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
 
         when:
         CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
@@ -60,7 +60,63 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
         output.contains("<password>test</password>")
     }
 
+    def "standalone Gradle daemon reuse writes the default IntelliJ IDEA export into the current project"() {
+        given:
+        Path repoRoot = findRepositoryRoot()
+        Path mavenRepo = tempDir.resolve("maven-repo")
+        Path gradleUserHome = tempDir.resolve("gradle-user-home")
+        Path firstProject = tempDir.resolve("first-project")
+        Path secondProject = tempDir.resolve("second-project")
+        Path firstOutput = firstProject.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH)
+        Path secondOutput = secondProject.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH)
+        String projectVersion = propertyValue(repoRoot.resolve("gradle.properties"), "projectVersion")
+        String micronautPlatformVersion = versionCatalogValue(repoRoot.resolve("gradle/libs.versions.toml"), "micronaut-platform")
+        String micronautGradlePluginVersion = versionCatalogValue(repoRoot.resolve("gradle/libs.versions.toml"), "micronaut-gradle-plugin")
+        writeStandaloneProject(firstProject, "intellij-export-first", null, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
+        writeStandaloneProject(secondProject, "intellij-export-second", null, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
+
+        when:
+        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
+        CommandResult firstBuild = runGradle(repoRoot, [
+            "--console=plain",
+            "--gradle-user-home", gradleUserHome.toString(),
+            "-p", firstProject.toString(),
+            "test",
+            "--tests", "example.ExportSpec",
+            "-Dsample.repo=${mavenRepo.toUri()}".toString()
+        ])
+
+        then:
+        assert publish.exitCode == 0: publish.output
+        assert firstBuild.exitCode == 0: firstBuild.output
+        Files.exists(firstOutput)
+        !Files.exists(secondOutput)
+
+        when:
+        Files.delete(firstOutput)
+        CommandResult secondBuild = runGradle(repoRoot, [
+            "--console=plain",
+            "--gradle-user-home", gradleUserHome.toString(),
+            "-p", secondProject.toString(),
+            "test",
+            "--tests", "example.ExportSpec",
+            "-Dsample.repo=${mavenRepo.toUri()}".toString()
+        ])
+
+        then:
+        assert secondBuild.exitCode == 0: secondBuild.output
+        !Files.exists(firstOutput)
+        Files.exists(secondOutput)
+
+        and:
+        def output = Files.readString(secondOutput)
+        output.contains("#LocalDataSource: default")
+        output.contains("<jdbc-driver>org.postgresql.Driver</jdbc-driver>")
+        output.contains("<jdbc-url>jdbc:postgresql://")
+    }
+
     private static void writeStandaloneProject(Path sampleProject,
+                                               String projectName,
                                                Path outputFile,
                                                String projectVersion,
                                                String micronautPlatformVersion,
@@ -76,7 +132,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
                 }
             }
 
-            rootProject.name = 'intellij-export-sample'
+            rootProject.name = '${projectName}'
             """.stripIndent())
 
         Files.writeString(sampleProject.resolve("build.gradle"), """
@@ -128,7 +184,16 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
             }
             """.stripIndent())
 
-        Files.writeString(sampleProject.resolve("src/test/resources/application-test.yml"), """
+        String applicationConfig = outputFile == null ? """
+            datasources:
+              default:
+                db-type: postgres
+                schema-generate: CREATE_DROP
+
+            test-resources:
+              intellij-idea:
+                enabled: true
+            """.stripIndent() : """
             datasources:
               default:
                 db-type: postgres
@@ -138,7 +203,9 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
               intellij-idea:
                 enabled: true
                 output-path: ${outputFile}
-            """.stripIndent())
+            """.stripIndent()
+
+        Files.writeString(sampleProject.resolve("src/test/resources/application-test.yml"), applicationConfig)
 
         Files.writeString(sampleProject.resolve("src/test/groovy/example/ExportSpec.groovy"), """
             package example

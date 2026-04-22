@@ -199,6 +199,41 @@ class TestResourcesClientTest extends Specification implements ClientCleanup {
         firstApp?.close()
     }
 
+    @RestoreSystemProperties
+    def "cached client uses the current project path for the default IntelliJ IDEA export location"() {
+        given:
+        def firstProjectDir = tempDir.resolve("first-project")
+        def secondProjectDir = tempDir.resolve("second-project")
+        Files.createDirectories(firstProjectDir)
+        Files.createDirectories(secondProjectDir)
+        def firstOutput = firstProjectDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH)
+        def secondOutput = secondProjectDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH)
+        System.setProperty(systemPropertyNameOf(IntellijIdeaDatasourceExporter.PROJECT_PATH_URI), firstProjectDir.toUri().toString())
+        def firstApp = createApplication([
+            'test-resources.intellij-idea.enabled': 'true'
+        ])
+
+        when:
+        resolveDatasource(firstApp, "default")
+        def cachedClient = TestResourcesClientFactory.fromSystemProperties().orElseThrow()
+        Files.deleteIfExists(firstOutput)
+        System.setProperty(systemPropertyNameOf(IntellijIdeaDatasourceExporter.PROJECT_PATH_URI), secondProjectDir.toUri().toString())
+        def secondApp = createApplication([
+            'test-resources.intellij-idea.enabled': 'true'
+        ])
+        resolveDatasource(secondApp, "default")
+        def reusedClient = TestResourcesClientFactory.fromSystemProperties().orElseThrow()
+
+        then:
+        reusedClient.is(cachedClient)
+        !Files.exists(firstOutput)
+        Files.exists(secondOutput)
+
+        cleanup:
+        secondApp?.close()
+        firstApp?.close()
+    }
+
     private ApplicationContext createApplication(Map<String, Object> properties = [:]) {
         System.setProperty(systemPropertyNameOf(TestResourcesClient.SERVER_URI), server.getURI().toString())
         def app = ApplicationContext.builder()

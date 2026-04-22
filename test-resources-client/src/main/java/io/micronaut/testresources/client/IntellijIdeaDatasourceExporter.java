@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import java.util.UUID;
 final class IntellijIdeaDatasourceExporter {
     static final String ENABLED = "intellij-idea.enabled";
     static final String OUTPUT_PATH = "intellij-idea.output-path";
+    static final String PROJECT_PATH_URI = "project-path-uri";
     static final String DEFAULT_OUTPUT_PATH = ".micronaut/test-resources/intellij-idea-datasources.xml";
 
     private static final String DATASOURCES_PREFIX = "datasources.";
@@ -194,11 +196,26 @@ final class IntellijIdeaDatasourceExporter {
     private record ExportConfiguration(boolean enabled, Path outputPath) {
         private static ExportConfiguration from(Map<String, Object> testResourcesConfig, Path projectDirectory) {
             boolean enabled = booleanValue(testResourcesConfig, ENABLED, false);
+            Path activeProjectDirectory = projectDirectory(testResourcesConfig, projectDirectory);
             Path outputPath = stringValue(testResourcesConfig, OUTPUT_PATH)
                 .map(Path::of)
-                .map(path -> path.isAbsolute() ? path : projectDirectory.resolve(path).normalize())
-                .orElse(projectDirectory.resolve(DEFAULT_OUTPUT_PATH).normalize());
+                .map(path -> path.isAbsolute() ? path : activeProjectDirectory.resolve(path).normalize())
+                .orElse(activeProjectDirectory.resolve(DEFAULT_OUTPUT_PATH).normalize());
             return new ExportConfiguration(enabled, outputPath);
+        }
+
+        private static Path projectDirectory(Map<String, Object> testResourcesConfig, Path defaultProjectDirectory) {
+            return stringValue(testResourcesConfig, PROJECT_PATH_URI)
+                .map(ExportConfiguration::pathFromUri)
+                .orElse(defaultProjectDirectory);
+        }
+
+        private static Path pathFromUri(String projectPathUri) {
+            try {
+                return Path.of(URI.create(projectPathUri)).toAbsolutePath().normalize();
+            } catch (IllegalArgumentException e) {
+                throw new TestResourcesException("Invalid IntelliJ IDEA project path URI '" + projectPathUri + "'", e);
+            }
         }
 
         private static boolean booleanValue(Map<String, Object> testResourcesConfig, String key, boolean defaultValue) {

@@ -112,6 +112,26 @@ class IntellijIdeaDatasourceExporterTest extends Specification {
     }
 
     @RestoreSystemProperties
+    def "project path system property overrides the default export base"() {
+        given:
+        def otherProjectDir = tempDir.resolve("other-project")
+        Files.createDirectories(otherProjectDir)
+        System.setProperty("micronaut.test.resources.${IntellijIdeaDatasourceExporter.PROJECT_PATH_URI}".toString(), otherProjectDir.toUri().toString())
+        def exporter = new IntellijIdeaDatasourceExporter(tempDir)
+        def config = [(IntellijIdeaDatasourceExporter.ENABLED): true]
+
+        when:
+        exporter.export("datasources.default.url", "jdbc:postgresql://localhost:5432/demo", config)
+        exporter.export("datasources.default.username", "demo_user", config)
+        exporter.export("datasources.default.password", "demo_secret", config)
+        exporter.export("datasources.default.driver-class-name", "org.postgresql.Driver", config)
+
+        then:
+        Files.exists(otherProjectDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH))
+        !Files.exists(tempDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH))
+    }
+
+    @RestoreSystemProperties
     def "driver detection uses a locale-stable lowercasing strategy"() {
         given:
         Locale defaultLocale = Locale.default

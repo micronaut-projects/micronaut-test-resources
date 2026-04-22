@@ -12,6 +12,7 @@ import spock.util.environment.RestoreSystemProperties
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.Properties
 
 class ServerUtilsTest extends Specification {
     @TempDir
@@ -41,6 +42,23 @@ class ServerUtilsTest extends Specification {
         'abc' | null
         null  | 60
         'abc' | 98
+    }
+
+    def "writes the current project path uri into server settings when available"() {
+        given:
+        def projectDir = tmpDir.resolve("sample-project")
+        Files.createDirectories(projectDir.resolve("build/test-resources-server-config"))
+        Files.createFile(projectDir.resolve("settings.gradle"))
+        def settingsDir = projectDir.resolve("build/test-resources-server-config")
+        def settings = new ServerSettings(1234, null, null, null)
+
+        when:
+        ServerUtils.writeServerSettings(settingsDir, settings)
+        def props = new Properties()
+        Files.newInputStream(settingsDir.resolve(ServerUtils.PROPERTIES_FILE_NAME)).withCloseable(props.&load)
+
+        then:
+        props.getProperty("micronaut.test.resources.project-path-uri") == projectDir.toUri().toString()
     }
 
     def "requires new server"() {

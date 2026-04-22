@@ -34,6 +34,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.math.BigDecimal;
 
 
@@ -50,6 +52,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     public static final String DISPLAY_NAME = "Kafka";
     public static final String SIMPLE_NAME = "kafka";
+    private static final long ADMIN_TIMEOUT_SECONDS = 30;
 
     private final Map<KafkaContainer, TopicProvisioningConfiguration> topicProvisioningConfigurations =
         Collections.synchronizedMap(new WeakHashMap<>());
@@ -111,7 +114,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         Properties adminClientConfiguration = new Properties();
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
-            Set<String> existingTopics = adminClient.listTopics().names().get();
+            Set<String> existingTopics = adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
             List<NewTopic> topicsToCreate = configuration.topics().stream()
                 .filter(topic -> !existingTopics.contains(topic))
                 .map(topic -> new NewTopic(topic, configuration.partitions(), (short) 1))
@@ -122,7 +125,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             var createTopicsResult = adminClient.createTopics(topicsToCreate);
             for (NewTopic topic : topicsToCreate) {
                 try {
-                    createTopicsResult.values().get(topic.name()).get();
+                    createTopicsResult.values().get(topic.name()).get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 } catch (ExecutionException e) {
                     if (!(e.getCause() instanceof TopicExistsException)) {
                         throw e;
@@ -131,10 +134,19 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new TestResourcesResolutionException("Interrupted while provisioning Kafka topics", e);
+            throw new TestResourcesResolutionException("Interrupted while provisioning Kafka topics " + topicProvisioningDetails(configuration), e);
         } catch (ExecutionException e) {
-            throw new TestResourcesResolutionException("Failed to provision Kafka topics", e);
+            throw new TestResourcesResolutionException("Failed to provision Kafka topics " + topicProvisioningDetails(configuration), e);
+        } catch (TimeoutException e) {
+            throw new TestResourcesResolutionException(
+                "Timed out after " + ADMIN_TIMEOUT_SECONDS + "s while provisioning Kafka topics " + topicProvisioningDetails(configuration),
+                e
+            );
         }
+    }
+
+    private static String topicProvisioningDetails(TopicProvisioningConfiguration configuration) {
+        return "[topics=" + configuration.topics() + ", partitions=" + configuration.partitions() + "]";
     }
 
     private TopicProvisioningConfiguration topicProvisioningConfiguration(Map<String, Object> testResourcesConfig) {

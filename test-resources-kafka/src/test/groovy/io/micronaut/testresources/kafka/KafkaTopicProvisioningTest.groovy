@@ -9,8 +9,11 @@ import org.apache.kafka.clients.admin.TopicDescription
 import spock.lang.Specification
 
 import java.util.Properties
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
+    private static final long ADMIN_TIMEOUT_SECONDS = 30
 
     @Inject
     ApplicationContext applicationContext
@@ -25,7 +28,9 @@ abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
         Properties properties = new Properties()
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
         try (AdminClient adminClient = AdminClient.create(properties)) {
-            return adminClient.describeTopics(topicNames.toList()).allTopicNames().get()
+            return adminClient.describeTopics(topicNames.toList()).allTopicNames().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        } catch (TimeoutException e) {
+            throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s describing Kafka topics ${topicNames.toList()} for ${bootstrapServers}", e)
         }
     }
 }

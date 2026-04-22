@@ -51,25 +51,15 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
     public static final int QUEUE_PORT = 10001;
     public static final int TABLE_PORT = 10002;
 
+    private static final Map<String, String> FIXED_PROPERTIES = Map.of(
+        ACCOUNT_NAME_PROPERTY, DEFAULT_ACCOUNT_NAME,
+        ACCOUNT_KEY_PROPERTY, DEFAULT_ACCOUNT_KEY
+    );
+
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
                                                 Map<String, Object> testResourcesConfig) {
-        return RESOLVABLE_PROPERTIES_LIST;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return DISPLAY_NAME;
-    }
-
-    @Override
-    protected String getSimpleName() {
-        return SIMPLE_NAME;
-    }
-
-    @Override
-    protected String getDefaultImageName() {
-        return DEFAULT_IMAGE;
+        return List.copyOf(RESOLVABLE_PROPERTIES_LIST);
     }
 
     @Override
@@ -90,18 +80,35 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, GenericContainer<?> container) {
-        return switch (propertyName) {
-            case ACCOUNT_NAME_PROPERTY -> Optional.of(DEFAULT_ACCOUNT_NAME);
-            case ACCOUNT_KEY_PROPERTY -> Optional.of(DEFAULT_ACCOUNT_KEY);
-            case CONNECTION_STRING_PROPERTY -> Optional.of(connectionString(container));
-            default -> Optional.empty();
-        };
+        String fixedValue = FIXED_PROPERTIES.get(propertyName);
+        if (fixedValue != null) {
+            return Optional.of(fixedValue);
+        }
+        if (CONNECTION_STRING_PROPERTY.equals(propertyName)) {
+            return Optional.of(connectionString(container));
+        }
+        return Optional.empty();
     }
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties,
                                    Map<String, Object> testResourcesConfig) {
-        return propertyName != null && propertyName.startsWith(PROPERTY_PREFIX);
+        return isSharedKeyProperty(propertyName);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return metadata(true);
+    }
+
+    @Override
+    protected String getSimpleName() {
+        return metadata(false);
+    }
+
+    @Override
+    protected String getDefaultImageName() {
+        return DEFAULT_IMAGE;
     }
 
     private String connectionString(GenericContainer<?> container) {
@@ -115,5 +122,13 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
 
     private String endpoint(GenericContainer<?> container, int port) {
         return "http://" + container.getHost() + ":" + container.getMappedPort(port) + "/" + DEFAULT_ACCOUNT_NAME;
+    }
+
+    private boolean isSharedKeyProperty(String propertyName) {
+        return propertyName != null && propertyName.startsWith(PROPERTY_PREFIX);
+    }
+
+    private String metadata(boolean displayName) {
+        return displayName ? DISPLAY_NAME : SIMPLE_NAME;
     }
 }

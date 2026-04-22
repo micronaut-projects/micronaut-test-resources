@@ -146,6 +146,9 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
                                     T container,
                                     Map<String, Object> properties,
                                     Map<String, Object> testResourcesConfig) {
+        if (!propertyName.endsWith("." + URL)) {
+            return;
+        }
         findRequestedDatabaseName(propertyName, properties)
             .filter(databaseName -> supportsMultipleDatabases())
             .filter(databaseName -> extractDefaultDatabaseName(container).map(defaultDatabase -> !defaultDatabase.equals(databaseName)).orElse(true))
@@ -187,7 +190,7 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         @SuppressWarnings("unchecked")
         T typedContainer = (T) container;
         prepareContainer(propertyName, typedContainer, properties, testResourcesConfig);
-        return extractOptions(container);
+        return options;
     }
 
     private String resolveFromConnectionOptions(String expression,

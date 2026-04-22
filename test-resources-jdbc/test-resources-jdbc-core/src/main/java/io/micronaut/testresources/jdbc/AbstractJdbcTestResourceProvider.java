@@ -136,6 +136,9 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
                                     T container,
                                     Map<String, Object> properties,
                                     Map<String, Object> testResourcesConfig) {
+        if (!URL.equals(datasourcePropertyFrom(propertyName))) {
+            return;
+        }
         findRequestedDatabaseName(propertyName, properties)
             .filter(databaseName -> supportsMultipleDatabases())
             .filter(databaseName -> !databaseName.equals(container.getDatabaseName()))

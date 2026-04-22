@@ -452,6 +452,7 @@ final class TestContainerMetadataSupport {
     private static CreateContainerCmd applyAnonymousVolumes(CreateContainerCmd cmd,
                                                             Set<String> rwAnonymousVolumes,
                                                             Set<String> roAnonymousVolumes) {
+        assertNoConflictingAnonymousVolumes(rwAnonymousVolumes, roAnonymousVolumes);
         HostConfig hostConfig = Optional.ofNullable(cmd.getHostConfig()).orElseGet(HostConfig::newHostConfig);
         List<Mount> existingMounts = Optional.ofNullable(hostConfig.getMounts())
             .orElseGet(Collections::emptyList);
@@ -464,6 +465,16 @@ final class TestContainerMetadataSupport {
             .distinct()
             .collect(Collectors.toList())));
         return cmd;
+    }
+
+    private static void assertNoConflictingAnonymousVolumes(Set<String> rwAnonymousVolumes,
+                                                            Set<String> roAnonymousVolumes) {
+        if (Collections.disjoint(rwAnonymousVolumes, roAnonymousVolumes)) {
+            return;
+        }
+        Set<String> overlaps = new LinkedHashSet<>(rwAnonymousVolumes);
+        overlaps.retainAll(roAnonymousVolumes);
+        throw new IllegalArgumentException("Anonymous volumes cannot be declared as both read-write and read-only: " + overlaps);
     }
 
     private static Mount anonymousVolumeMount(String containerPath, boolean readOnly) {

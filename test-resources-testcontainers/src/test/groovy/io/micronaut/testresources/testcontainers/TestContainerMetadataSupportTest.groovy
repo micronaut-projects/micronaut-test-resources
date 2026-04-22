@@ -439,6 +439,38 @@ class TestContainerMetadataSupportTest extends Specification {
         ]
     }
 
+    def "rejects conflicting anonymous volume access modes for the same path"() {
+        given:
+        def config = """
+            containers:
+                foo:
+                    ro-anonymous-volumes:
+                        - /shared-data
+                    rw-anonymous-volumes:
+                        - /shared-data
+        """
+        def metadata = metadataFrom(config, "foo").get()
+        def container = TestContainerMetadataSupport.applyMetadata(metadata, new GenericContainer("alpine:3.20"))
+        def hostConfig = HostConfig.newHostConfig()
+        CreateContainerCmd cmd
+        cmd = [
+            getHostConfig: { -> hostConfig },
+            withHostConfig: { HostConfig value ->
+                hostConfig = value
+                cmd
+            }
+        ] as CreateContainerCmd
+
+        when:
+        container.createContainerCmdModifiers.each { modifier ->
+            modifier.modify(cmd)
+        }
+
+        then:
+        def ex = thrown(IllegalArgumentException)
+        ex.message == 'Anonymous volumes cannot be declared as both read-write and read-only: [/shared-data]'
+    }
+
     def "reads log wait strategy"() {
         def config = """
                 containers:

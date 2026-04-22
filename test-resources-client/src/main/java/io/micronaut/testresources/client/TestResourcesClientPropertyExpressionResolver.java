@@ -73,12 +73,12 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
             if (client instanceof DefaultTestResourcesClient defaultClient) {
                 return withErrorHandling(
                     () -> defaultClient.resolve(expression, props, properties, intellijIdeaExportSessionId),
-                    () -> "Test resources service wasn't able to revolve expression '" + expression + "'"
+                    () -> "Test resources service wasn't able to resolve expression '" + expression + "'"
                 );
             }
             return withErrorHandling(
                 () -> client.resolve(expression, props, properties),
-                () -> "Test resources service wasn't able to revolve expression '" + expression + "'"
+                () -> "Test resources service wasn't able to resolve expression '" + expression + "'"
             );
         }
 

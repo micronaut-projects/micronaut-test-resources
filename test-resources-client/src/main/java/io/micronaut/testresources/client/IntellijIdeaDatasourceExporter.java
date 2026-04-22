@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -68,11 +69,17 @@ final class IntellijIdeaDatasourceExporter {
                 var previousOutputPath = sessionState.outputPath;
                 sessionState.outputPath = config.outputPath();
                 var state = sessionState.datasources.computeIfAbsent(property.datasourceName(), JdbcDatasourceState::new);
+                boolean wasComplete = state.isComplete();
                 state.record(property.propertyName(), value);
-                if (previousOutputPath != null && !previousOutputPath.equals(sessionState.outputPath)) {
+                boolean outputPathChanged = previousOutputPath != null && !previousOutputPath.equals(sessionState.outputPath);
+                if (outputPathChanged) {
                     rewriteExport(previousOutputPath);
                 }
-                rewriteExport(sessionState.outputPath);
+                if ((outputPathChanged && sessionState.hasCompleteDatasources())
+                    || wasComplete
+                    || state.isComplete()) {
+                    rewriteExport(sessionState.outputPath);
+                }
             });
     }
 
@@ -177,6 +184,10 @@ final class IntellijIdeaDatasourceExporter {
 
         private ExportSessionState(Path outputPath) {
             this.outputPath = outputPath;
+        }
+
+        private boolean hasCompleteDatasources() {
+            return datasources.values().stream().anyMatch(JdbcDatasourceState::isComplete);
         }
     }
 
@@ -297,8 +308,8 @@ final class IntellijIdeaDatasourceExporter {
 
     private record DriverMetadata(String driverRef, Optional<String> dbms) {
         private static DriverMetadata from(String jdbcUrl, String driverClassName) {
-            String lowerDriver = driverClassName.toLowerCase();
-            String lowerUrl = jdbcUrl.toLowerCase();
+            String lowerDriver = driverClassName.toLowerCase(Locale.ROOT);
+            String lowerUrl = jdbcUrl.toLowerCase(Locale.ROOT);
             if (lowerDriver.contains("postgresql") || lowerUrl.startsWith("jdbc:postgresql:")) {
                 return new DriverMetadata("postgresql", Optional.of("POSTGRES"));
             }

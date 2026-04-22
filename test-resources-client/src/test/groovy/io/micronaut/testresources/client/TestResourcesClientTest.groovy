@@ -48,7 +48,7 @@ class TestResourcesClientTest extends Specification implements ClientCleanup {
 
         then:
         TestResourcesException e = thrown()
-        e.message == "Test resources service wasn't able to revolve expression 'throws': Something bad happened"
+        e.message == "Test resources service wasn't able to resolve expression 'throws': Something bad happened"
     }
 
     @RestoreSystemProperties

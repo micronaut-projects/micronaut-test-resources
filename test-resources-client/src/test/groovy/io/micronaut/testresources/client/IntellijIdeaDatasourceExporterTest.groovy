@@ -7,6 +7,7 @@ import spock.util.environment.RestoreSystemProperties
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.charset.StandardCharsets
+import java.util.Locale
 import java.util.UUID
 
 class IntellijIdeaDatasourceExporterTest extends Specification {
@@ -108,6 +109,29 @@ class IntellijIdeaDatasourceExporterTest extends Specification {
         then:
         Files.exists(outputFile)
         !Files.exists(tempDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH))
+    }
+
+    @RestoreSystemProperties
+    def "driver detection uses a locale-stable lowercasing strategy"() {
+        given:
+        Locale defaultLocale = Locale.default
+        Locale.setDefault(Locale.forLanguageTag("tr"))
+        def exporter = new IntellijIdeaDatasourceExporter(tempDir)
+        def config = [(IntellijIdeaDatasourceExporter.ENABLED): true]
+
+        when:
+        exporter.export("datasources.default.url", "JDBC:MARIADB://localhost:3306/demo", config)
+        exporter.export("datasources.default.username", "demo_user", config)
+        exporter.export("datasources.default.password", "demo_secret", config)
+        exporter.export("datasources.default.driver-class-name", "ORG.MARIADB.JDBC.DRIVER", config)
+
+        then:
+        def output = Files.readString(tempDir.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH))
+        output.contains('<driver-ref>mariadb</driver-ref>')
+        output.contains('dbms="MARIADB"')
+
+        cleanup:
+        Locale.setDefault(defaultLocale)
     }
 
     def "overlapping sessions sharing an output path merge and rewrite live datasource state"() {

@@ -152,14 +152,11 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         findRequestedDatabaseName(propertyName, properties)
             .filter(databaseName -> supportsMultipleDatabases())
             .filter(databaseName -> extractDefaultDatabaseName(container).map(defaultDatabase -> !defaultDatabase.equals(databaseName)).orElse(true))
-            .ifPresent(databaseName -> {
-                synchronized (container) {
-                    if (!TestContainers.hasDatabase(container, databaseName)) {
-                        createAdditionalDatabase(container, databaseName);
-                        TestContainers.rememberDatabase(container, databaseName);
-                    }
-                }
-            });
+            .ifPresent(databaseName -> TestContainers.createDatabaseIfMissing(
+                container,
+                databaseName,
+                () -> createAdditionalDatabase(container, databaseName)
+            ));
     }
 
     private Optional<String> resolveUsingExistingContainer(String propertyName,

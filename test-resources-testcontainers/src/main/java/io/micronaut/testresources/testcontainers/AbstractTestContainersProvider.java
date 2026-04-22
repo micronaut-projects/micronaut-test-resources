@@ -17,6 +17,7 @@ package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -212,10 +213,39 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
 
     protected abstract Optional<String> resolveProperty(String propertyName, T container);
 
+    /**
+     * Executes a command inside a running container and converts failures into a
+     * consistent {@link IllegalStateException}. Interrupted executions preserve the
+     * current thread interrupt status before the exception is raised.
+     *
+     * @param failureMessage the message to use when the command fails
+     * @param command the command to execute
+     */
+    protected final void executeInContainer(String failureMessage, ContainerCommand command) {
+        try {
+            Container.ExecResult result = command.execute();
+            if (result.getExitCode() != 0) {
+                throw new IllegalStateException(failureMessage + ": " + result.getStderr());
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(failureMessage, e);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalStateException(failureMessage, e);
+        }
+    }
+
     protected final String stringOrNull(Object value) {
         if (value == null) {
             return null;
         }
         return String.valueOf(value);
+    }
+
+    @FunctionalInterface
+    protected interface ContainerCommand {
+        Container.ExecResult execute() throws Exception;
     }
 }

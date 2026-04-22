@@ -59,6 +59,7 @@ public final class TestContainers {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestContainers.class);
     private static final Map<String, Network> NETWORKS_BY_KEY = new ConcurrentHashMap<>();
     private static final Map<GenericContainer<?>, Set<String>> DATABASES_BY_CONTAINER = new IdentityHashMap<>();
+    private static final Map<GenericContainer<?>, Lock> DATABASE_LOCKS_BY_CONTAINER = new IdentityHashMap<>();
 
     private static final Lock MAP_LOCK = new ReentrantLock();
 
@@ -253,6 +254,7 @@ public final class TestContainers {
             CONTAINERS_BY_KEY.clear();
             CONTAINERS_BY_PROPERTY.clear();
             DATABASES_BY_CONTAINER.clear();
+            DATABASE_LOCKS_BY_CONTAINER.clear();
             NETWORKS_BY_KEY.values().forEach(Network::close);
             NETWORKS_BY_KEY.clear();
             return closed;
@@ -278,6 +280,7 @@ public final class TestContainers {
                     LOGGER.debug("Stopping container {}", container.getContainerId());
                     container.close();
                     DATABASES_BY_CONTAINER.remove(container);
+                    DATABASE_LOCKS_BY_CONTAINER.remove(container);
                     closed = true;
                     for (Set<GenericContainer<?>> value : CONTAINERS_BY_PROPERTY.values()) {
                         value.remove(container);
@@ -311,6 +314,23 @@ public final class TestContainers {
                 .add(databaseName);
             return null;
         });
+    }
+
+    public static void createDatabaseIfMissing(GenericContainer<?> container,
+                                               String databaseName,
+                                               Runnable databaseCreator) {
+        Lock lock = withMapLock("databaseLock", () ->
+            DATABASE_LOCKS_BY_CONTAINER.computeIfAbsent(container, unused -> new ReentrantLock())
+        );
+        lock.lock();
+        try {
+            if (!hasDatabase(container, databaseName)) {
+                databaseCreator.run();
+                rememberDatabase(container, databaseName);
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
     private static final class Key {

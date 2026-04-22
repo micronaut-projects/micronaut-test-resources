@@ -59,22 +59,17 @@ public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
 
     @Override
     protected void createAdditionalDatabase(MySQLContainer container, String databaseName) {
-        try {
-            var result = container.execInContainer(
-                "mysql",
+        executeInContainer("Failed to create MySQL database '" + databaseName + "'", () ->
+            container.execInContainer(
+                DOCKER_OFFICIAL_IMAGE,
                 "-h127.0.0.1",
                 "-u",
                 container.getUsername(),
                 "-p" + container.getPassword(),
                 "-e",
                 "CREATE DATABASE " + quoteDatabaseName(databaseName)
-            );
-            if (result.getExitCode() != 0) {
-                throw new IllegalStateException(result.getStderr());
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to create MySQL database '" + databaseName + "'", e);
-        }
+            )
+        );
     }
 
     @Override

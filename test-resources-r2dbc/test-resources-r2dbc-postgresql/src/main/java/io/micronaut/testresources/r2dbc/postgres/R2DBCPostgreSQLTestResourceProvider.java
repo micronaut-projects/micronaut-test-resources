@@ -64,8 +64,8 @@ public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResour
 
     @Override
     protected void createAdditionalDatabase(PostgreSQLContainer container, String databaseName) {
-        try {
-            var result = container.execInContainer(
+        executeInContainer("Failed to create PostgreSQL database '" + databaseName + "'", () ->
+            container.execInContainer(
                 "psql",
                 "-v",
                 "ON_ERROR_STOP=1",
@@ -75,13 +75,8 @@ public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResour
                 container.getDatabaseName(),
                 "-c",
                 "CREATE DATABASE " + quoteDatabaseName(databaseName)
-            );
-            if (result.getExitCode() != 0) {
-                throw new IllegalStateException(result.getStderr());
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to create PostgreSQL database '" + databaseName + "'", e);
-        }
+            )
+        );
     }
 
     @Override

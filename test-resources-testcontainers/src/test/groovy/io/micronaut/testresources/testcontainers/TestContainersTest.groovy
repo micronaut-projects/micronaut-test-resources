@@ -142,6 +142,23 @@ class TestContainersTest extends Specification {
         TestContainers.hasDatabase(second, "reporting_db")
     }
 
+    def "createDatabaseIfMissing only creates a database once per container"() {
+        def container = Stub(GenericContainer)
+        int created = 0
+
+        when:
+        TestContainers.createDatabaseIfMissing(container, "shared_db") {
+            created++
+        }
+        TestContainers.createDatabaseIfMissing(container, "shared_db") {
+            created++
+        }
+
+        then:
+        created == 1
+        TestContainers.hasDatabase(container, "shared_db")
+    }
+
     void create(String name, String scope, GenericContainer container) {
         TestContainers.getOrCreate("foo", TestContainersTest.name, name, Scope.of(scope), [
                 (Scope.PROPERTY_KEY): scope

@@ -142,14 +142,11 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         findRequestedDatabaseName(propertyName, properties)
             .filter(databaseName -> supportsMultipleDatabases())
             .filter(databaseName -> !databaseName.equals(container.getDatabaseName()))
-            .ifPresent(databaseName -> {
-                synchronized (container) {
-                    if (!TestContainers.hasDatabase(container, databaseName)) {
-                        createAdditionalDatabase(container, databaseName);
-                        TestContainers.rememberDatabase(container, databaseName);
-                    }
-                }
-            });
+            .ifPresent(databaseName -> TestContainers.createDatabaseIfMissing(
+                container,
+                databaseName,
+                () -> createAdditionalDatabase(container, databaseName)
+            ));
     }
 
     /**

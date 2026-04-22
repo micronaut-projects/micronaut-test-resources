@@ -53,8 +53,8 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
 
     @Override
     protected void createAdditionalDatabase(MariaDBContainer container, String databaseName) {
-        try {
-            var result = container.execInContainer(
+        executeInContainer("Failed to create MariaDB database '" + databaseName + "'", () ->
+            container.execInContainer(
                 "mysql",
                 "-h127.0.0.1",
                 "-u",
@@ -62,13 +62,8 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
                 "-p" + container.getPassword(),
                 "-e",
                 "CREATE DATABASE " + quoteDatabaseName(databaseName)
-            );
-            if (result.getExitCode() != 0) {
-                throw new IllegalStateException(result.getStderr());
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to create MariaDB database '" + databaseName + "'", e);
-        }
+            )
+        );
     }
 
     @Override

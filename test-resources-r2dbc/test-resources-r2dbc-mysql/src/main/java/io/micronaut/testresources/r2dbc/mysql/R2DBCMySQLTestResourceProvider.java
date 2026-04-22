@@ -53,8 +53,8 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
 
     @Override
     protected void createAdditionalDatabase(MySQLContainer container, String databaseName) {
-        try {
-            var result = container.execInContainer(
+        executeInContainer("Failed to create MySQL database '" + databaseName + "'", () ->
+            container.execInContainer(
                 "mysql",
                 "-h127.0.0.1",
                 "-u",
@@ -62,13 +62,8 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
                 "-p" + container.getPassword(),
                 "-e",
                 "CREATE DATABASE " + quoteDatabaseName(databaseName)
-            );
-            if (result.getExitCode() != 0) {
-                throw new IllegalStateException(result.getStderr());
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to create MySQL database '" + databaseName + "'", e);
-        }
+            )
+        );
     }
 
     @Override

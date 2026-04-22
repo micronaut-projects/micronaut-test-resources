@@ -14,3 +14,24 @@ In order for the database to be properly detected, _one of_ the following proper
 - `datasources.*.dialect`: the dialect to use for the database (fallback)
 
 `datasources.*.driverClassName` should be empty because JDBC driver from testcontainers has to be used for working with URI like 'jdcb:tc:postgres:14///db'
+
+Micronaut Test Resources can also generate an IntelliJ IDEA/DataGrip datasource export file for resolved JDBC datasources.
+The export is opt-in and disabled by default.
+
+Enable it with:
+
+[configuration]
+----
+test-resources:
+  intellij-idea:
+    enabled: true
+----
+
+By default, the generated export is written to `.micronaut/test-resources/intellij-idea-datasources.xml`.
+You can override that location with `test-resources.intellij-idea.output-path`.
+
+The export is generated from resolved `datasources.*.url`, `datasources.*.username`, `datasources.*.password`, and `datasources.*.driver-class-name` values, and supports multiple named JDBC datasources in the same run.
+The file uses IntelliJ IDEA's datasource export format so you can import or paste it into IntelliJ IDEA or DataGrip without rebuilding the connection details by hand.
+
+WARNING: The generated export contains local test usernames and passwords.
+Do not commit it, and do not point the output path at `.idea/` files in this first iteration.

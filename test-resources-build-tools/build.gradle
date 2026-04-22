@@ -68,6 +68,7 @@ dependencies {
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(libs.spock)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testRuntimeOnly(mnSerde.micronaut.serde.jackson)
     embeddedDependencies(project(path: ":micronaut-test-resources-server", configuration: "embeddedDependencies"))
 }

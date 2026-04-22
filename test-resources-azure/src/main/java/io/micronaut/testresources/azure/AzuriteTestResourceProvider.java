@@ -19,30 +19,25 @@ import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * A test resource provider which will spawn an Azurite test container.
  */
 public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<GenericContainer<?>> {
+    public static final String PROPERTY_PREFIX = "azure.credential.storage-shared-key.";
     public static final String ACCOUNT_NAME_PROPERTY = "azure.credential.storage-shared-key.account-name";
     public static final String ACCOUNT_KEY_PROPERTY = "azure.credential.storage-shared-key.account-key";
     public static final String CONNECTION_STRING_PROPERTY = "azure.credential.storage-shared-key.connection-string";
 
-    public static final List<String> RESOLVABLE_PROPERTIES_LIST = Collections.unmodifiableList(Arrays.asList(
+    public static final List<String> RESOLVABLE_PROPERTIES_LIST = List.of(
         ACCOUNT_NAME_PROPERTY,
         ACCOUNT_KEY_PROPERTY,
         CONNECTION_STRING_PROPERTY
-    ));
-    public static final Set<String> RESOLVABLE_PROPERTIES_SET =
-        Collections.unmodifiableSet(new HashSet<>(RESOLVABLE_PROPERTIES_LIST));
+    );
 
     public static final String DEFAULT_ACCOUNT_NAME = "devstoreaccount1";
     public static final String DEFAULT_ACCOUNT_KEY =
@@ -57,25 +52,16 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
     public static final int TABLE_PORT = 10002;
 
     @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries,
-                                                Map<String, Object> testResourcesConfig) {
-        return RESOLVABLE_PROPERTIES_LIST;
-    }
+    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) { return RESOLVABLE_PROPERTIES_LIST; }
 
     @Override
-    public String getDisplayName() {
-        return DISPLAY_NAME;
-    }
+    public String getDisplayName() { return DISPLAY_NAME; }
 
     @Override
-    protected String getSimpleName() {
-        return SIMPLE_NAME;
-    }
+    protected String getSimpleName() { return SIMPLE_NAME; }
 
     @Override
-    protected String getDefaultImageName() {
-        return DEFAULT_IMAGE;
-    }
+    protected String getDefaultImageName() { return DEFAULT_IMAGE; }
 
     @Override
     @SuppressWarnings("java:S2095") // Container lifecycle is managed by AbstractTestContainersProvider/TestContainers.
@@ -95,22 +81,18 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, GenericContainer<?> container) {
-        if (ACCOUNT_NAME_PROPERTY.equals(propertyName)) {
-            return Optional.of(DEFAULT_ACCOUNT_NAME);
-        }
-        if (ACCOUNT_KEY_PROPERTY.equals(propertyName)) {
-            return Optional.of(DEFAULT_ACCOUNT_KEY);
-        }
-        if (CONNECTION_STRING_PROPERTY.equals(propertyName)) {
-            return Optional.of(connectionString(container));
-        }
-        return Optional.empty();
+        return switch (propertyName) {
+            case ACCOUNT_NAME_PROPERTY -> Optional.of(DEFAULT_ACCOUNT_NAME);
+            case ACCOUNT_KEY_PROPERTY -> Optional.of(DEFAULT_ACCOUNT_KEY);
+            case CONNECTION_STRING_PROPERTY -> Optional.of(connectionString(container));
+            default -> Optional.empty();
+        };
     }
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties,
                                    Map<String, Object> testResourcesConfig) {
-        return RESOLVABLE_PROPERTIES_SET.contains(propertyName);
+        return propertyName != null && propertyName.startsWith(PROPERTY_PREFIX);
     }
 
     private String connectionString(GenericContainer<?> container) {

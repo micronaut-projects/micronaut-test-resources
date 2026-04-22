@@ -19,6 +19,15 @@ class TestResourcesServiceTest extends Specification {
         getenv.apply("OTHER_ENV") == "value-for-OTHER_ENV"
     }
 
+    def "sanitizing getenv falls back to the process environment when no existing hook is installed"() {
+        given:
+        def getenv = TestResourcesService.configFilesSanitizingGetenv(null)
+
+        expect:
+        getenv.apply("MICRONAUT_CONFIG_FILES") == null
+        getenv.apply("PATH") == System.getenv("PATH")
+    }
+
     def "configurer excludes MICRONAUT_CONFIG_FILES from environment variables"() {
         given:
         def builder = Mock(ApplicationContextBuilder)
@@ -35,7 +44,7 @@ class TestResourcesServiceTest extends Specification {
         0 * _
     }
 
-    def "installing the cached environment override replaces the getenv operator"() {
+    def "ignoring inherited config files does nothing when the environment variable is absent"() {
         given:
         Field getenvField = CachedEnvironment.class.getDeclaredField("getenv")
         getenvField.setAccessible(true)
@@ -44,7 +53,25 @@ class TestResourcesServiceTest extends Specification {
         getenvField.set(null, existing)
 
         when:
-        TestResourcesService.installCachedEnvironmentConfigFilesOverride()
+        TestResourcesService.ignoreInheritedConfigFilesEnvironmentVariable(null)
+
+        then:
+        getenvField.get(null).is(existing)
+
+        cleanup:
+        getenvField.set(null, original)
+    }
+
+    def "ignoring inherited config files installs the cached environment override"() {
+        given:
+        Field getenvField = CachedEnvironment.class.getDeclaredField("getenv")
+        getenvField.setAccessible(true)
+        UnaryOperator<String> original = (UnaryOperator<String>) getenvField.get(null)
+        UnaryOperator<String> existing = { String key -> "existing-" + key } as UnaryOperator<String>
+        getenvField.set(null, existing)
+
+        when:
+        TestResourcesService.ignoreInheritedConfigFilesEnvironmentVariable("present")
         UnaryOperator<String> overridden = (UnaryOperator<String>) getenvField.get(null)
 
         then:

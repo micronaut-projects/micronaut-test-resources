@@ -46,7 +46,7 @@ public class TestResourcesService {
 
     public static void main(String[] args) {
         long sd = System.nanoTime();
-        ignoreInheritedConfigFilesEnvironmentVariable();
+        ignoreInheritedConfigFilesEnvironmentVariable(System.getenv(MICRONAUT_CONFIG_FILES_ENV));
         ApplicationContext context = Micronaut.run(TestResourcesService.class, args);
         Arrays.stream(args)
             .filter(arg -> arg.startsWith("--port-file="))
@@ -67,8 +67,8 @@ public class TestResourcesService {
             context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
     }
 
-    private static void ignoreInheritedConfigFilesEnvironmentVariable() {
-        if (System.getenv(MICRONAUT_CONFIG_FILES_ENV) == null) {
+    static void ignoreInheritedConfigFilesEnvironmentVariable(String inheritedConfigFilesValue) {
+        if (inheritedConfigFilesValue == null) {
             return;
         }
         installCachedEnvironmentConfigFilesOverride();

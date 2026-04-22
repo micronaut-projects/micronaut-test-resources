@@ -230,14 +230,37 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
 
     protected abstract Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container);
 
+    /**
+     * Indicates whether this provider can create additional logical databases inside the
+     * same running container. Subclasses overriding this method must also implement the
+     * matching database-creation hooks for the same container type.
+     *
+     * @return {@code true} when additional logical databases are supported
+     */
     protected boolean supportsMultipleDatabases() {
         return false;
     }
 
+    /**
+     * Creates an additional logical database inside an already started container.
+     * This is only invoked when {@link #supportsMultipleDatabases()} returns {@code true},
+     * so subclasses should override both hooks together.
+     *
+     * @param container the running container
+     * @param databaseName the database to create
+     */
     protected void createAdditionalDatabase(T container, String databaseName) {
         throw new UnsupportedOperationException("Additional database creation is not supported for " + getSimpleName());
     }
 
+    /**
+     * Extracts the default logical database name already configured on the running
+     * container. Subclasses may override when the provider can compare requested
+     * databases against a provider-specific default.
+     *
+     * @param container the running container
+     * @return the default logical database name, if one can be derived
+     */
     protected Optional<String> extractDefaultDatabaseName(T container) {
         return Optional.empty();
     }
@@ -250,6 +273,15 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         return Optional.ofNullable(stringOrNull(properties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.RESOURCE_NAME))));
     }
 
+    /**
+     * Extracts the logical database name requested by the caller from the R2DBC
+     * datasource properties. Subclasses may override when the provider supports
+     * alternative configuration keys for database selection.
+     *
+     * @param propertyName the property being resolved
+     * @param properties the resolved properties for the request
+     * @return the requested logical database name, if present
+     */
     protected Optional<String> findRequestedDatabaseName(String propertyName, Map<String, Object> properties) {
         if (!propertyName.startsWith(R2dbcSupport.R2DBC_PREFIX)) {
             return Optional.empty();

@@ -161,6 +161,17 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         return null;
     }
 
+    /**
+     * Resolves vendor-specific properties using the started container plus the original
+     * requested-property map. Subclasses may override when the resolved value depends on
+     * request metadata in addition to the container state.
+     *
+     * @param propertyName the property to resolve
+     * @param container the started container
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the resolved property, or {@code null} if not resolvable
+     */
     protected String resolveDbSpecificProperty(String propertyName,
                                                JdbcDatabaseContainer<?> container,
                                                Map<String, Object> properties,
@@ -202,14 +213,38 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         return PREFIX + "." + datasource + "." + property;
     }
 
+    /**
+     * Indicates whether this provider can create additional logical databases inside the
+     * same running container. Subclasses overriding this method must also implement the
+     * database-creation hooks consistently for the same container type.
+     *
+     * @return {@code true} when additional logical databases are supported
+     */
     protected boolean supportsMultipleDatabases() {
         return false;
     }
 
+    /**
+     * Creates an additional logical database inside an already started container.
+     * This is only invoked when {@link #supportsMultipleDatabases()} returns {@code true},
+     * so subclasses overriding one hook should override the other as a matching pair.
+     *
+     * @param container the running container
+     * @param databaseName the database to create
+     */
     protected void createAdditionalDatabase(T container, String databaseName) {
         throw new UnsupportedOperationException("Additional database creation is not supported for " + getSimpleName());
     }
 
+    /**
+     * Resolves the JDBC URL for the requested datasource. Subclasses may override to
+     * customize how the requested logical database name maps onto the running container.
+     *
+     * @param expression the property expression being resolved
+     * @param container the running container
+     * @param properties the resolved properties for the request
+     * @return the JDBC URL to expose to the caller
+     */
     protected String resolveJdbcUrl(String expression, T container, Map<String, Object> properties) {
         return findRequestedDatabaseName(expression, properties)
             .filter(databaseName -> supportsMultipleDatabases())
@@ -217,10 +252,28 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
             .orElseGet(container::getJdbcUrl);
     }
 
+    /**
+     * Builds a JDBC URL that targets the supplied logical database on the running
+     * container. Subclasses overriding this method should return a URL compatible with
+     * the driver exposed by the container.
+     *
+     * @param container the running container
+     * @param databaseName the logical database name requested by the caller
+     * @return the JDBC URL for that database
+     */
     protected String jdbcUrlFor(T container, String databaseName) {
         return container.getJdbcUrl();
     }
 
+    /**
+     * Extracts the logical database name requested by the caller from the datasource
+     * property set. Subclasses may override when the provider supports alternative
+     * configuration keys for selecting databases.
+     *
+     * @param propertyName the property being resolved
+     * @param requestedProperties the resolved properties for the request
+     * @return the requested logical database name, if present
+     */
     protected Optional<String> findRequestedDatabaseName(String propertyName, Map<String, Object> requestedProperties) {
         if (!isDatasourceExpression(propertyName)) {
             return Optional.empty();

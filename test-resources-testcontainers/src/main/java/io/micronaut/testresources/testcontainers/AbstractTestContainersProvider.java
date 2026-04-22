@@ -149,12 +149,32 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
         return Optional.empty();
     }
 
+    /**
+     * Returns the owner key used to scope cached containers for this resolver.
+     * Subclasses may override to share a physical container across multiple logical
+     * consumers, but should keep the returned key stable for equivalent requests.
+     *
+     * @param propertyName the property being resolved
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the owner key used for container reuse
+     */
     protected String getContainerOwnerKey(String propertyName,
                                           Map<String, Object> properties,
                                           Map<String, Object> testResourcesConfig) {
         return getClass().getName();
     }
 
+    /**
+     * Returns the query object used to look up or create a cached container.
+     * Subclasses may override to normalize request-specific properties into a
+     * stable physical-resource identity while preserving any keys needed for safe reuse.
+     *
+     * @param propertyName the property being resolved
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the container query used for cache lookup
+     */
     protected Map<String, Object> getContainerQuery(String propertyName,
                                                     Map<String, Object> properties,
                                                     Map<String, Object> testResourcesConfig) {
@@ -171,6 +191,18 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                                     Map<String, Object> testResourcesConfig) {
     }
 
+    /**
+     * Resolves the requested property from the started container with access to the
+     * full requested-property map and test-resources configuration. Subclasses may
+     * override when the resolved value depends on request metadata in addition to the
+     * container itself.
+     *
+     * @param propertyName the property being resolved
+     * @param container the started container
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the resolved value, if any
+     */
     protected Optional<String> resolveProperty(String propertyName,
                                                T container,
                                                Map<String, Object> properties,

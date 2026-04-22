@@ -18,6 +18,8 @@ modules:
     title: OpenSearch
   modules-kafka:
     title: Kafka
+  modules-pulsar:
+    title: Pulsar
   modules-localstack:
     title: Localstack
   modules-mongodb:

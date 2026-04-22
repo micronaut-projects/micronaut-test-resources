@@ -165,7 +165,7 @@ The `network-mode` can be used to set the network mode (e.g. including 'host', '
 
 == Wait strategies
 
-Micronaut Test Resources uses the default https://www.testcontainers.org/features/startup_and_waits/[Testcontainers wait strategies].
+Micronaut Test Resources uses the underlying container's default https://www.testcontainers.org/features/startup_and_waits/[Testcontainers wait strategies] unless a provider documents a more specific default.
 
 It is however possible to override the default by configuration.
 
@@ -190,7 +190,7 @@ The following wait strategies are supported:
     - `tls`: if TLS should be enabled
     - `port`: the port to listen on
     - `status-code`: the list of expected status codes
-- `port` strategy (this is the default strategy)
+- `port` strategy
 - `healthcheck`: Docker healthcheck strategy
 
 Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):

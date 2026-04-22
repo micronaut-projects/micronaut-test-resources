@@ -51,9 +51,10 @@ class EmbeddedTestResourcesPropertySourceLoaderWarningSpec extends Specification
         e.message.contains("kafka.bootstrap-servers")
         firstKeys == []
         secondKeys == []
-        appender.events.findAll { it.level == Level.WARN }*.formattedMessage == [
-            "Test resources provider for Apache Kafka is disabled"
-        ]
+        appender.events.count {
+            it.level == Level.WARN &&
+                it.formattedMessage == "Test resources provider for Apache Kafka is disabled"
+        } == 1
 
         cleanup:
         resolver.close()

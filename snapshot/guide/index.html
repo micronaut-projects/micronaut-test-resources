@@ -600,6 +600,88 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <div class="paragraph">
 <p><code>datasources.*.driverClassName</code> should be empty because JDBC driver from testcontainers has to be used for working with URI like 'jdcb:tc:postgres:14///db'</p>
 </div>
+<div class="paragraph">
+<p>Micronaut Test Resources can also generate an IntelliJ IDEA/DataGrip datasource export file for resolved JDBC datasources.
+The export is opt-in and disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>Enable it with:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.intellij-idea.enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  intellij-idea:
+    enabled: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.intellij-idea]
+    enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  intellijIdea {
+    enabled = true
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    intellij-idea {
+      enabled = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "intellij-idea": {
+      "enabled": true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the generated export is written to <code>.micronaut/test-resources/intellij-idea-datasources.xml</code>.
+You can override that location with <code>test-resources.intellij-idea.output-path</code>.</p>
+</div>
+<div class="paragraph">
+<p>The export is generated from resolved <code>datasources.<strong>.url</code>, <code>datasources.</strong>.username</code>, <code>datasources.<strong>.password</code>, and <code>datasources.</strong>.driver-class-name</code> values, and supports multiple named JDBC datasources in the same run.
+The file uses IntelliJ IDEA&#8217;s datasource export format so you can import or paste it into IntelliJ IDEA or DataGrip without rebuilding the connection details by hand.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The generated export contains local test usernames and passwords.
+Do not commit it, and do not point the output path at <code>.idea/</code> files in this first iteration.
+</td>
+</tr>
+</table>
+</div>
 
 <h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>5.1.2 R2DBC</h2>
 

@@ -17,3 +17,7 @@ dependencies {
     testImplementation(testFixtures(project(":micronaut-test-resources-jdbc-core")))
     testRuntimeOnly(mnSql.micronaut.jdbc.hikari)
 }
+
+extensions.configure(org.sonatype.gradle.plugins.scan.ossindex.OssIndexPluginExtension) { extension ->
+    extension.excludeVulnerabilityIds = ["CVE-2018-14335"] as Set
+}

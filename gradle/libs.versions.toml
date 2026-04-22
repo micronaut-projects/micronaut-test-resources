@@ -68,6 +68,7 @@ managed-testcontainers-hivemq = { module = "org.testcontainers:testcontainers-hi
 managed-testcontainers-kafka = { module = "org.testcontainers:testcontainers-kafka", version.ref = "managed-testcontainers" }
 managed-testcontainers-localstack = { module = "org.testcontainers:testcontainers-localstack", version.ref = "managed-testcontainers" }
 managed-testcontainers-mariadb = { module = "org.testcontainers:testcontainers-mariadb", version.ref = "managed-testcontainers" }
+managed-testcontainers-minio = { module = "org.testcontainers:testcontainers-minio", version.ref = "managed-testcontainers" }
 managed-testcontainers-mongodb = { module = "org.testcontainers:testcontainers-mongodb", version.ref = "managed-testcontainers" }
 managed-testcontainers-mssql = { module = "org.testcontainers:testcontainers-mssqlserver", version.ref = "managed-testcontainers" }
 managed-testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql", version.ref = "managed-testcontainers" }

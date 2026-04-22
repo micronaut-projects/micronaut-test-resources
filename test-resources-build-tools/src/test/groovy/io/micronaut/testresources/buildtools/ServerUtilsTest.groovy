@@ -179,6 +179,7 @@ class ServerUtilsTest extends Specification {
         def cdsClassList = cdsDir.resolve("cds.classlist")
         def cdsArchiveFile = cdsDir.resolve("cds.jsa")
         def cdsFlatJar = cdsDir.resolve("flat.jar")
+        def cdsLoggingOffOption = "-Xlog:cds*=off"
         String cdsClassListOption = "-XX:DumpLoadedClassList=${cdsClassList.toAbsolutePath()}"
         String cdsSharedClassListOption = "-XX:SharedClassListFile=${cdsClassList.toAbsolutePath()}"
         String cdsSharedArchiveFileOption = "-XX:SharedArchiveFile=${cdsArchiveFile.toAbsolutePath()}"
@@ -193,6 +194,7 @@ class ServerUtilsTest extends Specification {
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
             def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains(cdsLoggingOffOption)
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
             assert params.classpath.contains(cdsFlatJar.toFile())
@@ -210,6 +212,7 @@ class ServerUtilsTest extends Specification {
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
             def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains(cdsLoggingOffOption)
             assert jvmArgs.contains("-Xshare:dump")
             assert jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
@@ -217,6 +220,7 @@ class ServerUtilsTest extends Specification {
         }
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
             def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains(cdsLoggingOffOption)
             assert !jvmArgs.contains("-Xshare:dump")
             assert !jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
@@ -233,6 +237,7 @@ class ServerUtilsTest extends Specification {
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
             def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains(cdsLoggingOffOption)
             assert !jvmArgs.contains("-Xshare:dump")
             assert !jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
@@ -249,6 +254,7 @@ class ServerUtilsTest extends Specification {
         then:
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
             def jvmArgs = params.jvmArguments
+            assert jvmArgs.contains(cdsLoggingOffOption)
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
             assert params.classpath == []

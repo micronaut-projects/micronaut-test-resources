@@ -78,6 +78,7 @@ public class ServerUtils {
     private static final String CDS_HASH = "cds.bin";
     private static final String CDS_FILE = "cds.jsa";
     private static final String CDS_CLASS_LST = "cds.classlist";
+    private static final String CDS_LOGGING_OFF = "-Xlog:cds*=off";
     private static final String FLAT_JAR = "flat.jar";
 
     // See io.micronaut.testresources.testcontainers.DockerSupport.TIMEOUT
@@ -615,6 +616,7 @@ public class ServerUtils {
                                          File cdsFile,
                                          File cdsClassList,
                                          File cdsHashFile) {
+            jvmArguments.add(CDS_LOGGING_OFF);
             if (cdsClassList.exists()) {
                 try {
                     byte[] actualHash = computeClasspathHash(getClasspath().stream());

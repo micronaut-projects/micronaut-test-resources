@@ -40,7 +40,7 @@ class PulsarStartedTest extends AbstractPulsarSpec {
         listContainers().size() == 1
         message != null
         message.value == "hello pulsar"
-        with(TestContainers.listByScope("pulsar").get(Scope.of("pulsar"))) {
+        with(TestContainers.listByScope(PulsarTestResourceProvider.SIMPLE_NAME).get(Scope.of(PulsarTestResourceProvider.SIMPLE_NAME))) {
             size() == 1
             get(0).dockerImageName == PulsarTestResourceProvider.DEFAULT_IMAGE
         }

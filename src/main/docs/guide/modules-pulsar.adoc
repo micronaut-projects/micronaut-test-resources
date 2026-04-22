@@ -1,3 +1,3 @@
 Pulsar support will automatically start an https://pulsar.apache.org/[Apache Pulsar container] and provide the value of the `pulsar.service-url` property.
 
-The default image can be overwritten by setting the `test-resources.containers.pulsar.image-name` property.
+The default image can be overridden by setting the `test-resources.containers.pulsar.image-name` property.

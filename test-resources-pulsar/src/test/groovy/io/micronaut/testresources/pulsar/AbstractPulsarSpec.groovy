@@ -11,12 +11,12 @@ abstract class AbstractPulsarSpec extends AbstractTestContainersSpec {
 
     @Override
     String getScopeName() {
-        'pulsar'
+        PulsarTestResourceProvider.SIMPLE_NAME
     }
 
     @Override
     String getImageName() {
-        'apachepulsar/pulsar'
+        PulsarTestResourceProvider.DEFAULT_IMAGE
     }
 
     @Prototype

@@ -15,7 +15,7 @@ If the client cannot find the server settings in system properties, it falls bac
 * `~/.micronaut/test-resources/test-resources.properties` when the `TEST_RESOURCES_NAMESPACE` environment variable is not set
 * `~/.micronaut/test-resources-<namespace>/test-resources.properties` when the `TEST_RESOURCES_NAMESPACE` environment variable is set
 
-Build tools write this file when they start or connect to a test resources server.
+Build tools write this file when they start a server and create fresh recorded settings, then reuse it when reconnecting to an already-running shared server.
 The working-directory location is scoped to the current project checkout.
 The user-home location is intended for settings shared across builds, so it can survive older experiments or manually managed shared servers.
 

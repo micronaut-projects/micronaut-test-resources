@@ -26,6 +26,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -57,6 +58,7 @@ public final class TestContainers {
     private static final Map<Key, Lock> OPERATIONS_PER_KEY = new ConcurrentHashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestContainers.class);
     private static final Map<String, Network> NETWORKS_BY_KEY = new ConcurrentHashMap<>();
+    private static final Map<GenericContainer<?>, Set<String>> DATABASES_BY_CONTAINER = new IdentityHashMap<>();
 
     private static final Lock MAP_LOCK = new ReentrantLock();
 
@@ -95,8 +97,9 @@ public final class TestContainers {
      *
      * @param <T> the container type
      * @param requestedProperty the property that this container will resolve
-     * @param owner the class which requested the creation of a container
+     * @param owner the identity which requested the creation of a container
      * @param name the identifier of the container
+     * @param scope the test resources scope
      * @param query the parameters used to create the container. Different parameters mean
      * different container will be created.
      * @param imageNameSupplier the function which computes the image name
@@ -104,12 +107,13 @@ public final class TestContainers {
      * @return the container
      */
     static <T extends GenericContainer<? extends T>> T getOrCreate(String requestedProperty,
-                                                                   Class<?> owner,
+                                                                   String owner,
                                                                    String name,
+                                                                   Scope scope,
                                                                    Map<String, Object> query,
                                                                    Supplier<DockerImageName> imageNameSupplier,
                                                                    Function<DockerImageName, T> creator) {
-        return withKey(Key.of(owner, name, Scope.from(query), query), key -> {
+        return withKey(Key.of(owner, name, scope, query), key -> {
             try {
                 T container = withMapLock("getOrCreate", () -> (T) CONTAINERS_BY_KEY.get(key));
                 var dockerImageName = imageNameSupplier.get();
@@ -248,6 +252,7 @@ public final class TestContainers {
             }
             CONTAINERS_BY_KEY.clear();
             CONTAINERS_BY_PROPERTY.clear();
+            DATABASES_BY_CONTAINER.clear();
             NETWORKS_BY_KEY.values().forEach(Network::close);
             NETWORKS_BY_KEY.clear();
             return closed;
@@ -272,6 +277,7 @@ public final class TestContainers {
                     GenericContainer<?> container = entry.getValue();
                     LOGGER.debug("Stopping container {}", container.getContainerId());
                     container.close();
+                    DATABASES_BY_CONTAINER.remove(container);
                     closed = true;
                     for (Set<GenericContainer<?>> value : CONTAINERS_BY_PROPERTY.values()) {
                         value.remove(container);
@@ -292,20 +298,35 @@ public final class TestContainers {
         });
     }
 
+    public static boolean hasDatabase(GenericContainer<?> container, String databaseName) {
+        return withMapLock("hasDatabase", () ->
+            DATABASES_BY_CONTAINER.getOrDefault(container, Collections.emptySet()).contains(databaseName)
+        );
+    }
+
+    public static void rememberDatabase(GenericContainer<?> container, String databaseName) {
+        withMapLock("rememberDatabase", () -> {
+            DATABASES_BY_CONTAINER
+                .computeIfAbsent(container, unused -> new LinkedHashSet<>())
+                .add(databaseName);
+            return null;
+        });
+    }
+
     private static final class Key {
-        private final Class<?> type;
+        private final String owner;
         private final String name;
         private final Map<String, String> properties;
         private final int hashCode;
         private final Scope scope;
 
-        private Key(Class<?> type, String name, Scope scope, Map<String, String> properties) {
-            this.type = type;
+        private Key(String owner, String name, Scope scope, Map<String, String> properties) {
+            this.owner = owner;
             this.name = name;
             this.scope = scope;
             this.properties = properties;
             this.hashCode =
-                31 * (31 * (31 * type.hashCode() + properties.hashCode()) + scope.hashCode()) +
+                31 * (31 * (31 * owner.hashCode() + properties.hashCode()) + scope.hashCode()) +
                 name.hashCode();
         }
 
@@ -327,7 +348,7 @@ public final class TestContainers {
                 return false;
             }
 
-            if (!type.equals(key.type)) {
+            if (!owner.equals(key.owner)) {
                 return false;
             }
             return properties.equals(key.properties);
@@ -338,15 +359,15 @@ public final class TestContainers {
             return hashCode;
         }
 
-        static <T> Key of(Class<T> type, String name, Scope scope, Map<String, Object> properties) {
+        static Key of(String owner, String name, Scope scope, Map<String, Object> properties) {
             if (properties.isEmpty()) {
-                return new Key(type, name, scope, Collections.emptyMap());
+                return new Key(owner, name, scope, Collections.emptyMap());
             }
             Map<String, String> converted = new HashMap<>(properties.size());
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
                 converted.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
-            return new Key(type, name, scope, Collections.unmodifiableMap(converted));
+            return new Key(owner, name, scope, Collections.unmodifiableMap(converted));
         }
     }
 }

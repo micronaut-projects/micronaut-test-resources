@@ -16,6 +16,7 @@
 package io.micronaut.testresources.jdbc;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import io.micronaut.testresources.testcontainers.TestContainers;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
 import java.util.Collection;
@@ -33,6 +34,7 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseContainer<? extends T>> extends AbstractTestContainersProvider<T> {
     public static final String PREFIX = "datasources";
+    public static final String RESOURCE_NAME = "test-resources.resource-name";
     private static final String URL = "url";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -74,7 +76,9 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
         String datasource = datasourceNameFrom(expression);
         return Stream.of(
                 datasourceExpressionOf(datasource, TYPE),
-                datasourceExpressionOf(datasource, DIALECT)
+                datasourceExpressionOf(datasource, DIALECT),
+                datasourceExpressionOf(datasource, DB_NAME),
+                datasourceExpressionOf(datasource, RESOURCE_NAME)
             ).toList();
     }
 
@@ -94,14 +98,55 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
 
     @Override
     protected Optional<String> resolveProperty(String expression, T container) {
+        return resolveProperty(expression, container, Collections.emptyMap(), Collections.emptyMap());
+    }
+
+    @Override
+    protected Optional<String> resolveProperty(String expression,
+                                               T container,
+                                               Map<String, Object> properties,
+                                               Map<String, Object> testResourcesConfig) {
         String value = switch (datasourcePropertyFrom(expression)) {
-            case URL -> container.getJdbcUrl();
+            case URL -> resolveJdbcUrl(expression, container, properties);
             case USERNAME -> container.getUsername();
             case PASSWORD -> container.getPassword();
             case DRIVER -> container.getDriverClassName();
-            default -> resolveDbSpecificProperty(expression, container);
+            default -> resolveDbSpecificProperty(expression, container, properties, testResourcesConfig);
         };
         return Optional.ofNullable(value);
+    }
+
+    @Override
+    protected String getContainerOwnerKey(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        if (supportsSharedContainerReuse(propertyName, properties)) {
+            return getSimpleName();
+        }
+        return super.getContainerOwnerKey(propertyName, properties, testResourcesConfig);
+    }
+
+    @Override
+    protected Map<String, Object> getContainerQuery(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        return supportsSharedContainerReuse(propertyName, properties) ? findSharedResourceName(propertyName, properties)
+            .<Map<String, Object>>map(name -> Map.of(RESOURCE_NAME, name))
+            .orElseGet(() -> super.getContainerQuery(propertyName, properties, testResourcesConfig)) : super.getContainerQuery(propertyName, properties, testResourcesConfig);
+    }
+
+    @Override
+    protected void prepareContainer(String propertyName,
+                                    T container,
+                                    Map<String, Object> properties,
+                                    Map<String, Object> testResourcesConfig) {
+        findRequestedDatabaseName(propertyName, properties)
+            .filter(databaseName -> supportsMultipleDatabases())
+            .filter(databaseName -> !databaseName.equals(container.getDatabaseName()))
+            .ifPresent(databaseName -> {
+                synchronized (container) {
+                    if (!TestContainers.hasDatabase(container, databaseName)) {
+                        createAdditionalDatabase(container, databaseName);
+                        TestContainers.rememberDatabase(container, databaseName);
+                    }
+                }
+            });
     }
 
     /**
@@ -114,6 +159,13 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
      */
     protected String resolveDbSpecificProperty(String propertyName, JdbcDatabaseContainer<?> container) {
         return null;
+    }
+
+    protected String resolveDbSpecificProperty(String propertyName,
+                                               JdbcDatabaseContainer<?> container,
+                                               Map<String, Object> properties,
+                                               Map<String, Object> testResourcesConfig) {
+        return resolveDbSpecificProperty(propertyName, container);
     }
 
     @Override
@@ -148,5 +200,44 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
 
     protected static String datasourceExpressionOf(String datasource, String property) {
         return PREFIX + "." + datasource + "." + property;
+    }
+
+    protected boolean supportsMultipleDatabases() {
+        return false;
+    }
+
+    protected void createAdditionalDatabase(T container, String databaseName) {
+        throw new UnsupportedOperationException("Additional database creation is not supported for " + getSimpleName());
+    }
+
+    protected String resolveJdbcUrl(String expression, T container, Map<String, Object> properties) {
+        return findRequestedDatabaseName(expression, properties)
+            .filter(databaseName -> supportsMultipleDatabases())
+            .map(databaseName -> jdbcUrlFor(container, databaseName))
+            .orElseGet(container::getJdbcUrl);
+    }
+
+    protected String jdbcUrlFor(T container, String databaseName) {
+        return container.getJdbcUrl();
+    }
+
+    protected Optional<String> findRequestedDatabaseName(String propertyName, Map<String, Object> requestedProperties) {
+        if (!isDatasourceExpression(propertyName)) {
+            return Optional.empty();
+        }
+        String datasource = datasourceNameFrom(propertyName);
+        return Optional.ofNullable(stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, DB_NAME))));
+    }
+
+    private Optional<String> findSharedResourceName(String propertyName, Map<String, Object> requestedProperties) {
+        if (!isDatasourceExpression(propertyName)) {
+            return Optional.empty();
+        }
+        String datasource = datasourceNameFrom(propertyName);
+        return Optional.ofNullable(stringOrNull(requestedProperties.get(datasourceExpressionOf(datasource, RESOURCE_NAME))));
+    }
+
+    private boolean supportsSharedContainerReuse(String propertyName, Map<String, Object> properties) {
+        return findSharedResourceName(propertyName, properties).isPresent();
     }
 }

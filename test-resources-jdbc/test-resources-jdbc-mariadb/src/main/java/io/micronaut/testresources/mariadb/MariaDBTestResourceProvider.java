@@ -43,8 +43,49 @@ public class MariaDBTestResourceProvider extends AbstractJdbcTestResourceProvide
     }
 
     @Override
+    protected boolean supportsMultipleDatabases() {
+        return true;
+    }
+
+    @Override
+    protected void createAdditionalDatabase(MariaDBContainer container, String databaseName) {
+        try {
+            var result = container.execInContainer(
+                "mysql",
+                "-h127.0.0.1",
+                "-u",
+                container.getUsername(),
+                "-p" + container.getPassword(),
+                "-e",
+                "CREATE DATABASE " + quoteDatabaseName(databaseName)
+            );
+            if (result.getExitCode() != 0) {
+                throw new IllegalStateException(result.getStderr());
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to create MariaDB database '" + databaseName + "'", e);
+        }
+    }
+
+    @Override
+    protected String jdbcUrlFor(MariaDBContainer container, String databaseName) {
+        return replaceDatabaseName(container.getJdbcUrl(), databaseName);
+    }
+
+    @Override
     protected MariaDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new MariaDBContainer(imageName);
     }
 
+    private static String replaceDatabaseName(String jdbcUrl, String databaseName) {
+        int queryIndex = jdbcUrl.indexOf('?');
+        String querySuffix = queryIndex >= 0 ? jdbcUrl.substring(queryIndex) : "";
+        String baseUrl = queryIndex >= 0 ? jdbcUrl.substring(0, queryIndex) : jdbcUrl;
+        int databaseSeparator = baseUrl.lastIndexOf('/');
+        return baseUrl.substring(0, databaseSeparator + 1) + databaseName + querySuffix;
+    }
+
+    private static String quoteDatabaseName(String databaseName) {
+        return "`" + databaseName.replace("`", "``") + "`";
+    }
 }

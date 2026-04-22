@@ -103,22 +103,66 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
     protected Optional<String> resolveWithoutContainer(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         String name = R2dbcSupport.removeR2dbPrefixFrom(propertyName);
         if (properties.containsKey(name)) {
-            return resolveUsingExistingContainer(propertyName, properties, name);
+            return resolveUsingExistingContainer(propertyName, properties, testResourcesConfig, name);
         }
         return Optional.empty();
     }
 
     @Override
     protected final Optional<String> resolveProperty(String expression, T container) {
+        return resolveProperty(expression, container, Collections.emptyMap(), Collections.emptyMap());
+    }
+
+    @Override
+    protected final Optional<String> resolveProperty(String expression,
+                                                    T container,
+                                                    Map<String, Object> properties,
+                                                    Map<String, Object> testResourcesConfig) {
         Optional<ConnectionFactoryOptions> options = extractOptions(container);
         if (options.isPresent()) {
             String propertyName = expression.substring(expression.lastIndexOf(".") + 1);
-            return Optional.ofNullable(resolveFromConnectionOptions(propertyName, options.get()));
+            return Optional.ofNullable(resolveFromConnectionOptions(expression, propertyName, options.get(), properties));
         }
         return Optional.empty();
     }
 
-    private Optional<String> resolveUsingExistingContainer(String propertyName, Map<String, Object> properties, String name) {
+    @Override
+    protected String getContainerOwnerKey(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        if (supportsSharedContainerReuse(propertyName, properties)) {
+            return getSimpleName();
+        }
+        return super.getContainerOwnerKey(propertyName, properties, testResourcesConfig);
+    }
+
+    @Override
+    protected Map<String, Object> getContainerQuery(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        return supportsSharedContainerReuse(propertyName, properties) ? findSharedResourceName(propertyName, properties)
+            .<Map<String, Object>>map(name -> Map.of(R2dbcSupport.RESOURCE_NAME, name))
+            .orElseGet(() -> super.getContainerQuery(propertyName, properties, testResourcesConfig)) : super.getContainerQuery(propertyName, properties, testResourcesConfig);
+    }
+
+    @Override
+    protected void prepareContainer(String propertyName,
+                                    T container,
+                                    Map<String, Object> properties,
+                                    Map<String, Object> testResourcesConfig) {
+        findRequestedDatabaseName(propertyName, properties)
+            .filter(databaseName -> supportsMultipleDatabases())
+            .filter(databaseName -> extractDefaultDatabaseName(container).map(defaultDatabase -> !defaultDatabase.equals(databaseName)).orElse(true))
+            .ifPresent(databaseName -> {
+                synchronized (container) {
+                    if (!TestContainers.hasDatabase(container, databaseName)) {
+                        createAdditionalDatabase(container, databaseName);
+                        TestContainers.rememberDatabase(container, databaseName);
+                    }
+                }
+            });
+    }
+
+    private Optional<String> resolveUsingExistingContainer(String propertyName,
+                                                           Map<String, Object> properties,
+                                                           Map<String, Object> testResourcesConfig,
+                                                           String name) {
         // Look for a container with JDBC
         LOGGER.debug("Resolving property: {} with properties {}", propertyName, properties);
         List<GenericContainer<?>> containers = TestContainers.findByRequestedProperty(Scope.from(properties), name);
@@ -128,15 +172,34 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         }
         return containers.stream()
             .findFirst()
-            .flatMap(this::extractOptions)
-            .map(options -> resolveFromConnectionOptions(propertyName, options));
+            .flatMap(container -> prepareAndExtractOptions(propertyName, properties, testResourcesConfig, container))
+            .map(options -> resolveFromConnectionOptions(propertyName, propertyName, options, properties));
     }
 
-    private String resolveFromConnectionOptions(String propertyName, ConnectionFactoryOptions options) {
+    private Optional<ConnectionFactoryOptions> prepareAndExtractOptions(String propertyName,
+                                                                        Map<String, Object> properties,
+                                                                        Map<String, Object> testResourcesConfig,
+                                                                        GenericContainer<?> container) {
+        Optional<ConnectionFactoryOptions> options = extractOptions(container);
+        if (options.isEmpty()) {
+            return Optional.empty();
+        }
+        @SuppressWarnings("unchecked")
+        T typedContainer = (T) container;
+        prepareContainer(propertyName, typedContainer, properties, testResourcesConfig);
+        return extractOptions(container);
+    }
+
+    private String resolveFromConnectionOptions(String expression,
+                                                String propertyName,
+                                                ConnectionFactoryOptions options,
+                                                Map<String, Object> properties) {
         String property = propertyName.substring(propertyName.lastIndexOf(".") + 1);
         switch (property) {
             case URL:
-                Object db = options.getValue(ConnectionFactoryOptions.DATABASE);
+                Object db = findRequestedDatabaseName(expression, properties)
+                    .filter(databaseName -> supportsMultipleDatabases())
+                    .orElseGet(() -> options.getValue(ConnectionFactoryOptions.DATABASE) == null ? null : String.valueOf(options.getValue(ConnectionFactoryOptions.DATABASE)));
                 String url;
                 if (db != null) {
                     url = String.format(
@@ -166,5 +229,41 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
     }
 
     protected abstract Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container);
+
+    protected boolean supportsMultipleDatabases() {
+        return false;
+    }
+
+    protected void createAdditionalDatabase(T container, String databaseName) {
+        throw new UnsupportedOperationException("Additional database creation is not supported for " + getSimpleName());
+    }
+
+    protected Optional<String> extractDefaultDatabaseName(T container) {
+        return Optional.empty();
+    }
+
+    private Optional<String> findSharedResourceName(String propertyName, Map<String, Object> properties) {
+        if (!propertyName.startsWith(R2dbcSupport.R2DBC_PREFIX)) {
+            return Optional.empty();
+        }
+        String datasource = R2dbcSupport.datasourceNameFrom(R2dbcSupport.removeR2dbPrefixFrom(propertyName));
+        return Optional.ofNullable(stringOrNull(properties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.RESOURCE_NAME))));
+    }
+
+    protected Optional<String> findRequestedDatabaseName(String propertyName, Map<String, Object> properties) {
+        if (!propertyName.startsWith(R2dbcSupport.R2DBC_PREFIX)) {
+            return Optional.empty();
+        }
+        String datasource = R2dbcSupport.datasourceNameFrom(R2dbcSupport.removeR2dbPrefixFrom(propertyName));
+        String r2dbcDatabaseName = stringOrNull(properties.get(R2dbcSupport.r2dbDatasourceExpressionOf(datasource, R2dbcSupport.DB_NAME)));
+        if (r2dbcDatabaseName != null) {
+            return Optional.of(r2dbcDatabaseName);
+        }
+        return Optional.ofNullable(stringOrNull(properties.get(R2dbcSupport.datasourceExpressionOf(datasource, R2dbcSupport.DB_NAME))));
+    }
+
+    private boolean supportsSharedContainerReuse(String propertyName, Map<String, Object> properties) {
+        return findSharedResourceName(propertyName, properties).isPresent();
+    }
 
 }

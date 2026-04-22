@@ -24,3 +24,24 @@ In addition, R2DBC databases can be configured simply by reading the traditional
 
 In which case, the name of the datasource must match the name of the R2DBC datasource.
 This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.
+
+If the logical datasource names differ, you can still opt JDBC and R2DBC into the same physical test resource by setting `test-resources.resource-name` on both sides:
+
+[configuration]
+----
+datasources:
+  migrations:
+    dialect: POSTGRES
+    db-name: migrations_db
+    test-resources:
+      resource-name: main-db
+r2dbc:
+  datasources:
+    default:
+      dialect: POSTGRES
+      db-name: default_db
+      test-resources:
+        resource-name: main-db
+----
+
+The same property can also be shared by multiple R2DBC datasources to reuse one physical container. When PostgreSQL, MySQL, or MariaDB datasources also declare distinct `db-name` values, Micronaut Test Resources creates those databases on the shared container and returns datasource-specific R2DBC URLs. For other engines, `test-resources.resource-name` still only controls container identity.

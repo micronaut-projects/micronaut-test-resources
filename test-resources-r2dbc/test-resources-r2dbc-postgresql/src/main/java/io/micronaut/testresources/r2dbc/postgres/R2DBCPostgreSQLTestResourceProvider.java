@@ -58,6 +58,38 @@ public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResour
     }
 
     @Override
+    protected boolean supportsMultipleDatabases() {
+        return true;
+    }
+
+    @Override
+    protected void createAdditionalDatabase(PostgreSQLContainer container, String databaseName) {
+        try {
+            var result = container.execInContainer(
+                "psql",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-U",
+                container.getUsername(),
+                "-d",
+                container.getDatabaseName(),
+                "-c",
+                "CREATE DATABASE " + quoteDatabaseName(databaseName)
+            );
+            if (result.getExitCode() != 0) {
+                throw new IllegalStateException(result.getStderr());
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to create PostgreSQL database '" + databaseName + "'", e);
+        }
+    }
+
+    @Override
+    protected Optional<String> extractDefaultDatabaseName(PostgreSQLContainer container) {
+        return Optional.of(container.getDatabaseName());
+    }
+
+    @Override
     protected Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container) {
         if (container instanceof PostgreSQLContainer) {
             return Optional.of(PostgreSQLR2DBCDatabaseContainer.getOptions((PostgreSQLContainer) container));
@@ -70,4 +102,7 @@ public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResour
         return new PostgreSQLContainer(imageName);
     }
 
+    private static String quoteDatabaseName(String databaseName) {
+        return "\"" + databaseName.replace("\"", "\"\"") + "\"";
+    }
 }

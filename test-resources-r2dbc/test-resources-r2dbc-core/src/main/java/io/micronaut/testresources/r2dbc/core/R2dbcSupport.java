@@ -36,6 +36,8 @@ public final class R2dbcSupport {
     public static final String DIALECT = "dialect";
     public static final String DRIVER = "driverClassName";
     public static final String TYPE = "db-type";
+    public static final String DB_NAME = "db-name";
+    public static final String RESOURCE_NAME = "test-resources.resource-name";
 
     public static final List<String> REQUIRED_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
         DIALECT,
@@ -59,7 +61,14 @@ public final class R2dbcSupport {
             String datasourceName = R2dbcSupport.datasourceNameFrom(regularDatasource);
             List<String> requiredProperties = Stream.concat(
                 Stream.of(regularDatasource),
-                REQUIRED_PROPERTIES.stream().map(k -> R2dbcSupport.r2dbDatasourceExpressionOf(datasourceName, k))
+                Stream.concat(
+                    REQUIRED_PROPERTIES.stream().map(k -> R2dbcSupport.r2dbDatasourceExpressionOf(datasourceName, k)),
+                    Stream.of(
+                        R2dbcSupport.r2dbDatasourceExpressionOf(datasourceName, DB_NAME),
+                        R2dbcSupport.r2dbDatasourceExpressionOf(datasourceName, RESOURCE_NAME),
+                        R2dbcSupport.datasourceExpressionOf(datasourceName, DB_NAME)
+                    )
+                )
             ).collect(Collectors.toList());
 
             LOGGER.debug("Required properties: {}", requiredProperties);
@@ -90,5 +99,9 @@ public final class R2dbcSupport {
 
     public static String r2dbDatasourceExpressionOf(String datasource, String property) {
         return R2DBC_DATASOURCES + "." + datasource + "." + property;
+    }
+
+    public static String datasourceExpressionOf(String datasource, String property) {
+        return DATASOURCES + "." + datasource + "." + property;
     }
 }

@@ -14,10 +14,9 @@ By default, the provider starts `mcr.microsoft.com/azure-storage/azurite:3.35.0`
 
 [configuration]
 ----
-azure:
-  credential:
-    storage-shared-key:
-      connection-string: ${azure.credential.storage-shared-key.connection-string}
+storage:
+  client:
+    connection-string: ${azure.credential.storage-shared-key.connection-string}
 ----
 
 NOTE: If you need Azurite behavior outside these shared-key properties, the generic Testcontainers support remains available.

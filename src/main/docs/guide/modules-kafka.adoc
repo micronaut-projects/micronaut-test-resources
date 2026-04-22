@@ -2,6 +2,23 @@ Kafka support will automatically start a https://kafka.apache.org[Kafka containe
 
 The default image can be overwritten by setting the `test-resources.containers.kafka.image-name` property.
 
+Kafka topics are only provisioned when `test-resources.containers.kafka.topics` is configured. When set, test resources creates any missing topics before returning `kafka.bootstrap.servers`.
+
+The optional `test-resources.containers.kafka.partitions` property applies the same partition count to every configured topic and defaults to `1`.
+
+NOTE: Topic replication is fixed to `1` because the Kafka test resource starts a single-broker container. This feature is intended for test-time broker preparation, not general Kafka administration.
+
+[configuration]
+----
+test-resources:
+  containers:
+    kafka:
+      topics:
+        - orders
+        - shipments
+      partitions: 3
+----
+
 TIP: See the guide for https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html[Testing Kafka Listener using Testcontainers with the Micronaut Framework] to learn more.
 
 

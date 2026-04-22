@@ -54,6 +54,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String SIMPLE_NAME = "kafka";
     private static final long ADMIN_TIMEOUT_SECONDS = 30;
 
+    private final Object topicProvisioningMonitor = new Object();
     private final Map<KafkaContainer, TopicProvisioningConfiguration> topicProvisioningConfigurations =
         Collections.synchronizedMap(new WeakHashMap<>());
 
@@ -100,7 +101,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         if (configuration == null || configuration.provisioned() || configuration.topics().isEmpty()) {
             return;
         }
-        synchronized (container) {
+        synchronized (topicProvisioningMonitor) {
             TopicProvisioningConfiguration currentConfiguration = topicProvisioningConfigurations.get(container);
             if (currentConfiguration == null || currentConfiguration.provisioned() || currentConfiguration.topics().isEmpty()) {
                 return;

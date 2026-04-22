@@ -19,6 +19,7 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
+import io.micronaut.context.env.CachedEnvironment;
 import io.micronaut.context.env.Environment;
 import io.micronaut.runtime.Micronaut;
 import io.micronaut.runtime.server.EmbeddedServer;
@@ -28,8 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.function.UnaryOperator;
 
 /**
  * Main entry point for the server.
@@ -37,9 +40,12 @@ import java.util.Arrays;
 @Singleton
 public class TestResourcesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesService.class);
+    private static final String MICRONAUT_CONFIG_FILES_ENV = "MICRONAUT_CONFIG_FILES";
+    private static final String CACHED_ENVIRONMENT_GETENV_FIELD = "getenv";
 
     public static void main(String[] args) {
         long sd = System.nanoTime();
+        ignoreInheritedConfigFilesEnvironmentVariable();
         ApplicationContext context = Micronaut.run(TestResourcesService.class, args);
         Arrays.stream(args)
             .filter(arg -> arg.startsWith("--port-file="))
@@ -58,6 +64,30 @@ public class TestResourcesService {
         long dur = System.nanoTime() - sd;
         LOGGER.info("A Micronaut Test Resources server is listening on port {}, started in {}ms",
             context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
+    }
+
+    private static void ignoreInheritedConfigFilesEnvironmentVariable() {
+        if (System.getenv(MICRONAUT_CONFIG_FILES_ENV) == null) {
+            return;
+        }
+        try {
+            Field getenvField = CachedEnvironment.class.getDeclaredField(CACHED_ENVIRONMENT_GETENV_FIELD);
+            getenvField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            UnaryOperator<String> existing = (UnaryOperator<String>) getenvField.get(null);
+            UnaryOperator<String> sanitizedGetenv = key -> {
+                if (MICRONAUT_CONFIG_FILES_ENV.equals(key)) {
+                    return null;
+                }
+                if (existing != null) {
+                    return existing.apply(key);
+                }
+                return System.getenv(key);
+            };
+            getenvField.set(null, sanitizedGetenv);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Unable to ignore inherited " + MICRONAUT_CONFIG_FILES_ENV, e);
+        }
     }
 
     /**
@@ -83,6 +113,7 @@ public class TestResourcesService {
             builder.packages("io.micronaut.testresources.server")
                 .deduceEnvironment(false)
                 .environments(Environment.TEST)
+                .environmentVariableExcludes(MICRONAUT_CONFIG_FILES_ENV)
                 .banner(false);
         }
     }

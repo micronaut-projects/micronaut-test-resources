@@ -14,6 +14,8 @@ import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
 
 class ServerUtilsTest extends Specification {
+    private static final String JMX_PROPERTY = 'com.sun.management.jmxremote'
+
     @TempDir
     Path tmpDir
 
@@ -58,7 +60,7 @@ class ServerUtilsTest extends Specification {
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
             assert params.mainClass == 'io.micronaut.testresources.server.TestResourcesService'
             assert params.classpath == classpath
-            def sysProps = ['com.sun.management.jmxremote': null]
+            def sysProps = [(JMX_PROPERTY): null]
             if (token != null) {
                 sysProps["server.access-token"] = token
             }
@@ -197,6 +199,8 @@ class ServerUtilsTest extends Specification {
             assert jvmArgs.contains(cdsLoggingOffOption)
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
+            assert params.systemProperties.containsKey(JMX_PROPERTY)
+            assert params.systemProperties.get(JMX_PROPERTY) == null
             assert params.classpath.contains(cdsFlatJar.toFile())
             assert Files.exists(cdsFlatJar)
             Files.write(cdsClassList, "test".getBytes())
@@ -216,6 +220,7 @@ class ServerUtilsTest extends Specification {
             assert jvmArgs.contains("-Xshare:dump")
             assert jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
+            assert !params.systemProperties.containsKey(JMX_PROPERTY)
             Files.write(cdsArchiveFile, "test".getBytes())
         }
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -224,6 +229,8 @@ class ServerUtilsTest extends Specification {
             assert !jvmArgs.contains("-Xshare:dump")
             assert !jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
+            assert params.systemProperties.containsKey(JMX_PROPERTY)
+            assert params.systemProperties.get(JMX_PROPERTY) == null
         }
         1 * factory.waitFor(_) >> {
             portFile.toFile().text = "${embeddedServer.port}"
@@ -241,6 +248,8 @@ class ServerUtilsTest extends Specification {
             assert !jvmArgs.contains("-Xshare:dump")
             assert !jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
+            assert params.systemProperties.containsKey(JMX_PROPERTY)
+            assert params.systemProperties.get(JMX_PROPERTY) == null
         }
         1 * factory.waitFor(_) >> {
             portFile.toFile().text = "${embeddedServer.port}"
@@ -257,6 +266,8 @@ class ServerUtilsTest extends Specification {
             assert jvmArgs.contains(cdsLoggingOffOption)
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
+            assert params.systemProperties.containsKey(JMX_PROPERTY)
+            assert params.systemProperties.get(JMX_PROPERTY) == null
             assert params.classpath == []
             Files.write(cdsClassList, "test".getBytes())
         }

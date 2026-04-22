@@ -475,7 +475,9 @@ public class ServerUtils {
         @Override
         public Map<String, String> getSystemProperties() {
             Map<String, String> systemProperties = new HashMap<>();
-            systemProperties.put(JMX_SYSTEM_PROPERTY, null);
+            if (!isCDSDumpInvocation()) {
+                systemProperties.put(JMX_SYSTEM_PROPERTY, null);
+            }
             String dockerCheckTimeout = System.getProperty(DOCKER_CHECK_TIMEOUT_SECONDS_PROPERTY);
             if (dockerCheckTimeout == null) {
                 dockerCheckTimeout = System.getenv(DOCKER_CHECK_TIMEOUT_SECONDS_ENV);

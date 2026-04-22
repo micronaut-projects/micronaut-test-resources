@@ -31,6 +31,7 @@ micronaut-mongodb = "6.0.1-M1"
 micronaut-gradle-plugin = "4.6.2"
 micronaut-mqtt = "4.0.0-M1"
 micronaut-neo4j = "8.0.0-M1"
+micronaut-pulsar = "3.0.0-M1"
 micronaut-rabbitmq = "5.0.0-M1"
 micronaut-r2dbc = "7.0.0"
 micronaut-reactor = "4.0.0-M1"
@@ -38,7 +39,6 @@ micronaut-redis = "7.0.0-M1"
 micronaut-security = "5.0.0-M1"
 micronaut-serde = "3.0.0-M5"
 micronaut-sql = "7.0.0-M7"
-pulsar-client = "4.1.3"
 spock = "2.4-groovy-5.0"
 vertx-client = "5.0.10"
 amazon-awssdk-v1 = "1.12.797"
@@ -78,7 +78,6 @@ managed-testcontainers-opensearch = { module = "org.testcontainers:testcontainer
 managed-testcontainers-oracle-xe = { module = "org.testcontainers:testcontainers-oracle-xe", version.ref = "managed-testcontainers" }
 managed-testcontainers-oracle-free = { module = "org.testcontainers:testcontainers-oracle-free", version.ref = "managed-testcontainers" }
 managed-testcontainers-postgres = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "managed-testcontainers" }
-managed-testcontainers-pulsar = { module = "org.testcontainers:pulsar", version.ref = "managed-testcontainers-pulsar" }
 managed-testcontainers-rabbitmq = { module = "org.testcontainers:testcontainers-rabbitmq", version.ref = "managed-testcontainers" }
 managed-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "managed-testcontainers-redis" }
 managed-testcontainers-r2dbc = { module = "org.testcontainers:testcontainers-r2dbc", version.ref = "managed-testcontainers" }
@@ -102,6 +101,7 @@ micronaut-logging = { module = "io.micronaut.logging:micronaut-logging-bom", ver
 micronaut-mqtt = { module = "io.micronaut.mqtt:micronaut-mqtt-bom", version.ref = "micronaut-mqtt" }
 micronaut-mongodb = { module = "io.micronaut.mongodb:micronaut-mongo-bom", version.ref = "micronaut-mongodb" }
 micronaut-neo4j = { module = "io.micronaut.neo4j:micronaut-neo4j-bom", version.ref = "micronaut-neo4j" }
+micronaut-pulsar = { module = "io.micronaut.pulsar:micronaut-pulsar-bom", version.ref = "micronaut-pulsar" }
 micronaut-rabbitmq = { module = "io.micronaut.rabbitmq:micronaut-rabbitmq-bom", version.ref = "micronaut-rabbitmq" }
 micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
 micronaut-redis = { module = "io.micronaut.redis:micronaut-redis-bom", version.ref = "micronaut-redis" }
@@ -109,7 +109,7 @@ micronaut-r2dbc = { module = "io.micronaut.r2dbc:micronaut-r2dbc-bom", version.r
 micronaut-security = { module = "io.micronaut.security:micronaut-security-bom", version.ref = "micronaut-security" }
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
 micronaut-sql = { module = "io.micronaut.sql:micronaut-sql-bom", version.ref = "micronaut-sql" }
-pulsar-client-original = { module = "org.apache.pulsar:pulsar-client-original", version.ref = "pulsar-client" }
+managed-testcontainers-pulsar = { module = "org.testcontainers:pulsar", version.ref = "managed-testcontainers-pulsar" }
 
 vertx-mysql = { module = "io.vertx:vertx-mysql-client", version.ref = "vertx.client" }
 vertx-mssql = { module = "io.vertx:vertx-mssql-client", version.ref = "vertx.client" }

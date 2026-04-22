@@ -127,6 +127,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-mongodb")
     importMicronautCatalog("micronaut-mqtt")
     importMicronautCatalog("micronaut-neo4j")
+    importMicronautCatalog("micronaut-pulsar")
     importMicronautCatalog("micronaut-rabbitmq")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-redis")

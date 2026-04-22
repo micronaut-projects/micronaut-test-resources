@@ -27,6 +27,7 @@ dependencies {
     testFixturesImplementation(projects.micronautTestResourcesCore)
     testFixturesImplementation(projects.micronautTestResourcesTestcontainers)
     testImplementation(mn.micronaut.http.client)
+    testImplementation(mnLogging.logback.classic)
     testImplementation(projects.micronautTestResourcesClient)
     // TODO: MN5 Requires Micronaut Kafka release
 //    testRuntimeOnly(projects.micronautTestResourcesKafka)

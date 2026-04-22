@@ -10,6 +10,7 @@ The resource resolvers are loaded via service loading.
 
 dependencies {
     api(project(':micronaut-test-resources-core'))
+    testImplementation(mnLogging.logback.classic)
 }
 
 testing {

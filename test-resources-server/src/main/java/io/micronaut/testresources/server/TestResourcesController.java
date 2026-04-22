@@ -40,6 +40,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +62,7 @@ public class TestResourcesController implements TestResourcesResolver {
     private final EmbeddedServer embeddedServer;
     private final ApplicationContext applicationContext;
     private final TaskScheduler taskScheduler;
+    private final Set<String> warnedDisabledResolvers = ConcurrentHashMap.newKeySet();
 
     public TestResourcesController(List<PropertyResolutionListener> propertyResolutionListeners,
                                    EmbeddedServer embeddedServer,
@@ -155,8 +158,7 @@ public class TestResourcesController implements TestResourcesResolver {
         var sanitizedTestResourcesConfig = sanitizeTestResourcesConfig(testResourcesConfig);
         Optional<String> result = Optional.empty();
         for (TestResourcesResolver resolver : loader.getResolvers()) {
-            if (resolver instanceof ToggableTestResourcesResolver toggable &&
-                !toggable.isEnabled(sanitizedTestResourcesConfig)) {
+            if (!isEnabled(resolver, sanitizedTestResourcesConfig)) {
                 continue;
             }
             try {
@@ -277,10 +279,16 @@ public class TestResourcesController implements TestResourcesResolver {
             });
     }
 
-    private static boolean isEnabled(TestResourcesResolver resolver,
-                                     Map<String, Object> testResourcesConfig) {
+    private boolean isEnabled(TestResourcesResolver resolver,
+                              Map<String, Object> testResourcesConfig) {
         if (resolver instanceof ToggableTestResourcesResolver toggable) {
-            return toggable.isEnabled(testResourcesConfig);
+            if (toggable.isEnabled(testResourcesConfig)) {
+                return true;
+            }
+            if (warnedDisabledResolvers.add(toggable.getName())) {
+                LOGGER.warn("Test resources provider for {} is disabled", toggable.getDisplayName());
+            }
+            return false;
         }
         return true;
     }

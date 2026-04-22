@@ -30,7 +30,7 @@ import java.util.Optional;
 public class PulsarTestResourceProvider extends AbstractTestContainersProvider<PulsarContainer> {
 
     public static final String PULSAR_SERVICE_URL = "pulsar.service-url";
-    public static final String DEFAULT_IMAGE = "apachepulsar/pulsar:3.3.9";
+    public static final String DEFAULT_IMAGE = "apachepulsar/pulsar:4.1.3";
     public static final String DISPLAY_NAME = "Pulsar";
     public static final String SIMPLE_NAME = "pulsar";
 

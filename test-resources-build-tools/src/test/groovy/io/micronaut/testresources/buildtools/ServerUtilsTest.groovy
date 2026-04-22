@@ -14,6 +14,8 @@ import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
 
 class ServerUtilsTest extends Specification {
+    private static final String JMX_PROPERTY = 'com.sun.management.jmxremote'
+
     @TempDir
     Path tmpDir
 
@@ -195,6 +197,7 @@ class ServerUtilsTest extends Specification {
             def jvmArgs = params.jvmArguments
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
+            assert params.systemProperties == [(JMX_PROPERTY): null]
             assert params.classpath.contains(cdsFlatJar.toFile())
             assert Files.exists(cdsFlatJar)
             Files.write(cdsClassList, "test".getBytes())
@@ -213,6 +216,7 @@ class ServerUtilsTest extends Specification {
             assert jvmArgs.contains("-Xshare:dump")
             assert jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
+            assert !params.systemProperties.containsKey(JMX_PROPERTY)
             Files.write(cdsArchiveFile, "test".getBytes())
         }
         1 * factory.startServer(_) >> { ServerUtils.ProcessParameters params ->
@@ -220,6 +224,7 @@ class ServerUtilsTest extends Specification {
             assert !jvmArgs.contains("-Xshare:dump")
             assert !jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
+            assert params.systemProperties == [(JMX_PROPERTY): null]
         }
         1 * factory.waitFor(_) >> {
             portFile.toFile().text = "${embeddedServer.port}"
@@ -236,6 +241,7 @@ class ServerUtilsTest extends Specification {
             assert !jvmArgs.contains("-Xshare:dump")
             assert !jvmArgs.contains(cdsSharedClassListOption)
             assert jvmArgs.contains(cdsSharedArchiveFileOption)
+            assert params.systemProperties == [(JMX_PROPERTY): null]
         }
         1 * factory.waitFor(_) >> {
             portFile.toFile().text = "${embeddedServer.port}"
@@ -251,6 +257,7 @@ class ServerUtilsTest extends Specification {
             def jvmArgs = params.jvmArguments
             assert jvmArgs.contains("-Xshare:off")
             assert jvmArgs.contains(cdsClassListOption)
+            assert params.systemProperties == [(JMX_PROPERTY): null]
             assert params.classpath == []
             Files.write(cdsClassList, "test".getBytes())
         }

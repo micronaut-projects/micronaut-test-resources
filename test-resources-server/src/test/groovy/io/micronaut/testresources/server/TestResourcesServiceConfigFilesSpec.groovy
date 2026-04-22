@@ -70,12 +70,13 @@ class TestResourcesServiceConfigFilesSpec extends Specification {
             javaCommand(),
             *jvmArgs,
             "-cp",
-            System.getProperty(RUNTIME_CLASSPATH_PROPERTY),
+            System.getProperty(RUNTIME_CLASSPATH_PROPERTY, System.getProperty("java.class.path")),
             TestResourcesService.name,
             "--port-file=${portFile.toAbsolutePath()}".toString()
         ]
         def builder = new ProcessBuilder(command)
         builder.redirectErrorStream(true)
+        builder.redirectOutput(tempDir.resolve("server-${runningProcesses.size()}.log").toFile())
         builder.environment().putAll(environment)
         def process = builder.start()
         runningProcesses.add(process)

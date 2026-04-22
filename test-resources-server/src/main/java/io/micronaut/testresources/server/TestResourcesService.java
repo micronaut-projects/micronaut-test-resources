@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.function.UnaryOperator;
@@ -70,22 +71,30 @@ public class TestResourcesService {
         if (System.getenv(MICRONAUT_CONFIG_FILES_ENV) == null) {
             return;
         }
+        installCachedEnvironmentConfigFilesOverride();
+    }
+
+    static UnaryOperator<String> configFilesSanitizingGetenv(UnaryOperator<String> existing) {
+        return key -> {
+            if (MICRONAUT_CONFIG_FILES_ENV.equals(key)) {
+                return null;
+            }
+            if (existing != null) {
+                return existing.apply(key);
+            }
+            return System.getenv(key);
+        };
+    }
+
+    @SuppressWarnings("java:S3011")
+    static void installCachedEnvironmentConfigFilesOverride() {
         try {
             Field getenvField = CachedEnvironment.class.getDeclaredField(CACHED_ENVIRONMENT_GETENV_FIELD);
             getenvField.setAccessible(true);
             @SuppressWarnings("unchecked")
             UnaryOperator<String> existing = (UnaryOperator<String>) getenvField.get(null);
-            UnaryOperator<String> sanitizedGetenv = key -> {
-                if (MICRONAUT_CONFIG_FILES_ENV.equals(key)) {
-                    return null;
-                }
-                if (existing != null) {
-                    return existing.apply(key);
-                }
-                return System.getenv(key);
-            };
-            getenvField.set(null, sanitizedGetenv);
-        } catch (ReflectiveOperationException e) {
+            getenvField.set(null, configFilesSanitizingGetenv(existing));
+        } catch (InaccessibleObjectException | SecurityException | ReflectiveOperationException e) {
             throw new IllegalStateException("Unable to ignore inherited " + MICRONAUT_CONFIG_FILES_ENV, e);
         }
     }

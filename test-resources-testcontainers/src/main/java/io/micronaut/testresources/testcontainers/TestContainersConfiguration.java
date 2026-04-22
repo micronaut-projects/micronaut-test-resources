@@ -36,6 +36,8 @@ final class TestContainersConfiguration {
     private Map<String, Integer> exposedPorts;
     private Map<String, String> roFsBind;
     private Map<String, String> rwFsBind;
+    private Set<String> roAnonymousVolumes;
+    private Set<String> rwAnonymousVolumes;
     private List<String> command;
     private String workingDirectory;
     private Map<String, String> env;
@@ -161,6 +163,40 @@ final class TestContainersConfiguration {
      */
     public void setRwFsBind(Map<String, String> rwFsBind) {
         this.rwFsBind = rwFsBind;
+    }
+
+    /**
+     * Returns the set of read-only anonymous Docker-managed volumes.
+     * @return the read-only anonymous volumes.
+     */
+    public Set<String> getRoAnonymousVolumes() {
+        return roAnonymousVolumes;
+    }
+
+    /**
+     * The paths in the container filesystem that should be mounted as
+     * Docker-managed anonymous volumes in read-only mode.
+     * @param roAnonymousVolumes the read-only anonymous volumes.
+     */
+    public void setRoAnonymousVolumes(Set<String> roAnonymousVolumes) {
+        this.roAnonymousVolumes = roAnonymousVolumes;
+    }
+
+    /**
+     * Returns the set of read-write anonymous Docker-managed volumes.
+     * @return the read-write anonymous volumes.
+     */
+    public Set<String> getRwAnonymousVolumes() {
+        return rwAnonymousVolumes;
+    }
+
+    /**
+     * The paths in the container filesystem that should be mounted as
+     * Docker-managed anonymous volumes in read-write mode.
+     * @param rwAnonymousVolumes the read-write anonymous volumes.
+     */
+    public void setRwAnonymousVolumes(Set<String> rwAnonymousVolumes) {
+        this.rwAnonymousVolumes = rwAnonymousVolumes;
     }
 
     /**

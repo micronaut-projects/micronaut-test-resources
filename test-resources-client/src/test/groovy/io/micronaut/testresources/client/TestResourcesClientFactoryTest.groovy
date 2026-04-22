@@ -46,6 +46,15 @@ class TestResourcesClientFactoryTest extends Specification implements ClientClea
             Optional.of(currentDirectory.resolve(".micronaut/test-resources/test-resources.properties"))
     }
 
+    def "directory named like properties file is ignored"() {
+        given:
+        def currentDirectory = tempDir.resolve("application")
+        Files.createDirectories(currentDirectory.resolve(".micronaut/test-resources/test-resources.properties"))
+
+        expect:
+        TestResourcesClientFactory.findPropertiesFileByConvention(currentDirectory, tempDir.resolve("home"), null).empty
+    }
+
     def "standalone module directory resolves nested settings file"() {
         given:
         def currentDirectory = tempDir.resolve("test-resources")

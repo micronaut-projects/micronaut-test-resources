@@ -190,7 +190,7 @@ public final class TestResourcesClientFactory {
                 .flatMap(Optional::stream)
                 .forEach(candidates::add);
         } catch (IOException e) {
-            throw new TestResourcesException(e);
+            return candidates;
         }
         return candidates;
     }
@@ -220,7 +220,9 @@ public final class TestResourcesClientFactory {
     }
 
     private static Optional<Path> existingPropertiesFile(Path location) {
-        if (Files.exists(location) && location.getFileName().endsWith(TEST_RESOURCES_PROPERTIES)) {
+        if (Files.isRegularFile(location)
+            && Files.isReadable(location)
+            && location.getFileName().endsWith(TEST_RESOURCES_PROPERTIES)) {
             return Optional.of(location);
         }
         return Optional.empty();

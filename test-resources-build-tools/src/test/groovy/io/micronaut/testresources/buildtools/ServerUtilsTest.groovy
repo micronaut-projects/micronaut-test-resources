@@ -236,6 +236,25 @@ class ServerUtilsTest extends Specification {
         server?.stop(0)
     }
 
+    def "fails clearly when an explicit port requires an access token"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def server = startRequirementsServer('secret-token')
+
+        when:
+        ServerUtils.startOrConnectToExistingServer(server.address.port, portFile, settingsDir, null, [], null, null, factory)
+
+        then:
+        def ex = thrown(IllegalStateException)
+        ex.message == "Explicit test resources port ${server.address.port} is already in use by a service that could not be validated as Micronaut Test Resources: an access token is required"
+        0 * factory.startServer(_)
+        0 * factory.waitFor(_)
+
+        cleanup:
+        server?.stop(0)
+    }
+
     def "supports class data sharing"() {
         def portFile = tmpDir.resolve("port-file")
         def settingsDir = tmpDir.resolve("settings")

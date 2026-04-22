@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -282,7 +283,9 @@ public class ServerUtils {
             }
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                return ServiceProbeResult.runningButInvalid("the saved access token was rejected");
+                return ServiceProbeResult.runningButInvalid(accessToken != null
+                    ? "the access token was rejected"
+                    : "an access token is required");
             }
             if (responseCode != HttpURLConnection.HTTP_OK) {
                 return ServiceProbeResult.runningButInvalid("it responded with HTTP " + responseCode);
@@ -307,7 +310,7 @@ public class ServerUtils {
     }
 
     private static boolean isJsonContentType(String contentType) {
-        return contentType != null && contentType.toLowerCase().contains(JSON_CONTENT_TYPE);
+        return contentType != null && contentType.toLowerCase(Locale.ROOT).contains(JSON_CONTENT_TYPE);
     }
 
     private static boolean isJsonStringArray(String body) {
@@ -422,7 +425,7 @@ public class ServerUtils {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             serverSettings.getAccessToken()
-                .ifPresent(token -> conn.setRequestProperty("Access-Token", token));
+                .ifPresent(token -> conn.setRequestProperty(ACCESS_TOKEN_HEADER, token));
             try (InputStream is = conn.getInputStream()) {
                 is.read();
             }

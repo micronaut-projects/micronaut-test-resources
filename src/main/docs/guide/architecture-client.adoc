@@ -3,3 +3,20 @@ It basically delegates requests of property resolution from Micronaut to the ser
 
 This client is automatically injected on the application classpath in development mode or during tests.
 As a user, you should never have to deal with this module directly.
+
+== Conventional lookup locations
+
+When the client is configured automatically, Micronaut Test Resources prefers system properties.
+This is the most reliable option because it supports the full client configuration, including shared servers and namespaces.
+
+If the client cannot find the server settings in system properties, it falls back to `test-resources.properties` files in conventional locations:
+
+* `./.micronaut/test-resources/test-resources.properties`
+* `~/.micronaut/test-resources/test-resources.properties` when the `TEST_RESOURCES_NAMESPACE` environment variable is not set
+* `~/.micronaut/test-resources-<namespace>/test-resources.properties` when the `TEST_RESOURCES_NAMESPACE` environment variable is set
+
+Build tools write this file when they start or connect to a test resources server.
+The working-directory location is scoped to the current project checkout.
+The user-home location is intended for settings shared across builds, so it can survive older experiments or manually managed shared servers.
+
+NOTE: If Micronaut Test Resources unexpectedly connects to an old server or fails because a recorded server is no longer running, remove the stale `test-resources.properties` file from the relevant `.micronaut` directory and rerun the build so the settings can be recreated.

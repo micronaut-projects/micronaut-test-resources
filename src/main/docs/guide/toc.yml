@@ -26,6 +26,8 @@ modules:
     title: MinIO
   modules-seaweedfs:
     title: SeaweedFS
+  modules-couchbase:
+    title: Couchbase
   modules-mongodb:
     title: MongoDB
   modules-mqtt:

@@ -1,0 +1,18 @@
+Couchbase support will automatically start a https://www.couchbase.com[Couchbase Server container] and provide the values of the `couchbase.uri`, `couchbase.username`, and `couchbase.password` properties.
+
+The provider uses the `couchbase/server` image by default.
+
+You can override the image name and tag with `test-resources.containers.couchbase.image-name` and `test-resources.containers.couchbase.image-tag`.
+
+[configuration]
+----
+test-resources:
+  containers:
+    couchbase:
+      image-name: couchbase/server
+      image-tag: latest
+----
+
+If you already map one of those same properties explicitly through generic Testcontainers support, that explicit mapping still wins.
+
+For unsupported Couchbase topologies or additional property shapes, continue using xref:modules-testcontainers.adoc[generic Testcontainers support].

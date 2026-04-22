@@ -50,6 +50,7 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
     public static final String DEFAULT_IMAGE = "mcr.microsoft.com/azure-storage/azurite:3.35.0";
     public static final String SIMPLE_NAME = "azurite";
     public static final String DISPLAY_NAME = "Azurite";
+    public static final String LISTEN_HOST = "0.0.0.0";
 
     public static final int BLOB_PORT = 10000;
     public static final int QUEUE_PORT = 10001;
@@ -77,15 +78,16 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
+    @SuppressWarnings("java:S2095") // Container lifecycle is managed by AbstractTestContainersProvider/TestContainers.
     protected GenericContainer<?> createContainer(DockerImageName imageName,
                                                   Map<String, Object> requestedProperties,
                                                   Map<String, Object> testResourcesConfig) {
         return new GenericContainer<>(imageName)
             .withCommand(
-                "azurite",
-                "--blobHost", "0.0.0.0",
-                "--queueHost", "0.0.0.0",
-                "--tableHost", "0.0.0.0",
+                SIMPLE_NAME,
+                "--blobHost", LISTEN_HOST,
+                "--queueHost", LISTEN_HOST,
+                "--tableHost", LISTEN_HOST,
                 "--skipApiVersionCheck"
             )
             .withExposedPorts(BLOB_PORT, QUEUE_PORT, TABLE_PORT);

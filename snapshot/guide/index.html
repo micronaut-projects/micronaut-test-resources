@@ -322,6 +322,13 @@ POM or via the command-line).</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.h2database.com/html/main.html">H2</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>h2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://mariadb.org/">MariaDB</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
@@ -366,7 +373,9 @@ POM or via the command-line).</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Databases are supplied via a <a href="https://www.testcontainers.com/">Testcontainers</a> container.
+<p>Most databases are supplied via a <a href="https://www.testcontainers.com/">Testcontainers</a> container.
+H2 is containerless and starts a loopback-only in-memory TCP server for the lifetime of the test-resources process.
+Shared or remote H2 test resources are not supported at this time, so the H2 resolver stays disabled when <code>micronaut.test.resources.server.uri</code> is configured.
 It is possible to override the default image of the container by setting the following property in your application configuration:</p>
 </div>
 <div class="ulist">
@@ -578,7 +587,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <p><code>datasources.*.password</code></p>
 </li>
 <li>
-<p><code>datasources.*.dialect</code></p>
+<p><code>datasources.*.driver-class-name</code></p>
 </li>
 </ul>
 </div>
@@ -592,7 +601,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <div class="ulist">
 <ul>
 <li>
-<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgres</code>)</p>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>h2</code>, <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgres</code>)</p>
 </li>
 <li>
 <p><code>datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
@@ -600,7 +609,12 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 </ul>
 </div>
 <div class="paragraph">
-<p><code>datasources.*.driverClassName</code> should be empty because JDBC driver from testcontainers has to be used for working with URI like 'jdcb:tc:postgres:14///db'</p>
+<p>Most JDBC databases are started via Testcontainers, so <code>datasources.*.driver-class-name</code> should usually be left empty because the JDBC driver from Testcontainers has to be used for URIs like <code>jdbc:tc:postgres:14:///db</code>.
+H2 is the exception: it is supported in JDBC mode only, starts a containerless loopback-only in-memory TCP server, and automatically resolves <code>org.h2.Driver</code>.
+Shared or remote H2 test resources are not supported at this time, so the H2 resolver stays disabled when <code>micronaut.test.resources.server.uri</code> is configured.</p>
+</div>
+<div class="paragraph">
+<p>H2 support in this module is currently limited to JDBC test resources. R2DBC and Hibernate Reactive H2 support are out of scope for this feature.</p>
 </div>
 <div class="paragraph">
 <p>Micronaut Test Resources can also generate an IntelliJ IDEA/DataGrip datasource export file for resolved JDBC datasources.

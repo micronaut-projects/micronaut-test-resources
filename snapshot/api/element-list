@@ -8,6 +8,7 @@ io.micronaut.testresources.consul
 io.micronaut.testresources.controlpanel
 io.micronaut.testresources.core
 io.micronaut.testresources.embedded
+io.micronaut.testresources.h2
 io.micronaut.testresources.hashicorp.vault
 io.micronaut.testresources.hazelcast
 io.micronaut.testresources.hibernate.reactive.core

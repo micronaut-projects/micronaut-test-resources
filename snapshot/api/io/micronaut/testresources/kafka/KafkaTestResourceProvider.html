@@ -54,13 +54,17 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
 <li><a href="#KAFKA_BOOTSTRAP_SERVERS" tabindex="0">KAFKA_BOOTSTRAP_SERVERS</a></li>
+<li><a href="#KAFKA_TOPICS" tabindex="0">KAFKA_TOPICS</a></li>
+<li><a href="#KAFKA_PARTITIONS" tabindex="0">KAFKA_PARTITIONS</a></li>
 <li><a href="#DEFAULT_IMAGE" tabindex="0">DEFAULT_IMAGE</a></li>
+<li><a href="#DEFAULT_PARTITIONS" tabindex="0">DEFAULT_PARTITIONS</a></li>
 <li><a href="#DISPLAY_NAME" tabindex="0">DISPLAY_NAME</a></li>
 <li><a href="#SIMPLE_NAME" tabindex="0">SIMPLE_NAME</a></li>
 </ol>
@@ -79,6 +83,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" tabindex="0">createContainer(DockerImageName, Map, Map)</a></li>
 <li><a href="#resolveProperty(java.lang.String,org.testcontainers.kafka.KafkaContainer)" tabindex="0">resolveProperty(String, KafkaContainer)</a></li>
 <li><a href="#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" tabindex="0">shouldAnswer(String, Map, Map)</a></li>
+<li><a href="#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" tabindex="0">resolveWithoutContainer(String, Map, Map)</a></li>
+<li><a href="#beforeCreateTopics(org.testcontainers.kafka.KafkaContainer,io.micronaut.testresources.kafka.KafkaTestResourceProvider.TopicProvisioningConfiguration,java.util.List)" tabindex="0">beforeCreateTopics(KafkaContainer, KafkaTestResourceProvider.TopicProvisioningConfiguration, List)</a></li>
 </ol>
 </li>
 </ol>
@@ -107,6 +113,21 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="KafkaTestResourceProvider.TopicProvisioningConfiguration.html" class="type-name-link" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider.TopicProvisioningConfiguration</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -119,15 +140,24 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#DEFAULT_IMAGE" class="member-name-link">DEFAULT_IMAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#DISPLAY_NAME" class="member-name-link">DISPLAY_NAME</a></code></div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_PARTITIONS" class="member-name-link">DEFAULT_PARTITIONS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#KAFKA_BOOTSTRAP_SERVERS" class="member-name-link">KAFKA_BOOTSTRAP_SERVERS</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DISPLAY_NAME" class="member-name-link">DISPLAY_NAME</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#SIMPLE_NAME" class="member-name-link">SIMPLE_NAME</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#KAFKA_BOOTSTRAP_SERVERS" class="member-name-link">KAFKA_BOOTSTRAP_SERVERS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#KAFKA_PARTITIONS" class="member-name-link">KAFKA_PARTITIONS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#KAFKA_TOPICS" class="member-name-link">KAFKA_TOPICS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#SIMPLE_NAME" class="member-name-link">SIMPLE_NAME</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-io.micronaut.core.order.Ordered">Fields inherited from interface&nbsp;io.micronaut.core.order.Ordered</h3>
@@ -161,40 +191,53 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.kafka.KafkaContainer</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" class="member-name-link">createContainer</a><wbr>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#beforeCreateTopics(org.testcontainers.kafka.KafkaContainer,io.micronaut.testresources.kafka.KafkaTestResourceProvider.TopicProvisioningConfiguration,java.util.List)" class="member-name-link">beforeCreateTopics</a><wbr>(org.testcontainers.kafka.KafkaContainer&nbsp;container,
+ <a href="KafkaTestResourceProvider.TopicProvisioningConfiguration.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider.TopicProvisioningConfiguration</a>&nbsp;configuration,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.apache.kafka.clients.admin.NewTopic&gt;&nbsp;topicsToCreate)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.kafka.KafkaContainer</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" class="member-name-link">createContainer</a><wbr>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates the test container.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDefaultImageName()" class="member-name-link">getDefaultImageName</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDefaultImageName()" class="member-name-link">getDefaultImageName</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the default image name.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDisplayName()" class="member-name-link">getDisplayName</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDisplayName()" class="member-name-link">getDisplayName</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a display name for a test resources resolver, used
 for debugging purposes.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;&nbsp;propertyEntries,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;&nbsp;propertyEntries,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of properties that this resolver
 is able to support.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSimpleName()" class="member-name-link">getSimpleName</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSimpleName()" class="member-name-link">getSimpleName</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the name of the resource resolver, for example "kafka" or "mysql".</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveProperty(java.lang.String,org.testcontainers.kafka.KafkaContainer)" class="member-name-link">resolveProperty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveProperty(java.lang.String,org.testcontainers.kafka.KafkaContainer)" class="member-name-link">resolveProperty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
  org.testcontainers.kafka.KafkaContainer&nbsp;container)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Lets a resolver provide a value for the requested property without triggering the
+creation of a test container.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">shouldAnswer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
@@ -207,7 +250,7 @@ is able to support.</div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.testresources.testcontainers.AbstractTestContainersProvider">Methods inherited from class&nbsp;<a href="../testcontainers/AbstractTestContainersProvider.html#method-summary" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></h3>
-<code><a href="../testcontainers/AbstractTestContainersProvider.html#configureContainer(T,java.util.Map,java.util.Map)" title="configureContainer(KafkaContainer, Map, Map)">configureContainer</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#getName()" title="getName()">getName</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#getOrder()" title="getOrder()">getOrder</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#resolve(java.lang.String,java.util.Map,java.util.Map)" title="resolve(String, Map, Map)">resolve</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" title="resolveWithoutContainer(String, Map, Map)">resolveWithoutContainer</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#stringOrNull(java.lang.Object)" title="stringOrNull(Object)">stringOrNull</a></code></div>
+<code><a href="../testcontainers/AbstractTestContainersProvider.html#configureContainer(T,java.util.Map,java.util.Map)" title="configureContainer(KafkaContainer, Map, Map)">configureContainer</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#getName()" title="getName()">getName</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#getOrder()" title="getOrder()">getOrder</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#resolve(java.lang.String,java.util.Map,java.util.Map)" title="resolve(String, Map, Map)">resolve</a>, <a href="../testcontainers/AbstractTestContainersProvider.html#stringOrNull(java.lang.Object)" title="stringOrNull(Object)">stringOrNull</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -245,6 +288,38 @@ is able to support.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="KAFKA_TOPICS">
+<h3>KAFKA_TOPICS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">KAFKA_TOPICS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#io.micronaut.testresources.kafka.KafkaTestResourceProvider.KAFKA_TOPICS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="KAFKA_PARTITIONS">
+<h3>KAFKA_PARTITIONS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">KAFKA_PARTITIONS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#io.micronaut.testresources.kafka.KafkaTestResourceProvider.KAFKA_PARTITIONS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="DEFAULT_IMAGE">
 <h3>DEFAULT_IMAGE</h3>
 <div class="horizontal-scroll">
@@ -254,6 +329,22 @@ is able to support.</div>
 <dd>
 <ul class="tag-list">
 <li><a href="../../../../constant-values.html#io.micronaut.testresources.kafka.KafkaTestResourceProvider.DEFAULT_IMAGE">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_PARTITIONS">
+<h3>DEFAULT_PARTITIONS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_PARTITIONS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#io.micronaut.testresources.kafka.KafkaTestResourceProvider.DEFAULT_PARTITIONS">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -442,6 +533,40 @@ example.</div>
 <dt>Returns:</dt>
 <dd>if this resolver should answer</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)">
+<h3>resolveWithoutContainer</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveWithoutContainer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)">AbstractTestContainersProvider</a></code></span></div>
+<div class="block">Lets a resolver provide a value for the requested property without triggering the
+creation of a test container. This can be used in case a resolver wants to check
+existing containers first.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../testcontainers/AbstractTestContainersProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)">resolveWithoutContainer</a></code>&nbsp;in class&nbsp;<code><a href="../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;org.testcontainers.kafka.KafkaContainer&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>propertyName</code> - the name of the property to resolve</dd>
+<dd><code>properties</code> - the properties used to resolve</dd>
+<dd><code>testResourcesConfig</code> - the test resources configuration</dd>
+<dt>Returns:</dt>
+<dd>a resolved property</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="beforeCreateTopics(org.testcontainers.kafka.KafkaContainer,io.micronaut.testresources.kafka.KafkaTestResourceProvider.TopicProvisioningConfiguration,java.util.List)">
+<h3>beforeCreateTopics</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">beforeCreateTopics</span><wbr><span class="parameters">(org.testcontainers.kafka.KafkaContainer&nbsp;container,
+ <a href="KafkaTestResourceProvider.TopicProvisioningConfiguration.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider.TopicProvisioningConfiguration</a>&nbsp;configuration,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.apache.kafka.clients.admin.NewTopic&gt;&nbsp;topicsToCreate)</span></div>
 </div>
 </section>
 </li>

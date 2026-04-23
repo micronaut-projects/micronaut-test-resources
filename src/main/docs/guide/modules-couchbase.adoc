@@ -13,6 +13,6 @@ test-resources:
       image-tag: latest
 ----
 
-If you already map one of those same properties explicitly through generic Testcontainers support, that explicit mapping still wins.
+If you explicitly map any of those same properties through generic Testcontainers support, the dedicated Couchbase provider stands down for the full `couchbase.uri` / `couchbase.username` / `couchbase.password` connection set so values never come from mixed containers.
 
 For unsupported Couchbase topologies or additional property shapes, continue using xref:modules-testcontainers.adoc[generic Testcontainers support].

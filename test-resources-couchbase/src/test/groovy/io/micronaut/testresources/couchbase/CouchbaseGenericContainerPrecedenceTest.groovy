@@ -39,4 +39,22 @@ class CouchbaseGenericContainerPrecedenceTest extends Specification {
         provider.resolve(CouchbaseTestResourceProvider.COUCHBASE_URI, [(Scope.PROPERTY_KEY): 'generic-precedence'], config).isEmpty()
         TestContainers.listAll().isEmpty()
     }
+
+    def "partial explicit generic mappings disable the whole Couchbase connection set"() {
+        given:
+        def provider = new CouchbaseTestResourceProvider()
+        def config = [
+            'containers.explicit.image-name'   : 'couchbase/server',
+            'containers.explicit.exposed-ports': [[(CouchbaseTestResourceProvider.COUCHBASE_URI): 8091]]
+        ]
+
+        expect:
+        provider.getResolvableProperties([:], config).isEmpty()
+
+        and:
+        provider.resolve(CouchbaseTestResourceProvider.COUCHBASE_URI, [(Scope.PROPERTY_KEY): 'generic-precedence-partial-uri'], config).isEmpty()
+        provider.resolve(CouchbaseTestResourceProvider.COUCHBASE_USERNAME, [(Scope.PROPERTY_KEY): 'generic-precedence-partial-username'], config).isEmpty()
+        provider.resolve(CouchbaseTestResourceProvider.COUCHBASE_PASSWORD, [(Scope.PROPERTY_KEY): 'generic-precedence-partial-password'], config).isEmpty()
+        TestContainers.listAll().isEmpty()
+    }
 }

@@ -48,10 +48,7 @@ public class CouchbaseTestResourceProvider extends AbstractTestContainersProvide
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        Set<String> explicitGenericMappings = explicitGenericMappings(testResourcesConfig);
-        return SUPPORTED_PROPERTIES_LIST.stream()
-            .filter(property -> !explicitGenericMappings.contains(property))
-            .toList();
+        return hasExplicitGenericOverlap(testResourcesConfig) ? List.of() : SUPPORTED_PROPERTIES_LIST;
     }
 
     @Override
@@ -86,7 +83,12 @@ public class CouchbaseTestResourceProvider extends AbstractTestContainersProvide
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return SUPPORTED_PROPERTIES.contains(propertyName) && !explicitGenericMappings(testResourcesConfig).contains(propertyName);
+        return SUPPORTED_PROPERTIES.contains(propertyName) && !hasExplicitGenericOverlap(testResourcesConfig);
+    }
+
+    private static boolean hasExplicitGenericOverlap(Map<String, Object> testResourcesConfig) {
+        Set<String> explicitGenericMappings = explicitGenericMappings(testResourcesConfig);
+        return explicitGenericMappings.stream().anyMatch(SUPPORTED_PROPERTIES::contains);
     }
 
     private static Set<String> explicitGenericMappings(Map<String, Object> testResourcesConfig) {

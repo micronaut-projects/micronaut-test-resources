@@ -19,5 +19,7 @@ dependencies {
 }
 
 extensions.configure(org.sonatype.gradle.plugins.scan.ossindex.OssIndexPluginExtension) { extension ->
+    // OSS Index still reports this CVE for H2, but the current dependency resolves to 2.4.240
+    // and the published vulnerable range only covers older releases.
     extension.excludeVulnerabilityIds = ["CVE-2018-14335"] as Set
 }

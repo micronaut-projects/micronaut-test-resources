@@ -1,31 +1,21 @@
 package io.micronaut.testresources.server
 
 import io.micronaut.context.ApplicationContextBuilder
-import io.micronaut.context.env.CachedEnvironment
+import io.micronaut.context.env.CommandLinePropertySource
+import io.micronaut.context.env.EnvironmentPropertySource
+import io.micronaut.context.env.SystemPropertiesPropertySource
 import spock.lang.Specification
 
-import java.lang.reflect.Field
-import java.util.function.UnaryOperator
-
 class TestResourcesServiceTest extends Specification {
-    def "sanitizing getenv hides MICRONAUT_CONFIG_FILES and delegates other keys"() {
-        given:
-        def getenv = TestResourcesService.configFilesSanitizingGetenv { String key ->
-            "value-for-" + key
-        } as UnaryOperator<String>
+    def "manual bootstrap property sources preserve supported inputs"() {
+        when:
+        def propertySources = TestResourcesService.defaultPropertySources(["--server.port=9999"] as String[])
 
-        expect:
-        getenv.apply("MICRONAUT_CONFIG_FILES") == null
-        getenv.apply("OTHER_ENV") == "value-for-OTHER_ENV"
-    }
-
-    def "sanitizing getenv falls back to the process environment when no existing hook is installed"() {
-        given:
-        def getenv = TestResourcesService.configFilesSanitizingGetenv(null)
-
-        expect:
-        getenv.apply("MICRONAUT_CONFIG_FILES") == null
-        getenv.apply("PATH") == System.getenv("PATH")
+        then:
+        propertySources*.name == ["application", "system", "env", "cli"]
+        propertySources[1] instanceof SystemPropertiesPropertySource
+        propertySources[2] instanceof EnvironmentPropertySource
+        propertySources[3] instanceof CommandLinePropertySource
     }
 
     def "configurer excludes MICRONAUT_CONFIG_FILES from environment variables"() {
@@ -44,41 +34,12 @@ class TestResourcesServiceTest extends Specification {
         0 * _
     }
 
-    def "ignoring inherited config files does nothing when the environment variable is absent"() {
-        given:
-        Field getenvField = CachedEnvironment.class.getDeclaredField("getenv")
-        getenvField.setAccessible(true)
-        UnaryOperator<String> original = (UnaryOperator<String>) getenvField.get(null)
-        UnaryOperator<String> existing = { String key -> "existing-" + key } as UnaryOperator<String>
-        getenvField.set(null, existing)
-
+    def "bundled application properties are loaded for manual bootstrap"() {
         when:
-        TestResourcesService.ignoreInheritedConfigFilesEnvironmentVariable(null)
+        def propertySource = TestResourcesService.loadBundledApplicationPropertySource()
 
         then:
-        getenvField.get(null).is(existing)
-
-        cleanup:
-        getenvField.set(null, original)
-    }
-
-    def "ignoring inherited config files installs the cached environment override"() {
-        given:
-        Field getenvField = CachedEnvironment.class.getDeclaredField("getenv")
-        getenvField.setAccessible(true)
-        UnaryOperator<String> original = (UnaryOperator<String>) getenvField.get(null)
-        UnaryOperator<String> existing = { String key -> "existing-" + key } as UnaryOperator<String>
-        getenvField.set(null, existing)
-
-        when:
-        TestResourcesService.ignoreInheritedConfigFilesEnvironmentVariable("present")
-        UnaryOperator<String> overridden = (UnaryOperator<String>) getenvField.get(null)
-
-        then:
-        overridden.apply("MICRONAUT_CONFIG_FILES") == null
-        overridden.apply("OTHER_ENV") == "existing-OTHER_ENV"
-
-        cleanup:
-        getenvField.set(null, original)
+        propertySource.get("micronaut.application.name") == "Test resources server"
+        propertySource.get("micronaut.server.port") == "-1"
     }
 }

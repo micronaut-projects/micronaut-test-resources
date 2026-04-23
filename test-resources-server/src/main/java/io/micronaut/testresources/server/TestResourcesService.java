@@ -19,8 +19,14 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
-import io.micronaut.context.env.CachedEnvironment;
+import io.micronaut.context.env.CommandLinePropertySource;
 import io.micronaut.context.env.Environment;
+import io.micronaut.context.env.EnvironmentPropertySource;
+import io.micronaut.context.env.PropertiesPropertySourceLoader;
+import io.micronaut.context.env.PropertySource;
+import io.micronaut.context.env.SystemPropertiesPropertySource;
+import io.micronaut.core.cli.CommandLine;
+import io.micronaut.core.io.scan.ClassPathResourceLoader;
 import io.micronaut.runtime.Micronaut;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.scheduling.annotation.Scheduled;
@@ -29,11 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.InaccessibleObjectException;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.function.UnaryOperator;
+import java.util.List;
 
 /**
  * Main entry point for the server.
@@ -42,12 +46,14 @@ import java.util.function.UnaryOperator;
 public class TestResourcesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesService.class);
     private static final String MICRONAUT_CONFIG_FILES_ENV = "MICRONAUT_CONFIG_FILES";
-    private static final String CACHED_ENVIRONMENT_GETENV_FIELD = "getenv";
 
     public static void main(String[] args) {
         long sd = System.nanoTime();
-        ignoreInheritedConfigFilesEnvironmentVariable(System.getenv(MICRONAUT_CONFIG_FILES_ENV));
-        ApplicationContext context = Micronaut.run(TestResourcesService.class, args);
+        ApplicationContext context = Micronaut.build(args)
+            .mainClass(TestResourcesService.class)
+            .enableDefaultPropertySources(false)
+            .propertySources(defaultPropertySources(args))
+            .start();
         Arrays.stream(args)
             .filter(arg -> arg.startsWith("--port-file="))
             .findFirst()
@@ -67,36 +73,19 @@ public class TestResourcesService {
             context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
     }
 
-    static void ignoreInheritedConfigFilesEnvironmentVariable(String inheritedConfigFilesValue) {
-        if (inheritedConfigFilesValue == null) {
-            return;
-        }
-        installCachedEnvironmentConfigFilesOverride();
-    }
-
-    static UnaryOperator<String> configFilesSanitizingGetenv(UnaryOperator<String> existing) {
-        return key -> {
-            if (MICRONAUT_CONFIG_FILES_ENV.equals(key)) {
-                return null;
-            }
-            if (existing != null) {
-                return existing.apply(key);
-            }
-            return System.getenv(key);
+    static PropertySource[] defaultPropertySources(String[] args) {
+        return new PropertySource[]{
+            loadBundledApplicationPropertySource(),
+            new SystemPropertiesPropertySource(),
+            new EnvironmentPropertySource(List.of(), List.of(MICRONAUT_CONFIG_FILES_ENV)),
+            new CommandLinePropertySource(CommandLine.parse(args))
         };
     }
 
-    @SuppressWarnings("java:S3011")
-    static void installCachedEnvironmentConfigFilesOverride() {
-        try {
-            Field getenvField = CachedEnvironment.class.getDeclaredField(CACHED_ENVIRONMENT_GETENV_FIELD);
-            getenvField.setAccessible(true);
-            @SuppressWarnings("unchecked")
-            UnaryOperator<String> existing = (UnaryOperator<String>) getenvField.get(null);
-            getenvField.set(null, configFilesSanitizingGetenv(existing));
-        } catch (InaccessibleObjectException | SecurityException | ReflectiveOperationException e) {
-            throw new IllegalStateException("Unable to ignore inherited " + MICRONAUT_CONFIG_FILES_ENV, e);
-        }
+    static PropertySource loadBundledApplicationPropertySource() {
+        return new PropertiesPropertySourceLoader()
+            .load("application", ClassPathResourceLoader.defaultLoader(TestResourcesService.class.getClassLoader()))
+            .orElseThrow(() -> new IllegalStateException("Unable to load bundled application.properties"));
     }
 
     /**

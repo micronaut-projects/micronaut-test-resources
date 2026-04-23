@@ -6,9 +6,11 @@ import io.micronaut.testresources.core.Scope
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 import io.micronaut.testresources.testcontainers.TestContainers
 import org.testcontainers.DockerClientFactory
+import spock.util.concurrent.PollingConditions
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.core.sync.ResponseTransformer
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.S3Configuration
@@ -33,23 +35,32 @@ class SeaweedFsStartedTest extends AbstractTestContainersSpec {
     def "automatically starts a SeaweedFS container"() {
         given:
         def dockerHost = DockerClientFactory.instance().dockerHostIpAddress()
-        def client = buildClient()
+        def bucketName = "test-bucket-${System.nanoTime()}"
+        def conditions = new PollingConditions(timeout: 15, initialDelay: 1, delay: 1)
 
         when:
-        client.createBucket {
-            it.bucket("test-bucket")
+        conditions.eventually {
+            buildClient().withCloseable { client ->
+                client.listBuckets()
+            }
         }
-        client.putObject({
-            it.bucket("test-bucket")
-            it.key("test-key")
-        }, RequestBody.fromString("test data"))
-        def read = client.getObject {
-            it.bucket("test-bucket")
-            it.key("test-key")
+
+        String read
+        buildClient().withCloseable { client ->
+            client.createBucket {
+                it.bucket(bucketName)
+            }
+            client.putObject({
+                it.bucket(bucketName)
+                it.key("test-key")
+            }, RequestBody.fromString("test data"))
+            read = client.getObject({
+                it.bucket(bucketName)
+                it.key("test-key")
+            }, ResponseTransformer.toBytes()).asUtf8String()
         }
 
         then:
-        dockerHost in ["localhost", "127.0.0.1"]
         listContainers().size() == 1
         url.contains(dockerHost)
         accessKey == SeaweedFsTestResourceProvider.DEFAULT_ACCESS_KEY

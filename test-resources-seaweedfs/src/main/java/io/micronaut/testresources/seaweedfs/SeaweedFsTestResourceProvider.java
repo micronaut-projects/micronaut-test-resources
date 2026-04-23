@@ -17,10 +17,16 @@ package io.micronaut.testresources.seaweedfs;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.utility.MountableFile;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,7 +45,6 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
     public static final String DISPLAY_NAME = "SeaweedFS";
     public static final String SIMPLE_NAME = "seaweedfs";
     public static final int S3_PORT = 8333;
-    private static final String S3_CONFIG_CLASSPATH = "seaweedfs-s3.json";
     private static final String S3_CONFIG_PATH = "/etc/seaweedfs/s3.json";
     private static final List<String> SUPPORTED_KEYS = List.of(
         SEAWEEDFS_URL,
@@ -70,7 +75,7 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
     @Override
     protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new GenericContainer<>(imageName)
-            .withCopyFileToContainer(MountableFile.forClasspathResource(S3_CONFIG_CLASSPATH), S3_CONFIG_PATH)
+            .withCopyFileToContainer(seaweedFsS3ConfigFile(), S3_CONFIG_PATH)
             .withCommand("server", "-s3", "-s3.config=" + S3_CONFIG_PATH)
             .withExposedPorts(S3_PORT);
     }
@@ -88,5 +93,48 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_KEYS.contains(propertyName);
+    }
+
+    private static MountableFile seaweedFsS3ConfigFile() {
+        try {
+            Path tempFile = Files.createTempFile("seaweedfs-s3-", ".json");
+            Files.writeString(tempFile, """
+            {
+              "identities": [
+                {
+                  "name": "test-user",
+                  "credentials": [
+                    {
+                      "accessKey": "%s",
+                      "secretKey": "%s"
+                    }
+                  ],
+                  "actions": [
+                    "Admin",
+                    "Read",
+                    "List",
+                    "Tagging",
+                    "Write"
+                  ]
+                }
+              ]
+            }
+            """.formatted(DEFAULT_ACCESS_KEY, DEFAULT_SECRET_KEY), StandardCharsets.UTF_8);
+            try {
+                Files.setPosixFilePermissions(tempFile, EnumSet.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.GROUP_READ,
+                    PosixFilePermission.OTHERS_READ
+                ));
+            } catch (UnsupportedOperationException ignored) {
+                // Fall back on platforms without POSIX file permissions.
+                tempFile.toFile().setReadable(true, false);
+            }
+            tempFile.toFile().deleteOnExit();
+            return MountableFile.forHostPath(tempFile);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to create SeaweedFS S3 config", e);
+        }
     }
 }

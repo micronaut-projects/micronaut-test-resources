@@ -28,6 +28,7 @@ io.micronaut.testresources.localstack.s3
 io.micronaut.testresources.localstack.sns
 io.micronaut.testresources.localstack.sqs
 io.micronaut.testresources.mariadb
+io.micronaut.testresources.minio
 io.micronaut.testresources.mongodb
 io.micronaut.testresources.mssql
 io.micronaut.testresources.mysql

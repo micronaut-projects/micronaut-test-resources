@@ -121,21 +121,23 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>5.6</strong><span>Localstack</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.7</strong><span>MongoDB</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-minio"><a href="#modules-minio"><strong>5.7</strong><span>MinIO</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.8</strong><span>MQTT</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.8</strong><span>MongoDB</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.9</strong><span>Neo4j</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.9</strong><span>MQTT</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.10</strong><span>RabbitMQ</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.10</strong><span>Neo4j</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.11</strong><span>Redis</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.11</strong><span>RabbitMQ</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.12</strong><span>Hazelcast</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.12</strong><span>Redis</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.13</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.13</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.14</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.14</strong><span>Hashicorp Vault</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.15</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
         
@@ -1085,7 +1087,23 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 </ul>
 </div>
 
-<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.7 MongoDB</h2>
+<h2 id="modules-minio"><a class="anchor" href="#modules-minio"></a>5.7 MinIO</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-minio.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>MinIO support will automatically start a <a href="https://min.io">MinIO</a> container via <a href="https://java.testcontainers.org/modules/minio/">Testcontainers</a> and provide the values of the <code>minio.url</code>, <code>minio.access-key</code>, and <code>minio.secret-key</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.minio.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.8 MongoDB</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mongodb.adoc"'>
@@ -1116,7 +1134,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
 </div>
 
-<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.8 MQTT</h2>
+<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.9 MQTT</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mqtt.adoc"'>
@@ -1273,7 +1291,7 @@ listener 1883</code></pre>
 </div>
 </div>
 
-<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.9 Neo4j</h2>
+<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.10 Neo4j</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-neo4j.adoc"'>
@@ -1289,7 +1307,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.10 RabbitMQ</h2>
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.11 RabbitMQ</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
@@ -1305,7 +1323,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.11 Redis</h2>
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.12 Redis</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-redis.adoc"'>
@@ -1348,7 +1366,7 @@ This provider can be configured with a variety of parameters:</p>
 </ul>
 </div>
 
-<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.12 Hazelcast</h2>
+<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.13 Hazelcast</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hazelcast.adoc"'>
@@ -1379,7 +1397,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 </dl>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.13 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.14 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -1479,7 +1497,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.14 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.15 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>

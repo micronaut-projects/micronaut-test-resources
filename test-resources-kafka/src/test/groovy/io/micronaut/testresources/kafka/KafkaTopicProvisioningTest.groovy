@@ -8,7 +8,6 @@ import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.admin.TopicDescription
-import spock.lang.Specification
 
 import java.util.Properties
 import java.util.concurrent.ExecutionException
@@ -159,14 +158,14 @@ class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
     }
 }
 
-class KafkaInvalidTopicProvisioningConfigTest extends Specification {
+class KafkaInvalidTopicProvisioningConfigTest extends AbstractKafkaSpec {
 
     def "ignores Kafka topic partitions when no topics are configured"() {
         given:
         def provider = new KafkaTestResourceProvider()
 
         when:
-        def bootstrapServers = provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, [:], [
+        def bootstrapServers = provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, properties, [
             (KafkaTestResourceProvider.KAFKA_PARTITIONS): "0"
         ]).orElseThrow()
 
@@ -180,7 +179,7 @@ class KafkaInvalidTopicProvisioningConfigTest extends Specification {
         def provider = new KafkaTestResourceProvider()
 
         when:
-        provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, [:], [
+        provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, properties, [
             (KafkaTestResourceProvider.KAFKA_TOPICS)    : "orders",
             (KafkaTestResourceProvider.KAFKA_PARTITIONS): "0"
         ])

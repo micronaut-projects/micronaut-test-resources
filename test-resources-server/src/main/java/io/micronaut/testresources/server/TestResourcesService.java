@@ -49,11 +49,7 @@ public class TestResourcesService {
 
     public static void main(String[] args) {
         long sd = System.nanoTime();
-        ApplicationContext context = Micronaut.build(args)
-            .mainClass(TestResourcesService.class)
-            .enableDefaultPropertySources(false)
-            .propertySources(defaultPropertySources(args))
-            .start();
+        ApplicationContext context = start(args);
         Arrays.stream(args)
             .filter(arg -> arg.startsWith("--port-file="))
             .findFirst()
@@ -71,6 +67,14 @@ public class TestResourcesService {
         long dur = System.nanoTime() - sd;
         LOGGER.info("A Micronaut Test Resources server is listening on port {}, started in {}ms",
             context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
+    }
+
+    static ApplicationContext start(String[] args) {
+        return Micronaut.build(args)
+            .mainClass(TestResourcesService.class)
+            .enableDefaultPropertySources(false)
+            .propertySources(defaultPropertySources(args))
+            .start();
     }
 
     static PropertySource[] defaultPropertySources(String[] args) {

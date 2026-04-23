@@ -23,9 +23,11 @@ import org.testcontainers.utility.MountableFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
@@ -46,6 +48,15 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
     public static final String DISPLAY_NAME = "SeaweedFS";
     public static final String SIMPLE_NAME = "seaweedfs";
     public static final int S3_PORT = 8333;
+    private static final EnumSet<PosixFilePermission> OWNER_ONLY_DIRECTORY_PERMISSIONS = EnumSet.of(
+        PosixFilePermission.OWNER_READ,
+        PosixFilePermission.OWNER_WRITE,
+        PosixFilePermission.OWNER_EXECUTE
+    );
+    private static final EnumSet<PosixFilePermission> OWNER_ONLY_FILE_PERMISSIONS = EnumSet.of(
+        PosixFilePermission.OWNER_READ,
+        PosixFilePermission.OWNER_WRITE
+    );
     private static final String S3_CONFIG_PATH = System.getProperty(
         "io.micronaut.testresources.seaweedfs.s3-config-path",
         "/etc/seaweedfs/s3.json"
@@ -102,7 +113,8 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
 
     private static MountableFile seaweedFsS3ConfigFile() {
         try {
-            Path tempFile = Files.createTempFile("seaweedfs-s3-", ".json");
+            Path tempDir = createSecureTempDirectory();
+            Path tempFile = createSecureTempFile(tempDir.resolve("s3.json"));
             Files.writeString(tempFile, """
             {
               "identities": [
@@ -126,6 +138,7 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
             }
             """.formatted(DEFAULT_ACCESS_KEY, DEFAULT_SECRET_KEY), StandardCharsets.UTF_8);
             setReadablePermissions(tempFile);
+            tempDir.toFile().deleteOnExit();
             File file = tempFile.toFile();
             file.deleteOnExit();
             return MountableFile.forHostPath(tempFile);
@@ -134,15 +147,39 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
         }
     }
 
+    private static Path createSecureTempDirectory() throws IOException {
+        if (supportsPosixFilePermissions()) {
+            return Files.createTempDirectory(
+                "seaweedfs-s3-",
+                PosixFilePermissions.asFileAttribute(OWNER_ONLY_DIRECTORY_PERMISSIONS)
+            );
+        }
+        return Files.createTempDirectory("seaweedfs-s3-");
+    }
+
+    private static Path createSecureTempFile(Path tempFile) throws IOException {
+        if (supportsPosixFilePermissions()) {
+            return Files.createFile(
+                tempFile,
+                PosixFilePermissions.asFileAttribute(OWNER_ONLY_FILE_PERMISSIONS)
+            );
+        }
+        return Files.createFile(tempFile);
+    }
+
+    private static boolean supportsPosixFilePermissions() {
+        return FileSystems.getDefault().supportedFileAttributeViews().contains("posix");
+    }
+
     private static void setReadablePermissions(Path tempFile) throws IOException {
-        try {
+        if (supportsPosixFilePermissions()) {
             Files.setPosixFilePermissions(tempFile, EnumSet.of(
                 PosixFilePermission.OWNER_READ,
                 PosixFilePermission.OWNER_WRITE,
                 PosixFilePermission.GROUP_READ,
                 PosixFilePermission.OTHERS_READ
             ));
-        } catch (UnsupportedOperationException e) {
+        } else {
             // Fall back on platforms without POSIX file permissions.
             makeReadableByAllUsers(tempFile.toFile());
         }

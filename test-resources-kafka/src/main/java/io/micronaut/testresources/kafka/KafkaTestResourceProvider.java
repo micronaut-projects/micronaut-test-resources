@@ -205,11 +205,11 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     private TopicProvisioningConfiguration topicProvisioningConfiguration(Map<String, Object> testResourcesConfig) {
-        int partitions = configuredPartitions(testResourcesConfig);
         List<String> topics = configuredTopics(testResourcesConfig);
         if (topics.isEmpty()) {
             return NO_TOPICS;
         }
+        int partitions = configuredPartitions(testResourcesConfig);
         return new TopicProvisioningConfiguration(topics, partitions);
     }
 

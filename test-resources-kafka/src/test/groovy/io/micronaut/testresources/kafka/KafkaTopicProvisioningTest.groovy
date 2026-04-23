@@ -161,12 +161,27 @@ class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
 
 class KafkaInvalidTopicProvisioningConfigTest extends Specification {
 
-    def "rejects Kafka topic partitions even when no topics are configured"() {
+    def "ignores Kafka topic partitions when no topics are configured"() {
+        given:
+        def provider = new KafkaTestResourceProvider()
+
+        when:
+        def bootstrapServers = provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, [:], [
+            (KafkaTestResourceProvider.KAFKA_PARTITIONS): "0"
+        ]).orElseThrow()
+
+        then:
+        noExceptionThrown()
+        bootstrapServers
+    }
+
+    def "rejects Kafka topic partitions lower than one when topics are configured"() {
         given:
         def provider = new KafkaTestResourceProvider()
 
         when:
         provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, [:], [
+            (KafkaTestResourceProvider.KAFKA_TOPICS)    : "orders",
             (KafkaTestResourceProvider.KAFKA_PARTITIONS): "0"
         ])
 
@@ -184,7 +199,7 @@ class KafkaInvalidTopicProvisioningConfigTest extends Specification {
         e.message.contains("must not be blank")
     }
 
-    def "rejects Kafka topic partitions lower than one"() {
+    def "rejects Kafka topic partitions lower than one when parsed directly"() {
         when:
         KafkaTestResourceProvider.configuredPartitions([(KafkaTestResourceProvider.KAFKA_PARTITIONS): 0])
 

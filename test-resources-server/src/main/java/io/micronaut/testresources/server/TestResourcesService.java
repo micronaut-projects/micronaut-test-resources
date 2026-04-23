@@ -19,7 +19,14 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
+import io.micronaut.context.env.CommandLinePropertySource;
 import io.micronaut.context.env.Environment;
+import io.micronaut.context.env.EnvironmentPropertySource;
+import io.micronaut.context.env.PropertiesPropertySourceLoader;
+import io.micronaut.context.env.PropertySource;
+import io.micronaut.context.env.SystemPropertiesPropertySource;
+import io.micronaut.core.cli.CommandLine;
+import io.micronaut.core.io.scan.ClassPathResourceLoader;
 import io.micronaut.runtime.Micronaut;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.scheduling.annotation.Scheduled;
@@ -30,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileWriter;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Main entry point for the server.
@@ -37,10 +45,11 @@ import java.util.Arrays;
 @Singleton
 public class TestResourcesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestResourcesService.class);
+    private static final String MICRONAUT_CONFIG_FILES_ENV = "MICRONAUT_CONFIG_FILES";
 
     public static void main(String[] args) {
         long sd = System.nanoTime();
-        ApplicationContext context = Micronaut.run(TestResourcesService.class, args);
+        ApplicationContext context = start(args);
         Arrays.stream(args)
             .filter(arg -> arg.startsWith("--port-file="))
             .findFirst()
@@ -58,6 +67,29 @@ public class TestResourcesService {
         long dur = System.nanoTime() - sd;
         LOGGER.info("A Micronaut Test Resources server is listening on port {}, started in {}ms",
             context.getBean(EmbeddedServer.class).getPort(), Duration.ofNanos(dur).toMillis());
+    }
+
+    static ApplicationContext start(String[] args) {
+        return Micronaut.build(args)
+            .mainClass(TestResourcesService.class)
+            .enableDefaultPropertySources(false)
+            .propertySources(defaultPropertySources(args))
+            .start();
+    }
+
+    static PropertySource[] defaultPropertySources(String[] args) {
+        return new PropertySource[]{
+            loadBundledApplicationPropertySource(),
+            new SystemPropertiesPropertySource(),
+            new EnvironmentPropertySource(List.of(), List.of(MICRONAUT_CONFIG_FILES_ENV)),
+            new CommandLinePropertySource(CommandLine.parse(args))
+        };
+    }
+
+    static PropertySource loadBundledApplicationPropertySource() {
+        return new PropertiesPropertySourceLoader()
+            .load("application", ClassPathResourceLoader.defaultLoader(TestResourcesService.class.getClassLoader()))
+            .orElseThrow(() -> new IllegalStateException("Unable to load bundled application.properties"));
     }
 
     /**
@@ -83,6 +115,7 @@ public class TestResourcesService {
             builder.packages("io.micronaut.testresources.server")
                 .deduceEnvironment(false)
                 .environments(Environment.TEST)
+                .environmentVariableExcludes(MICRONAUT_CONFIG_FILES_ENV)
                 .banner(false);
         }
     }

@@ -68,3 +68,7 @@ micronautBuild {
         enabled = false
     }
 }
+
+tasks.named("test") {
+    systemProperty("test.resources.server.runtime.classpath", sourceSets.main.runtimeClasspath.asPath)
+}

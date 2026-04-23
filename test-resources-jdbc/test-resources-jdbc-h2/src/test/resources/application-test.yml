@@ -1,0 +1,4 @@
+datasources:
+  default:
+    db-type: h2
+    schema-generate: CREATE_DROP

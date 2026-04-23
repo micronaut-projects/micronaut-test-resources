@@ -24,8 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  * A factory responsible for creating a {@link TestResourcesClient}.
@@ -39,6 +42,9 @@ public final class TestResourcesClientFactory {
     private static final String TEST_RESOURCES_PROPERTIES = "test-resources.properties";
     private static final String DEFAULT_MICRONAUT_DIR = ".micronaut/test-resources/";
     private static final String DEFAULT_PROPERTIES_RELATIVE_PATH = DEFAULT_MICRONAUT_DIR + TEST_RESOURCES_PROPERTIES;
+    private static final String STANDALONE_SETTINGS_RELATIVE_PATH = DEFAULT_MICRONAUT_DIR + "test-resources-settings/" + TEST_RESOURCES_PROPERTIES;
+    private static final String SETTINGS_GRADLE = "settings.gradle";
+    private static final String SETTINGS_GRADLE_KTS = "settings.gradle.kts";
     private static final String TEST_RESOURCES_NAMESPACE = "TEST_RESOURCES_NAMESPACE";
     private static final String NAMESPACE_PREFIX = ".micronaut/test-resources-";
 
@@ -64,17 +70,19 @@ public final class TestResourcesClientFactory {
      * @return a configured client, or an empty optional.
      */
     public static Optional<TestResourcesClient> findByConvention() {
+        return findByConvention(
+            Paths.get("").toAbsolutePath(),
+            Paths.get(System.getProperty("user.home")),
+            System.getenv(TEST_RESOURCES_NAMESPACE)
+        );
+    }
+
+    static Optional<TestResourcesClient> findByConvention(Path currentDirectory,
+                                                          Path homeDirectory,
+                                                          String namespace) {
         return fromSystemProperties()
-            .or(() -> fromFileSystem(Paths.get(DEFAULT_PROPERTIES_RELATIVE_PATH)))
-            .or(() -> {
-                var homedir = Paths.get(System.getProperty("user.home"));
-                var namespace = System.getenv(TEST_RESOURCES_NAMESPACE);
-                if (namespace != null) {
-                    return fromFileSystem(homedir.resolve(
-                        NAMESPACE_PREFIX + namespace + "/" + TEST_RESOURCES_PROPERTIES));
-                }
-                return fromFileSystem(homedir.resolve(DEFAULT_PROPERTIES_RELATIVE_PATH));
-            });
+            .or(() -> findPropertiesFileByConvention(currentDirectory, homeDirectory, namespace)
+                .flatMap(TestResourcesClientFactory::fromFileSystem));
     }
 
     /**
@@ -127,6 +135,95 @@ public final class TestResourcesClientFactory {
             client = new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout);
             cachedClient = new WeakReference<>(client);
             return Optional.of(client);
+        }
+        return Optional.empty();
+    }
+
+    static Optional<Path> findPropertiesFileByConvention(Path currentDirectory,
+                                                         Path homeDirectory,
+                                                         String namespace) {
+        return findLocalPropertiesFile(currentDirectory)
+            .or(() -> findHomePropertiesFile(homeDirectory, namespace));
+    }
+
+    private static Optional<Path> findLocalPropertiesFile(Path currentDirectory) {
+        var localProperties = existingPropertiesFile(currentDirectory.resolve(DEFAULT_PROPERTIES_RELATIVE_PATH));
+        if (localProperties.isPresent()) {
+            return localProperties;
+        }
+        return findStandalonePropertiesFile(currentDirectory);
+    }
+
+    private static Optional<Path> findStandalonePropertiesFile(Path currentDirectory) {
+        Path normalizedCurrentDirectory = currentDirectory.toAbsolutePath().normalize();
+        var buildRoot = findNearestGradleBuildRoot(normalizedCurrentDirectory);
+        Path candidateRoot = normalizedCurrentDirectory;
+        while (candidateRoot != null) {
+            var standaloneCandidates = findStandaloneCandidates(candidateRoot);
+            if (standaloneCandidates.size() == 1) {
+                return Optional.of(standaloneCandidates.get(0));
+            }
+            if (buildRoot.isEmpty() || candidateRoot.equals(buildRoot.get())) {
+                break;
+            }
+            candidateRoot = candidateRoot.getParent();
+        }
+        return Optional.empty();
+    }
+
+    private static List<Path> findStandaloneCandidates(Path lookupRoot) {
+        var candidates = new ArrayList<Path>();
+        if (!Files.isDirectory(lookupRoot)) {
+            return candidates;
+        }
+        boolean gradleBuildRoot = isGradleBuildRoot(lookupRoot);
+        existingPropertiesFile(lookupRoot.resolve(STANDALONE_SETTINGS_RELATIVE_PATH))
+            .ifPresent(candidates::add);
+        if (!gradleBuildRoot) {
+            return candidates;
+        }
+        try (Stream<Path> children = Files.list(lookupRoot)) {
+            children
+                .filter(Files::isDirectory)
+                .map(child -> child.resolve(STANDALONE_SETTINGS_RELATIVE_PATH))
+                .map(TestResourcesClientFactory::existingPropertiesFile)
+                .flatMap(Optional::stream)
+                .forEach(candidates::add);
+        } catch (IOException e) {
+            return candidates;
+        }
+        return candidates;
+    }
+
+    private static Optional<Path> findNearestGradleBuildRoot(Path directory) {
+        Path candidate = directory;
+        while (candidate != null) {
+            if (Files.isDirectory(candidate) && isGradleBuildRoot(candidate)) {
+                return Optional.of(candidate);
+            }
+            candidate = candidate.getParent();
+        }
+        return Optional.empty();
+    }
+
+    private static boolean isGradleBuildRoot(Path directory) {
+        return Files.exists(directory.resolve(SETTINGS_GRADLE))
+            || Files.exists(directory.resolve(SETTINGS_GRADLE_KTS));
+    }
+
+    private static Optional<Path> findHomePropertiesFile(Path homeDirectory, String namespace) {
+        if (namespace != null) {
+            return existingPropertiesFile(homeDirectory.resolve(
+                NAMESPACE_PREFIX + namespace + "/" + TEST_RESOURCES_PROPERTIES));
+        }
+        return existingPropertiesFile(homeDirectory.resolve(DEFAULT_PROPERTIES_RELATIVE_PATH));
+    }
+
+    private static Optional<Path> existingPropertiesFile(Path location) {
+        if (Files.isRegularFile(location)
+            && Files.isReadable(location)
+            && location.getFileName().endsWith(TEST_RESOURCES_PROPERTIES)) {
+            return Optional.of(location);
         }
         return Optional.empty();
     }

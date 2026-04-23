@@ -75,6 +75,7 @@ include 'test-resources-kafka'
 include 'test-resources-mongodb'
 include 'test-resources-neo4j'
 include 'test-resources-opensearch'
+include 'test-resources-pulsar'
 include 'test-resources-redis'
 include 'test-resources-rabbitmq'
 include 'test-resources-server'
@@ -126,6 +127,7 @@ micronautBuild {
     importMicronautCatalog("micronaut-mongodb")
     importMicronautCatalog("micronaut-mqtt")
     importMicronautCatalog("micronaut-neo4j")
+    importMicronautCatalog("micronaut-pulsar")
     importMicronautCatalog("micronaut-rabbitmq")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-redis")

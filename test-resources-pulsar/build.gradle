@@ -1,0 +1,13 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching a Pulsar test container.
+"""
+
+dependencies {
+    implementation(libs.managed.testcontainers.pulsar)
+
+    testImplementation(mnPulsar.pulsar.client)
+}

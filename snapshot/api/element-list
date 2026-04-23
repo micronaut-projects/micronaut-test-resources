@@ -36,6 +36,7 @@ io.micronaut.testresources.oracle.free
 io.micronaut.testresources.oracle.testpilot
 io.micronaut.testresources.oracle.xe
 io.micronaut.testresources.postgres
+io.micronaut.testresources.pulsar
 io.micronaut.testresources.r2dbc.core
 io.micronaut.testresources.r2dbc.mariadb
 io.micronaut.testresources.r2dbc.mssql

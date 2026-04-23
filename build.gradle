@@ -20,9 +20,14 @@ repositories {
 //    }
 }
 
+def rootSonarExtension = extensions.findByName("sonar")
+if (rootSonarExtension != null) {
+    rootSonarExtension.skipProject = true
+}
+
 project(":micronaut-test-resources-bom") {
-    def sonarExtension = extensions.findByName("sonar")
-    if (sonarExtension != null) {
-        sonarExtension.skipProject = true
+    def bomSonarExtension = extensions.findByName("sonar")
+    if (bomSonarExtension != null) {
+        bomSonarExtension.skipProject = true
     }
 }

@@ -1,7 +1,9 @@
 package io.micronaut.testresources.buildtools
 
+import com.sun.net.httpserver.HttpServer
 import io.micronaut.context.ApplicationContext
 import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.runtime.server.EmbeddedServer
 import jakarta.inject.Inject
@@ -9,6 +11,8 @@ import spock.lang.Specification
 import spock.lang.TempDir
 import spock.util.environment.RestoreSystemProperties
 
+import java.net.InetSocketAddress
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
@@ -189,6 +193,88 @@ class ServerUtilsTest extends Specification {
         applicationContext.stop()
     }
 
+    def "starts a fresh server when persisted settings point to another service"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def staleServer = startRequirementsServer(null, 'application/json', '{"service":"other"}')
+        def applicationContext = ApplicationContext.builder().start()
+        def embeddedServer = applicationContext.getBean(EmbeddedServer)
+        embeddedServer.start()
+        ServerUtils.writeServerSettings(settingsDir, new ServerSettings(staleServer.address.port, null, null, null))
+
+        when:
+        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, null, factory)
+
+        then:
+        1 * factory.startServer(_)
+        1 * factory.waitFor(_) >> {
+            portFile.toFile().text = "${embeddedServer.port}"
+        }
+        settings.port == embeddedServer.port
+
+        cleanup:
+        staleServer?.stop(0)
+        applicationContext.stop()
+    }
+
+    def "reuses existing server using the saved access token"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def server = startRequirementsServer('secret-token')
+        ServerUtils.writeServerSettings(settingsDir, new ServerSettings(server.address.port, 'secret-token', null, null))
+
+        when:
+        def settings = ServerUtils.startOrConnectToExistingServer(null, portFile, settingsDir, null, [], null, null, factory)
+
+        then:
+        0 * factory.startServer(_)
+        0 * factory.waitFor(_)
+        settings == new ServerSettings(server.address.port, 'secret-token', null, null)
+
+        cleanup:
+        server?.stop(0)
+    }
+
+    def "fails clearly when an explicit port belongs to another service"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def server = startRequirementsServer(null, 'text/plain', 'not test resources')
+
+        when:
+        ServerUtils.startOrConnectToExistingServer(server.address.port, portFile, settingsDir, null, [], null, null, factory)
+
+        then:
+        def ex = thrown(IllegalStateException)
+        ex.message == "Explicit test resources port ${server.address.port} is already in use by a service that could not be validated as Micronaut Test Resources: it did not return JSON"
+        0 * factory.startServer(_)
+        0 * factory.waitFor(_)
+
+        cleanup:
+        server?.stop(0)
+    }
+
+    def "fails clearly when an explicit port requires an access token"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = Mock(ServerFactory)
+        def server = startRequirementsServer('secret-token')
+
+        when:
+        ServerUtils.startOrConnectToExistingServer(server.address.port, portFile, settingsDir, null, [], null, null, factory)
+
+        then:
+        def ex = thrown(IllegalStateException)
+        ex.message == "Explicit test resources port ${server.address.port} is already in use by a service that could not be validated as Micronaut Test Resources: an access token is required"
+        0 * factory.startServer(_)
+        0 * factory.waitFor(_)
+
+        cleanup:
+        server?.stop(0)
+    }
+
     def "supports class data sharing"() {
         def portFile = tmpDir.resolve("port-file")
         def settingsDir = tmpDir.resolve("settings")
@@ -367,9 +453,34 @@ class ServerUtilsTest extends Specification {
         @Inject
         ApplicationContext ctx
 
+        @Get("/requirements/entries")
+        List<String> entries() {
+            ['stub.entry']
+        }
+
         @Post("/stop")
         void close() {
             ctx.close()
         }
+    }
+
+    private static HttpServer startRequirementsServer(String expectedAccessToken = null,
+                                                      String contentType = 'application/json',
+                                                      String body = '["stub.entry"]') {
+        def server = HttpServer.create(new InetSocketAddress("localhost", 0), 0)
+        server.createContext('/requirements/entries') { exchange ->
+            if (expectedAccessToken != null && exchange.requestHeaders.getFirst('Access-Token') != expectedAccessToken) {
+                exchange.sendResponseHeaders(401, -1)
+                exchange.close()
+                return
+            }
+            byte[] response = body.getBytes(StandardCharsets.UTF_8)
+            exchange.responseHeaders.set('Content-Type', contentType)
+            exchange.sendResponseHeaders(200, response.length)
+            exchange.responseBody.write(response)
+            exchange.close()
+        }
+        server.start()
+        server
     }
 }

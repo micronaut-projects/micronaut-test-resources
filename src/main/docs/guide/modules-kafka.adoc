@@ -8,6 +8,8 @@ The optional `test-resources.containers.kafka.partitions` property applies the s
 
 NOTE: Topic replication is fixed to `1` because the Kafka test resource starts a single-broker container. This feature is intended for test-time broker preparation, not general Kafka administration.
 
+NOTE: When a cached Kafka broker is reused inside the same test-resources scope, configured topics must agree on the partition count. If a topic already exists with a different partition count, resolution fails with a clear error instead of mutating the existing topic.
+
 [configuration]
 ----
 test-resources:

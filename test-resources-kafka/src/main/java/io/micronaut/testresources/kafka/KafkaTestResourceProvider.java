@@ -20,6 +20,7 @@ import io.micronaut.testresources.core.TestResourcesResolutionException;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -129,6 +130,15 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
             Set<String> existingTopics = adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            List<String> configuredExistingTopics = configuration.topics().stream()
+                .filter(existingTopics::contains)
+                .toList();
+            if (!configuredExistingTopics.isEmpty()) {
+                Map<String, TopicDescription> existingTopicDescriptions = adminClient.describeTopics(configuredExistingTopics)
+                    .allTopicNames()
+                    .get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
+            }
             List<NewTopic> topicsToCreate = configuration.topics().stream()
                 .filter(topic -> !existingTopics.contains(topic))
                 .map(topic -> new NewTopic(topic, configuration.partitions(), (short) 1))
@@ -156,6 +166,20 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
                 "Timed out after " + ADMIN_TIMEOUT_SECONDS + "s while provisioning Kafka topics " + topicProvisioningDetails(configuration),
                 e
             );
+        }
+    }
+
+    private static void verifyExistingTopicPartitions(Map<String, TopicDescription> existingTopicDescriptions,
+                                                      TopicProvisioningConfiguration configuration) {
+        for (Map.Entry<String, TopicDescription> entry : existingTopicDescriptions.entrySet()) {
+            int existingPartitions = entry.getValue().partitions().size();
+            if (existingPartitions != configuration.partitions()) {
+                throw new TestResourcesResolutionException(
+                    "Kafka topic '" + entry.getKey() + "' already exists with " + existingPartitions
+                        + " partitions, which conflicts with requested " + configuration.partitions() + " "
+                        + topicProvisioningDetails(configuration)
+                );
+            }
         }
     }
 

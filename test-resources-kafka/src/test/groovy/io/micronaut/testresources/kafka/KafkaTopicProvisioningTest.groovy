@@ -2,6 +2,7 @@ package io.micronaut.testresources.kafka
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.testresources.core.TestResourcesResolutionException
 import jakarta.inject.Inject
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
@@ -117,6 +118,29 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
         then:
         bootstrapServers == reusedBootstrapServers
         topics.orders.partitions().size() == 2
+        listContainers().size() == 1
+    }
+
+    def "rejects conflicting Kafka partition requests when reusing a cached broker in the same scope"() {
+        given:
+        def provider = new KafkaTestResourceProvider()
+        def requestedProperties = properties
+
+        when:
+        def bootstrapServers = provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, requestedProperties, [
+            (KafkaTestResourceProvider.KAFKA_TOPICS)    : "payments",
+            (KafkaTestResourceProvider.KAFKA_PARTITIONS): "1"
+        ]).orElseThrow()
+        provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, requestedProperties, [
+            (KafkaTestResourceProvider.KAFKA_TOPICS)    : "payments",
+            (KafkaTestResourceProvider.KAFKA_PARTITIONS): "3"
+        ]).orElseThrow()
+
+        then:
+        def e = thrown(TestResourcesResolutionException)
+        e.message.contains("already exists with 1 partitions")
+        e.message.contains("requested 3")
+        describeTopics(bootstrapServers, "payments").payments.partitions().size() == 1
         listContainers().size() == 1
     }
 }

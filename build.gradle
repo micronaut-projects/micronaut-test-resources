@@ -19,3 +19,10 @@ repositories {
 //        url "https://s01.oss.sonatype.org/content/repositories/snapshots"
 //    }
 }
+
+project(":micronaut-test-resources-bom") {
+    def sonarExtension = extensions.findByName("sonar")
+    if (sonarExtension != null) {
+        sonarExtension.skipProject = true
+    }
+}

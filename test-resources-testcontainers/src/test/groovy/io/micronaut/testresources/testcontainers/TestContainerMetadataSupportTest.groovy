@@ -1,5 +1,12 @@
 package io.micronaut.testresources.testcontainers
 
+import com.github.dockerjava.api.command.CreateContainerCmd
+import com.github.dockerjava.api.model.Bind
+import com.github.dockerjava.api.model.HostConfig
+import com.github.dockerjava.api.model.Mount
+import com.github.dockerjava.api.model.MountType
+import com.github.dockerjava.api.model.Volume
+import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.DockerHealthcheckWaitStrategy
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy
@@ -136,6 +143,29 @@ class TestContainerMetadataSupportTest extends Specification {
         with(md.get()) {
             roTmpfsMappings.containsAll(['/some/path', '/some/other/path'])
             rwTmpfsMappings.containsAll(['/yet/another/path', '/yet/another/other/path'])
+        }
+    }
+
+    def "reads anonymous volumes"() {
+        def config = """
+            containers:
+                foo:
+                    ro-anonymous-volumes:
+                        - /some/path
+                        - /some/other/path
+                    rw-anonymous-volumes:
+                        - /yet/another/path
+                        - /yet/another/other/path
+        """
+
+        when:
+        def md = metadataFrom(config, "foo")
+
+        then:
+        md.present
+        with(md.get()) {
+            roAnonymousVolumes.containsAll(['/some/path', '/some/other/path'])
+            rwAnonymousVolumes.containsAll(['/yet/another/path', '/yet/another/other/path'])
         }
     }
 
@@ -365,6 +395,142 @@ class TestContainerMetadataSupportTest extends Specification {
         md3.get().with {
             networkMode.get() == 'third'
         }
+    }
+
+    def "applies anonymous volumes without losing existing create command settings"() {
+        given:
+        def config = """
+            containers:
+                foo:
+                    ro-anonymous-volumes:
+                        - /ro-data
+                    rw-anonymous-volumes:
+                        - /rw-data
+                    memory: 128m
+        """
+        def metadata = metadataFrom(config, "foo").get()
+        def container = TestContainerMetadataSupport.applyMetadata(metadata, new GenericContainer("alpine:3.20"))
+        def hostConfig = HostConfig.newHostConfig()
+                .withBinds(new Bind('/host-data', new Volume('/existing-bind')))
+                .withMounts([new Mount().withType(MountType.VOLUME).withTarget('/existing-data').withReadOnly(false)])
+        CreateContainerCmd cmd
+        cmd = [
+            getHostConfig: { -> hostConfig },
+            withHostConfig: { HostConfig value ->
+                hostConfig = value
+                cmd
+            }
+        ] as CreateContainerCmd
+
+        when:
+        container.createContainerCmdModifiers.each { modifier ->
+            modifier.modify(cmd)
+        }
+
+        then:
+        hostConfig.memory == 134217728L
+        hostConfig.mounts == [
+                new Mount().withType(MountType.VOLUME).withTarget('/existing-data').withReadOnly(false),
+                new Mount().withType(MountType.VOLUME).withTarget('/rw-data').withReadOnly(false),
+                new Mount().withType(MountType.VOLUME).withTarget('/ro-data').withReadOnly(true)
+        ]
+        hostConfig.binds.toList() == [
+            new Bind('/host-data', new Volume('/existing-bind'))
+        ]
+    }
+
+    def "rejects conflicting anonymous volume access modes for the same path"() {
+        given:
+        def config = """
+            containers:
+                foo:
+                    ro-anonymous-volumes:
+                        - /shared-data
+                    rw-anonymous-volumes:
+                        - /shared-data
+        """
+        def metadata = metadataFrom(config, "foo").get()
+        def container = TestContainerMetadataSupport.applyMetadata(metadata, new GenericContainer("alpine:3.20"))
+        def hostConfig = HostConfig.newHostConfig()
+        CreateContainerCmd cmd
+        cmd = [
+            getHostConfig: { -> hostConfig },
+            withHostConfig: { HostConfig value ->
+                hostConfig = value
+                cmd
+            }
+        ] as CreateContainerCmd
+
+        when:
+        container.createContainerCmdModifiers.each { modifier ->
+            modifier.modify(cmd)
+        }
+
+        then:
+        def ex = thrown(IllegalArgumentException)
+        ex.message == 'Anonymous volumes cannot be declared as both read-write and read-only: [/shared-data]'
+    }
+
+    def "rejects anonymous volumes that overlap existing filesystem binds"() {
+        given:
+        def config = """
+            containers:
+                foo:
+                    rw-anonymous-volumes:
+                        - /shared-data
+        """
+        def metadata = metadataFrom(config, "foo").get()
+        def container = TestContainerMetadataSupport.applyMetadata(metadata, new GenericContainer("alpine:3.20"))
+        def hostConfig = HostConfig.newHostConfig()
+                .withBinds(new Bind('/host-data', new Volume('/shared-data')))
+        CreateContainerCmd cmd
+        cmd = [
+            getHostConfig: { -> hostConfig },
+            withHostConfig: { HostConfig value ->
+                hostConfig = value
+                cmd
+            }
+        ] as CreateContainerCmd
+
+        when:
+        container.createContainerCmdModifiers.each { modifier ->
+            modifier.modify(cmd)
+        }
+
+        then:
+        def ex = thrown(IllegalArgumentException)
+        ex.message == 'Anonymous volumes cannot reuse container paths already configured by mounts, filesystem binds, or tmpfs mappings: [/shared-data]'
+    }
+
+    def "rejects anonymous volumes that overlap existing tmpfs mappings"() {
+        given:
+        def config = """
+            containers:
+                foo:
+                    ro-anonymous-volumes:
+                        - /shared-data
+        """
+        def metadata = metadataFrom(config, "foo").get()
+        def container = TestContainerMetadataSupport.applyMetadata(metadata, new GenericContainer("alpine:3.20"))
+        def hostConfig = HostConfig.newHostConfig()
+                .withTmpFs(['/shared-data': 'rw'])
+        CreateContainerCmd cmd
+        cmd = [
+            getHostConfig: { -> hostConfig },
+            withHostConfig: { HostConfig value ->
+                hostConfig = value
+                cmd
+            }
+        ] as CreateContainerCmd
+
+        when:
+        container.createContainerCmdModifiers.each { modifier ->
+            modifier.modify(cmd)
+        }
+
+        then:
+        def ex = thrown(IllegalArgumentException)
+        ex.message == 'Anonymous volumes cannot reuse container paths already configured by mounts, filesystem binds, or tmpfs mappings: [/shared-data]'
     }
 
     def "reads log wait strategy"() {

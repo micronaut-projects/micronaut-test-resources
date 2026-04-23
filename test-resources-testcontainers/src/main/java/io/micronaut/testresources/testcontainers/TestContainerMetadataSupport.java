@@ -15,6 +15,11 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.Mount;
+import com.github.dockerjava.api.model.MountType;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.convert.DefaultMutableConversionService;
 import io.micronaut.core.convert.MutableConversionService;
@@ -82,6 +87,8 @@ final class TestContainerMetadataSupport {
         Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
         Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
         Map<String, String> roFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, true);
+        Set<String> rwAnonymousVolumes = extractAnonymousVolumesFrom(prefix, testResourcesConfig, false);
+        Set<String> roAnonymousVolumes = extractAnonymousVolumesFrom(prefix, testResourcesConfig, true);
         Set<String> rwTmpfsMappings = extractTmpfsMappingsFrom(prefix, testResourcesConfig, false);
         Set<String> roTmpfsMappings = extractTmpfsMappingsFrom(prefix, testResourcesConfig, true);
         Map<String, String> env = extractMapFrom(prefix, "env", testResourcesConfig);
@@ -98,7 +105,7 @@ final class TestContainerMetadataSupport {
         String networkMode = extractStringParameterFrom(prefix, "network-mode", testResourcesConfig);
         Set<String> dependsOn = extractSetFrom(prefix, testResourcesConfig, "depends-on");
         WaitStrategy waitStrategy = extractWaitStrategyFrom(prefix, testResourcesConfig);
-        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, rwTmpfsMappings, roTmpfsMappings, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, networkMode, waitStrategy, dependsOn));
+        return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, rwAnonymousVolumes, roAnonymousVolumes, rwTmpfsMappings, roTmpfsMappings, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, networkMode, waitStrategy, dependsOn));
     }
 
     private static Long extractMemoryParameterFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
@@ -189,6 +196,10 @@ final class TestContainerMetadataSupport {
 
     private static Set<String> extractTmpfsMappingsFrom(String prefix, Map<String, Object> testResourcesConfig, boolean readOnly) {
         return extractSetFrom(prefix, testResourcesConfig, (readOnly ? "ro-" : "rw-") + "tmpfs-mappings");
+    }
+
+    private static Set<String> extractAnonymousVolumesFrom(String prefix, Map<String, Object> testResourcesConfig, boolean readOnly) {
+        return extractSetFrom(prefix, testResourcesConfig, (readOnly ? "ro-" : "rw-") + "anonymous-volumes");
     }
 
     private static Map<String, String> extractFsBindsFrom(String prefix,
@@ -403,6 +414,9 @@ final class TestContainerMetadataSupport {
         }
         md.getRwFsBinds().forEach((hostPath, containerPath) -> applyFsBind(container, hostPath, containerPath, BindMode.READ_WRITE));
         md.getRoFsBinds().forEach((hostPath, containerPath) -> applyFsBind(container, hostPath, containerPath, BindMode.READ_ONLY));
+        if (!md.getRwAnonymousVolumes().isEmpty() || !md.getRoAnonymousVolumes().isEmpty()) {
+            container.withCreateContainerCmdModifier(cmd -> applyAnonymousVolumes(cmd, md.getRwAnonymousVolumes(), md.getRoAnonymousVolumes()));
+        }
         md.getRwTmpfsMappings().forEach((mapping) -> applyTmpFsMapping(container, mapping, BindMode.READ_WRITE));
         md.getRoTmpfsMappings().forEach((mapping) -> applyTmpFsMapping(container, mapping, BindMode.READ_ONLY));
         if (!md.getCommand().isEmpty()) {
@@ -434,5 +448,72 @@ final class TestContainerMetadataSupport {
 
     static void applyTmpFsMapping(GenericContainer<?> container, String mapping, BindMode bindMode) {
         container.withTmpFs(Collections.singletonMap(mapping, bindMode.accessMode.name()));
+    }
+
+    private static CreateContainerCmd applyAnonymousVolumes(CreateContainerCmd cmd,
+                                                            Set<String> rwAnonymousVolumes,
+                                                            Set<String> roAnonymousVolumes) {
+        assertNoConflictingAnonymousVolumes(rwAnonymousVolumes, roAnonymousVolumes);
+        HostConfig hostConfig = Optional.ofNullable(cmd.getHostConfig()).orElseGet(HostConfig::newHostConfig);
+        assertNoConflictingContainerTargets(hostConfig, rwAnonymousVolumes, roAnonymousVolumes);
+        List<Mount> existingMounts = Optional.ofNullable(hostConfig.getMounts())
+            .orElseGet(Collections::emptyList);
+        List<Mount> anonymousVolumeMounts = Stream.concat(
+                rwAnonymousVolumes.stream().map(path -> anonymousVolumeMount(path, false)),
+                roAnonymousVolumes.stream().map(path -> anonymousVolumeMount(path, true))
+            )
+            .collect(Collectors.toList());
+        cmd.withHostConfig(hostConfig.withMounts(Stream.concat(existingMounts.stream(), anonymousVolumeMounts.stream())
+            .distinct()
+            .collect(Collectors.toList())));
+        return cmd;
+    }
+
+    private static void assertNoConflictingAnonymousVolumes(Set<String> rwAnonymousVolumes,
+                                                            Set<String> roAnonymousVolumes) {
+        if (Collections.disjoint(rwAnonymousVolumes, roAnonymousVolumes)) {
+            return;
+        }
+        Set<String> overlaps = new LinkedHashSet<>(rwAnonymousVolumes);
+        overlaps.retainAll(roAnonymousVolumes);
+        throw new IllegalArgumentException("Anonymous volumes cannot be declared as both read-write and read-only: " + overlaps);
+    }
+
+    private static void assertNoConflictingContainerTargets(HostConfig hostConfig,
+                                                            Set<String> rwAnonymousVolumes,
+                                                            Set<String> roAnonymousVolumes) {
+        Set<String> requestedTargets = Stream.concat(rwAnonymousVolumes.stream(), roAnonymousVolumes.stream())
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+        Set<String> existingTargets = existingContainerTargets(hostConfig);
+        requestedTargets.retainAll(existingTargets);
+        if (!requestedTargets.isEmpty()) {
+            throw new IllegalArgumentException("Anonymous volumes cannot reuse container paths already configured by mounts, filesystem binds, or tmpfs mappings: " + requestedTargets);
+        }
+    }
+
+    private static Set<String> existingContainerTargets(HostConfig hostConfig) {
+        Stream<String> mountTargets = Optional.ofNullable(hostConfig.getMounts())
+            .orElseGet(Collections::emptyList)
+            .stream()
+            .map(Mount::getTarget);
+        Stream<String> bindTargets = Arrays.stream(Optional.ofNullable(hostConfig.getBinds()).orElseGet(() -> new Bind[0]))
+            .map(Bind::getVolume)
+            .filter(Objects::nonNull)
+            .map(volume -> volume.getPath());
+        Stream<String> tmpfsTargets = Optional.ofNullable(hostConfig.getTmpFs())
+            .orElseGet(Collections::emptyMap)
+            .keySet()
+            .stream();
+        return Stream.of(mountTargets, bindTargets, tmpfsTargets)
+            .flatMap(stream -> stream)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private static Mount anonymousVolumeMount(String containerPath, boolean readOnly) {
+        return new Mount()
+            .withType(MountType.VOLUME)
+            .withTarget(containerPath)
+            .withReadOnly(readOnly);
     }
 }

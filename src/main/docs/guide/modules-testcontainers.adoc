@@ -83,6 +83,26 @@ test-resources:
         - /path/to/readwrite/container/file
 ----
 
+Generic containers can also declare Docker-managed anonymous volumes when you need container-local storage without binding any host filesystem path:
+
+[configuration]
+----
+test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-anonymous-volumes:
+        - /path/to/readonly/container/data
+      rw-anonymous-volumes:
+        - /path/to/readwrite/container/data
+----
+
+Unlike `*-fs-bind`, anonymous volumes do not map a host path. They use Docker-managed storage attached only to the container path, which is useful when the container expects persistent writable directories but you do not want filesystem exposure from the host. Anonymous volume targets must remain distinct from any existing bind, mount, or tmpfs target for the same container path.
+
 It is also possible to copy files from the host to the container:
 
 [configuration]

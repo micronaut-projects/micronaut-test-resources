@@ -34,6 +34,8 @@ final class TestContainerMetadata {
 
     private final Map<String, String> rwFsBinds;
     private final Map<String, String> roFsBinds;
+    private final Set<String> rwAnonymousVolumes;
+    private final Set<String> roAnonymousVolumes;
     private final Set<String> rwTmpfsMappings;
     private final Set<String> roTmpfsMappings;
     private final List<String> command;
@@ -59,6 +61,8 @@ final class TestContainerMetadata {
                           Set<String> hostNames,
                           Map<String, String> rwFsBinds,
                           Map<String, String> roFsBinds,
+                          Set<String> rwAnonymousVolumes,
+                          Set<String> roAnonymousVolumes,
                           Set<String> rwTmpfsMappings,
                           Set<String> roTmpfsMappings,
                           List<String> command,
@@ -82,6 +86,8 @@ final class TestContainerMetadata {
         this.hostNames = hostNames;
         this.rwFsBinds = rwFsBinds;
         this.roFsBinds = roFsBinds;
+        this.rwAnonymousVolumes = rwAnonymousVolumes;
+        this.roAnonymousVolumes = roAnonymousVolumes;
         this.rwTmpfsMappings = rwTmpfsMappings;
         this.roTmpfsMappings = roTmpfsMappings;
         this.command = command;
@@ -130,6 +136,14 @@ final class TestContainerMetadata {
 
     public List<String> getCommand() {
         return command;
+    }
+
+    public Set<String> getRwAnonymousVolumes() {
+        return rwAnonymousVolumes;
+    }
+
+    public Set<String> getRoAnonymousVolumes() {
+        return roAnonymousVolumes;
     }
 
     public Optional<String> getWorkingDirectory() {

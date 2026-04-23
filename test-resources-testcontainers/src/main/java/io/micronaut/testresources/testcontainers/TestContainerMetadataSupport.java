@@ -16,6 +16,7 @@
 package io.micronaut.testresources.testcontainers;
 
 import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Mount;
 import com.github.dockerjava.api.model.MountType;
@@ -454,6 +455,7 @@ final class TestContainerMetadataSupport {
                                                             Set<String> roAnonymousVolumes) {
         assertNoConflictingAnonymousVolumes(rwAnonymousVolumes, roAnonymousVolumes);
         HostConfig hostConfig = Optional.ofNullable(cmd.getHostConfig()).orElseGet(HostConfig::newHostConfig);
+        assertNoConflictingContainerTargets(hostConfig, rwAnonymousVolumes, roAnonymousVolumes);
         List<Mount> existingMounts = Optional.ofNullable(hostConfig.getMounts())
             .orElseGet(Collections::emptyList);
         List<Mount> anonymousVolumeMounts = Stream.concat(
@@ -475,6 +477,37 @@ final class TestContainerMetadataSupport {
         Set<String> overlaps = new LinkedHashSet<>(rwAnonymousVolumes);
         overlaps.retainAll(roAnonymousVolumes);
         throw new IllegalArgumentException("Anonymous volumes cannot be declared as both read-write and read-only: " + overlaps);
+    }
+
+    private static void assertNoConflictingContainerTargets(HostConfig hostConfig,
+                                                            Set<String> rwAnonymousVolumes,
+                                                            Set<String> roAnonymousVolumes) {
+        Set<String> requestedTargets = Stream.concat(rwAnonymousVolumes.stream(), roAnonymousVolumes.stream())
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+        Set<String> existingTargets = existingContainerTargets(hostConfig);
+        requestedTargets.retainAll(existingTargets);
+        if (!requestedTargets.isEmpty()) {
+            throw new IllegalArgumentException("Anonymous volumes cannot reuse container paths already configured by mounts, filesystem binds, or tmpfs mappings: " + requestedTargets);
+        }
+    }
+
+    private static Set<String> existingContainerTargets(HostConfig hostConfig) {
+        Stream<String> mountTargets = Optional.ofNullable(hostConfig.getMounts())
+            .orElseGet(Collections::emptyList)
+            .stream()
+            .map(Mount::getTarget);
+        Stream<String> bindTargets = Arrays.stream(Optional.ofNullable(hostConfig.getBinds()).orElseGet(() -> new Bind[0]))
+            .map(Bind::getVolume)
+            .filter(Objects::nonNull)
+            .map(volume -> volume.getPath());
+        Stream<String> tmpfsTargets = Optional.ofNullable(hostConfig.getTmpFs())
+            .orElseGet(Collections::emptyMap)
+            .keySet()
+            .stream();
+        return Stream.of(mountTargets, bindTargets, tmpfsTargets)
+            .flatMap(stream -> stream)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private static Mount anonymousVolumeMount(String containerPath, boolean readOnly) {

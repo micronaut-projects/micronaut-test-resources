@@ -471,6 +471,68 @@ class TestContainerMetadataSupportTest extends Specification {
         ex.message == 'Anonymous volumes cannot be declared as both read-write and read-only: [/shared-data]'
     }
 
+    def "rejects anonymous volumes that overlap existing filesystem binds"() {
+        given:
+        def config = """
+            containers:
+                foo:
+                    rw-anonymous-volumes:
+                        - /shared-data
+        """
+        def metadata = metadataFrom(config, "foo").get()
+        def container = TestContainerMetadataSupport.applyMetadata(metadata, new GenericContainer("alpine:3.20"))
+        def hostConfig = HostConfig.newHostConfig()
+                .withBinds(new Bind('/host-data', new Volume('/shared-data')))
+        CreateContainerCmd cmd
+        cmd = [
+            getHostConfig: { -> hostConfig },
+            withHostConfig: { HostConfig value ->
+                hostConfig = value
+                cmd
+            }
+        ] as CreateContainerCmd
+
+        when:
+        container.createContainerCmdModifiers.each { modifier ->
+            modifier.modify(cmd)
+        }
+
+        then:
+        def ex = thrown(IllegalArgumentException)
+        ex.message == 'Anonymous volumes cannot reuse container paths already configured by mounts, filesystem binds, or tmpfs mappings: [/shared-data]'
+    }
+
+    def "rejects anonymous volumes that overlap existing tmpfs mappings"() {
+        given:
+        def config = """
+            containers:
+                foo:
+                    ro-anonymous-volumes:
+                        - /shared-data
+        """
+        def metadata = metadataFrom(config, "foo").get()
+        def container = TestContainerMetadataSupport.applyMetadata(metadata, new GenericContainer("alpine:3.20"))
+        def hostConfig = HostConfig.newHostConfig()
+                .withTmpFs(['/shared-data': 'rw'])
+        CreateContainerCmd cmd
+        cmd = [
+            getHostConfig: { -> hostConfig },
+            withHostConfig: { HostConfig value ->
+                hostConfig = value
+                cmd
+            }
+        ] as CreateContainerCmd
+
+        when:
+        container.createContainerCmdModifiers.each { modifier ->
+            modifier.modify(cmd)
+        }
+
+        then:
+        def ex = thrown(IllegalArgumentException)
+        ex.message == 'Anonymous volumes cannot reuse container paths already configured by mounts, filesystem binds, or tmpfs mappings: [/shared-data]'
+    }
+
     def "reads log wait strategy"() {
         def config = """
                 containers:

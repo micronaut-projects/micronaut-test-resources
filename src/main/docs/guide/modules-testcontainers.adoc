@@ -101,7 +101,7 @@ test-resources:
         - /path/to/readwrite/container/data
 ----
 
-Unlike `*-fs-bind`, anonymous volumes do not map a host path. They use Docker-managed storage attached only to the container path, which is useful when the container expects persistent writable directories but you do not want filesystem exposure from the host.
+Unlike `*-fs-bind`, anonymous volumes do not map a host path. They use Docker-managed storage attached only to the container path, which is useful when the container expects persistent writable directories but you do not want filesystem exposure from the host. Anonymous volume targets must remain distinct from any existing bind, mount, or tmpfs target for the same container path.
 
 It is also possible to copy files from the host to the container:
 

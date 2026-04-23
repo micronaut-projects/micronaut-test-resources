@@ -48,6 +48,7 @@ io.micronaut.testresources.r2dbc.pool
 io.micronaut.testresources.r2dbc.postgres
 io.micronaut.testresources.rabbitmq
 io.micronaut.testresources.redis
+io.micronaut.testresources.seaweedfs
 io.micronaut.testresources.server
 io.micronaut.testresources.solr
 io.micronaut.testresources.testcontainers

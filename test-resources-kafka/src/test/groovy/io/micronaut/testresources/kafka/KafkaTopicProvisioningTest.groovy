@@ -6,10 +6,12 @@ import io.micronaut.testresources.core.TestResourcesResolutionException
 import jakarta.inject.Inject
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
+import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.admin.TopicDescription
 import spock.lang.Specification
 
 import java.util.Properties
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
@@ -80,26 +82,6 @@ class KafkaDefaultTopicPartitionsTest extends AbstractKafkaTopicProvisioningSpec
     }
 }
 
-@MicronautTest
-class KafkaPartitionsWithoutTopicsTest extends AbstractKafkaTopicProvisioningSpec {
-
-    @Override
-    Map<String, String> getProperties() {
-        super.properties + [
-            "test-resources.containers.kafka.partitions": "0"
-        ]
-    }
-
-    def "ignores Kafka topic partitions when no topics are configured"() {
-        when:
-        def bootstrapServers = resolveBootstrapServers()
-
-        then:
-        bootstrapServers
-        listContainers().size() == 1
-    }
-}
-
 class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvisioningSpec {
 
     def "provisions configured Kafka topics when reusing a cached broker in the same scope"() {
@@ -143,9 +125,55 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
         describeTopics(bootstrapServers, "payments").payments.partitions().size() == 1
         listContainers().size() == 1
     }
+
+    def "rejects partition mismatch when the topic appears between listing and create"() {
+        given:
+        def provider = new RacingKafkaTestResourceProvider()
+
+        when:
+        provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, properties, [
+            (KafkaTestResourceProvider.KAFKA_TOPICS)    : "race-topic",
+            (KafkaTestResourceProvider.KAFKA_PARTITIONS): "3"
+        ]).orElseThrow()
+
+        then:
+        def e = thrown(TestResourcesResolutionException)
+        e.message.contains("already exists with 1 partitions")
+        e.message.contains("requested 3")
+    }
+}
+
+class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
+    @Override
+    protected void beforeCreateTopics(org.testcontainers.kafka.KafkaContainer container,
+                                      TopicProvisioningConfiguration configuration,
+                                      List<NewTopic> topicsToCreate) {
+        Properties properties = new Properties()
+        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.bootstrapServers)
+        try (AdminClient adminClient = AdminClient.create(properties)) {
+            NewTopic topic = new NewTopic(topicsToCreate.first().name(), 1, (short) 1)
+            adminClient.createTopics([topic]).all().get(30, TimeUnit.SECONDS)
+        } catch (ExecutionException e) {
+            throw new AssertionError("Failed to create the racing Kafka topic", e)
+        }
+    }
 }
 
 class KafkaInvalidTopicProvisioningConfigTest extends Specification {
+
+    def "rejects Kafka topic partitions even when no topics are configured"() {
+        given:
+        def provider = new KafkaTestResourceProvider()
+
+        when:
+        provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, [:], [
+            (KafkaTestResourceProvider.KAFKA_PARTITIONS): "0"
+        ])
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.message.contains("greater than or equal to 1")
+    }
 
     def "rejects blank Kafka topic names"() {
         when:

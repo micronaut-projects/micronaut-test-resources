@@ -130,15 +130,9 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
             Set<String> existingTopics = adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            List<String> configuredExistingTopics = configuration.topics().stream()
+            verifyExistingTopicPartitions(adminClient, configuration.topics().stream()
                 .filter(existingTopics::contains)
-                .toList();
-            if (!configuredExistingTopics.isEmpty()) {
-                Map<String, TopicDescription> existingTopicDescriptions = adminClient.describeTopics(configuredExistingTopics)
-                    .allTopicNames()
-                    .get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
-            }
+                .toList(), configuration);
             List<NewTopic> topicsToCreate = configuration.topics().stream()
                 .filter(topic -> !existingTopics.contains(topic))
                 .map(topic -> new NewTopic(topic, configuration.partitions(), (short) 1))
@@ -146,16 +140,21 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             if (topicsToCreate.isEmpty()) {
                 return;
             }
+            beforeCreateTopics(container, configuration, topicsToCreate);
             var createTopicsResult = adminClient.createTopics(topicsToCreate);
+            List<String> topicsToReverify = new java.util.ArrayList<String>();
             for (NewTopic topic : topicsToCreate) {
                 try {
                     createTopicsResult.values().get(topic.name()).get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 } catch (ExecutionException e) {
-                    if (!(e.getCause() instanceof TopicExistsException)) {
+                    if (e.getCause() instanceof TopicExistsException) {
+                        topicsToReverify.add(topic.name());
+                    } else {
                         throw e;
                     }
                 }
             }
+            verifyExistingTopicPartitions(adminClient, topicsToReverify, configuration);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new TestResourcesResolutionException("Interrupted while provisioning Kafka topics " + topicProvisioningDetails(configuration), e);
@@ -167,6 +166,24 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
                 e
             );
         }
+    }
+
+    protected void beforeCreateTopics(KafkaContainer container,
+                                      TopicProvisioningConfiguration configuration,
+                                      List<NewTopic> topicsToCreate) {
+        // Default no-op hook for tests that need to force a topic-creation race.
+    }
+
+    private void verifyExistingTopicPartitions(AdminClient adminClient,
+                                               List<String> topicNames,
+                                               TopicProvisioningConfiguration configuration) throws ExecutionException, InterruptedException, TimeoutException {
+        if (topicNames.isEmpty()) {
+            return;
+        }
+        Map<String, TopicDescription> existingTopicDescriptions = adminClient.describeTopics(topicNames)
+            .allTopicNames()
+            .get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
     }
 
     private static void verifyExistingTopicPartitions(Map<String, TopicDescription> existingTopicDescriptions,
@@ -188,11 +205,12 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     private TopicProvisioningConfiguration topicProvisioningConfiguration(Map<String, Object> testResourcesConfig) {
+        int partitions = configuredPartitions(testResourcesConfig);
         List<String> topics = configuredTopics(testResourcesConfig);
         if (topics.isEmpty()) {
             return NO_TOPICS;
         }
-        return new TopicProvisioningConfiguration(topics, configuredPartitions(testResourcesConfig));
+        return new TopicProvisioningConfiguration(topics, partitions);
     }
 
     static List<String> configuredTopics(Map<String, Object> testResourcesConfig) {
@@ -241,6 +259,6 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         }
     }
 
-    private record TopicProvisioningConfiguration(List<String> topics, int partitions) {
+    protected record TopicProvisioningConfiguration(List<String> topics, int partitions) {
     }
 }

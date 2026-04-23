@@ -24,6 +24,8 @@ modules:
     title: Localstack
   modules-minio:
     title: MinIO
+  modules-seaweedfs:
+    title: SeaweedFS
   modules-mongodb:
     title: MongoDB
   modules-mqtt:

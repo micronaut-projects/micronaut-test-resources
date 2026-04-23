@@ -1,0 +1,11 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching a SeaweedFS test container.
+"""
+
+dependencies {
+    testImplementation(libs.amazon.awssdk.v2.s3)
+}

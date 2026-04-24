@@ -3,8 +3,6 @@ This provider can be configured with a variety of parameters:
 
 * The default image can be overwritten by setting the `test-resources.containers.redis.image-name` property.
 
-* Unless a Redis wait strategy is configured, for example with `test-resources.containers.redis.wait-strategy` or `test-resources.containers.redis.wait-strategy.*` properties, the single-node Redis provider waits for the mapped Redis port to listen before exposing `redis.uri`.
-
 * Have Test Resources spawn a Redis cluster by setting `test-resources.containers.redis.cluster-mode` to `true`. With this setting, the property `redis.uris` will be defined instead of `redis.uri`, and some cluster-specific parameters may be provided under `test-resources.containers.redis.cluster`:
 
 ** The number of master nodes can be controlled by the `masters` property.

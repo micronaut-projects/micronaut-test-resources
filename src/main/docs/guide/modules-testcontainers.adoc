@@ -165,7 +165,7 @@ The `network-mode` can be used to set the network mode (e.g. including 'host', '
 
 == Wait strategies
 
-Micronaut Test Resources uses the underlying container's default https://www.testcontainers.org/features/startup_and_waits/[Testcontainers wait strategies] unless a provider documents a more specific default.
+Micronaut Test Resources uses the underlying container's default https://www.testcontainers.org/features/startup_and_waits/[Testcontainers wait strategies] unless you configure `test-resources.containers.<name>.wait-strategy...` or a provider documents a more specific default.
 
 It is however possible to override the default by configuration.
 

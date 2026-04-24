@@ -17,7 +17,6 @@ package io.micronaut.testresources.redis;
 
 import com.redis.testcontainers.RedisContainer;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
@@ -65,9 +64,7 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Re
 
     @Override
     protected RedisContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        RedisContainer redisContainer = new RedisContainer(imageName);
-        redisContainer.setWaitStrategy(Wait.forListeningPort());
-        return redisContainer;
+        return new RedisContainer(imageName);
     }
 
     @Override

@@ -2524,7 +2524,7 @@ The <code>network-aliases</code> can be used to assign host names to the contain
 <h2 id="_wait_strategies">Wait strategies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Micronaut Test Resources uses the default <a href="https://www.testcontainers.org/features/startup_and_waits/">Testcontainers wait strategies</a>.</p>
+<p>Micronaut Test Resources uses the underlying container&#8217;s default <a href="https://www.testcontainers.org/features/startup_and_waits/">Testcontainers wait strategies</a> unless you configure <code>test-resources.containers.&lt;name&gt;.wait-strategy&#8230;&#8203;</code> or a provider documents a more specific default.</p>
 </div>
 <div class="paragraph">
 <p>It is however possible to override the default by configuration.</p>
@@ -2643,7 +2643,7 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 <p><code>status-code</code>: the list of expected status codes</p>
 </li>
 <li>
-<p><code>port</code> strategy (this is the default strategy)</p>
+<p><code>port</code> strategy</p>
 </li>
 <li>
 <p><code>healthcheck</code>: Docker healthcheck strategy</p>

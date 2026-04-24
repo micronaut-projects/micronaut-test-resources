@@ -19,7 +19,8 @@ import io.micronaut.core.io.ResourceLoader;
 import io.micronaut.testresources.core.LazyTestResourcesPropertySourceLoader;
 import io.micronaut.testresources.core.PropertyExpressionProducer;
 import io.micronaut.testresources.core.TestResourcesResolver;
-import io.micronaut.testresources.core.ToggableTestResourcesResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
  */
 public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResourcesPropertySourceLoader {
     private static final Pattern CAMEL_CASE = Pattern.compile("([a-z])([A-Z])");
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedTestResourcesPropertySourceLoader.class);
 
     public EmbeddedTestResourcesPropertySourceLoader() {
         super(new EmbeddedTestResourcesProducer());
@@ -55,7 +57,7 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
         public List<String> produceKeys(ResourceLoader resourceLoader, Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
             return loader.getResolvers()
                 .stream()
-                .filter(r -> isEnabled(r, testResourcesConfig))
+                .filter(r -> EmbeddedDisabledResolverWarningSupport.isEnabled(r, testResourcesConfig, LOGGER))
                 .flatMap(r -> r.getResolvableProperties(propertyEntries, testResourcesConfig)
                     .stream().map(key -> assertValidKey(key, r))
                 ).distinct()
@@ -68,13 +70,6 @@ public class EmbeddedTestResourcesPropertySourceLoader extends LazyTestResources
                 throw new IllegalArgumentException("Test resources resolver [" + r.getClass().getName() + "] : Property key [" + key + "] is not valid. Property keys must be in kebab case.");
             }
             return key;
-        }
-
-        private static boolean isEnabled(TestResourcesResolver resolver, Map<String, Object> testResourcesConfig) {
-            if (resolver instanceof ToggableTestResourcesResolver toggable) {
-                return toggable.isEnabled(testResourcesConfig);
-            }
-            return true;
         }
     }
 }

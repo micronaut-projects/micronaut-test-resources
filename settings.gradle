@@ -64,6 +64,7 @@ def localstackModules = [
 ]
 
 include 'test-resources-bom'
+include 'test-resources-azure'
 include 'test-resources-build-tools'
 include 'test-resources-couchbase'
 include 'test-resources-core'

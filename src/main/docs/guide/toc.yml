@@ -14,6 +14,8 @@ modules:
       title: R2DBC
   modules-elasticsearch:
     title: Elasticsearch
+  modules-azure:
+    title: Azure Storage
   modules-opensearch:
     title: OpenSearch
   modules-kafka:

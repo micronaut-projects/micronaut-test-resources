@@ -17,6 +17,7 @@ client.
 dependencies {
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.reactor)
+    implementation(projects.micronautTestResourcesCodec)
     implementation(projects.micronautTestResourcesCore)
     implementation(projects.micronautTestResourcesEmbedded)
     implementation(projects.micronautTestResourcesTestcontainers)

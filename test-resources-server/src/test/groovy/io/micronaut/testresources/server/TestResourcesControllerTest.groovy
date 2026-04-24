@@ -1,12 +1,15 @@
 package io.micronaut.testresources.server
 
 import io.micronaut.context.annotation.Property
+import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Get
 import org.jspecify.annotations.Nullable
 import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.Produces
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.client.TestResourcesClient
+import io.micronaut.testresources.codec.TestResourcesMediaType
 import jakarta.inject.Inject
 import spock.lang.Ignore
 import spock.lang.Specification
@@ -102,9 +105,11 @@ class TestResourcesControllerTest extends Specification {
     }
 
     @Client("/")
+    @Produces(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+    @Consumes(TestResourcesMediaType.TEST_RESOURCES_BINARY)
     static interface DiagnosticsClient extends TestResourcesClient {
         @Get("/testcontainers")
-        List<TestContainer> listContainers();
+        List<Map<String, Object>> listContainers();
 
         @Override
         @Post("/list")

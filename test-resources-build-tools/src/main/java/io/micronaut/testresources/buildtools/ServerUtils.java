@@ -77,6 +77,7 @@ public class ServerUtils {
     private static final String SERVER_ENTRY_POINT =
         "io.micronaut.testresources.server.TestResourcesService";
     private static final String REQUIREMENTS_ENTRIES_PATH = "/requirements/entries";
+    private static final String TEST_RESOURCES_BINARY_MEDIA_TYPE = "application/x-test-resources+binary";
     private static final String MICRONAUT_SERVER_PORT = "micronaut.server.port";
     private static final String JMX_SYSTEM_PROPERTY = "com.sun.management.jmxremote";
     private static final String CDS_HASH = "cds.bin";
@@ -428,8 +429,15 @@ public class ServerUtils {
             URL url = new URL("http://localhost:" + serverSettings.getPort() + "/stop");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", TEST_RESOURCES_BINARY_MEDIA_TYPE);
+            conn.setRequestProperty("Accept", TEST_RESOURCES_BINARY_MEDIA_TYPE);
+            conn.setFixedLengthStreamingMode(0);
+            conn.setDoOutput(true);
             serverSettings.getAccessToken()
                 .ifPresent(token -> conn.setRequestProperty(ACCESS_TOKEN_HEADER, token));
+            try (var os = conn.getOutputStream()) {
+                os.flush();
+            }
             try (InputStream is = conn.getInputStream()) {
                 is.read();
             }

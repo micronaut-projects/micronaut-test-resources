@@ -9,10 +9,10 @@ and provide their value on demand.
 """
 
 dependencies {
-    annotationProcessor(mnSerde.micronaut.serde.processor)
-    api(mn.micronaut.json.core)
+    api(mn.micronaut.http)
     api(projects.micronautTestResourcesCore)
-    compileOnly(mnSerde.micronaut.serde.api)
-    compileOnly(mnSerde.micronaut.serde.jackson)
+    compileOnly(mn.micronaut.context)
+    implementation(projects.micronautTestResourcesCodec)
+    testImplementation(mn.micronaut.http.server.netty)
     testRuntimeOnly(mn.micronaut.http.server.netty)
 }

@@ -1,0 +1,12 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching an Azurite test container.
+"""
+
+dependencies {
+    testImplementation(platform(libs.azure.sdk.bom))
+    testImplementation(libs.azure.storage.blob)
+}

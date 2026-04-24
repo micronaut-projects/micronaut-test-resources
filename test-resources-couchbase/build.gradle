@@ -1,0 +1,12 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching a Couchbase test container.
+"""
+
+dependencies {
+    implementation(libs.managed.testcontainers.couchbase)
+    testImplementation(libs.couchbase.java.client)
+}

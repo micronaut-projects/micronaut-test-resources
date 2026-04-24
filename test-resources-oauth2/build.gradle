@@ -1,0 +1,12 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching a Keycloak test container for OAuth2 tests.
+"""
+
+dependencies {
+    testImplementation(testFixtures(projects.micronautTestResourcesTestcontainers))
+    testImplementation(mnSecurity.micronaut.security.oauth2)
+}

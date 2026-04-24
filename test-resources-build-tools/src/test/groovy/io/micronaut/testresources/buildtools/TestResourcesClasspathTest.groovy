@@ -33,6 +33,7 @@ class TestResourcesClasspathTest extends Specification {
         'mqtt'             | 'hivemq'
         'mqttv5'           | 'hivemq'
         'neo4j-bolt'       | 'neo4j'
+        'security-oauth2'  | 'oauth2'
         'rabbitmq'         | 'rabbitmq'
         'redis-lettuce'    | 'redis'
         'elasticsearch'    | 'elasticsearch'

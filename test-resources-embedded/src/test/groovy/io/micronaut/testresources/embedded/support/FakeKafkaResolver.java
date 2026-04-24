@@ -16,6 +16,7 @@
 package io.micronaut.testresources.embedded.support;
 
 import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,11 +25,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class FakeKafkaResolver implements TestResourcesResolver {
+public class FakeKafkaResolver implements ToggableTestResourcesResolver {
 
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap-servers";
     public static final String KAFKA_TOPIC = "kafka.topic";
     public static final String KAFKA_TEST_PORT = "kafka.test-port";
+
+    @Override
+    public String getName() {
+        return "kafka";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Apache Kafka";
+    }
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

@@ -33,9 +33,12 @@ public interface ToggableTestResourcesResolver extends TestResourcesResolver {
         if (o == null) {
             return true;
         }
+        boolean enabled;
         if (o instanceof Boolean b) {
-            return b;
+            enabled = b;
+        } else {
+            enabled = Boolean.parseBoolean(String.valueOf(o));
         }
-        return Boolean.parseBoolean(String.valueOf(o));
+        return enabled;
     }
 }

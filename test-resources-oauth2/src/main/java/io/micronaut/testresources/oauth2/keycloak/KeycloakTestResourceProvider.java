@@ -36,7 +36,7 @@ import java.util.UUID;
 public class KeycloakTestResourceProvider extends AbstractTestContainersProvider<KeycloakTestResourceProvider.KeycloakContainer> {
     public static final String DISPLAY_NAME = "Keycloak";
     public static final String SIMPLE_NAME = "keycloak";
-    public static final String DEFAULT_IMAGE = "quay.io/keycloak/keycloak:latest";
+    public static final String DEFAULT_IMAGE = "quay.io/keycloak/keycloak:26.6.1";
 
     public static final String CLIENT_ID = "micronaut.security.oauth2.clients.keycloak.client-id";
     public static final String CLIENT_SECRET = "micronaut.security.oauth2.clients.keycloak.client-secret";
@@ -157,9 +157,27 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
     }
 
     private static String escapeJson(String value) {
-        return value
-            .replace("\\", "\\\\")
-            .replace("\"", "\\\"");
+        StringBuilder escaped = new StringBuilder(value.length() + 16);
+        for (int i = 0; i < value.length(); i++) {
+            char current = value.charAt(i);
+            switch (current) {
+                case '\\' -> escaped.append("\\\\");
+                case '"' -> escaped.append("\\\"");
+                case '\b' -> escaped.append("\\b");
+                case '\f' -> escaped.append("\\f");
+                case '\n' -> escaped.append("\\n");
+                case '\r' -> escaped.append("\\r");
+                case '\t' -> escaped.append("\\t");
+                default -> {
+                    if (current < 0x20) {
+                        escaped.append(String.format("\\u%04x", (int) current));
+                    } else {
+                        escaped.append(current);
+                    }
+                }
+            }
+        }
+        return escaped.toString();
     }
 
     private static String baseUrl(GenericContainer<?> container) {

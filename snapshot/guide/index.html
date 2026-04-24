@@ -127,21 +127,23 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-seaweedfs"><a href="#modules-seaweedfs"><strong>5.9</strong><span>SeaweedFS</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.10</strong><span>MongoDB</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-couchbase"><a href="#modules-couchbase"><strong>5.10</strong><span>Couchbase</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.11</strong><span>MQTT</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.11</strong><span>MongoDB</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.12</strong><span>Neo4j</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.12</strong><span>MQTT</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.13</strong><span>RabbitMQ</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.13</strong><span>Neo4j</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.14</strong><span>Redis</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.14</strong><span>RabbitMQ</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.15</strong><span>Hazelcast</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.15</strong><span>Redis</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.16</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.16</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.17</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.17</strong><span>Hashicorp Vault</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.18</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
         
@@ -1227,7 +1229,100 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>The default image can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.10 MongoDB</h2>
+<h2 id="modules-couchbase"><a class="anchor" href="#modules-couchbase"></a>5.10 Couchbase</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-couchbase.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Couchbase support will automatically start a <a href="https://www.couchbase.com">Couchbase Server container</a> and provide the values of the <code>couchbase.uri</code>, <code>couchbase.username</code>, and <code>couchbase.password</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The provider uses the <code>couchbase/server</code> image by default.</p>
+</div>
+<div class="paragraph">
+<p>You can override the image name and tag with <code>test-resources.containers.couchbase.image-name</code> and <code>test-resources.containers.couchbase.image-tag</code>.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.couchbase.image-name=couchbase/server
+test-resources.containers.couchbase.image-tag=latest</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    couchbase:
+      image-name: couchbase/server
+      image-tag: latest</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.couchbase]
+      image-name="couchbase/server"
+      image-tag="latest"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    couchbase {
+      imageName = "couchbase/server"
+      imageTag = "latest"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      couchbase {
+        image-name = "couchbase/server"
+        image-tag = "latest"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "couchbase": {
+        "image-name": "couchbase/server",
+        "image-tag": "latest"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If you explicitly map any of those same properties through generic Testcontainers support, the dedicated Couchbase provider stands down for the full <code>couchbase.uri</code> / <code>couchbase.username</code> / <code>couchbase.password</code> connection set so values never come from mixed containers.</p>
+</div>
+<div class="paragraph">
+<p>For unsupported Couchbase topologies or additional property shapes, continue using <a href="modules-testcontainers.html">generic Testcontainers support</a>.</p>
+</div>
+
+<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.11 MongoDB</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mongodb.adoc"'>
@@ -1258,7 +1353,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
 </div>
 
-<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.11 MQTT</h2>
+<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.12 MQTT</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mqtt.adoc"'>
@@ -1415,7 +1510,7 @@ listener 1883</code></pre>
 </div>
 </div>
 
-<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.12 Neo4j</h2>
+<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.13 Neo4j</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-neo4j.adoc"'>
@@ -1431,7 +1526,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.13 RabbitMQ</h2>
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.14 RabbitMQ</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
@@ -1447,7 +1542,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.14 Redis</h2>
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.15 Redis</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-redis.adoc"'>
@@ -1490,7 +1585,7 @@ This provider can be configured with a variety of parameters:</p>
 </ul>
 </div>
 
-<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.15 Hazelcast</h2>
+<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.16 Hazelcast</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hazelcast.adoc"'>
@@ -1521,7 +1616,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 </dl>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.16 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.17 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -1621,7 +1716,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.17 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.18 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>

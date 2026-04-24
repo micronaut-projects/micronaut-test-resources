@@ -8,4 +8,5 @@ Provides support for launching a Couchbase test container.
 
 dependencies {
     implementation(libs.managed.testcontainers.couchbase)
+    testImplementation(libs.couchbase.java.client)
 }

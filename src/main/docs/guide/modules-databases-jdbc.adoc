@@ -51,7 +51,7 @@ datasources:
       resource-name: main-db
 ----
 
-For other engines, `test-resources.resource-name` still controls physical container reuse, but engine-specific multi-database bootstrap is only enabled where it is currently supported.
+For other engines, `datasources.<name>.test-resources.resource-name` still controls physical container reuse, but engine-specific multi-database bootstrap is only enabled where it is currently supported.
 
 Micronaut Test Resources can also generate an IntelliJ IDEA/DataGrip datasource export file for resolved JDBC datasources.
 The export is opt-in and disabled by default.

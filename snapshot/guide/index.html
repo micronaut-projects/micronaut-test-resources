@@ -113,33 +113,35 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-elasticsearch"><a href="#modules-elasticsearch"><strong>5.2</strong><span>Elasticsearch</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opensearch"><a href="#modules-opensearch"><strong>5.3</strong><span>OpenSearch</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-azure"><a href="#modules-azure"><strong>5.3</strong><span>Azure Storage</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>5.4</strong><span>Kafka</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opensearch"><a href="#modules-opensearch"><strong>5.4</strong><span>OpenSearch</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-pulsar"><a href="#modules-pulsar"><strong>5.5</strong><span>Pulsar</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>5.5</strong><span>Kafka</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>5.6</strong><span>Localstack</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-pulsar"><a href="#modules-pulsar"><strong>5.6</strong><span>Pulsar</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-minio"><a href="#modules-minio"><strong>5.7</strong><span>MinIO</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>5.7</strong><span>Localstack</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-seaweedfs"><a href="#modules-seaweedfs"><strong>5.8</strong><span>SeaweedFS</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-minio"><a href="#modules-minio"><strong>5.8</strong><span>MinIO</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.9</strong><span>MongoDB</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-seaweedfs"><a href="#modules-seaweedfs"><strong>5.9</strong><span>SeaweedFS</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.10</strong><span>MQTT</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.10</strong><span>MongoDB</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.11</strong><span>Neo4j</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.11</strong><span>MQTT</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.12</strong><span>RabbitMQ</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.12</strong><span>Neo4j</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.13</strong><span>Redis</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.13</strong><span>RabbitMQ</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.14</strong><span>Hazelcast</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.14</strong><span>Redis</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.15</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.15</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.16</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.16</strong><span>Hashicorp Vault</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.17</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
         
@@ -797,7 +799,111 @@ This can be useful when using modules like Flyway which only support JDBC for up
 The default version can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
 </div>
 
-<h2 id="modules-opensearch"><a class="anchor" href="#modules-opensearch"></a>5.3 OpenSearch</h2>
+<h2 id="modules-azure"><a class="anchor" href="#modules-azure"></a>5.3 Azure Storage</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-azure.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Azure Storage support will automatically start an <a href="https://learn.microsoft.com/azure/storage/common/storage-use-azurite">Azurite</a> container and resolve the Micronaut Azure shared-key properties needed to talk to the emulator.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.azurite.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The following properties are resolved automatically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>azure.credential.storage-shared-key.account-name</code></p>
+</li>
+<li>
+<p><code>azure.credential.storage-shared-key.account-key</code></p>
+</li>
+<li>
+<p><code>azure.credential.storage-shared-key.connection-string</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The generated connection string uses Azurite&#8217;s mapped Testcontainers ports for the blob, queue, and table endpoints, so no fixed host port configuration is required.</p>
+</div>
+<div class="paragraph">
+<p>By default, the provider starts <code>mcr.microsoft.com/azure-storage/azurite:3.35.0</code> with blob, queue, and table listeners bound to all interfaces inside the container.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">storage.client.connection-string=${azure.credential.storage-shared-key.connection-string}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  client:
+    connection-string: ${azure.credential.storage-shared-key.connection-string}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[storage]
+  [storage.client]
+    connection-string="${azure.credential.storage-shared-key.connection-string}"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">storage {
+  client {
+    connectionString = "${azure.credential.storage-shared-key.connection-string}"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  storage {
+    client {
+      connection-string = "${azure.credential.storage-shared-key.connection-string}"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "storage": {
+    "client": {
+      "connection-string": "${azure.credential.storage-shared-key.connection-string}"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you need Azurite behavior outside these shared-key properties, the generic Testcontainers support remains available.
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="modules-opensearch"><a class="anchor" href="#modules-opensearch"></a>5.4 OpenSearch</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-opensearch.adoc"'>
@@ -813,7 +919,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <p>The default image (<code>opensearchproject/opensearch:latest</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>5.4 Kafka</h2>
+<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>5.5 Kafka</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-kafka.adoc"'>
@@ -1022,7 +1128,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 </table>
 </div>
 
-<h2 id="modules-pulsar"><a class="anchor" href="#modules-pulsar"></a>5.5 Pulsar</h2>
+<h2 id="modules-pulsar"><a class="anchor" href="#modules-pulsar"></a>5.6 Pulsar</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-pulsar.adoc"'>
@@ -1038,7 +1144,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>The default image can be overridden by setting the <code>test-resources.containers.pulsar.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>5.6 Localstack</h2>
+<h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>5.7 Localstack</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-localstack.adoc"'>
@@ -1089,7 +1195,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 </ul>
 </div>
 
-<h2 id="modules-minio"><a class="anchor" href="#modules-minio"></a>5.7 MinIO</h2>
+<h2 id="modules-minio"><a class="anchor" href="#modules-minio"></a>5.8 MinIO</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-minio.adoc"'>
@@ -1105,7 +1211,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>The default image can be overwritten by setting the <code>test-resources.containers.minio.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-seaweedfs"><a class="anchor" href="#modules-seaweedfs"></a>5.8 SeaweedFS</h2>
+<h2 id="modules-seaweedfs"><a class="anchor" href="#modules-seaweedfs"></a>5.9 SeaweedFS</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-seaweedfs.adoc"'>
@@ -1121,7 +1227,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>The default image can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.9 MongoDB</h2>
+<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.10 MongoDB</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mongodb.adoc"'>
@@ -1152,7 +1258,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
 </div>
 
-<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.10 MQTT</h2>
+<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.11 MQTT</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mqtt.adoc"'>
@@ -1309,7 +1415,7 @@ listener 1883</code></pre>
 </div>
 </div>
 
-<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.11 Neo4j</h2>
+<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.12 Neo4j</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-neo4j.adoc"'>
@@ -1325,7 +1431,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.12 RabbitMQ</h2>
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.13 RabbitMQ</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
@@ -1341,7 +1447,7 @@ listener 1883</code></pre>
 <p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.13 Redis</h2>
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.14 Redis</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-redis.adoc"'>
@@ -1384,7 +1490,7 @@ This provider can be configured with a variety of parameters:</p>
 </ul>
 </div>
 
-<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.14 Hazelcast</h2>
+<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.15 Hazelcast</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hazelcast.adoc"'>
@@ -1415,7 +1521,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 </dl>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.15 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.16 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -1515,7 +1621,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.16 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.17 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>

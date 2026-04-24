@@ -2,6 +2,7 @@ io.micronaut.test.extensions.junit5
 io.micronaut.test.extensions.junit5.annotation
 io.micronaut.test.extensions.testresources
 io.micronaut.test.extensions.testresources.annotation
+io.micronaut.testresources.azure
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
 io.micronaut.testresources.consul

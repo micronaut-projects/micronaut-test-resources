@@ -50,6 +50,7 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
     private static final String DEFAULT_REALM = "micronaut";
     private static final String DEFAULT_CLIENT_PREFIX = "micronaut-test-resources-";
     private static final String DEFAULT_ADMIN_USERNAME_PREFIX = "mn-test-resources-admin-";
+    private static final String REALMS_PATH = "/realms/";
 
     private static final String REALM_CONFIGURATION_KEY = "containers.keycloak.realm";
     private static final String CLIENT_ID_CONFIGURATION_KEY = "containers.keycloak.client-id";
@@ -76,6 +77,7 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
     }
 
     @Override
+    @SuppressWarnings("java:S2095") // AbstractTestContainersProvider owns the container lifecycle after creation.
     protected KeycloakContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         KeycloakConfiguration keycloakConfiguration = buildConfiguration(testResourcesConfig);
         return new KeycloakContainer(imageName, keycloakConfiguration)
@@ -87,7 +89,7 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
                 "/opt/keycloak/data/import/" + keycloakConfiguration.realm() + "-realm.json"
             )
             .withCommand("start-dev", "--import-realm")
-            .waitingFor(Wait.forHttp("/realms/" + keycloakConfiguration.realm() + "/.well-known/openid-configuration")
+            .waitingFor(Wait.forHttp(REALMS_PATH + keycloakConfiguration.realm() + "/.well-known/openid-configuration")
                 .forPort(KEYCLOAK_PORT)
                 .forStatusCode(200)
                 .withStartupTimeout(Duration.ofMinutes(3)));
@@ -99,8 +101,8 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
         return switch (propertyName) {
             case CLIENT_ID -> Optional.of(keycloakConfiguration.clientId());
             case CLIENT_SECRET -> Optional.of(keycloakConfiguration.clientSecret());
-            case ISSUER -> Optional.of(baseUrl(container) + "/realms/" + keycloakConfiguration.realm());
-            case JWKS_URL -> Optional.of(baseUrl(container) + "/realms/" + keycloakConfiguration.realm() + "/protocol/openid-connect/certs");
+            case ISSUER -> Optional.of(baseUrl(container) + REALMS_PATH + keycloakConfiguration.realm());
+            case JWKS_URL -> Optional.of(baseUrl(container) + REALMS_PATH + keycloakConfiguration.realm() + "/protocol/openid-connect/certs");
             default -> Optional.empty();
         };
     }

@@ -19,5 +19,20 @@ class MSSQLTestResourceProviderSpec extends Specification {
         value << [StringUtils.TRUE, true, Boolean.TRUE]
     }
 
+    void "shared resource name reuse stays enabled when db-name is set"() {
+        given:
+        def provider = new MSSQLTestResourceProvider()
+        def properties = [
+                "datasources.default.db-type": "mssql",
+                "datasources.default.db-name": "app_db",
+                "datasources.default.test-resources.resource-name": "shared-mssql"
+        ]
+
+        expect:
+        provider.getContainerOwnerKey("datasources.default.url", properties, [:]) == "mssql"
+        provider.getContainerQuery("datasources.default.url", properties, [:]) == [
+                "test-resources.resource-name": "shared-mssql"
+        ]
+    }
 
 }

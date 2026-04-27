@@ -47,6 +47,31 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
     }
 
     @Override
+    protected boolean supportsMultipleDatabases() {
+        return true;
+    }
+
+    @Override
+    protected void createAdditionalDatabase(MariaDBContainer container, String databaseName) {
+        executeInContainer("Failed to create MariaDB database '" + databaseName + "'", () ->
+            container.execInContainer(
+                "mysql",
+                "-h127.0.0.1",
+                "-u",
+                container.getUsername(),
+                "-p" + container.getPassword(),
+                "-e",
+                "CREATE DATABASE " + quoteDatabaseName(databaseName)
+            )
+        );
+    }
+
+    @Override
+    protected Optional<String> extractDefaultDatabaseName(MariaDBContainer container) {
+        return Optional.of(container.getDatabaseName());
+    }
+
+    @Override
     protected Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container) {
         if (container instanceof MariaDBContainer) {
             return Optional.of(MariaDBR2DBCDatabaseContainer.getOptions((MariaDBContainer) container));
@@ -59,4 +84,7 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
         return new MariaDBContainer(imageName);
     }
 
+    private static String quoteDatabaseName(String databaseName) {
+        return "`" + databaseName.replace("`", "``") + "`";
+    }
 }

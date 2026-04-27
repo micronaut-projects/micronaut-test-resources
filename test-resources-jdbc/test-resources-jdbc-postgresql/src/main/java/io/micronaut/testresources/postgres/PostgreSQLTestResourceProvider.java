@@ -54,8 +54,46 @@ public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProv
     }
 
     @Override
+    protected boolean supportsMultipleDatabases() {
+        return true;
+    }
+
+    @Override
+    protected void createAdditionalDatabase(PostgreSQLContainer container, String databaseName) {
+        executeInContainer("Failed to create PostgreSQL database '" + databaseName + "'", () ->
+            container.execInContainer(
+                "psql",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-U",
+                container.getUsername(),
+                "-d",
+                container.getDatabaseName(),
+                "-c",
+                "CREATE DATABASE " + quoteDatabaseName(databaseName)
+            )
+        );
+    }
+
+    @Override
+    protected String jdbcUrlFor(PostgreSQLContainer container, String databaseName) {
+        return replaceDatabaseName(container.getJdbcUrl(), databaseName);
+    }
+
+    @Override
     protected PostgreSQLContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new PostgreSQLContainer(imageName);
     }
 
+    private static String replaceDatabaseName(String jdbcUrl, String databaseName) {
+        int queryIndex = jdbcUrl.indexOf('?');
+        String querySuffix = queryIndex >= 0 ? jdbcUrl.substring(queryIndex) : "";
+        String baseUrl = queryIndex >= 0 ? jdbcUrl.substring(0, queryIndex) : jdbcUrl;
+        int databaseSeparator = baseUrl.lastIndexOf('/');
+        return baseUrl.substring(0, databaseSeparator + 1) + databaseName + querySuffix;
+    }
+
+    private static String quoteDatabaseName(String databaseName) {
+        return "\"" + databaseName.replace("\"", "\"\"") + "\"";
+    }
 }

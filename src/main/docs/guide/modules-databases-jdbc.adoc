@@ -19,6 +19,40 @@ Shared or remote H2 test resources are not supported at this time, so the H2 res
 
 H2 support in this module is currently limited to JDBC test resources. R2DBC and Hibernate Reactive H2 support are out of scope for this feature.
 
+To opt multiple logical JDBC datasources into the same physical test resource, set `datasources.<name>.test-resources.resource-name` to the same value on each datasource:
+
+[configuration]
+----
+datasources:
+  read:
+    dialect: POSTGRES
+    test-resources:
+      resource-name: main-db
+  write:
+    dialect: POSTGRES
+    test-resources:
+      resource-name: main-db
+----
+
+If those datasources also declare different `datasources.<name>.db-name` values, Micronaut Test Resources will create separate databases on the shared PostgreSQL, MySQL, or MariaDB container and return datasource-specific URLs:
+
+[configuration]
+----
+datasources:
+  read:
+    dialect: POSTGRES
+    db-name: read_db
+    test-resources:
+      resource-name: main-db
+  write:
+    dialect: POSTGRES
+    db-name: write_db
+    test-resources:
+      resource-name: main-db
+----
+
+For other engines, `datasources.<name>.test-resources.resource-name` still controls physical container reuse, but engine-specific multi-database bootstrap is only enabled where it is currently supported.
+
 Micronaut Test Resources can also generate an IntelliJ IDEA/DataGrip datasource export file for resolved JDBC datasources.
 The export is opt-in and disabled by default.
 

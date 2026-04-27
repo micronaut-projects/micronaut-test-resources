@@ -9,6 +9,7 @@ Provides support for PostgreSQL R2DBC test resources.
 dependencies {
     implementation(libs.managed.testcontainers.postgres)
     runtimeOnly(project(":micronaut-test-resources-jdbc-postgresql"))
+    testImplementation(project(":micronaut-test-resources-jdbc-postgresql"))
 
     testRuntimeOnly(mnR2dbc.r2dbc.postgresql)
     testRuntimeOnly(mnSql.postgresql)

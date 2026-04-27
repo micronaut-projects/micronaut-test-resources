@@ -53,6 +53,31 @@ public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
     }
 
     @Override
+    protected boolean supportsMultipleDatabases() {
+        return true;
+    }
+
+    @Override
+    protected void createAdditionalDatabase(MySQLContainer container, String databaseName) {
+        executeInContainer("Failed to create MySQL database '" + databaseName + "'", () ->
+            container.execInContainer(
+                DOCKER_OFFICIAL_IMAGE,
+                "-h127.0.0.1",
+                "-u",
+                container.getUsername(),
+                "-p" + container.getPassword(),
+                "-e",
+                "CREATE DATABASE " + quoteDatabaseName(databaseName)
+            )
+        );
+    }
+
+    @Override
+    protected String jdbcUrlFor(MySQLContainer container, String databaseName) {
+        return replaceDatabaseName(container.getJdbcUrl(), databaseName);
+    }
+
+    @Override
     protected MySQLContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         // Testcontainers uses by default the Docker Hub official image, so the MySQL official image needs to be set as compatible substitute
         if (imageName.asCanonicalNameString().startsWith(MYSQL_OFFICIAL_IMAGE)) {
@@ -78,17 +103,34 @@ public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
     }
 
     @Override
-    protected String resolveDbSpecificProperty(String propertyName, JdbcDatabaseContainer<?> container) {
+    protected String resolveDbSpecificProperty(String propertyName,
+                                               JdbcDatabaseContainer<?> container,
+                                               Map<String, Object> properties,
+                                               Map<String, Object> testResourcesConfig) {
         if (X_PROTOCOL_URL.equals(propertyName.substring(propertyName.lastIndexOf(".") + 1))) {
             String username = container.getUsername();
             String password = container.getPassword();
             String host = container.getHost();
             String port = String.valueOf(container.getMappedPort(DEFAULT_X_PROTOCOL_PORT));
-            String schema = container.getDatabaseName();
+            String schema = findRequestedDatabaseName(propertyName, properties)
+                .filter(unused -> supportsMultipleDatabases())
+                .orElseGet(container::getDatabaseName);
 
             return "mysqlx://%s:%s@%s:%s/%s".formatted(username, password, host, port, schema);
         } else {
-            return super.resolveDbSpecificProperty(propertyName, container);
+            return super.resolveDbSpecificProperty(propertyName, container, properties, testResourcesConfig);
         }
+    }
+
+    private static String replaceDatabaseName(String jdbcUrl, String databaseName) {
+        int queryIndex = jdbcUrl.indexOf('?');
+        String querySuffix = queryIndex >= 0 ? jdbcUrl.substring(queryIndex) : "";
+        String baseUrl = queryIndex >= 0 ? jdbcUrl.substring(0, queryIndex) : jdbcUrl;
+        int databaseSeparator = baseUrl.lastIndexOf('/');
+        return baseUrl.substring(0, databaseSeparator + 1) + databaseName + querySuffix;
+    }
+
+    private static String quoteDatabaseName(String databaseName) {
+        return "`" + databaseName.replace("`", "``") + "`";
     }
 }

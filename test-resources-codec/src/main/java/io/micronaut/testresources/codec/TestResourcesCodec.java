@@ -111,6 +111,7 @@ public final class TestResourcesCodec {
         output.writeByte(kind.asByte());
         switch (kind) {
             case NULL -> {
+                // NULL is fully represented by the type marker.
             }
             case BOOLEAN -> output.writeBoolean((Boolean) object);
             case INTEGER -> output.writeInt((Integer) object);

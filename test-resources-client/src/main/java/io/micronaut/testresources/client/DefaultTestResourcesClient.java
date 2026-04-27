@@ -52,6 +52,8 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
     public static final String ACCESS_TOKEN = "Access-Token";
     private static final Pattern JSON_MESSAGE = Pattern.compile("\"message\"\\s*:\\s*\"([^\"]+)\"");
     private static final String INTERNAL_SERVER_ERROR_PREFIX = "Internal Server Error: ";
+    private static final String MESSAGE_KEY = "message";
+    private static final String SERVER_FAILED_WITHOUT_ERROR_BODY = "Server failed without an error body";
 
     private static final String RESOLVABLE_PROPERTIES_URI = "/list";
     private static final String REQUIRED_PROPERTIES_URI = "/requirements/expr";
@@ -215,18 +217,18 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
     private Map<String, Object> fallbackErrorBody(byte[] body) {
         String text = new String(body, StandardCharsets.UTF_8).trim();
         if (text.isEmpty()) {
-            return Map.of("message", "Server failed without an error body");
+            return Map.of(MESSAGE_KEY, SERVER_FAILED_WITHOUT_ERROR_BODY);
         }
         Matcher matcher = JSON_MESSAGE.matcher(text);
         if (matcher.find()) {
-            return Map.of("message", matcher.group(1));
+            return Map.of(MESSAGE_KEY, matcher.group(1));
         }
-        return Map.of("message", text);
+        return Map.of(MESSAGE_KEY, text);
     }
 
     private <T> T handleError(Object payload) {
         if (!(payload instanceof Map<?, ?> map)) {
-            throw new TestResourcesException(payload == null ? "Server failed without an error body" : payload.toString());
+            throw new TestResourcesException(payload == null ? SERVER_FAILED_WITHOUT_ERROR_BODY : payload.toString());
         }
         var allErrors = new LinkedHashSet<String>();
         collectErrors(map, allErrors);
@@ -245,7 +247,7 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
 
     @SuppressWarnings("unchecked")
     private void collectErrors(Map<?, ?> model, LinkedHashSet<String> allErrors) {
-        sanitizeError((String) model.get("message")).ifPresent(allErrors::add);
+        sanitizeError((String) model.get(MESSAGE_KEY)).ifPresent(allErrors::add);
         Object errors = model.get("errors");
         if (errors instanceof List<?> list) {
             for (Object error : list) {

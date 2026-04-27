@@ -159,7 +159,7 @@ class TestResourcesCodecTest extends Specification {
 
     def "rejects oversized maps before encoding"() {
         when:
-        encode((0..TestResourcesCodec.MAX_COLLECTION_ELEMENTS).collectEntries { ["key-$it": it] })
+        encode((0..TestResourcesCodec.MAX_COLLECTION_ELEMENTS).collectEntries { [("key-" + it): it] })
 
         then:
         def ex = thrown(CodecException)

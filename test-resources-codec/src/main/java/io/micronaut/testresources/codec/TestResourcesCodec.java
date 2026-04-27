@@ -62,7 +62,7 @@ public final class TestResourcesCodec {
         }
         var version = input.readByte();
         if (version != VERSION) {
-            throw new CodecException("Unsupported test resources protocol version: " + version);
+            throw new CodecException("Unsupported test resources protocol version: " + Byte.toUnsignedInt(version));
         }
     }
 
@@ -98,8 +98,13 @@ public final class TestResourcesCodec {
 
     @SuppressWarnings("unchecked")
     private static void writeObject(Object object, DataOutputStream output) throws IOException {
+        writeObject(object, output, 0);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void writeObject(Object object, DataOutputStream output, int depth) throws IOException {
         if (object instanceof Result<?> result) {
-            writeObject(result.value(), output);
+            writeObject(result.value(), output, depth);
             return;
         }
         var kind = SupportedType.kindOf(object);
@@ -112,21 +117,25 @@ public final class TestResourcesCodec {
             case LONG -> output.writeLong((Long) object);
             case STRING -> output.writeUTF((String) object);
             case LIST -> {
+                int nestedDepth = validateNestingDepth(depth + 1);
                 Collection<?> collection = (Collection<?>) object;
+                validateCollectionSize("list", collection.size());
                 output.writeInt(collection.size());
                 for (Object value : collection) {
-                    writeObject(value, output);
+                    writeObject(value, output, nestedDepth);
                 }
             }
             case MAP -> {
+                int nestedDepth = validateNestingDepth(depth + 1);
                 Map<?, ?> map = (Map<?, ?>) object;
+                validateCollectionSize("map", map.size());
                 output.writeInt(map.size());
                 for (Map.Entry<?, ?> entry : map.entrySet()) {
                     if (!(entry.getKey() instanceof String key)) {
-                        throw new CodecException("Unsupported map key type: " + entry.getKey().getClass().getName());
+                        throw new CodecException("Unsupported map key type: " + typeName(entry.getKey()));
                     }
                     output.writeUTF(key);
-                    writeObject(entry.getValue(), output);
+                    writeObject(entry.getValue(), output, nestedDepth);
                 }
             }
             default -> throw new CodecException("Unsupported value kind: " + kind);
@@ -177,6 +186,10 @@ public final class TestResourcesCodec {
             }
             throw new CodecException("Unsupported type: " + value.getClass().getName());
         }
+    }
+
+    private static String typeName(Object value) {
+        return value == null ? "null" : value.getClass().getName();
     }
 
     private static int validateCollectionSize(String collectionType, int count) {

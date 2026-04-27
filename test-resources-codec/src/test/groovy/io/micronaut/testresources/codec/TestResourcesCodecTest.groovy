@@ -78,6 +78,15 @@ class TestResourcesCodecTest extends Specification {
         ex.message == "Unsupported map key type: java.lang.Integer"
     }
 
+    def "rejects null map keys"() {
+        when:
+        encode([(null): "value"])
+
+        then:
+        def ex = thrown(CodecException)
+        ex.message == "Unsupported map key type: null"
+    }
+
     def "rejects invalid header"() {
         when:
         TestResourcesCodec.readValue(new ByteArrayInputStream([0, 0, 0, 0, 1, 2, 3] as byte[]))
@@ -90,14 +99,14 @@ class TestResourcesCodecTest extends Specification {
     def "rejects unsupported protocol version"() {
         given:
         def bytes = encode("ok")
-        bytes[4] = (byte) 99
+        bytes[4] = (byte) 255
 
         when:
         TestResourcesCodec.readValue(new ByteArrayInputStream(bytes))
 
         then:
         def ex = thrown(CodecException)
-        ex.message == "Unsupported test resources protocol version: 99"
+        ex.message == "Unsupported test resources protocol version: 255"
     }
 
     def "rejects negative collection sizes before allocation"() {
@@ -133,6 +142,42 @@ class TestResourcesCodecTest extends Specification {
     def "rejects deeply nested maps before stack exhaustion"() {
         when:
         TestResourcesCodec.readValue(new ByteArrayInputStream(payloadWithNestedMaps(TestResourcesCodec.MAX_NESTING_DEPTH + 1)))
+
+        then:
+        def ex = thrown(CodecException)
+        ex.message == "Unsupported nesting depth: ${TestResourcesCodec.MAX_NESTING_DEPTH + 1} (max ${TestResourcesCodec.MAX_NESTING_DEPTH})"
+    }
+
+    def "rejects oversized lists before encoding"() {
+        when:
+        encode((0..TestResourcesCodec.MAX_COLLECTION_ELEMENTS).toList())
+
+        then:
+        def ex = thrown(CodecException)
+        ex.message == "Unsupported list size: ${TestResourcesCodec.MAX_COLLECTION_ELEMENTS + 1} (max ${TestResourcesCodec.MAX_COLLECTION_ELEMENTS})"
+    }
+
+    def "rejects oversized maps before encoding"() {
+        when:
+        encode((0..TestResourcesCodec.MAX_COLLECTION_ELEMENTS).collectEntries { ["key-$it": it] })
+
+        then:
+        def ex = thrown(CodecException)
+        ex.message == "Unsupported map size: ${TestResourcesCodec.MAX_COLLECTION_ELEMENTS + 1} (max ${TestResourcesCodec.MAX_COLLECTION_ELEMENTS})"
+    }
+
+    def "rejects deeply nested lists before encoding stack exhaustion"() {
+        when:
+        encode(nestedLists(TestResourcesCodec.MAX_NESTING_DEPTH + 1))
+
+        then:
+        def ex = thrown(CodecException)
+        ex.message == "Unsupported nesting depth: ${TestResourcesCodec.MAX_NESTING_DEPTH + 1} (max ${TestResourcesCodec.MAX_NESTING_DEPTH})"
+    }
+
+    def "rejects deeply nested maps before encoding stack exhaustion"() {
+        when:
+        encode(nestedMaps(TestResourcesCodec.MAX_NESTING_DEPTH + 1))
 
         then:
         def ex = thrown(CodecException)
@@ -183,5 +228,21 @@ class TestResourcesCodecTest extends Specification {
         data.writeByte(TestResourcesCodec.SupportedType.NULL.asByte())
         data.flush()
         output.toByteArray()
+    }
+
+    private static Object nestedLists(int depth) {
+        def value = null
+        depth.times {
+            value = [value]
+        }
+        value
+    }
+
+    private static Object nestedMaps(int depth) {
+        def value = null
+        depth.times {
+            value = [nested: value]
+        }
+        value
     }
 }

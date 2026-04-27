@@ -69,7 +69,7 @@ public class TestResourcesBodyHandler<T> implements MessageBodyHandler<T> {
             }
             return (T) value;
         } catch (IOException e) {
-            throw new CodecException("Unable to decode the test resources response", e);
+            throw new CodecException("Unable to decode the test resources payload", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class TestResourcesBodyHandler<T> implements MessageBodyHandler<T> {
             outgoingHeaders.set(HttpHeaders.CONTENT_TYPE, TEST_RESOURCES_BINARY);
             TestResourcesCodec.writeValue(object, outputStream);
         } catch (IOException e) {
-            throw new CodecException("Unable to encode the test resources response", e);
+            throw new CodecException("Unable to encode the test resources payload", e);
         }
     }
 }

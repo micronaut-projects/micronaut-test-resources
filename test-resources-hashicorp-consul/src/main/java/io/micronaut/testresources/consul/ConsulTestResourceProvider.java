@@ -40,7 +40,7 @@ public class ConsulTestResourceProvider extends AbstractTestContainersProvider<C
 
     public static final String HASHICORP_CONSUL_KV_PROPERTIES_KEY =
         "containers.hashicorp-consul.kv-properties";
-    public static final String DEFAULT_IMAGE = "hashicorp/consul:1.15";
+    public static final String DEFAULT_IMAGE = "hashicorp/consul:1.15.4";
     public static final int CONSUL_HTTP_PORT = 8500;
     public static final String SIMPLE_NAME = "hashicorp-consul";
     public static final String DISPLAY_NAME = "Consul";

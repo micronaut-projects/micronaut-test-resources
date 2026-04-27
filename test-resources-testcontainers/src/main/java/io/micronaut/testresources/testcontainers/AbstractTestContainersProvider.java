@@ -25,6 +25,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_MARIADB_IMAGE;
+import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_MYSQL_IMAGE;
+import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_POSTGRES_IMAGE;
 import static io.micronaut.testresources.testcontainers.TestContainerMetadataSupport.SPECIFIC_ORDER;
 
 /**
@@ -116,7 +119,7 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
             Map<String, Object> containerQuery = getContainerQuery(propertyName, properties, testResourcesConfig);
             T container = TestContainers.getOrCreate(propertyName, containerOwnerKey, getSimpleName(),
                 scope, containerQuery, () -> {
-                    String defaultImageName = getDefaultImageName();
+                    String defaultImageName = getEffectiveDefaultImageName();
                     DockerImageName imageName = DockerImageName.parse(defaultImageName);
                     Optional<TestContainerMetadata> metadata =
                         TestContainerMetadataSupport.containerMetadataFor(
@@ -180,6 +183,15 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                                                     Map<String, Object> properties,
                                                     Map<String, Object> testResourcesConfig) {
         return properties;
+    }
+
+    private String getEffectiveDefaultImageName() {
+        return switch (getDefaultImageName()) {
+            case "mariadb" -> DEFAULT_MARIADB_IMAGE;
+            case "mysql:8.4.5" -> DEFAULT_MYSQL_IMAGE;
+            case "postgres" -> DEFAULT_POSTGRES_IMAGE;
+            default -> getDefaultImageName();
+        };
     }
 
     protected void configureContainer(T container, Map<String, Object> properties,

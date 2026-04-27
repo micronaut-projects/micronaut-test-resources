@@ -33,7 +33,7 @@ import java.util.Set;
 public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Neo4jContainer> {
 
     public static final String NEO4J_SERVER_URI = "neo4j.uri";
-    public static final String DEFAULT_IMAGE = "neo4j";
+    public static final String DEFAULT_IMAGE = "neo4j:5.26.25";
 
     private static final Set<String> SUPPORTED_PROPERTIES;
     public static final String DISPLAY_NAME = "Neo4J";

@@ -36,7 +36,7 @@ import java.util.Set;
 public class HazelcastTestResourceProvider extends AbstractTestContainersProvider<GenericContainer<?>> {
 
     public static final String HAZELCAST_ADDRESSES = "hazelcast.client.network.addresses";
-    public static final String DEFAULT_IMAGE = "hazelcast/hazelcast:latest-slim";
+    public static final String DEFAULT_IMAGE = "hazelcast/hazelcast:5.6.0-slim";
     public static final String DISPLAY_NAME = "Hazelcast";
     public static final String SIMPLE_NAME = "hazelcast";
     private static final int DEFAULT_PORT = 5701;

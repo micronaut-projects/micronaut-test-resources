@@ -7,12 +7,12 @@ Micronaut Test Resources provides support for the following databases:
 |Database | JDBC | R2DBC | Database identifier | Default image
 
 | https://www.h2database.com/html/main.html[H2] | Yes | No | `h2` | n/a
-| https://mariadb.org/[MariaDB] | Yes | Yes | `mariadb` | `mariadb`
-| https://www.mysql.com/[MySQL] | Yes | Yes | `mysql` | `container-registry.oracle.com/mysql/community-server`
+| https://mariadb.org/[MariaDB] | Yes | Yes | `mariadb` | `mariadb:11.8.6`
+| https://www.mysql.com/[MySQL] | Yes | Yes | `mysql` | `container-registry.oracle.com/mysql/community-server:8.4.8`
 | https://www.oracle.com/database/technologies/appdev/xe.html[Oracle Database XE] | Yes | Yes | `oracle-xe` | `gvenzl/oracle-xe:slim-faststart`
 | https://www.oracle.com/database/free/[Oracle Database Free] | Yes | Yes | `oracle` | `gvenzl/oracle-free:slim-faststart`
-| https://www.postgresql.org/[PostgreSQL] | Yes | Yes | `postgres` | `postgres`
-| https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | `mssql` | `mcr.microsoft.com/mssql/server:2022-latest`
+| https://www.postgresql.org/[PostgreSQL] | Yes | Yes | `postgres` | `postgres:18.3`
+| https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | `mssql` | `mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04`
 
 |===
 

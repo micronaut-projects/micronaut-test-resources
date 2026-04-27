@@ -49,7 +49,7 @@ public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
 
     @Override
     protected String getDefaultImageName() {
-        return MYSQL_OFFICIAL_IMAGE;
+        return "container-registry.oracle.com/mysql/community-server:8.4.8";
     }
 
     @Override

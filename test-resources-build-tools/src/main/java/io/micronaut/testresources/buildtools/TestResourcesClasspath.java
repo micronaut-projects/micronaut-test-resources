@@ -47,6 +47,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_ELASTICSEARCH = "micronaut-elasticsearch";
     private static final String MICRONAUT_KAFKA = "micronaut-kafka";
     private static final String MICRONAUT_MQTT = "micronaut-mqtt";
+    private static final String MICRONAUT_SECURITY_OAUTH2 = "micronaut-security-oauth2";
     private static final String MICRONAUT_RABBITMQ = "micronaut-rabbitmq";
     private static final String MICRONAUT_REDIS = "micronaut-redis-lettuce";
     private static final String MICRONAUT_DISCOVERY_CLIENT = "micronaut-discovery-client";
@@ -96,6 +97,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MYSQL_MODULE = "jdbc-mysql";
     private static final String REACTIVE_MYSQL_MODULE = "r2dbc-mysql";
     private static final String NEO4J_MODULE = "neo4j";
+    private static final String OAUTH2_MODULE = "oauth2";
     private static final String ORACLE_FREE_MODULE = "jdbc-oracle-free";
     private static final String RABBITMQ_MODULE = "rabbitmq";
     private static final String REACTIVE_ORACLE_FREE_MODULE = "r2dbc-oracle-free";
@@ -175,6 +177,7 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(MICRONAUT_ELASTICSEARCH, ELASTICSEARCH_MODULE);
             m.onArtifact(MICRONAUT_KAFKA, KAFKA_MODULE);
             m.onArtifact(name -> name.startsWith(MICRONAUT_MQTT), deps -> true, HIVEMQ_MODULE);
+            m.onArtifact(MICRONAUT_SECURITY_OAUTH2, OAUTH2_MODULE);
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
             m.onModule(MICRONAUT_MONGO_SYNC, MONGODB_MODULE);
             m.onModule(MICRONAUT_MONGO_REACTIVE, MONGODB_MODULE);

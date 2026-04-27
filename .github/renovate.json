@@ -32,8 +32,8 @@
         "/^test-resources-redis\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
         "/^test-resources-solr\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
         "/^test-resources-jdbc\\/test-resources-jdbc-(mariadb|mssql|mysql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-r2dbc\\/test-resources-r2dbc-(mariadb|mssql|mysql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-hibernate-reactive\\/test-resources-hibernate-reactive-(mariadb|mssql|mysql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/"
+        "/^test-resources-r2dbc\\/test-resources-r2dbc-(mariadb|mssql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
+        "/^test-resources-hibernate-reactive\\/test-resources-hibernate-reactive-(mariadb|mssql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/"
       ],
       "matchStrings": [
         "(?:DEFAULT(?:_[A-Z0-9]+)*_IMAGE(?:_NAME)?\\s*=\\s*|return\\s+)\"(?<depName>[a-z0-9.-]+(?:\\/[a-z0-9._-]+)*):(?<currentValue>[A-Za-z0-9_.-]+)\""

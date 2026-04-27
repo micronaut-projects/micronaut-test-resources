@@ -21,8 +21,6 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 
-import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_MYSQL_IMAGE;
-
 /**
  * A test resource provider which will spawn a MySQL test container.
  */
@@ -41,7 +39,7 @@ public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernat
 
     @Override
     protected String getDefaultImageName() {
-        return DEFAULT_MYSQL_IMAGE;
+        return "mysql:8.4.5";
     }
 
     @Override

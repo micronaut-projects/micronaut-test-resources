@@ -21,8 +21,6 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 
-import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_MARIADB_IMAGE;
-
 /**
  * A test resource provider which will spawn a MariaDB test container.
  */
@@ -41,7 +39,7 @@ public class MariaDBTestResourceProvider extends AbstractJdbcTestResourceProvide
 
     @Override
     protected String getDefaultImageName() {
-        return DEFAULT_MARIADB_IMAGE;
+        return "mariadb";
     }
 
     @Override

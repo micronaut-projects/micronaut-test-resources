@@ -25,8 +25,6 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_MARIADB_IMAGE;
-
 /**
  * A test resource provider for reactive MariaDB.
  */
@@ -45,7 +43,7 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
 
     @Override
     protected String getDefaultImageName() {
-        return DEFAULT_MARIADB_IMAGE;
+        return "mariadb";
     }
 
     @Override

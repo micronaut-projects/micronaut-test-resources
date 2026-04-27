@@ -15,7 +15,9 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -109,51 +111,141 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
             if (firstPass.isPresent()) {
                 return firstPass;
             }
-            return resolveProperty(propertyName,
-                TestContainers.getOrCreate(propertyName, this.getClass(), getSimpleName(),
-                    properties, () -> {
-                        String defaultImageName = getDefaultImageName();
-                        DockerImageName imageName = DockerImageName.parse(defaultImageName);
-                        Optional<TestContainerMetadata> metadata =
-                            TestContainerMetadataSupport.containerMetadataFor(
-                                    Collections.singletonList(getSimpleName()), testResourcesConfig)
-                                .findAny();
-                        if (metadata.isPresent()) {
-                            TestContainerMetadata md = metadata.get();
-                            if (md.getImageName().isPresent()) {
-                                imageName = DockerImageName.parse(md.getImageName().get())
-                                    .asCompatibleSubstituteFor(defaultImageName);
-                            }
-                            if (md.getImageTag().isPresent()) {
-                                imageName = imageName.withTag(md.getImageTag().get());
-                            }
+            Scope scope = Scope.from(properties);
+            String containerOwnerKey = getContainerOwnerKey(propertyName, properties, testResourcesConfig);
+            Map<String, Object> containerQuery = getContainerQuery(propertyName, properties, testResourcesConfig);
+            T container = TestContainers.getOrCreate(propertyName, containerOwnerKey, getSimpleName(),
+                scope, containerQuery, () -> {
+                    String defaultImageName = getDefaultImageName();
+                    DockerImageName imageName = DockerImageName.parse(defaultImageName);
+                    Optional<TestContainerMetadata> metadata =
+                        TestContainerMetadataSupport.containerMetadataFor(
+                                Collections.singletonList(getSimpleName()), testResourcesConfig)
+                            .findAny();
+                    if (metadata.isPresent()) {
+                        TestContainerMetadata md = metadata.get();
+                        if (md.getImageName().isPresent()) {
+                            imageName = DockerImageName.parse(md.getImageName().get())
+                                .asCompatibleSubstituteFor(defaultImageName);
                         }
-                        return imageName;
-                    }, imageName -> {
-                        Optional<TestContainerMetadata> metadata =
-                            TestContainerMetadataSupport.containerMetadataFor(
-                                    Collections.singletonList(getSimpleName()), testResourcesConfig)
-                                .findAny();
-                        T container = createContainer(imageName, properties, testResourcesConfig);
-                        configureContainer(container, properties, testResourcesConfig);
-                        metadata.ifPresent(
-                            md -> TestContainerMetadataSupport.applyMetadata(md, container));
-                        return container;
-                    }));
+                        if (md.getImageTag().isPresent()) {
+                            imageName = imageName.withTag(md.getImageTag().get());
+                        }
+                    }
+                    return imageName;
+                }, imageName -> {
+                    Optional<TestContainerMetadata> metadata =
+                        TestContainerMetadataSupport.containerMetadataFor(
+                                Collections.singletonList(getSimpleName()), testResourcesConfig)
+                            .findAny();
+                    T createdContainer = createContainer(imageName, properties, testResourcesConfig);
+                    configureContainer(createdContainer, properties, testResourcesConfig);
+                    metadata.ifPresent(
+                        md -> TestContainerMetadataSupport.applyMetadata(md, createdContainer));
+                    return createdContainer;
+                });
+            prepareContainer(propertyName, container, properties, testResourcesConfig);
+            return resolveProperty(propertyName, container, properties, testResourcesConfig);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Returns the owner key used to scope cached containers for this resolver.
+     * Subclasses may override to share a physical container across multiple logical
+     * consumers, but should keep the returned key stable for equivalent requests.
+     *
+     * @param propertyName the property being resolved
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the owner key used for container reuse
+     */
+    protected String getContainerOwnerKey(String propertyName,
+                                          Map<String, Object> properties,
+                                          Map<String, Object> testResourcesConfig) {
+        return getClass().getName();
+    }
+
+    /**
+     * Returns the query object used to look up or create a cached container.
+     * Subclasses may override to normalize request-specific properties into a
+     * stable physical-resource identity while preserving any keys needed for safe reuse.
+     *
+     * @param propertyName the property being resolved
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the container query used for cache lookup
+     */
+    protected Map<String, Object> getContainerQuery(String propertyName,
+                                                    Map<String, Object> properties,
+                                                    Map<String, Object> testResourcesConfig) {
+        return properties;
     }
 
     protected void configureContainer(T container, Map<String, Object> properties,
                                       Map<String, Object> testResourcesConfig) {
     }
 
+    protected void prepareContainer(String propertyName,
+                                    T container,
+                                    Map<String, Object> properties,
+                                    Map<String, Object> testResourcesConfig) {
+    }
+
+    /**
+     * Resolves the requested property from the started container with access to the
+     * full requested-property map and test-resources configuration. Subclasses may
+     * override when the resolved value depends on request metadata in addition to the
+     * container itself.
+     *
+     * @param propertyName the property being resolved
+     * @param container the started container
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the resolved value, if any
+     */
+    protected Optional<String> resolveProperty(String propertyName,
+                                               T container,
+                                               Map<String, Object> properties,
+                                               Map<String, Object> testResourcesConfig) {
+        return resolveProperty(propertyName, container);
+    }
+
     protected abstract Optional<String> resolveProperty(String propertyName, T container);
+
+    /**
+     * Executes a command inside a running container and converts failures into a
+     * consistent {@link IllegalStateException}. Interrupted executions preserve the
+     * current thread interrupt status before the exception is raised.
+     *
+     * @param failureMessage the message to use when the command fails
+     * @param command the command to execute
+     */
+    protected final void executeInContainer(String failureMessage, ContainerCommand command) {
+        try {
+            Container.ExecResult result = command.execute();
+            if (result.getExitCode() != 0) {
+                throw new IllegalStateException(failureMessage + ": " + result.getStderr());
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(failureMessage, e);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalStateException(failureMessage, e);
+        }
+    }
 
     protected final String stringOrNull(Object value) {
         if (value == null) {
             return null;
         }
         return String.valueOf(value);
+    }
+
+    @FunctionalInterface
+    protected interface ContainerCommand {
+        Container.ExecResult execute() throws Exception;
     }
 }

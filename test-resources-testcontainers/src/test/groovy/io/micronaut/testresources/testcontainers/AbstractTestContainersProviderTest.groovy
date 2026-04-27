@@ -8,6 +8,8 @@ class AbstractTestContainersProviderTest extends Specification {
         def provider = Mock(AbstractTestContainersProvider) {
             getDefaultImageName() >> 'my-image'
             getSimpleName() >> 'test'
+            getContainerOwnerKey(_, _, _) >> AbstractTestContainersProviderTest.name
+            getContainerQuery(_, _, _) >> [request: 'value']
         }
 
         when:

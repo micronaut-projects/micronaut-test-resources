@@ -11,3 +11,5 @@ Alternatively, if you have multiple MongoDB servers declared in your configurati
 For example, if you have `mongodb.servers.users` and `mongodb.servers.books` defined, then the test resources service will supply the `mongodb.servers.users.uri` and `mondodb.servers.books.uri` properties.
 
 Note that in this case, a _single_ server is used, the value of `test-resources.containers.mongodb.db-name` is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively `users` and `books`).
+
+This existing multiplexing behavior is unchanged by `test-resources.resource-name`. MongoDB already reuses one physical server across named logical databases when you configure `mongodb.servers.*`.

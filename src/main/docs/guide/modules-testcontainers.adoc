@@ -264,3 +264,5 @@ test-resources:
 It's worth noting that such containers need to be declared on the <<#advanced-networking,same network>> in order to be able to communicate with each other.
 
 WARNING: Dependencies between containers **only work between generic containers**. It is not possible to create a dependency between a generic container and a container created with the other test resources resolvers. For example, you cannot add a dependency on a container which provides a MySQL database by adding a `depends-on: mysql`.
+
+Container-backed resolvers can distinguish between the logical consumer name and the physical test resource identity. When multiple consumers set the same `test-resources.resource-name`, Micronaut Test Resources can reuse one physical container for the same provider and scope. Supported database resolvers can also combine that shared resource name with per-datasource `db-name` values to create multiple databases on the same shared container. Without that opt-in property, each logical consumer keeps the default isolated behavior.

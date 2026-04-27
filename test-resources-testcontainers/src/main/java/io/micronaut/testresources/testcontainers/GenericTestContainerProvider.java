@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.testcontainers;
 
+import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -127,8 +128,9 @@ public class GenericTestContainerProvider implements ToggableTestResourcesResolv
             .findFirst()
             .map(md -> {
                 DockerImageName imageName = DockerImageName.parse(md.getImageName().get());
-                return new MappedContainer(md, TestContainers.getOrCreate(propertyName, GenericTestContainerProvider.class,
+                return new MappedContainer(md, TestContainers.getOrCreate(propertyName, GenericTestContainerProvider.class.getName(),
                     md.getId(),
+                    Scope.from(properties),
                     properties,
                     () -> imageName,
                     unused -> {

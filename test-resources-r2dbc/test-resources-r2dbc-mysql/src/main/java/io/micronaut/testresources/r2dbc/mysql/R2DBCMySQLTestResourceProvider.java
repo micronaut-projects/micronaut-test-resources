@@ -47,6 +47,31 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
     }
 
     @Override
+    protected boolean supportsMultipleDatabases() {
+        return true;
+    }
+
+    @Override
+    protected void createAdditionalDatabase(MySQLContainer container, String databaseName) {
+        executeInContainer("Failed to create MySQL database '" + databaseName + "'", () ->
+            container.execInContainer(
+                "mysql",
+                "-h127.0.0.1",
+                "-u",
+                container.getUsername(),
+                "-p" + container.getPassword(),
+                "-e",
+                "CREATE DATABASE " + quoteDatabaseName(databaseName)
+            )
+        );
+    }
+
+    @Override
+    protected Optional<String> extractDefaultDatabaseName(MySQLContainer container) {
+        return Optional.of(container.getDatabaseName());
+    }
+
+    @Override
     protected Optional<ConnectionFactoryOptions> extractOptions(GenericContainer<?> container) {
         if (container instanceof MySQLContainer) {
             return Optional.of(MySQLR2DBCDatabaseContainer.getOptions((MySQLContainer) container));
@@ -59,4 +84,7 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
         return new MySQLContainer(imageName);
     }
 
+    private static String quoteDatabaseName(String databaseName) {
+        return "`" + databaseName.replace("`", "``") + "`";
+    }
 }

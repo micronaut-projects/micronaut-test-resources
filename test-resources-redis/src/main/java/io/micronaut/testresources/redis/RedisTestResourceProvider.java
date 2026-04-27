@@ -34,7 +34,7 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Re
 
     public static final String REDIS_URI = "redis.uri";
 
-    public static final String DEFAULT_IMAGE = RedisContainer.DEFAULT_IMAGE_NAME.asCanonicalNameString();
+    public static final String DEFAULT_IMAGE = "redis:6.2.21";
     public static final String SIMPLE_NAME = "redis";
 
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URI);

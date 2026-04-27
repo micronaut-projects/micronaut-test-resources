@@ -2,7 +2,7 @@ Infinispan support
 
 Infinispan support will automatically start an Infinispan container and provide the values of the `infinispan.client.hotrod.server.host` and `infinispan.client.hotrod.server.port` properties.
 
-The default image can be overwritten by setting the `test-resources.containers.infinispan.image-name` property.
+The default image (`quay.io/infinispan/server:16.1.3`) can be overwritten by setting the `test-resources.containers.infinispan.image-name` property.
 The default version can be overwritten by setting the `test-resources.containers.infinispan.image-tag` property.
 
 Resolved properties:

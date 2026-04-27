@@ -20,7 +20,7 @@ class OpenSearchStartedSpec extends AbstractOpenSearchSpec {
         listContainers().size() == 1
         with(TestContainers.listByScope("opensearch").get(Scope.of("opensearch"))) {
             size() == 1
-            get(0).dockerImageName == "opensearchproject/opensearch:latest"
+            get(0).dockerImageName == OpenSearchTestResourceProvider.DEFAULT_IMAGE
         }
 
         where:

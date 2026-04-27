@@ -46,7 +46,7 @@ public class InfinispanTestResourceProvider extends AbstractTestContainersProvid
 
     @Override
     protected String getDefaultImageName() {
-        return "infinispan/server";
+        return "quay.io/infinispan/server:16.1.3";
     }
 
     @Override

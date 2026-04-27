@@ -2,7 +2,7 @@ MongoDB support will automatically start a https://www.mongodb.com[MongoDB conta
 
 The container is configured with replica set functionality enabled.
 
-The default image can be overwritten by setting the `test-resources.containers.mongodb.image-name` property.
+The default image (`mongo:8.2.7`) can be overwritten by setting the `test-resources.containers.mongodb.image-name` property.
 
 The default database name can be overwritten by setting the `test-resources.containers.mongodb.db-name` property.
 

@@ -66,6 +66,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#getNetworks()" tabindex="0">getNetworks()</a></li>
 <li><a href="#closeScope(java.lang.String)" tabindex="0">closeScope(String)</a></li>
 <li><a href="#findByRequestedProperty(io.micronaut.testresources.core.Scope,java.lang.String)" tabindex="0">findByRequestedProperty(Scope, String)</a></li>
+<li><a href="#hasDatabase(org.testcontainers.containers.GenericContainer,java.lang.String)" tabindex="0">hasDatabase(GenericContainer, String)</a></li>
+<li><a href="#rememberDatabase(org.testcontainers.containers.GenericContainer,java.lang.String)" tabindex="0">rememberDatabase(GenericContainer, String)</a></li>
+<li><a href="#createDatabaseIfMissing(org.testcontainers.containers.GenericContainer,java.lang.String,java.lang.Runnable)" tabindex="0">createDatabaseIfMissing(GenericContainer, String, Runnable)</a></li>
 </ol>
 </li>
 </ol>
@@ -110,12 +113,21 @@ the <a href="#closeAll()"><code>closeAll()</code></a> method.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#closeScope(java.lang.String)" class="member-name-link">closeScope</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findByRequestedProperty(io.micronaut.testresources.core.Scope,java.lang.String)" class="member-name-link">findByRequestedProperty</a><wbr>(<a href="../core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>&nbsp;scope,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createDatabaseIfMissing(org.testcontainers.containers.GenericContainer,java.lang.String,java.lang.Runnable)" class="member-name-link">createDatabaseIfMissing</a><wbr>(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;databaseCreator)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, org.testcontainers.containers.Network&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNetworks()" class="member-name-link">getNetworks</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findByRequestedProperty(io.micronaut.testresources.core.Scope,java.lang.String)" class="member-name-link">findByRequestedProperty</a><wbr>(<a href="../core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>&nbsp;scope,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, org.testcontainers.containers.Network&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNetworks()" class="member-name-link">getNetworks</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasDatabase(org.testcontainers.containers.GenericContainer,java.lang.String)" class="member-name-link">hasDatabase</a><wbr>(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="../core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#listAll()" class="member-name-link">listAll</a>()</code></div>
@@ -133,9 +145,13 @@ the <a href="#closeAll()"><code>closeAll()</code></a> method.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the list of containers which are being pulled.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startingContainers()" class="member-name-link">startingContainers</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rememberDatabase(org.testcontainers.containers.GenericContainer,java.lang.String)" class="member-name-link">rememberDatabase</a><wbr>(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startingContainers()" class="member-name-link">startingContainers</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the list of containers which are being started.</div>
 </div>
 </div>
@@ -240,6 +256,34 @@ the <a href="#closeAll()"><code>closeAll()</code></a> method.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.testcontainers.containers.GenericContainer&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">findByRequestedProperty</span><wbr><span class="parameters">(<a href="../core/Scope.html" title="class in io.micronaut.testresources.core">Scope</a>&nbsp;scope,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;property)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasDatabase(org.testcontainers.containers.GenericContainer,java.lang.String)">
+<h3>hasDatabase</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasDatabase</span><wbr><span class="parameters">(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="rememberDatabase(org.testcontainers.containers.GenericContainer,java.lang.String)">
+<h3>rememberDatabase</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rememberDatabase</span><wbr><span class="parameters">(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="createDatabaseIfMissing(org.testcontainers.containers.GenericContainer,java.lang.String,java.lang.Runnable)">
+<h3>createDatabaseIfMissing</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">createDatabaseIfMissing</span><wbr><span class="parameters">(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;databaseCreator)</span></div>
 </div>
 </section>
 </li>

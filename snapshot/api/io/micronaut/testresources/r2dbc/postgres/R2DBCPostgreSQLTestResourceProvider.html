@@ -54,6 +54,7 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
@@ -73,6 +74,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#getSimpleName()" tabindex="0">getSimpleName()</a></li>
 <li><a href="#getDefaultImageName()" tabindex="0">getDefaultImageName()</a></li>
 <li><a href="#getDbTypes()" tabindex="0">getDbTypes()</a></li>
+<li><a href="#supportsMultipleDatabases()" tabindex="0">supportsMultipleDatabases()</a></li>
+<li><a href="#createAdditionalDatabase(org.testcontainers.postgresql.PostgreSQLContainer,java.lang.String)" tabindex="0">createAdditionalDatabase(PostgreSQLContainer, String)</a></li>
+<li><a href="#extractDefaultDatabaseName(org.testcontainers.postgresql.PostgreSQLContainer)" tabindex="0">extractDefaultDatabaseName(PostgreSQLContainer)</a></li>
 <li><a href="#extractOptions(org.testcontainers.containers.GenericContainer)" tabindex="0">extractOptions(GenericContainer)</a></li>
 <li><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" tabindex="0">createContainer(DockerImageName, Map, Map)</a></li>
 </ol>
@@ -105,6 +109,15 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h3 id="nested-classes-inherited-from-class-io.micronaut.testresources.testcontainers.AbstractTestContainersProvider">Nested classes/interfaces inherited from class&nbsp;<a href="../../testcontainers/AbstractTestContainersProvider.html#nested-class-summary" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></h3>
+<code><a href="../../testcontainers/AbstractTestContainersProvider.ContainerCommand.html" title="interface in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider.ContainerCommand</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -150,12 +163,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.postgresql.PostgreSQLContainer</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" class="member-name-link">createContainer</a><wbr>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createAdditionalDatabase(org.testcontainers.postgresql.PostgreSQLContainer,java.lang.String)" class="member-name-link">createAdditionalDatabase</a><wbr>(org.testcontainers.postgresql.PostgreSQLContainer&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates an additional logical database inside an already started container.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.testcontainers.postgresql.PostgreSQLContainer</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" class="member-name-link">createContainer</a><wbr>(org.testcontainers.utility.DockerImageName&nbsp;imageName,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates the test container.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractDefaultDatabaseName(org.testcontainers.postgresql.PostgreSQLContainer)" class="member-name-link">extractDefaultDatabaseName</a><wbr>(org.testcontainers.postgresql.PostgreSQLContainer&nbsp;container)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Extracts the default logical database name already configured on the running
+container.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;io.r2dbc.spi.ConnectionFactoryOptions&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractOptions(org.testcontainers.containers.GenericContainer)" class="member-name-link">extractOptions</a><wbr>(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container)</code></div>
@@ -181,15 +206,21 @@ for debugging purposes.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the name of the resource resolver, for example "kafka" or "mysql".</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#supportsMultipleDatabases()" class="member-name-link">supportsMultipleDatabases</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Indicates whether this provider can create additional logical databases inside the
+same running container.</div>
+</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider">Methods inherited from class&nbsp;<a href="../core/AbstractR2DBCTestResourceProvider.html#method-summary" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></h3>
-<code><a href="../core/AbstractR2DBCTestResourceProvider.html#getRequiredProperties(java.lang.String)" title="getRequiredProperties(String)">getRequiredProperties</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#getRequiredPropertyEntries()" title="getRequiredPropertyEntries()">getRequiredPropertyEntries</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" title="getResolvableProperties(Map, Map)">getResolvableProperties</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#resolveProperty(java.lang.String,T)" title="resolveProperty(String, PostgreSQLContainer)">resolveProperty</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" title="resolveWithoutContainer(String, Map, Map)">resolveWithoutContainer</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" title="shouldAnswer(String, Map, Map)">shouldAnswer</a></code></div>
+<code><a href="../core/AbstractR2DBCTestResourceProvider.html#findRequestedDatabaseName(java.lang.String,java.util.Map)" title="findRequestedDatabaseName(String, Map)">findRequestedDatabaseName</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#getContainerOwnerKey(java.lang.String,java.util.Map,java.util.Map)" title="getContainerOwnerKey(String, Map, Map)">getContainerOwnerKey</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#getContainerQuery(java.lang.String,java.util.Map,java.util.Map)" title="getContainerQuery(String, Map, Map)">getContainerQuery</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#getRequiredProperties(java.lang.String)" title="getRequiredProperties(String)">getRequiredProperties</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#getRequiredPropertyEntries()" title="getRequiredPropertyEntries()">getRequiredPropertyEntries</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" title="getResolvableProperties(Map, Map)">getResolvableProperties</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#prepareContainer(java.lang.String,T,java.util.Map,java.util.Map)" title="prepareContainer(String, PostgreSQLContainer, Map, Map)">prepareContainer</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#resolveProperty(java.lang.String,T)" title="resolveProperty(String, PostgreSQLContainer)">resolveProperty</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#resolveProperty(java.lang.String,T,java.util.Map,java.util.Map)" title="resolveProperty(String, PostgreSQLContainer, Map, Map)">resolveProperty</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" title="resolveWithoutContainer(String, Map, Map)">resolveWithoutContainer</a>, <a href="../core/AbstractR2DBCTestResourceProvider.html#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" title="shouldAnswer(String, Map, Map)">shouldAnswer</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.testresources.testcontainers.AbstractTestContainersProvider">Methods inherited from class&nbsp;<a href="../../testcontainers/AbstractTestContainersProvider.html#method-summary" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></h3>
-<code><a href="../../testcontainers/AbstractTestContainersProvider.html#configureContainer(T,java.util.Map,java.util.Map)" title="configureContainer(PostgreSQLContainer, Map, Map)">configureContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getName()" title="getName()">getName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getOrder()" title="getOrder()">getOrder</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#resolve(java.lang.String,java.util.Map,java.util.Map)" title="resolve(String, Map, Map)">resolve</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#stringOrNull(java.lang.Object)" title="stringOrNull(Object)">stringOrNull</a></code></div>
+<code><a href="../../testcontainers/AbstractTestContainersProvider.html#configureContainer(T,java.util.Map,java.util.Map)" title="configureContainer(PostgreSQLContainer, Map, Map)">configureContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#executeInContainer(java.lang.String,io.micronaut.testresources.testcontainers.AbstractTestContainersProvider.ContainerCommand)" title="executeInContainer(String, AbstractTestContainersProvider.ContainerCommand)">executeInContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getName()" title="getName()">getName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getOrder()" title="getOrder()">getOrder</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#resolve(java.lang.String,java.util.Map,java.util.Map)" title="resolve(String, Map, Map)">resolve</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#stringOrNull(java.lang.Object)" title="stringOrNull(Object)">stringOrNull</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -309,6 +340,64 @@ for debugging purposes.</div>
 <dd><code><a href="../core/AbstractR2DBCTestResourceProvider.html#getDbTypes()">getDbTypes</a></code>&nbsp;in class&nbsp;<code><a href="../core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>&lt;org.testcontainers.postgresql.PostgreSQLContainer&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>the list of db types</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="supportsMultipleDatabases()">
+<h3>supportsMultipleDatabases</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supportsMultipleDatabases</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../core/AbstractR2DBCTestResourceProvider.html#supportsMultipleDatabases()">AbstractR2DBCTestResourceProvider</a></code></span></div>
+<div class="block">Indicates whether this provider can create additional logical databases inside the
+same running container. Subclasses overriding this method must also implement the
+matching database-creation hooks for the same container type.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../core/AbstractR2DBCTestResourceProvider.html#supportsMultipleDatabases()">supportsMultipleDatabases</a></code>&nbsp;in class&nbsp;<code><a href="../core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>&lt;org.testcontainers.postgresql.PostgreSQLContainer&gt;</code></dd>
+<dt>Returns:</dt>
+<dd><code>true</code> when additional logical databases are supported</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="createAdditionalDatabase(org.testcontainers.postgresql.PostgreSQLContainer,java.lang.String)">
+<h3>createAdditionalDatabase</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">createAdditionalDatabase</span><wbr><span class="parameters">(org.testcontainers.postgresql.PostgreSQLContainer&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../core/AbstractR2DBCTestResourceProvider.html#createAdditionalDatabase(T,java.lang.String)">AbstractR2DBCTestResourceProvider</a></code></span></div>
+<div class="block">Creates an additional logical database inside an already started container.
+This is only invoked when <a href="../core/AbstractR2DBCTestResourceProvider.html#supportsMultipleDatabases()"><code>AbstractR2DBCTestResourceProvider.supportsMultipleDatabases()</code></a> returns <code>true</code>,
+so subclasses should override both hooks together.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../core/AbstractR2DBCTestResourceProvider.html#createAdditionalDatabase(T,java.lang.String)">createAdditionalDatabase</a></code>&nbsp;in class&nbsp;<code><a href="../core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>&lt;org.testcontainers.postgresql.PostgreSQLContainer&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>container</code> - the running container</dd>
+<dd><code>databaseName</code> - the database to create</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractDefaultDatabaseName(org.testcontainers.postgresql.PostgreSQLContainer)">
+<h3>extractDefaultDatabaseName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">extractDefaultDatabaseName</span><wbr><span class="parameters">(org.testcontainers.postgresql.PostgreSQLContainer&nbsp;container)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../core/AbstractR2DBCTestResourceProvider.html#extractDefaultDatabaseName(T)">AbstractR2DBCTestResourceProvider</a></code></span></div>
+<div class="block">Extracts the default logical database name already configured on the running
+container. Subclasses may override when the provider can compare requested
+databases against a provider-specific default.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../core/AbstractR2DBCTestResourceProvider.html#extractDefaultDatabaseName(T)">extractDefaultDatabaseName</a></code>&nbsp;in class&nbsp;<code><a href="../core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a>&lt;org.testcontainers.postgresql.PostgreSQLContainer&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>container</code> - the running container</dd>
+<dt>Returns:</dt>
+<dd>the default logical database name, if one can be derived</dd>
 </dl>
 </div>
 </section>

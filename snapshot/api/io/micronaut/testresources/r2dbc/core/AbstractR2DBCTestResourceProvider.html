@@ -54,6 +54,7 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
@@ -71,7 +72,15 @@ loadScripts(document, 'script');</script>
 <li><a href="#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" tabindex="0">shouldAnswer(String, Map, Map)</a></li>
 <li><a href="#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" tabindex="0">resolveWithoutContainer(String, Map, Map)</a></li>
 <li><a href="#resolveProperty(java.lang.String,T)" tabindex="0">resolveProperty(String, T)</a></li>
+<li><a href="#resolveProperty(java.lang.String,T,java.util.Map,java.util.Map)" tabindex="0">resolveProperty(String, T, Map, Map)</a></li>
+<li><a href="#getContainerOwnerKey(java.lang.String,java.util.Map,java.util.Map)" tabindex="0">getContainerOwnerKey(String, Map, Map)</a></li>
+<li><a href="#getContainerQuery(java.lang.String,java.util.Map,java.util.Map)" tabindex="0">getContainerQuery(String, Map, Map)</a></li>
+<li><a href="#prepareContainer(java.lang.String,T,java.util.Map,java.util.Map)" tabindex="0">prepareContainer(String, T, Map, Map)</a></li>
 <li><a href="#extractOptions(org.testcontainers.containers.GenericContainer)" tabindex="0">extractOptions(GenericContainer)</a></li>
+<li><a href="#supportsMultipleDatabases()" tabindex="0">supportsMultipleDatabases()</a></li>
+<li><a href="#createAdditionalDatabase(T,java.lang.String)" tabindex="0">createAdditionalDatabase(T, String)</a></li>
+<li><a href="#extractDefaultDatabaseName(T)" tabindex="0">extractDefaultDatabaseName(T)</a></li>
+<li><a href="#findRequestedDatabaseName(java.lang.String,java.util.Map)" tabindex="0">findRequestedDatabaseName(String, Map)</a></li>
 </ol>
 </li>
 </ol>
@@ -114,6 +123,15 @@ If no such datasource exists, then a new container will be created.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h3 id="nested-classes-inherited-from-class-io.micronaut.testresources.testcontainers.AbstractTestContainersProvider">Nested classes/interfaces inherited from class&nbsp;<a href="../../testcontainers/AbstractTestContainersProvider.html#nested-class-summary" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></h3>
+<code><a href="../../testcontainers/AbstractTestContainersProvider.ContainerCommand.html" title="interface in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider.ContainerCommand</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -150,56 +168,110 @@ If no such datasource exists, then a new container will be created.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createAdditionalDatabase(T,java.lang.String)" class="member-name-link">createAdditionalDatabase</a><wbr>(<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates an additional logical database inside an already started container.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractDefaultDatabaseName(T)" class="member-name-link">extractDefaultDatabaseName</a><wbr>(<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Extracts the default logical database name already configured on the running
+container.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;io.r2dbc.spi.ConnectionFactoryOptions&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#extractOptions(org.testcontainers.containers.GenericContainer)" class="member-name-link">extractOptions</a><wbr>(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDbTypes()" class="member-name-link">getDbTypes</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findRequestedDatabaseName(java.lang.String,java.util.Map)" class="member-name-link">findRequestedDatabaseName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Extracts the logical database name requested by the caller from the R2DBC
+datasource properties.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getContainerOwnerKey(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">getContainerOwnerKey</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the owner key used to scope cached containers for this resolver.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getContainerQuery(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">getContainerQuery</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the query object used to look up or create a cached container.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDbTypes()" class="member-name-link">getDbTypes</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of db-types supported by this provider.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRequiredProperties(java.lang.String)" class="member-name-link">getRequiredProperties</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;expression)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRequiredProperties(java.lang.String)" class="member-name-link">getRequiredProperties</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;expression)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of properties which should be read
 before resolving an expression: this can be used if the resolver
 itself needs some configuration properties.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRequiredPropertyEntries()" class="member-name-link">getRequiredPropertyEntries</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;&nbsp;propertyEntries,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRequiredPropertyEntries()" class="member-name-link">getRequiredPropertyEntries</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;&nbsp;propertyEntries,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of properties that this resolver
 is able to support.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prepareContainer(java.lang.String,T,java.util.Map,java.util.Map)" class="member-name-link">prepareContainer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveProperty(java.lang.String,T)" class="member-name-link">resolveProperty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;expression,
  <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveProperty(java.lang.String,T,java.util.Map,java.util.Map)" class="member-name-link">resolveProperty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;expression,
+ <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Resolves the requested property from the started container with access to the
+full requested-property map and test-resources configuration.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Lets a resolver provide a value for the requested property without triggering the
 creation of a test container.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">shouldAnswer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldAnswer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">shouldAnswer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;requestedProperties,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Determines if this resolver can resolve the requested property.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#supportsMultipleDatabases()" class="member-name-link">supportsMultipleDatabases</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Indicates whether this provider can create additional logical databases inside the
+same running container.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-io.micronaut.testresources.testcontainers.AbstractTestContainersProvider">Methods inherited from class&nbsp;<a href="../../testcontainers/AbstractTestContainersProvider.html#method-summary" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a></h3>
-<code><a href="../../testcontainers/AbstractTestContainersProvider.html#configureContainer(T,java.util.Map,java.util.Map)" title="configureContainer(T, Map, Map)">configureContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" title="createContainer(DockerImageName, Map, Map)">createContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getDefaultImageName()" title="getDefaultImageName()">getDefaultImageName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getName()" title="getName()">getName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getOrder()" title="getOrder()">getOrder</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getSimpleName()" title="getSimpleName()">getSimpleName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#resolve(java.lang.String,java.util.Map,java.util.Map)" title="resolve(String, Map, Map)">resolve</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#stringOrNull(java.lang.Object)" title="stringOrNull(Object)">stringOrNull</a></code></div>
+<code><a href="../../testcontainers/AbstractTestContainersProvider.html#configureContainer(T,java.util.Map,java.util.Map)" title="configureContainer(T, Map, Map)">configureContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#createContainer(org.testcontainers.utility.DockerImageName,java.util.Map,java.util.Map)" title="createContainer(DockerImageName, Map, Map)">createContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#executeInContainer(java.lang.String,io.micronaut.testresources.testcontainers.AbstractTestContainersProvider.ContainerCommand)" title="executeInContainer(String, AbstractTestContainersProvider.ContainerCommand)">executeInContainer</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getDefaultImageName()" title="getDefaultImageName()">getDefaultImageName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getName()" title="getName()">getName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getOrder()" title="getOrder()">getOrder</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#getSimpleName()" title="getSimpleName()">getSimpleName</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#resolve(java.lang.String,java.util.Map,java.util.Map)" title="resolve(String, Map, Map)">resolve</a>, <a href="../../testcontainers/AbstractTestContainersProvider.html#stringOrNull(java.lang.Object)" title="stringOrNull(Object)">stringOrNull</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -361,10 +433,168 @@ existing containers first.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="resolveProperty(java.lang.String,T,java.util.Map,java.util.Map)">
+<h3 id="resolveProperty(java.lang.String,org.testcontainers.containers.GenericContainer,java.util.Map,java.util.Map)">resolveProperty</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolveProperty</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;expression,
+ <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../testcontainers/AbstractTestContainersProvider.html#resolveProperty(java.lang.String,T,java.util.Map,java.util.Map)">AbstractTestContainersProvider</a></code></span></div>
+<div class="block">Resolves the requested property from the started container with access to the
+full requested-property map and test-resources configuration. Subclasses may
+override when the resolved value depends on request metadata in addition to the
+container itself.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../../testcontainers/AbstractTestContainersProvider.html#resolveProperty(java.lang.String,T,java.util.Map,java.util.Map)">resolveProperty</a></code>&nbsp;in class&nbsp;<code><a href="../../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a> extends org.testcontainers.containers.GenericContainer&lt;? extends <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&gt;&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>expression</code> - the property being resolved</dd>
+<dd><code>container</code> - the started container</dd>
+<dd><code>properties</code> - the resolved properties for the request</dd>
+<dd><code>testResourcesConfig</code> - the test resources configuration</dd>
+<dt>Returns:</dt>
+<dd>the resolved value, if any</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getContainerOwnerKey(java.lang.String,java.util.Map,java.util.Map)">
+<h3>getContainerOwnerKey</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getContainerOwnerKey</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../testcontainers/AbstractTestContainersProvider.html#getContainerOwnerKey(java.lang.String,java.util.Map,java.util.Map)">AbstractTestContainersProvider</a></code></span></div>
+<div class="block">Returns the owner key used to scope cached containers for this resolver.
+Subclasses may override to share a physical container across multiple logical
+consumers, but should keep the returned key stable for equivalent requests.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../../testcontainers/AbstractTestContainersProvider.html#getContainerOwnerKey(java.lang.String,java.util.Map,java.util.Map)">getContainerOwnerKey</a></code>&nbsp;in class&nbsp;<code><a href="../../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a> extends org.testcontainers.containers.GenericContainer&lt;? extends <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&gt;&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>propertyName</code> - the property being resolved</dd>
+<dd><code>properties</code> - the resolved properties for the request</dd>
+<dd><code>testResourcesConfig</code> - the test resources configuration</dd>
+<dt>Returns:</dt>
+<dd>the owner key used for container reuse</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getContainerQuery(java.lang.String,java.util.Map,java.util.Map)">
+<h3>getContainerQuery</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">getContainerQuery</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../testcontainers/AbstractTestContainersProvider.html#getContainerQuery(java.lang.String,java.util.Map,java.util.Map)">AbstractTestContainersProvider</a></code></span></div>
+<div class="block">Returns the query object used to look up or create a cached container.
+Subclasses may override to normalize request-specific properties into a
+stable physical-resource identity while preserving any keys needed for safe reuse.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../../testcontainers/AbstractTestContainersProvider.html#getContainerQuery(java.lang.String,java.util.Map,java.util.Map)">getContainerQuery</a></code>&nbsp;in class&nbsp;<code><a href="../../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a> extends org.testcontainers.containers.GenericContainer&lt;? extends <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&gt;&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>propertyName</code> - the property being resolved</dd>
+<dd><code>properties</code> - the resolved properties for the request</dd>
+<dd><code>testResourcesConfig</code> - the test resources configuration</dd>
+<dt>Returns:</dt>
+<dd>the container query used for cache lookup</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="prepareContainer(java.lang.String,T,java.util.Map,java.util.Map)">
+<h3 id="prepareContainer(java.lang.String,org.testcontainers.containers.GenericContainer,java.util.Map,java.util.Map)">prepareContainer</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">prepareContainer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;testResourcesConfig)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../../testcontainers/AbstractTestContainersProvider.html#prepareContainer(java.lang.String,T,java.util.Map,java.util.Map)">prepareContainer</a></code>&nbsp;in class&nbsp;<code><a href="../../testcontainers/AbstractTestContainersProvider.html" title="class in io.micronaut.testresources.testcontainers">AbstractTestContainersProvider</a>&lt;<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a> extends org.testcontainers.containers.GenericContainer&lt;? extends <a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&gt;&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="extractOptions(org.testcontainers.containers.GenericContainer)">
 <h3>extractOptions</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;io.r2dbc.spi.ConnectionFactoryOptions&gt;</span>&nbsp;<span class="element-name">extractOptions</span><wbr><span class="parameters">(org.testcontainers.containers.GenericContainer&lt;?&gt;&nbsp;container)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="supportsMultipleDatabases()">
+<h3>supportsMultipleDatabases</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supportsMultipleDatabases</span>()</div>
+<div class="block">Indicates whether this provider can create additional logical databases inside the
+same running container. Subclasses overriding this method must also implement the
+matching database-creation hooks for the same container type.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>true</code> when additional logical databases are supported</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="createAdditionalDatabase(T,java.lang.String)">
+<h3 id="createAdditionalDatabase(org.testcontainers.containers.GenericContainer,java.lang.String)">createAdditionalDatabase</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">createAdditionalDatabase</span><wbr><span class="parameters">(<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;databaseName)</span></div>
+<div class="block">Creates an additional logical database inside an already started container.
+This is only invoked when <a href="#supportsMultipleDatabases()"><code>supportsMultipleDatabases()</code></a> returns <code>true</code>,
+so subclasses should override both hooks together.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>container</code> - the running container</dd>
+<dd><code>databaseName</code> - the database to create</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractDefaultDatabaseName(T)">
+<h3 id="extractDefaultDatabaseName(org.testcontainers.containers.GenericContainer)">extractDefaultDatabaseName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">extractDefaultDatabaseName</span><wbr><span class="parameters">(<a href="#type-param-T" title="type parameter in AbstractR2DBCTestResourceProvider">T</a>&nbsp;container)</span></div>
+<div class="block">Extracts the default logical database name already configured on the running
+container. Subclasses may override when the provider can compare requested
+databases against a provider-specific default.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>container</code> - the running container</dd>
+<dt>Returns:</dt>
+<dd>the default logical database name, if one can be derived</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findRequestedDatabaseName(java.lang.String,java.util.Map)">
+<h3>findRequestedDatabaseName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">findRequestedDatabaseName</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;propertyName,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;properties)</span></div>
+<div class="block">Extracts the logical database name requested by the caller from the R2DBC
+datasource properties. Subclasses may override when the provider supports
+alternative configuration keys for database selection.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>propertyName</code> - the property being resolved</dd>
+<dd><code>properties</code> - the resolved properties for the request</dd>
+<dt>Returns:</dt>
+<dd>the requested logical database name, if present</dd>
+</dl>
 </div>
 </section>
 </li>

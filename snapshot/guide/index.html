@@ -627,6 +627,219 @@ Shared or remote H2 test resources are not supported at this time, so the H2 res
 <p>H2 support in this module is currently limited to JDBC test resources. R2DBC and Hibernate Reactive H2 support are out of scope for this feature.</p>
 </div>
 <div class="paragraph">
+<p>To opt multiple logical JDBC datasources into the same physical test resource, set <code>datasources.&lt;name&gt;.test-resources.resource-name</code> to the same value on each datasource:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">datasources.read.dialect=POSTGRES
+datasources.read.test-resources.resource-name=main-db
+datasources.write.dialect=POSTGRES
+datasources.write.test-resources.resource-name=main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">datasources:
+  read:
+    dialect: POSTGRES
+    test-resources:
+      resource-name: main-db
+  write:
+    dialect: POSTGRES
+    test-resources:
+      resource-name: main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources]
+  [datasources.read]
+    dialect="POSTGRES"
+    [datasources.read.test-resources]
+      resource-name="main-db"
+  [datasources.write]
+    dialect="POSTGRES"
+    [datasources.write.test-resources]
+      resource-name="main-db"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">datasources {
+  read {
+    dialect = "POSTGRES"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+  write {
+    dialect = "POSTGRES"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  datasources {
+    read {
+      dialect = "POSTGRES"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+    write {
+      dialect = "POSTGRES"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "datasources": {
+    "read": {
+      "dialect": "POSTGRES",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    },
+    "write": {
+      "dialect": "POSTGRES",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If those datasources also declare different <code>datasources.&lt;name&gt;.db-name</code> values, Micronaut Test Resources will create separate databases on the shared PostgreSQL, MySQL, or MariaDB container and return datasource-specific URLs:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">datasources.read.dialect=POSTGRES
+datasources.read.db-name=read_db
+datasources.read.test-resources.resource-name=main-db
+datasources.write.dialect=POSTGRES
+datasources.write.db-name=write_db
+datasources.write.test-resources.resource-name=main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">datasources:
+  read:
+    dialect: POSTGRES
+    db-name: read_db
+    test-resources:
+      resource-name: main-db
+  write:
+    dialect: POSTGRES
+    db-name: write_db
+    test-resources:
+      resource-name: main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources]
+  [datasources.read]
+    dialect="POSTGRES"
+    db-name="read_db"
+    [datasources.read.test-resources]
+      resource-name="main-db"
+  [datasources.write]
+    dialect="POSTGRES"
+    db-name="write_db"
+    [datasources.write.test-resources]
+      resource-name="main-db"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">datasources {
+  read {
+    dialect = "POSTGRES"
+    dbName = "read_db"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+  write {
+    dialect = "POSTGRES"
+    dbName = "write_db"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  datasources {
+    read {
+      dialect = "POSTGRES"
+      db-name = "read_db"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+    write {
+      dialect = "POSTGRES"
+      db-name = "write_db"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "datasources": {
+    "read": {
+      "dialect": "POSTGRES",
+      "db-name": "read_db",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    },
+    "write": {
+      "dialect": "POSTGRES",
+      "db-name": "write_db",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For other engines, <code>datasources.&lt;name&gt;.test-resources.resource-name</code> still controls physical container reuse, but engine-specific multi-database bootstrap is only enabled where it is currently supported.</p>
+</div>
+<div class="paragraph">
 <p>Micronaut Test Resources can also generate an IntelliJ IDEA/DataGrip datasource export file for resolved JDBC datasources.
 The export is opt-in and disabled by default.</p>
 </div>
@@ -784,6 +997,136 @@ Do not commit it, and do not point the output path at <code>.idea/</code> files 
 <div class="paragraph">
 <p>In which case, the name of the datasource must match the name of the R2DBC datasource.
 This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.</p>
+</div>
+<div class="paragraph">
+<p>If the logical datasource names differ, you can still opt JDBC and R2DBC into the same physical test resource by setting <code>datasources.&lt;name&gt;.test-resources.resource-name</code> and <code>r2dbc.datasources.&lt;name&gt;.test-resources.resource-name</code> to the same value:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">datasources.migrations.dialect=POSTGRES
+datasources.migrations.db-name=migrations_db
+datasources.migrations.test-resources.resource-name=main-db
+r2dbc.datasources.default.dialect=POSTGRES
+r2dbc.datasources.default.db-name=default_db
+r2dbc.datasources.default.test-resources.resource-name=main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">datasources:
+  migrations:
+    dialect: POSTGRES
+    db-name: migrations_db
+    test-resources:
+      resource-name: main-db
+r2dbc:
+  datasources:
+    default:
+      dialect: POSTGRES
+      db-name: default_db
+      test-resources:
+        resource-name: main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources]
+  [datasources.migrations]
+    dialect="POSTGRES"
+    db-name="migrations_db"
+    [datasources.migrations.test-resources]
+      resource-name="main-db"
+[r2dbc]
+  [r2dbc.datasources]
+    [r2dbc.datasources.default]
+      dialect="POSTGRES"
+      db-name="default_db"
+      [r2dbc.datasources.default.test-resources]
+        resource-name="main-db"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">datasources {
+  migrations {
+    dialect = "POSTGRES"
+    dbName = "migrations_db"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+}
+r2dbc {
+  datasources {
+    'default' {
+      dialect = "POSTGRES"
+      dbName = "default_db"
+      testResources {
+        resourceName = "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  datasources {
+    migrations {
+      dialect = "POSTGRES"
+      db-name = "migrations_db"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+  }
+  r2dbc {
+    datasources {
+      default {
+        dialect = "POSTGRES"
+        db-name = "default_db"
+        test-resources {
+          resource-name = "main-db"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "datasources": {
+    "migrations": {
+      "dialect": "POSTGRES",
+      "db-name": "migrations_db",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    }
+  },
+  "r2dbc": {
+    "datasources": {
+      "default": {
+        "dialect": "POSTGRES",
+        "db-name": "default_db",
+        "test-resources": {
+          "resource-name": "main-db"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The same property can also be shared by multiple R2DBC datasources to reuse one physical container. When PostgreSQL, MySQL, or MariaDB datasources also declare distinct <code>db-name</code> values, Micronaut Test Resources creates those databases on the shared container and returns datasource-specific R2DBC URLs. For other engines, <code>r2dbc.datasources.&lt;name&gt;.test-resources.resource-name</code> still only controls container identity.</p>
 </div>
 
 <h2 id="modules-elasticsearch"><a class="anchor" href="#modules-elasticsearch"></a>5.2 Elasticsearch</h2>
@@ -1353,6 +1696,9 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
 </div>
 <div class="paragraph">
 <p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
+</div>
+<div class="paragraph">
+<p>This existing multiplexing behavior is unchanged by <code>test-resources.resource-name</code>. MongoDB already reuses one physical server across named logical databases when you configure <code>mongodb.servers.*</code>.</p>
 </div>
 
 <h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.12 MQTT</h2>
@@ -3165,6 +3511,9 @@ Dependencies between containers <strong>only work between generic containers</st
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Container-backed resolvers can distinguish between the logical consumer name and the physical test resource identity. When multiple consumers set the same <code>test-resources.resource-name</code>, Micronaut Test Resources can reuse one physical container for the same provider and scope. Supported database resolvers can also combine that shared resource name with per-datasource <code>db-name</code> values to create multiple databases on the same shared container. Without that opt-in property, each logical consumer keeps the default isolated behavior.</p>
 </div>
 </div>
 </div>

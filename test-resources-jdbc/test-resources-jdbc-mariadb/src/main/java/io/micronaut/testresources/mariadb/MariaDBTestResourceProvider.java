@@ -39,7 +39,7 @@ public class MariaDBTestResourceProvider extends AbstractJdbcTestResourceProvide
 
     @Override
     protected String getDefaultImageName() {
-        return "mariadb";
+        return "mariadb:11.8.6";
     }
 
     @Override

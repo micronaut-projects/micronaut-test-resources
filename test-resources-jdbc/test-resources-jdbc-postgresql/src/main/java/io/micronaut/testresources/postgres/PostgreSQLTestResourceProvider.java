@@ -45,7 +45,7 @@ public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProv
 
     @Override
     protected String getDefaultImageName() {
-        return "postgres";
+        return "postgres:18.3";
     }
 
     @Override

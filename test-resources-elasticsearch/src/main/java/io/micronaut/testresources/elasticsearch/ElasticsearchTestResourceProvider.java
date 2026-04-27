@@ -32,8 +32,8 @@ public class ElasticsearchTestResourceProvider extends AbstractTestContainersPro
 
     public static final String ELASTICSEARCH_HOSTS = "elasticsearch.http-hosts";
     public static final String SIMPLE_NAME = "elasticsearch";
-    public static final String DEFAULT_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch";
-    public static final String DEFAULT_TAG = "9.2.1";
+    public static final String DEFAULT_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:9.2.1";
+    public static final String DEFAULT_TAG = DEFAULT_IMAGE.substring(DEFAULT_IMAGE.lastIndexOf(':') + 1);
     public static final String DISPLAY_NAME = "Elasticsearch";
 
     @Override

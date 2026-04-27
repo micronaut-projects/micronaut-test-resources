@@ -49,7 +49,7 @@ public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResour
 
     @Override
     protected String getDefaultImageName() {
-        return "postgres";
+        return "postgres:18.3";
     }
 
     @Override

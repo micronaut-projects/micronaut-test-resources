@@ -39,7 +39,7 @@ public class HibernateReactivePostgreSQLTestResourceProvider extends AbstractHib
 
     @Override
     protected String getDefaultImageName() {
-        return "postgres";
+        return "postgres:18.3";
     }
 
     @Override

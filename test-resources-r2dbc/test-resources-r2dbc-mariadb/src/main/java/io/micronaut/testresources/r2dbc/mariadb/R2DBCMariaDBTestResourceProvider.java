@@ -43,7 +43,7 @@ public class R2DBCMariaDBTestResourceProvider extends AbstractR2DBCTestResourceP
 
     @Override
     protected String getDefaultImageName() {
-        return "mariadb";
+        return "mariadb:11.8.6";
     }
 
     @Override

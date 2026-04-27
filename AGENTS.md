@@ -60,6 +60,7 @@ Skipped (LSP not initialized). This is a large, modular Gradle Java/Groovy/Kotli
 - Tests: heavy Spock usage under src/test/groovy and src/spockTest/groovy; Kotlin tests under src/koTest/kotlin.
 - Custom source sets observed: src/test2 (embedded); Micronaut AOT under src/aot (server).
 - Providers expose properties under clear namespaces (jdbc.*, r2dbc.*, localstack.*) via core resolver SPI.
+- Default Docker images are tracked by Renovate custom managers in .github/renovate.json; when adding, moving, renaming, or centralizing provider image defaults, update that Renovate coverage in the same change.
 
 ## ANTI-PATTERNS (THIS PROJECT)
 - Do NOT hard-code ports for container providers; prefer ephemeral/random bindings (see Consul note).

@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_POSTGRES_IMAGE;
+
 /**
  * A test resource provider which will spawn a MySQL test container.
  */
@@ -45,7 +47,7 @@ public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProv
 
     @Override
     protected String getDefaultImageName() {
-        return "postgres:18.3";
+        return DEFAULT_POSTGRES_IMAGE;
     }
 
     @Override

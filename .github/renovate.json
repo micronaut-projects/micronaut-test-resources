@@ -16,6 +16,7 @@
       "customType": "regex",
       "description": "Docker image tags pinned in Java provider defaults",
       "managerFilePatterns": [
+        "/^test-resources-core\\/src\\/main\\/java\\/io\\/micronaut\\/testresources\\/core\\/DefaultTestResourceImages\\.java$/",
         "/^test-resources-hashicorp-consul\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
         "/^test-resources-hashicorp-vault\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
         "/^test-resources-elasticsearch\\/src\\/main\\/java\\/.*ElasticsearchTestResourceProvider\\.java$/",
@@ -35,7 +36,7 @@
         "/^test-resources-hibernate-reactive\\/test-resources-hibernate-reactive-(mariadb|mssql|mysql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/"
       ],
       "matchStrings": [
-        "(?:DEFAULT_IMAGE(?:_NAME)?\\s*=\\s*|return\\s+)\"(?<depName>[a-z0-9.-]+(?:\\/[a-z0-9._-]+)*):(?<currentValue>[A-Za-z0-9_.-]+)\""
+        "(?:DEFAULT(?:_[A-Z0-9]+)*_IMAGE(?:_NAME)?\\s*=\\s*|return\\s+)\"(?<depName>[a-z0-9.-]+(?:\\/[a-z0-9._-]+)*):(?<currentValue>[A-Za-z0-9_.-]+)\""
       ],
       "datasourceTemplate": "docker"
     }

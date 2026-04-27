@@ -21,6 +21,8 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 
+import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_POSTGRES_IMAGE;
+
 /**
  * A test resource provider which will spawn a PostgreSQL test container.
  */
@@ -39,7 +41,7 @@ public class HibernateReactivePostgreSQLTestResourceProvider extends AbstractHib
 
     @Override
     protected String getDefaultImageName() {
-        return "postgres:18.3";
+        return DEFAULT_POSTGRES_IMAGE;
     }
 
     @Override

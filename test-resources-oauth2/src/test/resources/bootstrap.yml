@@ -1,0 +1,9 @@
+micronaut:
+  application:
+    name: keycloak-test
+  security:
+    oauth2:
+      clients:
+        keycloak:
+          client-credentials:
+            enabled: true

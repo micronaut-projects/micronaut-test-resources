@@ -343,14 +343,14 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb:11.8.6</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.mysql.com/">MySQL</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mysql</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server:8.4.8</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/technologies/appdev/xe.html">Oracle Database XE</a></p></td>
@@ -371,14 +371,14 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres:18.3</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.microsoft.com/sql-server">Microsoft SQL Server</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mssql</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mcr.microsoft.com/mssql/server:2022-latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -1142,7 +1142,7 @@ r2dbc {
 <p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.hosts</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
+<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.2.1</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
 </div>
 
@@ -1263,7 +1263,7 @@ If you need Azurite behavior outside these shared-key properties, the generic Te
 <p>OpenSearch support will automatically start an <a href="https://opensearch.org/">OpenSearch</a> container and provide the value of the <code>micronaut.opensearch.rest-client.http-hosts</code> or <code>micronaut.opensearch.httpclient5.http-hosts</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>opensearchproject/opensearch:latest</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
+<p>The default image (<code>opensearchproject/opensearch:3.6.0</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>5.5 Kafka</h2>
@@ -1683,7 +1683,7 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
 <p>The container is configured with replica set functionality enabled.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
+<p>The default image (<code>mongo:8.2.7</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The default database name can be overwritten by setting the <code>test-resources.containers.mongodb.db-name</code> property.</p>
@@ -1871,7 +1871,7 @@ listener 1883</code></pre>
 <p>Neo4j support will automatically start a <a href="https://neo4j.com/">Neo4j container</a> and provide the value of the <code>neo4j.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
+<p>The default image (<code>neo4j:5.26.25</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.14 RabbitMQ</h2>
@@ -1887,7 +1887,7 @@ listener 1883</code></pre>
 <p>RabbitMQ support will automatically start a <a href="https://www.rabbitmq.com/">RabbitMQ container</a> and provide the value of the <code>rabbitmq.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
+<p>The default image (<code>rabbitmq:4.3.0</code>) can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.15 Redis</h2>
@@ -1906,7 +1906,7 @@ This provider can be configured with a variety of parameters:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The default image can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
+<p>The default image (<code>redis:6.2.21</code>, or <code>grokzen/redis-cluster:6.2.14</code> in cluster mode) can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
 </li>
 <li>
 <p>Have Test Resources spawn a Redis cluster by setting <code>test-resources.containers.redis.cluster-mode</code> to <code>true</code>. With this setting, the property <code>redis.uris</code> will be defined instead of <code>redis.uri</code>, and some cluster-specific parameters may be provided under <code>test-resources.containers.redis.cluster</code>:</p>
@@ -1949,7 +1949,7 @@ This provider can be configured with a variety of parameters:</p>
 <p>Hazelcast support will automatically start a Hazelcast container and provide the values of the <code>hazelcast.client.network.addresses</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.hazelcast.image-name</code> property.
+<p>The default image (<code>hazelcast/hazelcast:5.6.0-slim</code>) can be overwritten by setting the <code>test-resources.containers.hazelcast.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.hazelcast.image-tag</code> property.</p>
 </div>
 <div class="paragraph">

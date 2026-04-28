@@ -1,2 +1,12 @@
+=== Version 4.0.0
+The remote test-resources RPC transport now uses a dedicated binary protocol instead of JSON.
+This is an intentional breaking change on the unreleased `4.0.x` line.
+
+Consequences:
+
+- pre-change clients cannot talk to post-change servers, and post-change clients cannot talk to pre-change servers
+- direct JSON calls with tools such as `curl` or `httpie` are no longer a supported way to drive the RPC endpoints
+- the supported debugging path is the documentation in this guide, server logs, and the control panel instead of ad hoc JSON requests
+
 === Version 3.0.0
 MongoDB now defaults to using the latest image. Previously it used MongoDB 5.

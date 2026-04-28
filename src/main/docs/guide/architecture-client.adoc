@@ -20,3 +20,6 @@ The working-directory location is scoped to the current project checkout.
 The user-home location is intended for settings shared across builds, so it can survive older experiments or manually managed shared servers.
 
 NOTE: If Micronaut Test Resources unexpectedly connects to an old server or fails because a recorded server is no longer running, remove the stale `test-resources.properties` file from the relevant `.micronaut` directory and rerun the build so the settings can be recreated.
+
+The remote transport is a small binary protocol shared with the server.
+That protocol is intentionally limited to the value shapes used by the RPC layer: strings, booleans, integral numbers, lists, maps, and `null`.

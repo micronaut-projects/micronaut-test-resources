@@ -1,0 +1,7 @@
+The supported debugging path for the remote protocol is:
+
+- Gradle debug mode for the test resources server process
+- server logs
+- the control panel when it is available on the server classpath
+
+Mixed client/server versions across the JSON and binary protocol boundary are not supported.

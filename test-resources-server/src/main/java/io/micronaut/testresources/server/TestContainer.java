@@ -18,6 +18,9 @@ package io.micronaut.testresources.server;
 import io.micronaut.core.annotation.Introspected;
 import org.jspecify.annotations.Nullable;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Stores metadata about a running test container.
  */
@@ -67,6 +70,15 @@ public final class TestContainer {
     @Nullable
     public String getScope() {
         return scope;
+    }
+
+    public Map<String, Object> asMap() {
+        var map = new LinkedHashMap<String, Object>(4);
+        map.put("name", name);
+        map.put("imageName", imageName);
+        map.put("id", id);
+        map.put("scope", scope);
+        return map;
     }
 
     @Override

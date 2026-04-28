@@ -12,6 +12,7 @@ import java.util.regex.Pattern
 class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification {
     private static final List<String> SNAPSHOT_PUBLISH_TASKS = [
         ':micronaut-test-resources-build-tools:publishToMavenLocal',
+        ':micronaut-test-resources-codec:publishToMavenLocal',
         ':micronaut-test-resources-core:publishToMavenLocal',
         ':micronaut-test-resources-client:publishToMavenLocal',
         ':micronaut-test-resources-embedded:publishToMavenLocal',

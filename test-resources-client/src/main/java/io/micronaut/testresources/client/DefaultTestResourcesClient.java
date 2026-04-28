@@ -17,9 +17,13 @@ package io.micronaut.testresources.client;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.type.Argument;
+import io.micronaut.http.codec.CodecException;
 import org.jspecify.annotations.Nullable;
-import io.micronaut.json.JsonMapper;
+import io.micronaut.testresources.codec.TestResourcesCodec;
+import io.micronaut.testresources.codec.TestResourcesMediaType;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URI;
@@ -27,6 +31,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple implementation of the test resources client.
@@ -43,6 +50,10 @@ import java.util.function.Consumer;
 @Internal
 public final class DefaultTestResourcesClient implements TestResourcesClient {
     public static final String ACCESS_TOKEN = "Access-Token";
+    private static final Pattern JSON_MESSAGE = Pattern.compile("\"message\"\\s*:\\s*\"([^\"]+)\"");
+    private static final String INTERNAL_SERVER_ERROR_PREFIX = "Internal Server Error: ";
+    private static final String MESSAGE_KEY = "message";
+    private static final String SERVER_FAILED_WITHOUT_ERROR_BODY = "Server failed without an error body";
 
     private static final String RESOLVABLE_PROPERTIES_URI = "/list";
     private static final String REQUIRED_PROPERTIES_URI = "/requirements/expr";
@@ -53,10 +64,7 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
     private static final Argument<List<String>> LIST_OF_STRING = Argument.LIST_OF_STRING;
     private static final Argument<String> STRING = Argument.STRING;
     private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
-    private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
-    private static final String INTERNAL_SERVER_ERROR_PREFIX = INTERNAL_SERVER_ERROR + ": ";
 
-    private final JsonMapper jsonMapper;
     private final String baseUri;
     private final HttpClient client;
 
@@ -78,7 +86,6 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
             .connectTimeout(clientTimeout)
             .build();
         this.accessToken = accessToken;
-        this.jsonMapper = JsonMapper.createDefault();
         this.intellijIdeaDatasourceExporter = intellijIdeaDatasourceExporter;
     }
 
@@ -152,27 +159,24 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
             .uri(uri(path))
             .timeout(clientTimeout);
         request = request.header("User-Agent", "Micronaut Test Resources Client")
-            .header("Content-Type", "application/json")
-            .header("Accept", "application/json");
+            .header("Content-Type", TestResourcesMediaType.TEST_RESOURCES_BINARY)
+            .header("Accept", TestResourcesMediaType.TEST_RESOURCES_BINARY);
         if (accessToken != null) {
             request = request.header(ACCESS_TOKEN, accessToken);
         }
         config.accept(request);
         try {
-            var response = client.send(request.build(), HttpResponse.BodyHandlers.ofString());
+            var response = client.send(request.build(), HttpResponse.BodyHandlers.ofByteArray());
             var body = response.body();
             if (response.statusCode() == 200) {
-                if (STRING.equalsType(type)) {
-                    return (T) body;
-                }
-                return jsonMapper.readValue(body, type);
+                return decodeResponse(body, type);
             } else if (response.statusCode() == 500) {
-                return handleError(jsonMapper.readValue(body, SimpleJsonErrorModel.class));
+                return handleError(readErrorValue(body));
             } else if (response.statusCode() == 404) {
                 return null;
             }
             throw new TestResourcesException(
-                "Unexpected response code: " + response.statusCode() + " " + body);
+                "Unexpected response code: " + response.statusCode());
         } catch (ConnectException e) {
             throw new TestResourcesException("Test resource service is not available at " + baseUri, e);
         } catch (IOException e) {
@@ -183,9 +187,51 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         }
     }
 
-    private <T> T handleError(SimpleJsonErrorModel model) {
+    @SuppressWarnings("unchecked")
+    private <T> T decodeResponse(byte[] body, Argument<T> type) throws IOException {
+        Object value = readValue(body);
+        if (value == null) {
+            return null;
+        }
+        if (STRING.equalsType(type)) {
+            return (T) value;
+        }
+        return (T) value;
+    }
+
+    private Object readValue(byte[] body) throws IOException {
+        if (body.length == 0) {
+            return null;
+        }
+        return TestResourcesCodec.readValue(new ByteArrayInputStream(body));
+    }
+
+    private Object readErrorValue(byte[] body) throws IOException {
+        try {
+            return readValue(body);
+        } catch (CodecException e) {
+            return fallbackErrorBody(body);
+        }
+    }
+
+    private Map<String, Object> fallbackErrorBody(byte[] body) {
+        String text = new String(body, StandardCharsets.UTF_8).trim();
+        if (text.isEmpty()) {
+            return Map.of(MESSAGE_KEY, SERVER_FAILED_WITHOUT_ERROR_BODY);
+        }
+        Matcher matcher = JSON_MESSAGE.matcher(text);
+        if (matcher.find()) {
+            return Map.of(MESSAGE_KEY, matcher.group(1));
+        }
+        return Map.of(MESSAGE_KEY, text);
+    }
+
+    private <T> T handleError(Object payload) {
+        if (!(payload instanceof Map<?, ?> map)) {
+            throw new TestResourcesException(payload == null ? SERVER_FAILED_WITHOUT_ERROR_BODY : payload.toString());
+        }
         var allErrors = new LinkedHashSet<String>();
-        collectErrors(model, allErrors);
+        collectErrors(map, allErrors);
         var errorList = allErrors.stream().toList();
         if (errorList.size() == 1) {
             throw new TestResourcesException(errorList.get(0));
@@ -199,17 +245,23 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         }
     }
 
-    private void collectErrors(SimpleJsonErrorModel model, LinkedHashSet<String> allErrors) {
-        sanitizeError(model.message()).ifPresent(allErrors::add);
-        if (model.embedded() != null && model.embedded().errors() != null) {
-            for (SimpleJsonErrorModel error : model.embedded().errors()) {
-                collectErrors(error, allErrors);
+    @SuppressWarnings("unchecked")
+    private void collectErrors(Map<?, ?> model, LinkedHashSet<String> allErrors) {
+        sanitizeError((String) model.get(MESSAGE_KEY)).ifPresent(allErrors::add);
+        Object errors = model.get("errors");
+        if (errors instanceof List<?> list) {
+            for (Object error : list) {
+                if (error instanceof Map<?, ?> nested) {
+                    collectErrors(nested, allErrors);
+                } else if (error != null) {
+                    sanitizeError(error.toString()).ifPresent(allErrors::add);
+                }
             }
         }
     }
 
     private static Optional<String> sanitizeError(String message) {
-        if (message.equals(INTERNAL_SERVER_ERROR)) {
+        if (message == null || message.isBlank()) {
             return Optional.empty();
         }
         if (message.startsWith(INTERNAL_SERVER_ERROR_PREFIX)) {
@@ -228,7 +280,9 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
 
     private byte[] writeValueAsBytes(Object o) {
         try {
-            return jsonMapper.writeValueAsBytes(o);
+            var output = new ByteArrayOutputStream();
+            TestResourcesCodec.writeValue(o, output);
+            return output.toByteArray();
         } catch (IOException e) {
             throw new TestResourcesException(e);
         }

@@ -17,3 +17,6 @@ tasks.internalStartTestResourcesService {
 ----
 
 Alternatively, you may want to add the test resources control panel.
+
+On `4.0.x`, the remote RPC endpoints are binary rather than JSON.
+If you need to understand what the server is doing, prefer server logs, Gradle debug mode, and the control panel instead of calling the RPC routes with `curl` or `httpie`.

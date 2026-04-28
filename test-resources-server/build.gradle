@@ -23,7 +23,8 @@ dependencies {
     implementation(projects.micronautTestResourcesTestcontainers)
     runtimeOnly(mnLogging.logback.classic)
     runtimeOnly(mn.micronaut.management)
-    runtimeOnly(mnSerde.micronaut.serde.jackson)
+    runtimeOnly(mnSerde.micronaut.serde.support)
+    runtimeOnly(mn.snakeyaml)
 
     testFixturesImplementation(projects.micronautTestResourcesCore)
     testFixturesImplementation(projects.micronautTestResourcesTestcontainers)

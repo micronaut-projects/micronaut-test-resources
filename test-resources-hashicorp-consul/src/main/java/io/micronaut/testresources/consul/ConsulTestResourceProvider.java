@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.consul;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.consul.ConsulContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -40,7 +41,7 @@ public class ConsulTestResourceProvider extends AbstractTestContainersProvider<C
 
     public static final String HASHICORP_CONSUL_KV_PROPERTIES_KEY =
         "containers.hashicorp-consul.kv-properties";
-    public static final String DEFAULT_IMAGE = "hashicorp/consul:1.15.4";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_CONSUL_IMAGE;
     public static final int CONSUL_HTTP_PORT = 8500;
     public static final String SIMPLE_NAME = "hashicorp-consul";
     public static final String DISPLAY_NAME = "Consul";

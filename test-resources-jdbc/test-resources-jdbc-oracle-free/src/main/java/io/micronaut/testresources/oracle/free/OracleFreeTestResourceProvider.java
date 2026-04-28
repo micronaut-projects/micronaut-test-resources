@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.oracle.free;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -73,7 +74,7 @@ public class OracleFreeTestResourceProvider extends AbstractJdbcTestResourceProv
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-free:slim-faststart";
+        return DefaultTestResourceImages.DEFAULT_ORACLE_FREE_IMAGE;
     }
 
     @Override

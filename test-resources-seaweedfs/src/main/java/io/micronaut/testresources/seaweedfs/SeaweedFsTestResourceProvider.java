@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.seaweedfs;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.Transferable;
@@ -33,7 +34,7 @@ public class SeaweedFsTestResourceProvider extends AbstractTestContainersProvide
     public static final String SEAWEEDFS_URL = "seaweedfs.url";
     public static final String SEAWEEDFS_ACCESS_KEY = "seaweedfs.access-key";
     public static final String SEAWEEDFS_SECRET_KEY = "seaweedfs.secret-key";
-    public static final String DEFAULT_IMAGE = "chrislusf/seaweedfs";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_SEAWEEDFS_IMAGE;
     public static final String DEFAULT_ACCESS_KEY = "some_access_key1";
     public static final String DEFAULT_SECRET_KEY = "some_secret_key1";
     public static final String DISPLAY_NAME = "SeaweedFS";

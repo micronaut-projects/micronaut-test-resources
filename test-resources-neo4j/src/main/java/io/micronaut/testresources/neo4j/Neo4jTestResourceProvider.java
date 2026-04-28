@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.neo4j;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.neo4j.Neo4jContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -33,7 +34,7 @@ import java.util.Set;
 public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Neo4jContainer> {
 
     public static final String NEO4J_SERVER_URI = "neo4j.uri";
-    public static final String DEFAULT_IMAGE = "neo4j:5.26.25";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_NEO4J_IMAGE;
 
     private static final Set<String> SUPPORTED_PROPERTIES;
     public static final String DISPLAY_NAME = "Neo4J";

@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.rabbitmq;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.rabbitmq.RabbitMQContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -36,7 +37,7 @@ public class RabbitMQTestResourceProvider extends AbstractTestContainersProvider
     public static final String RABBITMQ_URI = "rabbitmq.uri";
     public static final String RABBITMQ_USERNAME = "rabbitmq.username";
     public static final String RABBITMQ_PASSWORD = "rabbitmq.password";
-    public static final String DEFAULT_IMAGE = "rabbitmq:4.3.0";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_RABBITMQ_IMAGE;
 
     public static final List<String> SUPPORTED_KEYS = Collections.unmodifiableList(Arrays.asList(
         RABBITMQ_URI,

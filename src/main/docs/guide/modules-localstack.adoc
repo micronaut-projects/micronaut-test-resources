@@ -1,6 +1,6 @@
 Micronaut Test Resources supports a subset of https://localstack.cloud/[Localstack] via https://www.testcontainers.org/modules/localstack/[Testcontainers].
 
-The default image can be overwritten by setting the `test-resources.containers.localstack.image-name` property.
+The default image (`localstack/localstack:4.14.0`) can be overwritten by setting the `test-resources.containers.localstack.image-name` property.
 
 The following services are supported:
 

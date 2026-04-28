@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.redis;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import com.redis.testcontainers.RedisContainer;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.utility.DockerImageName;
@@ -34,7 +35,7 @@ public class RedisTestResourceProvider extends AbstractTestContainersProvider<Re
 
     public static final String REDIS_URI = "redis.uri";
 
-    public static final String DEFAULT_IMAGE = "redis:6.2.21";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_REDIS_IMAGE;
     public static final String SIMPLE_NAME = "redis";
 
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URI);

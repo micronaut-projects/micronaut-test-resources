@@ -13,7 +13,9 @@ Providers expose Micronaut application properties by implementing the resolver S
 ## Container Conventions
 
 - Use Testcontainers dynamic ports and container-provided credentials.
+- Keep provider default Docker images in `test-resources-core/src/main/resources/io/micronaut/testresources/core/default-images/Dockerfile`; provider code should consume `DefaultTestResourceImages` instead of hard-coding mutable image tags.
 - Make image names and versions configurable through existing property namespaces when the module already supports overrides.
+- When changing a provider default image, update the manifest, generated/runtime default wiring, and matching `src/main/docs/guide/*.adoc` default-image text together. The core drift test should fail if docs and runtime defaults diverge.
 - Put shared behavior in the family core module instead of duplicating it in every database or LocalStack service module.
 - Keep startup and shutdown lifecycle behavior centralized in existing abstractions where possible.
 

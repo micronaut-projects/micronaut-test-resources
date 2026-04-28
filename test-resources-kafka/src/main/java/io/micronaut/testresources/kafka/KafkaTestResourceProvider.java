@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.kafka;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -49,7 +50,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
     public static final String KAFKA_TOPICS = "containers.kafka.topics";
     public static final String KAFKA_PARTITIONS = "containers.kafka.partitions";
-    public static final String DEFAULT_IMAGE = "apache/kafka:4.1.1";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_KAFKA_IMAGE;
     public static final int DEFAULT_PARTITIONS = 1;
 
     public static final String DISPLAY_NAME = "Kafka";

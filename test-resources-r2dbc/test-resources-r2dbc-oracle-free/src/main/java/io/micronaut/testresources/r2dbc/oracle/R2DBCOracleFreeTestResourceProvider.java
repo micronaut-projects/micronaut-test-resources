@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.r2dbc.oracle;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.micronaut.testresources.r2dbc.core.R2dbcSupport;
 import io.r2dbc.spi.ConnectionFactoryOptions;
@@ -78,7 +79,7 @@ public class R2DBCOracleFreeTestResourceProvider extends AbstractR2DBCTestResour
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-free:slim-faststart";
+        return DefaultTestResourceImages.DEFAULT_ORACLE_FREE_IMAGE;
     }
 
     @Override

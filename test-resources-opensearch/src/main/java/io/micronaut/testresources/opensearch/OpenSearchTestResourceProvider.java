@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.opensearch;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.opensearch.testcontainers.OpenSearchContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -30,7 +31,7 @@ import java.util.Optional;
 public class OpenSearchTestResourceProvider extends AbstractTestContainersProvider<OpenSearchContainer<?>> {
 
     public static final String SIMPLE_NAME = "opensearch";
-    public static final String DEFAULT_IMAGE = "opensearchproject/opensearch:3.6.0";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_OPENSEARCH_IMAGE;
     public static final String DISPLAY_NAME = "OpenSearch";
     public static final String MICRONAUT_OPEN_SEARCH_REST_CLIENT_HTTP_HOSTS = "micronaut.opensearch.rest-client.http-hosts";
     public static final String MICRONAUT_OPEN_SEARCH_HTTPCLIENT5_HTTP_HOSTS = "micronaut.opensearch.httpclient5.http-hosts";

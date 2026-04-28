@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.r2dbc.mysql;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
@@ -43,7 +44,7 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
 
     @Override
     protected String getDefaultImageName() {
-        return "mysql:8.4.5";
+        return DefaultTestResourceImages.DEFAULT_MYSQL_IMAGE;
     }
 
     @Override

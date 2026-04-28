@@ -7,7 +7,7 @@ When `micronaut-security-oauth2` is on the application classpath, Test Resources
 - `micronaut.security.oauth2.clients.keycloak.openid.issuer`
 - `micronaut.security.token.jwt.signatures.jwks.keycloak.url`
 
-The default image can be overwritten by setting the `test-resources.containers.keycloak.image-name` property.
+The default image (`quay.io/keycloak/keycloak:26.6.1`) can be overwritten by setting the `test-resources.containers.keycloak.image-name` property.
 The default image tag can be overwritten by setting the `test-resources.containers.keycloak.image-tag` property.
 
 You can customize the imported realm and client credentials with:

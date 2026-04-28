@@ -33,10 +33,6 @@ import java.util.regex.Pattern;
  */
 @Internal
 public final class DefaultTestResourceImages {
-    private static final String MANIFEST_RESOURCE = "/io/micronaut/testresources/core/default-images/Dockerfile";
-    private static final Pattern FROM_PATTERN = Pattern.compile("^FROM\\s+(\\S+)\\s+AS\\s+([a-z0-9_]+)$");
-    private static final Map<String, String> IMAGES = loadImages();
-
     public static final String DEFAULT_AZURITE_IMAGE = image("azurite");
     public static final String DEFAULT_CONSUL_IMAGE = image("consul");
     public static final String DEFAULT_COUCHBASE_IMAGE = image("couchbase");
@@ -76,7 +72,7 @@ public final class DefaultTestResourceImages {
      * @return The Docker image name
      */
     public static String image(String alias) {
-        String image = IMAGES.get(alias);
+        String image = ImageManifest.IMAGES.get(alias);
         if (image == null) {
             throw new IllegalArgumentException("No default Docker image is configured for '" + alias + "'");
         }
@@ -89,29 +85,35 @@ public final class DefaultTestResourceImages {
      * @return The default images
      */
     public static Map<String, String> images() {
-        return IMAGES;
+        return ImageManifest.IMAGES;
     }
 
-    private static Map<String, String> loadImages() {
-        InputStream resource = DefaultTestResourceImages.class.getResourceAsStream(MANIFEST_RESOURCE);
-        if (resource == null) {
-            throw new IllegalStateException("Default Docker image manifest not found: " + MANIFEST_RESOURCE);
-        }
-        Map<String, String> images = new LinkedHashMap<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Matcher matcher = FROM_PATTERN.matcher(line);
-                if (matcher.matches()) {
-                    images.put(matcher.group(2), matcher.group(1));
-                }
+    private static final class ImageManifest {
+        private static final String MANIFEST_RESOURCE = "/io/micronaut/testresources/core/default-images/Dockerfile";
+        private static final Pattern FROM_PATTERN = Pattern.compile("^FROM\\s+(\\S+)\\s+AS\\s+([a-z0-9_]+)$");
+        private static final Map<String, String> IMAGES = loadImages();
+
+        private static Map<String, String> loadImages() {
+            InputStream resource = DefaultTestResourceImages.class.getResourceAsStream(MANIFEST_RESOURCE);
+            if (resource == null) {
+                throw new IllegalStateException("Default Docker image manifest not found: " + MANIFEST_RESOURCE);
             }
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to read default Docker image manifest", e);
+            Map<String, String> images = new LinkedHashMap<>();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    Matcher matcher = FROM_PATTERN.matcher(line);
+                    if (matcher.matches()) {
+                        images.put(matcher.group(2), matcher.group(1));
+                    }
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to read default Docker image manifest", e);
+            }
+            if (images.isEmpty()) {
+                throw new IllegalStateException("Default Docker image manifest does not declare any images");
+            }
+            return Collections.unmodifiableMap(images);
         }
-        if (images.isEmpty()) {
-            throw new IllegalStateException("Default Docker image manifest does not declare any images");
-        }
-        return Collections.unmodifiableMap(images);
     }
 }

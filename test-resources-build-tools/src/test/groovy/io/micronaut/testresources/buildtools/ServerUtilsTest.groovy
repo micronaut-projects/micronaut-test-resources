@@ -15,6 +15,7 @@ import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Duration
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.Properties
 
@@ -446,6 +447,38 @@ class ServerUtilsTest extends Specification {
         withNamespace.parent.resolve("test-resources-custom") == withNamespace
     }
 
+    def "stops the real server controller with the existing stopServer caller"() {
+        def portFile = tmpDir.resolve("port-file")
+        def settingsDir = tmpDir.resolve("settings")
+        def factory = new ForkingServerFactory(tmpDir.resolve("server.log"))
+
+        when:
+        ServerUtils.startOrConnectToExistingServer(
+            null,
+            portFile,
+            settingsDir,
+            null,
+            currentJvmClasspath(),
+            null,
+            1,
+            factory
+        )
+        ServerUtils.stopServer(settingsDir)
+
+        then:
+        !Files.exists(settingsDir.resolve(ServerUtils.PROPERTIES_FILE_NAME))
+        factory.waitForExit(Duration.ofSeconds(15))
+        factory.exitValue() == 0
+
+        cleanup:
+        factory.destroy()
+    }
+
+    private static List<File> currentJvmClasspath() {
+        System.getProperty("java.class.path")
+            .split(File.pathSeparator)
+            .collect { new File(it) }
+    }
 
     @Controller
     static class ServerMock {
@@ -482,5 +515,52 @@ class ServerUtilsTest extends Specification {
         }
         server.start()
         server
+    }
+
+    private static final class ForkingServerFactory implements ServerFactory {
+        private final Path logFile
+        private Process process
+
+        private ForkingServerFactory(Path logFile) {
+            this.logFile = logFile
+        }
+
+        @Override
+        void startServer(ServerUtils.ProcessParameters processParameters) throws IOException {
+            def command = new ArrayList<String>()
+            command.add(new File(System.getProperty("java.home"), "bin/java").absolutePath)
+            command.addAll(processParameters.jvmArguments.collect { it.toString() })
+            processParameters.systemProperties.each { key, value ->
+                command.add(value == null ? "-D${key}".toString() : "-D${key}=${value}".toString())
+            }
+            command.add("-cp")
+            command.add(processParameters.classpath.collect { it.absolutePath }.join(File.pathSeparator))
+            command.add(processParameters.mainClass.toString())
+            command.addAll(processParameters.arguments.collect { it.toString() })
+            process = new ProcessBuilder(command)
+                .redirectErrorStream(true)
+                .redirectOutput(logFile.toFile())
+                .start()
+        }
+
+        @Override
+        void waitFor(Duration duration) throws InterruptedException {
+            Thread.sleep(duration.toMillis())
+        }
+
+        boolean waitForExit(Duration duration) throws InterruptedException {
+            process.waitFor(duration.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS)
+        }
+
+        int exitValue() {
+            process.exitValue()
+        }
+
+        void destroy() throws InterruptedException {
+            if (process?.isAlive()) {
+                process.destroyForcibly()
+                process.waitFor(5, java.util.concurrent.TimeUnit.SECONDS)
+            }
+        }
     }
 }

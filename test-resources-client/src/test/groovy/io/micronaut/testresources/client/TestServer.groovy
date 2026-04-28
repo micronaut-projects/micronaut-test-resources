@@ -1,19 +1,23 @@
 package io.micronaut.testresources.client
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
-import io.micronaut.testresources.core.TestResourcesResolver
+import io.micronaut.http.annotation.Produces
+import io.micronaut.testresources.codec.Result
+import io.micronaut.testresources.codec.TestResourcesMediaType
 
 @Controller("/")
 @Requires(property = 'server', notEquals = 'false')
-class TestServer implements TestResourcesResolver {
+@Produces(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+@Consumes(TestResourcesMediaType.TEST_RESOURCES_BINARY)
+class TestServer {
 
-    @Override
     @Post("/list")
-    List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        [
+    Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+        Result.of([
             "dummy1",
             "dummy2",
             "missing",
@@ -26,24 +30,21 @@ class TestServer implements TestResourcesResolver {
             "datasources.analytics.username",
             "datasources.analytics.password",
             "datasources.analytics.driver-class-name"
-        ]
+        ])
     }
 
-    @Override
     @Get("/requirements/expr/{expression}")
-    List<String> getRequiredProperties(String expression) {
-        []
+    Result<List<String>> getRequiredProperties(String expression) {
+        Result.of([])
     }
 
-    @Override
     @Get("/requirements/entries")
-    List<String> getRequiredPropertyEntries() {
-        []
+    Result<List<String>> getRequiredPropertyEntries() {
+        Result.of([])
     }
 
-    @Override
     @Post('/resolve')
-    Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+    Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
         if ("missing" == name) {
             return Optional.empty()
         }
@@ -51,34 +52,34 @@ class TestServer implements TestResourcesResolver {
             throw new RuntimeException("Something bad happened")
         }
         if ("datasources.default.url" == name) {
-            return Optional.of("jdbc:postgresql://localhost:15432/demo")
+            return Result.asOptional("jdbc:postgresql://localhost:15432/demo")
         }
         if ("datasources.default.username" == name) {
-            return Optional.of("demo_user")
+            return Result.asOptional("demo_user")
         }
         if ("datasources.default.password" == name) {
-            return Optional.of("demo_secret")
+            return Result.asOptional("demo_secret")
         }
         if ("datasources.default.driver-class-name" == name) {
-            return Optional.of("org.postgresql.Driver")
+            return Result.asOptional("org.postgresql.Driver")
         }
         if ("datasources.analytics.url" == name) {
-            return Optional.of("jdbc:mysql://localhost:13306/analytics")
+            return Result.asOptional("jdbc:mysql://localhost:13306/analytics")
         }
         if ("datasources.analytics.username" == name) {
-            return Optional.of("analytics_user")
+            return Result.asOptional("analytics_user")
         }
         if ("datasources.analytics.password" == name) {
-            return Optional.of("analytics_secret")
+            return Result.asOptional("analytics_secret")
         }
         if ("datasources.analytics.driver-class-name" == name) {
-            return Optional.of("com.mysql.cj.jdbc.Driver")
+            return Result.asOptional("com.mysql.cj.jdbc.Driver")
         }
-        Optional.of("value for $name".toString())
+        Result.asOptional("value for $name".toString())
     }
 
     @Get("/close/all")
-    void closeAll() {
-
+    Result<Boolean> closeAll() {
+        Result.TRUE
     }
 }

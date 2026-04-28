@@ -1,89 +1,34 @@
-# PROJECT KNOWLEDGE BASE
+# Micronaut Test Resources Agent Guidance
 
-Generated: 2026-01-22T12:14:22Z
-Commit: da5801d0
-Branch: kafka-native
+This repository is the `4.0.x` release-line workspace for Micronaut Test Resources. It is a Gradle multi-module project that provides automatic test resources through resolver SPIs, Testcontainers-backed providers, an embedded mode, a remote server, and build-time client utilities.
 
-## OVERVIEW
-Micronaut Test Resources: Gradle multi-module suite providing automatic test resources (databases, messaging, AWS emulation) via core resolvers, Testcontainers, and optional remote server.
+This file is intentionally durable: do not add generated timestamps, commit IDs, or branch names from transient analysis runs. Keep root guidance short and move detailed rules into `.agent-instructions/`.
 
-## STRUCTURE
-```
-./
-├── buildSrc/                             # Internal Gradle build logic
-├── config/                               # Repo configs
-├── gradle/                               # Gradle wrapper and scripts
-├── src/                                  # Project docs under src/main/docs/ (Micronaut site)
-├── test-resources-bom/                   # Dependency BOM module
-├── test-resources-build-tools/           # Build-time helpers (classpath/server utils)
-├── test-resources-client/                # Client API to the server
-├── test-resources-control-panel/         # Control Panel UI for server
-├── test-resources-core/                  # Resolver SPI and core model
-├── test-resources-elasticsearch/         # Elasticsearch provider
-├── test-resources-embedded/              # Embedded/in-process mode
-├── test-resources-extensions/            # Aggregator: core + JUnit Platform adapter
-├── test-resources-hashicorp-consul/      # Consul provider
-├── test-resources-hashicorp-vault/       # Vault provider
-├── test-resources-hibernate-reactive/    # Aggregator: HR core + db variants
-├── test-resources-hivemq/                # HiveMQ MQTT provider
-├── test-resources-jdbc/                  # Aggregator: mysql/postgresql/mariadb/mssql/oracle-*
-├── test-resources-kafka/                 # Kafka provider
-├── test-resources-localstack/            # Aggregator: core + s3/sqs/sns/dynamodb
-├── test-resources-mongodb/               # MongoDB provider
-├── test-resources-neo4j/                 # Neo4j provider
-├── test-resources-opensearch/            # OpenSearch provider
-├── test-resources-r2dbc/                 # Aggregator: r2dbc-* (core + db variants + pool)
-├── test-resources-rabbitmq/              # RabbitMQ provider
-├── test-resources-redis/                 # Redis provider
-├── test-resources-server/                # Micronaut app (sole main) serving test resources remotely
-├── test-resources-solr/                  # Solr provider
-└── test-resources-testcontainers/        # Base abstractions for container-backed providers
-```
+## Load First
 
-## WHERE TO LOOK
-- Core resolution SPI → test-resources-core/src/main/java/io/micronaut/testresources/core
-- Base container providers → test-resources-testcontainers/src/main/java/io/micronaut/testresources/testcontainers
-- Remote server entrypoint → test-resources-server/src/main/java/.../TestResourcesService.java
-- Client facade → test-resources-client/src/main/java/io/micronaut/testresources/client
-- Build helpers (large util) → test-resources-build-tools/src/main/java/.../ServerUtils.java
-- JDBC base + per-DB providers → test-resources-jdbc/
-- R2DBC base + per-DB providers → test-resources-r2dbc/
-- LocalStack shared logic → test-resources-localstack/test-resources-localstack-core
-- Build logic (plugins, conventions) → buildSrc/
+- [Architecture map](.agent-instructions/architecture.md) for module layout and ownership boundaries.
+- [Build and test](.agent-instructions/build-and-test.md) for Gradle commands, source sets, and verification scope.
+- [Documentation](.agent-instructions/docs.md) for guide sources, snippets, release notes, and docs validation.
+- [Provider modules](.agent-instructions/provider-modules.md) for resolver and container-provider conventions.
+- [Maintenance rules](.agent-instructions/maintenance.md) for recurring project-specific pitfalls.
 
-## CODE MAP
-Skipped (LSP not initialized). This is a large, modular Gradle Java/Groovy/Kotlin codebase.
+## Core Rules
 
-## CONVENTIONS
-- Gradle: settings plugin (Micronaut shared), version catalogs; wrapper present.
-- Docs: kept under src/main/docs/ (Micronaut site), not ./docs.
-- Tests: heavy Spock usage under src/test/groovy and src/spockTest/groovy; Kotlin tests under src/koTest/kotlin.
-- Custom source sets observed: src/test2 (embedded); Micronaut AOT under src/aot (server).
-- Providers expose properties under clear namespaces (jdbc.*, r2dbc.*, localstack.*) via core resolver SPI.
-- Default Docker images are tracked by Renovate custom managers in .github/renovate.json; when adding, moving, renaming, or centralizing provider image defaults, update that Renovate coverage in the same change.
-- Provider default Docker images are also documented in src/main/docs/guide/*.adoc; when changing default image tags, update the matching docs tables or examples in the same change so the published defaults do not drift from the code.
+- Use the Gradle wrapper from the repository root. Prefer targeted module tasks while developing, then broaden verification when a change affects shared behavior.
+- Keep resolver behavior lazy. Core resolver code should describe resolvable and required properties without starting containers or doing unrelated I/O.
+- Do not hard-code container or server ports. Use Testcontainers dynamic bindings and Micronaut's random-port configuration.
+- Avoid blocking Micronaut event-loop threads in `test-resources-server`; use the blocking executor pattern already present in the module.
+- Preserve compatibility modules unless the issue explicitly asks to remove them. When adding new Oracle guidance or examples, prefer the newer Oracle Free/Test Pilot paths over expanding deprecated XE-specific behavior.
+- Keep docs in `src/main/docs/guide`; this repository does not use a top-level `docs/` tree.
+- Remove stale nested agent guidance instead of letting old generated files override these root instructions.
 
-## ANTI-PATTERNS (THIS PROJECT)
-- Do NOT hard-code ports for container providers; prefer ephemeral/random bindings (see Consul note).
-- Deprecated Oracle XE variants exist; prefer unified 'oracle' providers (r2dbc/jdbc/hibernate-reactive).
-- Avoid blocking operations on Micronaut event loop in server module.
-- In Gradle/buildSrc, avoid leaking runtime app deps into build logic; keep tasks cache-friendly and free of network in configuration phase.
-- Preserve generated POM metadata markers in build outputs.
+## Common Commands
 
-## UNIQUE STYLES
-- Deep aggregator layout (e.g., test-resources-jdbc/*, r2dbc/*) with shared "core" per technology.
-- AOT usage in server; custom source set (test2) in embedded module.
-- Workflows synced from template; .github/workflows contains an rsync filter file.
-
-## COMMANDS
 ```bash
-./gradlew build              # Build all modules
-./gradlew check              # Run tests
+./gradlew check
+./gradlew publishGuide
+./gradlew docs
 ./gradlew publishToMavenLocal
-# CI workflows: .github/workflows/*.yml (gradle, release, snapshots, GraalVM variants)
 ```
 
-## NOTES
-- Two complexity hotspots: ServerUtils.java (~700 lines) and a large Spock test in testcontainers.
-- Entry point is only in test-resources-server (TestResourcesService).
-- Many modules extend shared base providers; start from each technology's "core" submodule before drilling into per-service modules.
+Run container-backed integration tests only when Docker is available and the task scope warrants it.

@@ -241,6 +241,29 @@ If that property is set, then the test resource will not be used.</p>
 
 
 <div class="sect2">
+<h3 id="_version_4_0_0">Version 4.0.0</h3>
+<div class="paragraph">
+<p>The remote test-resources RPC transport now uses a dedicated binary protocol instead of JSON.
+This is an intentional breaking change on the unreleased <code>4.0.x</code> line.</p>
+</div>
+<div class="paragraph">
+<p>Consequences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>pre-change clients cannot talk to post-change servers, and post-change clients cannot talk to pre-change servers</p>
+</li>
+<li>
+<p>direct JSON calls with tools such as <code>curl</code> or <code>httpie</code> are no longer a supported way to drive the RPC endpoints</p>
+</li>
+<li>
+<p>the supported debugging path is the documentation in this guide, server logs, and the control panel instead of ad hoc JSON requests</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_version_3_0_0">Version 3.0.0</h3>
 <div class="paragraph">
 <p>MongoDB now defaults to using the latest image. Previously it used MongoDB 5.</p>
@@ -3822,7 +3845,25 @@ Similarly, using the test distribution plugin of Gradle will trigger the same pr
 </div>
 
 
-
+<div class="paragraph">
+<p>The supported debugging path for the remote protocol is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Gradle debug mode for the test resources server process</p>
+</li>
+<li>
+<p>server logs</p>
+</li>
+<li>
+<p>the control panel when it is available on the server classpath</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Mixed client/server versions across the JSON and binary protocol boundary are not supported.</p>
+</div>
 
 <h2 id="debugging-intro"><a class="anchor" href="#debugging-intro"></a>7.1 Running the test resources service in debug mode</h2>
 
@@ -3856,6 +3897,10 @@ This can be configured using the following code:</p>
 </div>
 <div class="paragraph">
 <p>Alternatively, you may want to add the test resources control panel.</p>
+</div>
+<div class="paragraph">
+<p>On <code>4.0.x</code>, the remote RPC endpoints are binary rather than JSON.
+If you need to understand what the server is doing, prefer server logs, Gradle debug mode, and the control panel instead of calling the RPC routes with <code>curl</code> or <code>httpie</code>.</p>
 </div>
 
 <h2 id="modules-control-panel"><a class="anchor" href="#modules-control-panel"></a>7.2 Control Panel</h2>
@@ -3941,6 +3986,10 @@ That request context is displayed</p>
 For example, if a bean needs the value of the <code>datasources.default.url</code> property and that this property isn&#8217;t set, then the client will issue a request on the test resources server to give the value of that property.
 As a side effect of providing the value, a database container may be started.</p>
 </div>
+<div class="paragraph">
+<p>On the <code>4.0.x</code> line, the client/server RPC boundary uses a dedicated binary media type instead of JSON.
+This keeps the remote protocol narrow and removes the JSON transport requirement from the client side.</p>
+</div>
 
 <h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>8.1 The test resources server</h2>
 
@@ -3962,6 +4011,10 @@ As a side effect of providing the value, a database container may be started.</p
 </div>
 <div class="paragraph">
 <p>It means, for example, that with <a href="https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build">Gradle continuous builds</a>, the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.</p>
+</div>
+<div class="paragraph">
+<p>The remote RPC endpoints exposed by the server now consume and produce a dedicated binary media type.
+Manual JSON callers are therefore not a supported integration path for those endpoints on <code>4.0.x</code>.</p>
 </div>
 
 <h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>8.1.1 Sharing containers between independent builds</h2>
@@ -4073,6 +4126,10 @@ If Micronaut Test Resources unexpectedly connects to an old server or fails beca
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The remote transport is a small binary protocol shared with the server.
+That protocol is intentionally limited to the value shapes used by the RPC layer: strings, booleans, integral numbers, lists, maps, and <code>null</code>.</p>
 </div>
 </div>
 </div>

@@ -5,6 +5,7 @@ io.micronaut.test.extensions.testresources.annotation
 io.micronaut.testresources.azure
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
+io.micronaut.testresources.codec
 io.micronaut.testresources.consul
 io.micronaut.testresources.controlpanel
 io.micronaut.testresources.core

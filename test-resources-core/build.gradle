@@ -1,3 +1,5 @@
+import io.micronaut.internal.WriteDefaultTestResourceImages
+
 plugins {
     id 'io.micronaut.build.internal.test-resources-module'
 }
@@ -6,3 +8,11 @@ description = """
 Core support for test resources loading.
 This module defines interfaces of test resources resolvers, as well as facilities for loading them lazily.
 """
+
+def writeDefaultTestResourceImages = tasks.register("writeDefaultTestResourceImages", WriteDefaultTestResourceImages) {
+    manifestFile.set(layout.projectDirectory.file("src/main/resources/io/micronaut/testresources/core/default-images/Dockerfile"))
+    outputDirectory.set(layout.buildDirectory.dir("generated/sources/default-images/java"))
+    getPackage().set("io.micronaut.testresources.core")
+}
+
+sourceSets.main.java.srcDir(writeDefaultTestResourceImages)

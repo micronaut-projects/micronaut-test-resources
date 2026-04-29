@@ -1,8 +1,9 @@
 # This Dockerfile is not built. It is a Renovate-visible manifest for the
 # Docker images used as Micronaut Test Resources provider defaults.
 #
-# Keep one pinned FROM instruction per default image. Provider Java defaults load
-# this file at runtime, so a Renovate update here changes the effective default.
+# Keep one pinned FROM instruction per default image. The Gradle build generates
+# Java constants from this file, so a Renovate update here changes the effective
+# default.
 
 # provider: azurite
 # property: test-resources.containers.azurite.image-name

@@ -54,7 +54,7 @@ class DefaultTestResourceImagesTest extends Specification {
         'vault'
     ] as Set
 
-    def "loads the default image manifest as runtime defaults"() {
+    def "generates default images as runtime constants"() {
         expect:
         DefaultTestResourceImages.images().keySet() == EXPECTED_ALIASES
         DefaultTestResourceImages.DEFAULT_AZURITE_IMAGE == DefaultTestResourceImages.image('azurite')
@@ -87,9 +87,14 @@ class DefaultTestResourceImagesTest extends Specification {
         DefaultTestResourceImages.DEFAULT_VAULT_IMAGE == DefaultTestResourceImages.image('vault')
     }
 
+    def "generated defaults match the Renovate manifest"() {
+        expect:
+        DefaultTestResourceImages.images() == manifestDefaults()
+    }
+
     def "manifest uses pinned Docker image tags Renovate can update"() {
         expect:
-        DefaultTestResourceImages.images().every { alias, image ->
+        manifestDefaults().every { alias, image ->
             assert imageNamePart(image).contains(':'): "$alias is not pinned: $image"
             assert !image.endsWith(':latest'): "$alias uses a rolling latest tag: $image"
             true
@@ -134,6 +139,19 @@ class DefaultTestResourceImagesTest extends Specification {
             'modules-redis.adoc': ['redis', 'redis_cluster'],
             'modules-seaweedfs.adoc': ['seaweedfs']
         ]
+    }
+
+    private static Map<String, String> manifestDefaults() {
+        Map<String, String> defaults = [:]
+        Files.readAllLines(repositoryRoot()
+            .resolve('test-resources-core/src/main/resources/io/micronaut/testresources/core/default-images/Dockerfile'))
+            .each { line ->
+                def matcher = line =~ /^FROM\s+(\S+)\s+AS\s+([a-z0-9_]+)$/
+                if (matcher.matches()) {
+                    defaults[matcher.group(2)] = matcher.group(1)
+                }
+            }
+        defaults
     }
 
     private static String imageNamePart(String image) {

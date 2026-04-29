@@ -11,36 +11,6 @@
   "prHourlyLimit": 1,
   "prConcurrentLimit": 20,
   "timezone": "Europe/Prague",
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "Docker image tags pinned in Java provider defaults",
-      "managerFilePatterns": [
-        "/^test-resources-core\\/src\\/main\\/java\\/io\\/micronaut\\/testresources\\/core\\/DefaultTestResourceImages\\.java$/",
-        "/^test-resources-hashicorp-consul\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-hashicorp-vault\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-elasticsearch\\/src\\/main\\/java\\/.*ElasticsearchTestResourceProvider\\.java$/",
-        "/^test-resources-hazelcast\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-hivemq\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-infinispan\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-kafka\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-localstack\\/test-resources-localstack-core\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-mongodb\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-neo4j\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-opensearch\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-rabbitmq\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-redis\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-solr\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-jdbc\\/test-resources-jdbc-(mariadb|mssql|mysql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-r2dbc\\/test-resources-r2dbc-(mariadb|mssql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/",
-        "/^test-resources-hibernate-reactive\\/test-resources-hibernate-reactive-(mariadb|mssql|oracle-free|oracle-xe|postgresql)\\/src\\/main\\/java\\/.*TestResourceProvider\\.java$/"
-      ],
-      "matchStrings": [
-        "(?:DEFAULT(?:_[A-Z0-9]+)*_IMAGE(?:_NAME)?\\s*=\\s*|return\\s+)\"(?<depName>[a-z0-9.-]+(?:\\/[a-z0-9._-]+)*):(?<currentValue>[A-Za-z0-9_.-]+)\""
-      ],
-      "datasourceTemplate": "docker"
-    }
-  ],
   "packageRules": [
     {
       "dependencyDashboardApproval": true,

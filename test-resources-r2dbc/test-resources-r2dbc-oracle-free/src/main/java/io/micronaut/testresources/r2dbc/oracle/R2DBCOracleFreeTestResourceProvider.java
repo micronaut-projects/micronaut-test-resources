@@ -100,6 +100,7 @@ public class R2DBCOracleFreeTestResourceProvider extends AbstractR2DBCTestResour
     }
 
     @Override
+    @SuppressWarnings("java:S2095") // AbstractTestContainersProvider owns the container lifecycle after creation.
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new OracleContainer(imageName).withStartupTimeout(Duration.ofMinutes(2));
     }

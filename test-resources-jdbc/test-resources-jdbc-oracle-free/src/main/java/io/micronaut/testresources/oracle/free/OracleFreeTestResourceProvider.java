@@ -17,10 +17,10 @@ package io.micronaut.testresources.oracle.free;
 
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
+import io.micronaut.testresources.testcontainers.OracleFreeContainerSupport;
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -79,9 +79,8 @@ public class OracleFreeTestResourceProvider extends AbstractJdbcTestResourceProv
     }
 
     @Override
-    @SuppressWarnings("java:S2095") // AbstractTestContainersProvider owns the container lifecycle after creation.
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OracleContainer(imageName).withStartupTimeout(Duration.ofMinutes(2));
+        return OracleFreeContainerSupport.createContainer(() -> new OracleContainer(imageName));
     }
 
 }

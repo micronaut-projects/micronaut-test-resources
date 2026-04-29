@@ -18,12 +18,12 @@ package io.micronaut.testresources.r2dbc.oracle;
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.micronaut.testresources.r2dbc.core.R2dbcSupport;
+import io.micronaut.testresources.testcontainers.OracleFreeContainerSupport;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,9 +100,8 @@ public class R2DBCOracleFreeTestResourceProvider extends AbstractR2DBCTestResour
     }
 
     @Override
-    @SuppressWarnings("java:S2095") // AbstractTestContainersProvider owns the container lifecycle after creation.
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OracleContainer(imageName).withStartupTimeout(Duration.ofMinutes(2));
+        return OracleFreeContainerSupport.createContainer(() -> new OracleContainer(imageName));
     }
 
 }

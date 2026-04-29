@@ -15,7 +15,6 @@
  */
 package io.micronaut.testresources.r2dbc.mysql;
 
-import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
@@ -25,6 +24,8 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 import java.util.Optional;
+
+import static io.micronaut.testresources.core.DefaultTestResourceImages.DEFAULT_MYSQL_IMAGE;
 
 /**
  * A test resource provider for reactive MySQL.
@@ -44,7 +45,7 @@ public class R2DBCMySQLTestResourceProvider extends AbstractR2DBCTestResourcePro
 
     @Override
     protected String getDefaultImageName() {
-        return DefaultTestResourceImages.DEFAULT_MYSQL_IMAGE;
+        return DEFAULT_MYSQL_IMAGE;
     }
 
     @Override

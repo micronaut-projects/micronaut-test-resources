@@ -10,6 +10,7 @@ class AbstractTestContainersProviderTest extends Specification {
             getSimpleName() >> 'test'
             getContainerOwnerKey(_, _, _) >> AbstractTestContainersProviderTest.name
             getContainerQuery(_, _, _) >> [request: 'value']
+            getDefaultStartupTimeout(_, _) >> Optional.empty()
         }
 
         when:

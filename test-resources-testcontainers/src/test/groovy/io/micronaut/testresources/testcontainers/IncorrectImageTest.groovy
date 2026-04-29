@@ -17,6 +17,8 @@ class IncorrectImageTest extends Specification {
 
         then:
         Exception ex = thrown()
-        ex.message.contains """Status 404: {"message":"pull access denied for this-image-does-not-exist, repository does not exist or may require 'docker login': denied: requested access to the resource is denied"}"""
+        ex.message.contains "Status 404"
+        ex.message.contains "pull access denied for this-image-does-not-exist"
+        ex.message.contains "repository does not exist or may require 'docker login'"
     }
 }

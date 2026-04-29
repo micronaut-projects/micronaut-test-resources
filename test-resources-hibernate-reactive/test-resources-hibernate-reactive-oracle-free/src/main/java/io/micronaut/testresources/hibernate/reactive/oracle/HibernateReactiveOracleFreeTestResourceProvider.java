@@ -20,6 +20,7 @@ import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReact
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -45,7 +46,7 @@ public class HibernateReactiveOracleFreeTestResourceProvider extends AbstractHib
 
     @Override
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OracleContainer(imageName);
+        return new OracleContainer(imageName).withStartupTimeout(Duration.ofMinutes(2));
     }
 
 }

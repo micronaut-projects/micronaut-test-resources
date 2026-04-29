@@ -23,6 +23,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,7 +101,7 @@ public class R2DBCOracleFreeTestResourceProvider extends AbstractR2DBCTestResour
 
     @Override
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OracleContainer(imageName);
+        return new OracleContainer(imageName).withStartupTimeout(Duration.ofMinutes(2));
     }
 
 }

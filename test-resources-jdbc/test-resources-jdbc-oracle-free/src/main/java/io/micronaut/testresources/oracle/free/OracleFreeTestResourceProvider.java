@@ -20,6 +20,7 @@ import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class OracleFreeTestResourceProvider extends AbstractJdbcTestResourceProv
 
     @Override
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OracleContainer(imageName);
+        return new OracleContainer(imageName).withStartupTimeout(Duration.ofMinutes(2));
     }
 
 }

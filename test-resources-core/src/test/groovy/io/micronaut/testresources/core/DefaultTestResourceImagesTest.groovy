@@ -109,8 +109,7 @@ class DefaultTestResourceImagesTest extends Specification {
         documentedDefaults().every { fileName, aliases ->
             String doc = Files.readString(root.resolve("src/main/docs/guide/$fileName"))
             aliases.every { alias ->
-                assert doc.contains("`${DefaultTestResourceImages.image(alias)}`") ||
-                    doc.contains(DefaultTestResourceImages.image(alias)): "$fileName does not document $alias"
+                assert doc.contains(defaultImageAttribute(alias)): "$fileName does not document $alias"
                 true
             }
         }
@@ -157,6 +156,10 @@ class DefaultTestResourceImagesTest extends Specification {
     private static String imageNamePart(String image) {
         int lastSlash = image.lastIndexOf('/')
         lastSlash == -1 ? image : image.substring(lastSlash + 1)
+    }
+
+    private static String defaultImageAttribute(String alias) {
+        "{default-image-${alias.replace('_', '-')}}"
     }
 
     private static Path repositoryRoot() {

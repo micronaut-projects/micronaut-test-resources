@@ -23,6 +23,7 @@ import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
@@ -52,9 +53,17 @@ public abstract class WriteDefaultTestResourceImages extends DefaultTask {
     @OutputDirectory
     abstract DirectoryProperty getOutputDirectory();
 
+    @OutputFile
+    abstract RegularFileProperty getPropertiesFile();
+
     @TaskAction
     public void writeDefaultTestResourceImages() throws IOException {
         Map<String, String> images = loadImages();
+        writeJava(images);
+        writeProperties(images);
+    }
+
+    private void writeJava(Map<String, String> images) throws IOException {
         File outputFile = getOutputDirectory().file(getPackage().map(pkg -> pkg.replace('.', '/') + "/DefaultTestResourceImages.java")).get().getAsFile();
         Path parentPath = outputFile.getParentFile().toPath();
         if (Files.isDirectory(parentPath) || Files.createDirectories(parentPath) != null) {
@@ -116,6 +125,21 @@ public abstract class WriteDefaultTestResourceImages extends DefaultTask {
         }
     }
 
+    private void writeProperties(Map<String, String> images) throws IOException {
+        File outputFile = getPropertiesFile().get().getAsFile();
+        Path parentPath = outputFile.getParentFile().toPath();
+        if (Files.isDirectory(parentPath) || Files.createDirectories(parentPath) != null) {
+            try (PrintWriter prn = new PrintWriter(new FileWriter(outputFile))) {
+                images.forEach((alias, image) -> {
+                    String propertyAlias = alias.replace('_', '-');
+                    prn.println("default-image-" + propertyAlias + "=" + image);
+                    prn.println("default-image-name-" + propertyAlias + "=" + imageName(image));
+                    prn.println("default-image-tag-" + propertyAlias + "=" + imageTag(image));
+                });
+            }
+        }
+    }
+
     private Map<String, String> loadImages() throws IOException {
         Map<String, String> images = new LinkedHashMap<>();
         for (String line : Files.readAllLines(getManifestFile().get().getAsFile().toPath())) {
@@ -132,5 +156,13 @@ public abstract class WriteDefaultTestResourceImages extends DefaultTask {
 
     private static String constantName(String alias) {
         return "DEFAULT_" + alias.toUpperCase() + "_IMAGE";
+    }
+
+    private static String imageName(String image) {
+        return image.substring(0, image.lastIndexOf(':'));
+    }
+
+    private static String imageTag(String image) {
+        return image.substring(image.lastIndexOf(':') + 1);
     }
 }

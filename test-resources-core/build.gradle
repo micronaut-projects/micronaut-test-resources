@@ -12,7 +12,8 @@ This module defines interfaces of test resources resolvers, as well as facilitie
 def writeDefaultTestResourceImages = tasks.register("writeDefaultTestResourceImages", WriteDefaultTestResourceImages) {
     manifestFile.set(layout.projectDirectory.file("src/main/resources/io/micronaut/testresources/core/default-images/Dockerfile"))
     outputDirectory.set(layout.buildDirectory.dir("generated/sources/default-images/java"))
+    propertiesFile.set(layout.buildDirectory.file("generated/default-images/default-test-resource-images.properties"))
     getPackage().set("io.micronaut.testresources.core")
 }
 
-sourceSets.main.java.srcDir(writeDefaultTestResourceImages)
+sourceSets.main.java.srcDir(writeDefaultTestResourceImages.flatMap { it.outputDirectory })

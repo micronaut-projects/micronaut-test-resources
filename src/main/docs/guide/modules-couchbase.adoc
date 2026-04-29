@@ -1,6 +1,6 @@
 Couchbase support will automatically start a https://www.couchbase.com[Couchbase Server container] and provide the values of the `couchbase.uri`, `couchbase.username`, and `couchbase.password` properties.
 
-The provider uses the `couchbase/server:8.0.1` image by default.
+The provider uses the `{default-image-couchbase}` image by default.
 
 You can override the image name and tag with `test-resources.containers.couchbase.image-name` and `test-resources.containers.couchbase.image-tag`.
 
@@ -9,8 +9,8 @@ You can override the image name and tag with `test-resources.containers.couchbas
 test-resources:
   containers:
     couchbase:
-      image-name: couchbase/server
-      image-tag: 8.0.1
+      image-name: my-couchbase/server
+      image-tag: custom-tag
 ----
 
 If you explicitly map any of those same properties through generic Testcontainers support, the dedicated Couchbase provider stands down for the full `couchbase.uri` / `couchbase.username` / `couchbase.password` connection set so values never come from mixed containers.

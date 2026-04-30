@@ -1,22 +1,22 @@
 # Contributing Code or Documentation to Micronaut
 
-Sign the [Contributor License Agreement (CLA)](https://cla-assistant.io/melix/micronaut-test-resources). This is required before any of your code or pull-requests are accepted.
+Sign the [Contributor License Agreement (CLA)](https://cla-assistant.io/micronaut-projects/micronaut-test-resources). This is required before any of your code or pull requests are accepted.
 
 ## Finding Issues to Work on
 
-If you are interested in contributing to Micronaut and are looking for issues to work on, take a look at the issues tagged with [help wanted](https://github.com/micronaut-projects/micronaut-xxx/issues?q=is%3Aopen+is%3Aissue+label%3A%22status%3A+help+wanted%22).
+If you are interested in contributing to Micronaut and are looking for issues to work on, take a look at the issues tagged with [help wanted](https://github.com/micronaut-projects/micronaut-test-resources/issues?q=is%3Aopen+is%3Aissue+label%3A%22status%3A+help+wanted%22).
 
 ## JDK Setup
 
-Micronaut s currently requires JDK 8.
+Micronaut Test Resources currently requires JDK 25.
 
 ## IDE Setup
 
-Micronaut s can be imported into IntelliJ IDEA by opening the `build.gradle` file.
+Micronaut Test Resources can be imported into IntelliJ IDEA by opening the `settings.gradle` file.
 
 ## Docker Setup
 
-Micronaut s tests currently require Docker to be installed.
+Micronaut Test Resources tests currently require Docker to be installed.
 
 ## Running Tests
 
@@ -26,15 +26,15 @@ To run the tests, use `./gradlew check`.
 
 The documentation sources are located at `src/main/docs/guide`.
 
-To build the documentation, run `./gradlew publishGuide` (or `./gradlew pG`), then open `build/docs/index.html`
+To build the documentation, run `./gradlew publishGuide` (or `./gradlew pG`), then open `build/docs/index.html`.
 
 To also build the Javadocs, run `./gradlew docs`.
 
 ## Working on the code base
 
-If you use IntelliJ IDEA, you can import the project using the Intellij Gradle Tooling ("File / Import Project" and selecting the "settings.gradle" file).
+If you use IntelliJ IDEA, you can import the project using the IntelliJ Gradle Tooling ("File / Import Project" and selecting the `settings.gradle` file).
 
-To get a local development version of Micronaut XXX working, first run the `publishToMavenLocal` task.
+To get a local development version of Micronaut Test Resources working, first run the `publishToMavenLocal` task.
 
 ```
 ./gradlew pTML
@@ -57,17 +57,33 @@ Once you are satisfied with your changes:
 - Push your changes to your remote branch on GitHub
 - Send us a [pull request](https://help.github.com/articles/creating-a-pull-request)
 
+## Merging a pull request
+
+Before we merge a PR into the `master` branch, we have to consider:
+
+Can this PR be merged into a patch release (e.g. documentation fixes, bug fix, patch transitive dependency upgrade, breaking change due to security, GitHub actions sync, Micronaut Build Plugin upgrade)?
+
+Should this PR be merged into the next minor version of the module? For example, a new feature, a new module, or a minor transitive dependency upgrade.
+
+If the PR is going into the next minor version of the module, we need to release a patch version, and branch off `master` a new branch for the current minor module version. If the `gradle.properties` `projectVersion` is `3.1.2-SNAPSHOT`, the branch should be named `3.1.x`, and we push it to GitHub. If `master` contains only commits such as GitHub actions sync (no commits with benefits to users), we can branch off without doing a patch release.
+
+When you merge a PR that will go into the next module minor release:
+
+- Update any Micronaut Core branch or version alignment properties used by this repository.
+- Update `gradle.properties`'s `projectVersion` to the next minor snapshot.
+- Upgrade the module to the latest version of Micronaut.
+
 ## Checkstyle
 
 We want to keep the code clean, following good practices about organization, Javadoc, and style as much as possible.
 
-Micronaut XXX uses [Checkstyle](https://checkstyle.sourceforge.io/) to make sure that the code follows those standards. The configuration is defined in `config/checkstyle/checkstyle.xml`. To execute Checkstyle, run:
+Micronaut Test Resources uses [Checkstyle](https://checkstyle.sourceforge.io/) to make sure that the code follows those standards. The configuration is defined in `config/checkstyle/checkstyle.xml`. To execute Checkstyle, run:
 
 ```
 ./gradlew <module-name>:checkstyleMain
 ```
 
-Before starting to contribute new code we recommended that you install the IntelliJ [CheckStyle-IDEA](https://plugins.jetbrains.com/plugin/1065-checkstyle-idea) plugin and configure it to use Micronaut's checkstyle configuration file.
+Before starting to contribute new code, we recommend that you install the IntelliJ [CheckStyle-IDEA](https://plugins.jetbrains.com/plugin/1065-checkstyle-idea) plugin and configure it to use Micronaut's checkstyle configuration file.
 
 IntelliJ will mark in red the issues Checkstyle finds. For example:
 
@@ -77,6 +93,6 @@ In this case, to fix the issues, we need to:
 
 - Add one empty line before `package` in line 16
 - Add the Javadoc for the constructor in line 27
-- Add an space after `if` in line 34
+- Add a space after `if` in line 34
 
 The plugin also adds a new tab in the bottom of the IDE to run Checkstyle and show errors and warnings. We recommend that you run the report and fix all issues before submitting a pull request.

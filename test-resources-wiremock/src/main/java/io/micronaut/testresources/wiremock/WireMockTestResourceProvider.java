@@ -63,16 +63,6 @@ public class WireMockTestResourceProvider extends AbstractTestContainersProvider
     }
 
     @Override
-    protected String getSimpleName() {
-        return SIMPLE_NAME;
-    }
-
-    @Override
-    protected String getDefaultImageName() {
-        return DEFAULT_IMAGE;
-    }
-
-    @Override
     protected WireMockContainer createContainer(DockerImageName imageName,
                                                 Map<String, Object> requestedProperties,
                                                 Map<String, Object> testResourcesConfig) {
@@ -87,6 +77,11 @@ public class WireMockTestResourceProvider extends AbstractTestContainersProvider
         } else if (configuredCliArgs != null) {
             container.withCliArg(String.valueOf(configuredCliArgs));
         }
+    }
+
+    @Override
+    protected String getSimpleName() {
+        return SIMPLE_NAME;
     }
 
     @Override
@@ -106,5 +101,10 @@ public class WireMockTestResourceProvider extends AbstractTestContainersProvider
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_PROPERTIES.contains(propertyName);
+    }
+
+    @Override
+    protected String getDefaultImageName() {
+        return DEFAULT_IMAGE;
     }
 }

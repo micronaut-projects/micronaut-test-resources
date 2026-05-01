@@ -1,0 +1,31 @@
+WireMock support automatically starts a https://wiremock.org/[WireMock] container and provides the values of the `wiremock.host`, `wiremock.port`, and `wiremock.url` properties.
+
+The default image (`wiremock/wiremock:3.13.2-2`) can be overwritten by setting the `test-resources.containers.wiremock.image-name` property.
+The default version can be overwritten by setting the `test-resources.containers.wiremock.image-tag` property.
+
+Additional WireMock CLI arguments can be configured with `test-resources.containers.wiremock.cli-args`.
+The value may be a single argument string or a list of argument strings, which are passed directly to the WireMock container.
+
+[configuration]
+----
+test-resources:
+  containers:
+    wiremock:
+      cli-args:
+        - "--verbose"
+        - "--global-response-templating"
+----
+
+Resolved properties:
+
+[[wiremock-host]]
+`wiremock.host`:: The host name of the WireMock container.
+
+[[wiremock-port]]
+`wiremock.port`:: The mapped HTTP port of the WireMock container.
+
+[[wiremock-url]]
+`wiremock.url`:: The base HTTP URL of the WireMock container.
+
+Mapping and file-copy helpers are not part of the initial WireMock provider surface.
+For advanced file-copy needs, use the generic container metadata documented in <<modules-testcontainers,Generic Testcontainers support>>.

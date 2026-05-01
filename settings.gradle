@@ -92,6 +92,7 @@ include 'test-resources-hashicorp-vault'
 include 'test-resources-hashicorp-consul'
 include 'test-resources-infinispan'
 include 'test-resources-hazelcast'
+include 'test-resources-wiremock'
 
 extensionModules.each {
     String projectName = "test-resources-extensions-$it"

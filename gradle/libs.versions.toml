@@ -52,6 +52,7 @@ managed-opensearch-testcontainers = "4.1.0"
 managed-testcontainers = "2.0.4"
 managed-testcontainers-pulsar = "1.21.3"
 managed-testcontainers-redis = "1.6.4"
+managed-wiremock-testcontainers = "1.0-alpha-15"
 
 # Transitive dependencies upgrades
 commons-compress="1.28.0"
@@ -86,6 +87,7 @@ managed-testcontainers-rabbitmq = { module = "org.testcontainers:testcontainers-
 managed-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "managed-testcontainers-redis" }
 managed-testcontainers-r2dbc = { module = "org.testcontainers:testcontainers-r2dbc", version.ref = "managed-testcontainers" }
 managed-testcontainers-vault = { module = "org.testcontainers:testcontainers-vault", version.ref = "managed-testcontainers" }
+managed-wiremock-testcontainers = { module = "org.wiremock.integrations.testcontainers:wiremock-testcontainers-module", version.ref = "managed-wiremock-testcontainers" }
 
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }

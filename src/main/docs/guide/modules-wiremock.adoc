@@ -30,6 +30,22 @@ test-resources:
         - "--global-response-templating"
 ----
 
+WireMock mappings can be copied into the container with the generic Test Resources `copy-to-container` metadata.
+Copy JSON mapping files to `/home/wiremock/mappings/` and response body files to `/home/wiremock/__files/`:
+
+[configuration]
+----
+test-resources:
+  containers:
+    wiremock:
+      copy-to-container:
+        - "classpath:wiremock/mappings/hello.json": /home/wiremock/mappings/hello.json
+        - "classpath:wiremock/__files/hello.txt": /home/wiremock/__files/hello.txt
+----
+
+The same metadata can also copy files from host paths.
+See <<modules-testcontainers,Generic Testcontainers support>> for the full list of container metadata options.
+
 Resolved properties:
 
 [[wiremock-host]]
@@ -41,5 +57,4 @@ Resolved properties:
 [[wiremock-url]]
 `wiremock.url`:: The base HTTP URL of the WireMock container.
 
-Mapping and file-copy helpers are not part of the initial WireMock provider surface.
-For advanced file-copy needs, use the generic container metadata documented in <<modules-testcontainers,Generic Testcontainers support>>.
+Mapping-specific Java helpers are not part of the initial WireMock provider surface.

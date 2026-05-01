@@ -49,6 +49,7 @@ public class WireMockTestResourceProvider extends AbstractTestContainersProvider
      * Creates a WireMock test resource provider.
      */
     public WireMockTestResourceProvider() {
+        // Required for service loading.
     }
 
     @Override

@@ -1,10 +1,6 @@
 package io.micronaut.testresources.wiremock
 
-import io.micronaut.context.ApplicationContext
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import io.micronaut.testresources.core.Scope
-import io.micronaut.testresources.testcontainers.TestContainers
-import jakarta.inject.Inject
 
 @MicronautTest
 class WireMockCustomImageSpec extends AbstractWireMockSpec {
@@ -16,16 +12,13 @@ class WireMockCustomImageSpec extends AbstractWireMockSpec {
         ]
     }
 
-    @Inject
-    ApplicationContext applicationContext
-
     def "starts WireMock using a custom image"() {
         when:
-        applicationContext.getBean(WireMockClient)
+        wireMockClient()
 
         then:
         listContainers().size() == 1
-        with(TestContainers.listByScope("wiremock").get(Scope.of("wiremock"))) {
+        with(wireMockContainers()) {
             size() == 1
             get(0).dockerImageName == "wiremock/wiremock:3.13.1"
         }

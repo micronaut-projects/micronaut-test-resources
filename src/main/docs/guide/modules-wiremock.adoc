@@ -1,5 +1,19 @@
 WireMock support automatically starts a https://wiremock.org/[WireMock] container and provides the values of the `wiremock.host`, `wiremock.port`, and `wiremock.url` properties.
 
+The provider module is `io.micronaut.testresources:micronaut-test-resources-wiremock`.
+Use it when your build needs to add WireMock support explicitly to the Test Resources server classpath.
+
+You can inject `wiremock.url` into a test and use it to configure the WireMock client:
+
+[source,java]
+----
+@Value("${wiremock.url}")
+String wireMockUrl;
+
+URI uri = URI.create(wireMockUrl);
+WireMock.configureFor(uri.getHost(), uri.getPort());
+----
+
 The default image (`wiremock/wiremock:3.13.2-2`) can be overwritten by setting the `test-resources.containers.wiremock.image-name` property.
 The default version can be overwritten by setting the `test-resources.containers.wiremock.image-tag` property.
 

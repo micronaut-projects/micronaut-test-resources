@@ -1,0 +1,6 @@
+test-resources:
+  containers:
+    wiremock:
+      cli-args:
+        - "--verbose"
+        - "--global-response-templating"

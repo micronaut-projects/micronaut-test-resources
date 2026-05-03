@@ -141,11 +141,13 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.16</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.17</strong><span>OAuth2 / Keycloak</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-wiremock"><a href="#modules-wiremock"><strong>5.17</strong><span>WireMock</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.18</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.18</strong><span>OAuth2 / Keycloak</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.19</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.19</strong><span>Hashicorp Vault</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.20</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
         
@@ -1987,7 +1989,230 @@ The default version can be overwritten by setting the <code>test-resources.conta
 </dl>
 </div>
 
-<h2 id="modules-oauth2"><a class="anchor" href="#modules-oauth2"></a>5.17 OAuth2 / Keycloak</h2>
+<h2 id="modules-wiremock"><a class="anchor" href="#modules-wiremock"></a>5.17 WireMock</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-wiremock.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>WireMock support automatically starts a <a href="https://wiremock.org/">WireMock</a> container and provides the values of the <code>wiremock.host</code>, <code>wiremock.port</code>, and <code>wiremock.url</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The provider module is <code>io.micronaut.testresources:micronaut-test-resources-wiremock</code>.
+Use it when your build needs to add WireMock support explicitly to the Test Resources server classpath.</p>
+</div>
+<div class="paragraph">
+<p>You can inject <code>wiremock.url</code> into a test and use it to configure the WireMock client:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Value("${wiremock.url}")
+String wireMockUrl;
+
+URI uri = URI.create(wireMockUrl);
+WireMock.configureFor(uri.getHost(), uri.getPort());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default image (<code>wiremock/wiremock:3.13.2-2</code>) can be overwritten by setting the <code>test-resources.containers.wiremock.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.wiremock.image-tag</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Additional WireMock CLI arguments can be configured with <code>test-resources.containers.wiremock.cli-args</code>.
+The value may be a single argument string or a list of argument strings, which are passed directly to the WireMock container.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.wiremock.cli-args[0]=--verbose
+test-resources.containers.wiremock.cli-args[1]=--global-response-templating</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    wiremock:
+      cli-args:
+        - "--verbose"
+        - "--global-response-templating"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.wiremock]
+      cli-args=[
+        "--verbose",
+        "--global-response-templating"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    wiremock {
+      cliArgs = ["--verbose", "--global-response-templating"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      wiremock {
+        cli-args = ["--verbose", "--global-response-templating"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "wiremock": {
+        "cli-args": ["--verbose", "--global-response-templating"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>WireMock mappings can be copied into the container with the generic Test Resources <code>copy-to-container</code> metadata.
+Copy JSON mapping files to <code>/home/wiremock/mappings/</code> and response body files to <code>/home/wiremock/__files/</code>:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.wiremock.copy-to-container[0].classpath:wiremock/mappings/hello.json=/home/wiremock/mappings/hello.json
+test-resources.containers.wiremock.copy-to-container[1].classpath:wiremock/__files/hello.txt=/home/wiremock/__files/hello.txt</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    wiremock:
+      copy-to-container:
+        - "classpath:wiremock/mappings/hello.json": /home/wiremock/mappings/hello.json
+        - "classpath:wiremock/__files/hello.txt": /home/wiremock/__files/hello.txt</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.wiremock]
+      [[test-resources.containers.wiremock.copy-to-container]]
+        "classpath:wiremock/mappings/hello.json"="/home/wiremock/mappings/hello.json"
+      [[test-resources.containers.wiremock.copy-to-container]]
+        "classpath:wiremock/__files/hello.txt"="/home/wiremock/__files/hello.txt"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    wiremock {
+      copyToContainer = [{
+          classpath:wiremock/mappings/hello.json = "/home/wiremock/mappings/hello.json"
+        }, {
+          classpath:wiremock/__files/hello.txt = "/home/wiremock/__files/hello.txt"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      wiremock {
+        copy-to-container = [{
+            "classpath:wiremock/mappings/hello.json" = "/home/wiremock/mappings/hello.json"
+          }, {
+            "classpath:wiremock/__files/hello.txt" = "/home/wiremock/__files/hello.txt"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "wiremock": {
+        "copy-to-container": [{
+            "classpath:wiremock/mappings/hello.json": "/home/wiremock/mappings/hello.json"
+          }, {
+            "classpath:wiremock/__files/hello.txt": "/home/wiremock/__files/hello.txt"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The same metadata can also copy files from host paths.
+See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the full list of container metadata options.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="wiremock-host" class="dlist">
+<dl>
+<dt class="hdlist1"><code>wiremock.host</code></dt>
+<dd>
+<p>The host name of the WireMock container.</p>
+</dd>
+</dl>
+</div>
+<div id="wiremock-port" class="dlist">
+<dl>
+<dt class="hdlist1"><code>wiremock.port</code></dt>
+<dd>
+<p>The mapped HTTP port of the WireMock container.</p>
+</dd>
+</dl>
+</div>
+<div id="wiremock-url" class="dlist">
+<dl>
+<dt class="hdlist1"><code>wiremock.url</code></dt>
+<dd>
+<p>The base HTTP URL of the WireMock container.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Mapping-specific Java helpers are not part of the initial WireMock provider surface.</p>
+</div>
+
+<h2 id="modules-oauth2"><a class="anchor" href="#modules-oauth2"></a>5.18 OAuth2 / Keycloak</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-oauth2.adoc"'>
@@ -2100,7 +2325,7 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 </div>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.18 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.19 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -2200,7 +2425,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.19 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.20 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>

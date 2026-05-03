@@ -56,3 +56,4 @@ io.micronaut.testresources.seaweedfs
 io.micronaut.testresources.server
 io.micronaut.testresources.solr
 io.micronaut.testresources.testcontainers
+io.micronaut.testresources.wiremock

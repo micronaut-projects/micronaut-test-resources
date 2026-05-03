@@ -42,6 +42,8 @@ modules:
     title: Redis
   modules-hazelcast:
     title: Hazelcast
+  modules-wiremock:
+    title: WireMock
   modules-oauth2:
     title: OAuth2 / Keycloak
   modules-hashicorp-vault:

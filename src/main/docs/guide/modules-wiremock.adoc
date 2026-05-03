@@ -1,0 +1,60 @@
+WireMock support automatically starts a https://wiremock.org/[WireMock] container and provides the values of the `wiremock.host`, `wiremock.port`, and `wiremock.url` properties.
+
+The provider module is `io.micronaut.testresources:micronaut-test-resources-wiremock`.
+Use it when your build needs to add WireMock support explicitly to the Test Resources server classpath.
+
+You can inject `wiremock.url` into a test and use it to configure the WireMock client:
+
+[source,java]
+----
+@Value("${wiremock.url}")
+String wireMockUrl;
+
+URI uri = URI.create(wireMockUrl);
+WireMock.configureFor(uri.getHost(), uri.getPort());
+----
+
+The default image (`wiremock/wiremock:3.13.2-2`) can be overwritten by setting the `test-resources.containers.wiremock.image-name` property.
+The default version can be overwritten by setting the `test-resources.containers.wiremock.image-tag` property.
+
+Additional WireMock CLI arguments can be configured with `test-resources.containers.wiremock.cli-args`.
+The value may be a single argument string or a list of argument strings, which are passed directly to the WireMock container.
+
+[configuration]
+----
+test-resources:
+  containers:
+    wiremock:
+      cli-args:
+        - "--verbose"
+        - "--global-response-templating"
+----
+
+WireMock mappings can be copied into the container with the generic Test Resources `copy-to-container` metadata.
+Copy JSON mapping files to `/home/wiremock/mappings/` and response body files to `/home/wiremock/__files/`:
+
+[configuration]
+----
+test-resources:
+  containers:
+    wiremock:
+      copy-to-container:
+        - "classpath:wiremock/mappings/hello.json": /home/wiremock/mappings/hello.json
+        - "classpath:wiremock/__files/hello.txt": /home/wiremock/__files/hello.txt
+----
+
+The same metadata can also copy files from host paths.
+See <<modules-testcontainers,Generic Testcontainers support>> for the full list of container metadata options.
+
+Resolved properties:
+
+[[wiremock-host]]
+`wiremock.host`:: The host name of the WireMock container.
+
+[[wiremock-port]]
+`wiremock.port`:: The mapped HTTP port of the WireMock container.
+
+[[wiremock-url]]
+`wiremock.url`:: The base HTTP URL of the WireMock container.
+
+Mapping-specific Java helpers are not part of the initial WireMock provider surface.

@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.hashicorp.vault;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.vault.VaultContainer;
@@ -41,7 +42,7 @@ public class VaultTestResourceProvider extends AbstractTestContainersProvider<Va
     ));
     public static final Set<String> RESOLVABLE_PROPERTIES_SET = Collections.unmodifiableSet(new HashSet<>(RESOLVABLE_PROPERTIES_LIST));
     public static final String VAULT_CLIENT_TOKEN_VALUE = "vault-token";
-    public static final String DEFAULT_IMAGE = "vault:1.13.3";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_VAULT_IMAGE;
     public static final String SIMPLE_NAME = "hashicorp-vault";
     public static final String HASHICORP_VAULT_TOKEN_KEY = "containers.hashicorp-vault.token";
     public static final String TEST_RESOURCES_CONTAINERS_PATH_KEY = "containers.hashicorp-vault.path";

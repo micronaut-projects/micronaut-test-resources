@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.pulsar;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.PulsarContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -30,7 +31,7 @@ import java.util.Optional;
 public class PulsarTestResourceProvider extends AbstractTestContainersProvider<PulsarContainer> {
 
     public static final String PULSAR_SERVICE_URL = "pulsar.service-url";
-    public static final String DEFAULT_IMAGE = "apachepulsar/pulsar:4.1.3";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_PULSAR_IMAGE;
     public static final String DISPLAY_NAME = "Pulsar";
     public static final String SIMPLE_NAME = "pulsar";
 

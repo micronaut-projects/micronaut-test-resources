@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.hibernate.reactive.mysql;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
 import org.testcontainers.mysql.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -39,7 +40,7 @@ public class HibernateReactiveMySQLTestResourceProvider extends AbstractHibernat
 
     @Override
     protected String getDefaultImageName() {
-        return "mysql:8.4.5";
+        return DefaultTestResourceImages.DEFAULT_MYSQL_IMAGE;
     }
 
     @Override

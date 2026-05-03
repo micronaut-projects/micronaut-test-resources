@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.hazelcast;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -36,7 +37,7 @@ import java.util.Set;
 public class HazelcastTestResourceProvider extends AbstractTestContainersProvider<GenericContainer<?>> {
 
     public static final String HAZELCAST_ADDRESSES = "hazelcast.client.network.addresses";
-    public static final String DEFAULT_IMAGE = "hazelcast/hazelcast:5.6.0-slim";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_HAZELCAST_IMAGE;
     public static final String DISPLAY_NAME = "Hazelcast";
     public static final String SIMPLE_NAME = "hazelcast";
     private static final int DEFAULT_PORT = 5701;

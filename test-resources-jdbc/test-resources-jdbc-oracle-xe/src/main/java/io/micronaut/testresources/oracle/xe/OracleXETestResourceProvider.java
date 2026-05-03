@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.oracle.xe;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -74,7 +75,7 @@ public class OracleXETestResourceProvider extends AbstractJdbcTestResourceProvid
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe:slim-faststart";
+        return DefaultTestResourceImages.DEFAULT_ORACLE_XE_IMAGE;
     }
 
     @Override

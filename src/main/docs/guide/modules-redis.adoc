@@ -1,7 +1,7 @@
 Redis support will automatically start a https://redis.io/[Redis container] and provide the value of the `redis.uri` property.
 This provider can be configured with a variety of parameters:
 
-* The default image (`redis:6.2.21`, or `grokzen/redis-cluster:6.2.14` in cluster mode) can be overwritten by setting the `test-resources.containers.redis.image-name` property.
+* The default image (`{default-image-redis}`, or `{default-image-redis-cluster}` in cluster mode) can be overwritten by setting the `test-resources.containers.redis.image-name` property.
 
 * Have Test Resources spawn a Redis cluster by setting `test-resources.containers.redis.cluster-mode` to `true`. With this setting, the property `redis.uris` will be defined instead of `redis.uri`, and some cluster-specific parameters may be provided under `test-resources.containers.redis.cluster`:
 

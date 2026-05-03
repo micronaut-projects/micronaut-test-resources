@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.localstack;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -37,7 +38,7 @@ import java.util.stream.StreamSupport;
  */
 public class LocalStackTestResourceProvider extends AbstractTestContainersProvider<LocalStackContainer> {
 
-    private static final String DEFAULT_IMAGE = "localstack/localstack:4.14.0";
+    private static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_LOCALSTACK_IMAGE;
     private static final String NAME = "localstack";
 
     private static final String AWS_ACCESS_KEY_ID = "aws.access-key-id";

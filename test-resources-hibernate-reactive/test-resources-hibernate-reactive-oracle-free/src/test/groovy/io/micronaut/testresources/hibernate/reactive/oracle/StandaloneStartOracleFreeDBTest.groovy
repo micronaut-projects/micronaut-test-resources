@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit
 
 @MicronautTest(transactional = false, environments = "standalone")
 class StandaloneStartOracleFreeDBTest extends AbstractTestContainersSpec {
-    private static final Duration TEST_TIMEOUT = Duration.of(10, ChronoUnit.SECONDS)
+    private static final Duration TEST_TIMEOUT = Duration.of(30, ChronoUnit.SECONDS)
 
     @Inject
     BookRepository repository

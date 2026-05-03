@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.mssql;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.mssqlserver.MSSQLServerContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 public class MSSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<MSSQLServerContainer> {
 
-    public static final String DEFAULT_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04";
+    public static final String DEFAULT_IMAGE_NAME = DefaultTestResourceImages.DEFAULT_MSSQL_IMAGE;
     public static final String DISPLAY_NAME = "MSSQL";
 
     @Override

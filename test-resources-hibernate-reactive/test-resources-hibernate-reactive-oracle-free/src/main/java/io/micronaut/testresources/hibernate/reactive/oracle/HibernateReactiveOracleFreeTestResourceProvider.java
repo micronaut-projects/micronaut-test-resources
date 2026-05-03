@@ -15,7 +15,9 @@
  */
 package io.micronaut.testresources.hibernate.reactive.oracle;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
+import io.micronaut.testresources.testcontainers.OracleFreeContainerSupport;
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -39,12 +41,12 @@ public class HibernateReactiveOracleFreeTestResourceProvider extends AbstractHib
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-free:slim-faststart";
+        return DefaultTestResourceImages.DEFAULT_ORACLE_FREE_IMAGE;
     }
 
     @Override
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OracleContainer(imageName);
+        return OracleFreeContainerSupport.createContainer(() -> new OracleContainer(imageName));
     }
 
 }

@@ -1,6 +1,6 @@
 Kafka support will automatically start a https://kafka.apache.org[Kafka container] and provide the value of the `kafka.bootstrap.servers` property.
 
-The default image can be overwritten by setting the `test-resources.containers.kafka.image-name` property.
+The default image (`{default-image-kafka}`) can be overwritten by setting the `test-resources.containers.kafka.image-name` property.
 
 Kafka topics are only provisioned when `test-resources.containers.kafka.topics` is configured. When set, test resources creates any missing topics before returning `kafka.bootstrap.servers`.
 

@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.couchbase;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.couchbase.CouchbaseContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -34,7 +35,7 @@ public class CouchbaseTestResourceProvider extends AbstractTestContainersProvide
     public static final String COUCHBASE_URI = "couchbase.uri";
     public static final String COUCHBASE_USERNAME = "couchbase.username";
     public static final String COUCHBASE_PASSWORD = "couchbase.password";
-    public static final String DEFAULT_IMAGE = "couchbase/server";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_COUCHBASE_IMAGE;
     public static final String SIMPLE_NAME = "couchbase";
     public static final String DISPLAY_NAME = "Couchbase";
 

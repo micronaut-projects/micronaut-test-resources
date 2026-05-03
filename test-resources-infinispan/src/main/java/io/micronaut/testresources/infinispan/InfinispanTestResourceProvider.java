@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.infinispan;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.infinispan.testcontainers.InfinispanContainer;
@@ -46,7 +47,7 @@ public class InfinispanTestResourceProvider extends AbstractTestContainersProvid
 
     @Override
     protected String getDefaultImageName() {
-        return "quay.io/infinispan/server:16.1.3";
+        return DefaultTestResourceImages.DEFAULT_INFINISPAN_IMAGE;
     }
 
     @Override

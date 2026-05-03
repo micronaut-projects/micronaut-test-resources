@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.azure;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -42,7 +43,7 @@ public class AzuriteTestResourceProvider extends AbstractTestContainersProvider<
     public static final String DEFAULT_ACCOUNT_NAME = "devstoreaccount1";
     public static final String DEFAULT_ACCOUNT_KEY =
         "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==";
-    public static final String DEFAULT_IMAGE = "mcr.microsoft.com/azure-storage/azurite:3.35.0";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_AZURITE_IMAGE;
     public static final String SIMPLE_NAME = "azurite";
     public static final String DISPLAY_NAME = "Azurite";
     public static final String LISTEN_HOST = "0.0.0.0";

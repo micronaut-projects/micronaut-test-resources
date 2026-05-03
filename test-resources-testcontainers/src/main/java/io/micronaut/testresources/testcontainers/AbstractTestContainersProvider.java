@@ -21,6 +21,7 @@ import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -143,6 +144,7 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
                             .findAny();
                     T createdContainer = createContainer(imageName, properties, testResourcesConfig);
                     configureContainer(createdContainer, properties, testResourcesConfig);
+                    getDefaultStartupTimeout(properties, testResourcesConfig).ifPresent(createdContainer::withStartupTimeout);
                     metadata.ifPresent(
                         md -> TestContainerMetadataSupport.applyMetadata(md, createdContainer));
                     return createdContainer;
@@ -196,6 +198,18 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
 
     protected void configureContainer(T container, Map<String, Object> properties,
                                       Map<String, Object> testResourcesConfig) {
+    }
+
+    /**
+     * Returns the default startup timeout for this provider before user metadata is applied.
+     *
+     * @param properties the resolved properties for the request
+     * @param testResourcesConfig the test resources configuration
+     * @return the provider default startup timeout, if any
+     */
+    protected Optional<Duration> getDefaultStartupTimeout(Map<String, Object> properties,
+                                                          Map<String, Object> testResourcesConfig) {
+        return Optional.empty();
     }
 
     protected void prepareContainer(String propertyName,

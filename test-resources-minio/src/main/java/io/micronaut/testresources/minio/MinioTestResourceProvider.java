@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.minio;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.MinIOContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -32,7 +33,7 @@ public class MinioTestResourceProvider extends AbstractTestContainersProvider<Mi
     public static final String MINIO_URL = "minio.url";
     public static final String MINIO_ACCESS_KEY = "minio.access-key";
     public static final String MINIO_SECRET_KEY = "minio.secret-key";
-    public static final String DEFAULT_IMAGE = "minio/minio";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_MINIO_IMAGE;
     public static final String DISPLAY_NAME = "MinIO";
     public static final String SIMPLE_NAME = "minio";
     private static final List<String> SUPPORTED_KEYS = List.of(

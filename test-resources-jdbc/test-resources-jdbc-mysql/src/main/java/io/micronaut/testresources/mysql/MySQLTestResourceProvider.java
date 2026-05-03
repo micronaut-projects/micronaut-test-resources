@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.mysql;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.mysql.MySQLContainer;
@@ -49,7 +50,7 @@ public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
 
     @Override
     protected String getDefaultImageName() {
-        return "container-registry.oracle.com/mysql/community-server:8.4.8";
+        return DefaultTestResourceImages.DEFAULT_MYSQL_COMMUNITY_IMAGE;
     }
 
     @Override

@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.hivemq;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.hivemq.HiveMQContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -32,7 +33,7 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
 
     public static final String MQTT_CLIENT_CLIENT_ID = "mqtt.client.client-id";
     public static final String MQTT_CLIENT_SERVER_URI = "mqtt.client.server-uri";
-    public static final String DEFAULT_IMAGE = "hivemq/hivemq-ce:2021.3";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_HIVEMQ_IMAGE;
     public static final String DISPLAY_NAME = "HiveMQ";
 
     private final String clientId;

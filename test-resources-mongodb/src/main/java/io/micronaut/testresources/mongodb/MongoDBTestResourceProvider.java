@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.mongodb;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.mongodb.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -32,7 +33,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
 
     public static final String MONGODB_SERVERS = "mongodb.servers";
     public static final String MONGODB_SERVER_URI = "mongodb.uri";
-    public static final String DEFAULT_IMAGE = "mongo:8.2.7";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_MONGODB_IMAGE;
     public static final String SIMPLE_NAME = "mongodb";
     public static final String DB_NAME = "containers." + SIMPLE_NAME + ".db-name";
     public static final String DISPLAY_NAME = "MongoDB";

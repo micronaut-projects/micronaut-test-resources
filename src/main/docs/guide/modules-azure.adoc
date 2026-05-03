@@ -10,7 +10,7 @@ The following properties are resolved automatically:
 
 The generated connection string uses Azurite's mapped Testcontainers ports for the blob, queue, and table endpoints, so no fixed host port configuration is required.
 
-By default, the provider starts `mcr.microsoft.com/azure-storage/azurite:3.35.0` with blob, queue, and table listeners bound to all interfaces inside the container.
+By default, the provider starts `{default-image-azurite}` with blob, queue, and table listeners bound to all interfaces inside the container.
 
 [configuration]
 ----

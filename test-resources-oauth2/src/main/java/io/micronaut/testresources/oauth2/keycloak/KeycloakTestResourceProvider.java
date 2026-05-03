@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.oauth2.keycloak;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -36,7 +37,7 @@ import java.util.UUID;
 public class KeycloakTestResourceProvider extends AbstractTestContainersProvider<KeycloakTestResourceProvider.KeycloakContainer> {
     public static final String DISPLAY_NAME = "Keycloak";
     public static final String SIMPLE_NAME = "keycloak";
-    public static final String DEFAULT_IMAGE = "quay.io/keycloak/keycloak:26.6.1";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_KEYCLOAK_IMAGE;
 
     public static final String CLIENT_ID = "micronaut.security.oauth2.clients.keycloak.client-id";
     public static final String CLIENT_SECRET = "micronaut.security.oauth2.clients.keycloak.client-secret";

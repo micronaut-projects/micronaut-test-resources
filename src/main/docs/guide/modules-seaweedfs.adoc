@@ -1,3 +1,3 @@
 SeaweedFS support will automatically start a https://github.com/seaweedfs/seaweedfs[SeaweedFS] container and provide the values of the `seaweedfs.url`, `seaweedfs.access-key`, and `seaweedfs.secret-key` properties.
 
-The default image can be overridden by setting the `test-resources.containers.seaweedfs.image-name` property.
+The default image (`{default-image-seaweedfs}`) can be overridden by setting the `test-resources.containers.seaweedfs.image-name` property.

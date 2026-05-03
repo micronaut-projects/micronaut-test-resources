@@ -15,8 +15,10 @@
  */
 package io.micronaut.testresources.r2dbc.oracle;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.r2dbc.core.AbstractR2DBCTestResourceProvider;
 import io.micronaut.testresources.r2dbc.core.R2dbcSupport;
+import io.micronaut.testresources.testcontainers.OracleFreeContainerSupport;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.oracle.OracleContainer;
@@ -78,7 +80,7 @@ public class R2DBCOracleFreeTestResourceProvider extends AbstractR2DBCTestResour
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-free:slim-faststart";
+        return DefaultTestResourceImages.DEFAULT_ORACLE_FREE_IMAGE;
     }
 
     @Override
@@ -99,7 +101,7 @@ public class R2DBCOracleFreeTestResourceProvider extends AbstractR2DBCTestResour
 
     @Override
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new OracleContainer(imageName);
+        return OracleFreeContainerSupport.createContainer(() -> new OracleContainer(imageName));
     }
 
 }

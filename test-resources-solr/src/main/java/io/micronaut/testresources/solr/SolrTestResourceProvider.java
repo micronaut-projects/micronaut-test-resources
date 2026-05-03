@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.solr;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.solr.SolrContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
@@ -35,7 +36,7 @@ import java.util.Optional;
 public class SolrTestResourceProvider extends AbstractTestContainersProvider<SolrContainer> {
 
     public static final String SIMPLE_NAME = "solr";
-    public static final String DEFAULT_IMAGE = "solr:9.8.0";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_SOLR_IMAGE;
     public static final String DISPLAY_NAME = "Solr Search Server";
     public static final String MICRONAUT_SOLR_ENDPOINT = "micronaut.solr.hosts";
     public static final String MICRONAUT_ZOOKEEPER_HOSTS = "micronaut.solr.zk-hosts";

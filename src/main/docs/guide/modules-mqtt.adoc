@@ -1,4 +1,4 @@
-MQTT support is provided using a https://www.hivemq.com/[HiveMQ] container by default.
+MQTT support is provided using the `{default-image-hivemq}` https://www.hivemq.com/[HiveMQ] container by default.
 
 It will automatically configure the `mqtt.client.server-uri` property.
 

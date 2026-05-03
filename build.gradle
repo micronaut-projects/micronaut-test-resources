@@ -10,6 +10,9 @@ tasks.withType(io.micronaut.build.catalogs.tasks.VersionCatalogUpdate).configure
 }
 
 tasks.named("publishGuide") {
+    def writeDefaultTestResourceImages = project(":micronaut-test-resources-core").tasks.named("writeDefaultTestResourceImages")
+    dependsOn(writeDefaultTestResourceImages)
+    propertiesFiles.from(writeDefaultTestResourceImages.flatMap { it.propertiesFile })
     properties['micronautVersion'] = micronautVersion
 }
 

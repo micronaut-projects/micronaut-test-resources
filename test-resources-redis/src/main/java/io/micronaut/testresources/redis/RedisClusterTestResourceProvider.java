@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.redis;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import com.redis.testcontainers.RedisClusterContainer;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.images.builder.Transferable;
@@ -41,7 +42,7 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     public static final String REDIS_URIS = "redis.uris";
     public static final String DISPLAY_NAME = "Redis";
     public static final String SIMPLE_NAME = "redis";
-    public static final String DEFAULT_IMAGE = "grokzen/redis-cluster:6.2.14";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_REDIS_CLUSTER_IMAGE;
 
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URIS);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URIS);

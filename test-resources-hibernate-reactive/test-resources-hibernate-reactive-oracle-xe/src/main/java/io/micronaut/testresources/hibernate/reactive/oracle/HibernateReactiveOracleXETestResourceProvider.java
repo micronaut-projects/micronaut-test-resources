@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.hibernate.reactive.oracle;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.hibernate.reactive.core.AbstractHibernateReactiveTestResourceProvider;
 import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -42,7 +43,7 @@ public class HibernateReactiveOracleXETestResourceProvider extends AbstractHiber
 
     @Override
     protected String getDefaultImageName() {
-        return "gvenzl/oracle-xe:slim-faststart";
+        return DefaultTestResourceImages.DEFAULT_ORACLE_XE_IMAGE;
     }
 
     @Override

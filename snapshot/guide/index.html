@@ -1304,7 +1304,7 @@ If you need Azurite behavior outside these shared-key properties, the generic Te
 <p>Kafka support will automatically start a <a href="https://kafka.apache.org">Kafka container</a> and provide the value of the <code>kafka.bootstrap.servers</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
+<p>The default image (<code>apache/kafka:4.1.1</code>) can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Kafka topics are only provisioned when <code>test-resources.containers.kafka.topics</code> is configured. When set, test resources creates any missing topics before returning <code>kafka.bootstrap.servers</code>.</p>
@@ -1513,7 +1513,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Pulsar support will automatically start an <a href="https://pulsar.apache.org/">Apache Pulsar container</a> and provide the value of the <code>pulsar.service-url</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overridden by setting the <code>test-resources.containers.pulsar.image-name</code> property.</p>
+<p>The default image (<code>apachepulsar/pulsar:4.1.3</code>) can be overridden by setting the <code>test-resources.containers.pulsar.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>5.7 Localstack</h2>
@@ -1529,7 +1529,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Micronaut Test Resources supports a subset of <a href="https://localstack.cloud/">Localstack</a> via <a href="https://www.testcontainers.org/modules/localstack/">Testcontainers</a>.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.localstack.image-name</code> property.</p>
+<p>The default image (<code>localstack/localstack:4.14.0</code>) can be overwritten by setting the <code>test-resources.containers.localstack.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The following services are supported:</p>
@@ -1580,7 +1580,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>MinIO support will automatically start a <a href="https://min.io">MinIO</a> container via <a href="https://java.testcontainers.org/modules/minio/">Testcontainers</a> and provide the values of the <code>minio.url</code>, <code>minio.access-key</code>, and <code>minio.secret-key</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.minio.image-name</code> property.</p>
+<p>The default image (<code>minio/minio:RELEASE.2025-09-07T16-13-09Z</code>) can be overwritten by setting the <code>test-resources.containers.minio.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-seaweedfs"><a class="anchor" href="#modules-seaweedfs"></a>5.9 SeaweedFS</h2>
@@ -1596,7 +1596,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>SeaweedFS support will automatically start a <a href="https://github.com/seaweedfs/seaweedfs">SeaweedFS</a> container and provide the values of the <code>seaweedfs.url</code>, <code>seaweedfs.access-key</code>, and <code>seaweedfs.secret-key</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
+<p>The default image (<code>chrislusf/seaweedfs:4.22</code>) can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-couchbase"><a class="anchor" href="#modules-couchbase"></a>5.10 Couchbase</h2>
@@ -1612,7 +1612,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Couchbase support will automatically start a <a href="https://www.couchbase.com">Couchbase Server container</a> and provide the values of the <code>couchbase.uri</code>, <code>couchbase.username</code>, and <code>couchbase.password</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The provider uses the <code>couchbase/server</code> image by default.</p>
+<p>The provider uses the <code>couchbase/server:8.0.1</code> image by default.</p>
 </div>
 <div class="paragraph">
 <p>You can override the image name and tag with <code>test-resources.containers.couchbase.image-name</code> and <code>test-resources.containers.couchbase.image-tag</code>.</p>
@@ -1621,8 +1621,8 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <div class="content">
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.couchbase.image-name=couchbase/server
-test-resources.containers.couchbase.image-tag=latest</code></pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.couchbase.image-name=my-couchbase/server
+test-resources.containers.couchbase.image-tag=custom-tag</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1630,8 +1630,8 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
   containers:
     couchbase:
-      image-name: couchbase/server
-      image-tag: latest</code></pre>
+      image-name: my-couchbase/server
+      image-tag: custom-tag</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1639,8 +1639,8 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
   [test-resources.containers]
     [test-resources.containers.couchbase]
-      image-name="couchbase/server"
-      image-tag="latest"</code></pre>
+      image-name="my-couchbase/server"
+      image-tag="custom-tag"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1648,8 +1648,8 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
 <pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
   containers {
     couchbase {
-      imageName = "couchbase/server"
-      imageTag = "latest"
+      imageName = "my-couchbase/server"
+      imageTag = "custom-tag"
     }
   }
 }</code></pre>
@@ -1661,8 +1661,8 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
   test-resources {
     containers {
       couchbase {
-        image-name = "couchbase/server"
-        image-tag = "latest"
+        image-name = "my-couchbase/server"
+        image-tag = "custom-tag"
       }
     }
   }
@@ -1675,8 +1675,8 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
   "test-resources": {
     "containers": {
       "couchbase": {
-        "image-name": "couchbase/server",
-        "image-tag": "latest"
+        "image-name": "my-couchbase/server",
+        "image-tag": "custom-tag"
       }
     }
   }
@@ -1736,7 +1736,7 @@ test-resources.containers.couchbase.image-tag=latest</code></pre>
 
 
 <div class="paragraph">
-<p>MQTT support is provided using a <a href="https://www.hivemq.com/">HiveMQ</a> container by default.</p>
+<p>MQTT support is provided using the <code>hivemq/hivemq-ce:2021.3</code> <a href="https://www.hivemq.com/">HiveMQ</a> container by default.</p>
 </div>
 <div class="paragraph">
 <p>It will automatically configure the <code>mqtt.client.server-uri</code> property.</p>
@@ -2244,7 +2244,7 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 </ul>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
+<p>The default image (<code>quay.io/keycloak/keycloak:26.6.1</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
 The default image tag can be overwritten by setting the <code>test-resources.containers.keycloak.image-tag</code> property.</p>
 </div>
 <div class="paragraph">
@@ -2340,7 +2340,7 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>The default image can be overwritten by setting the <code>test-resources.containers.hashicorp-vault.image-name</code> property.</p>
+<p>The default image (<code>vault:1.13.3</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-vault.image-name</code> property.</p>
 </li>
 <li>
 <p>The default Vault access token is <code>vault-token</code> but this can be overridden by setting the <code>test-resources.containers.hashicorp-vault.token</code> property.</p>

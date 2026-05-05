@@ -38,6 +38,8 @@ import java.util.stream.StreamSupport;
  */
 public class LocalStackTestResourceProvider extends AbstractTestContainersProvider<LocalStackContainer> {
 
+    public static final String DISPLAY_NAME = "LocalStack";
+
     private static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_LOCALSTACK_IMAGE;
     private static final String NAME = "localstack";
 
@@ -50,7 +52,6 @@ public class LocalStackTestResourceProvider extends AbstractTestContainersProvid
     private static final Map<String, List<String>> RESOLVABLE_PROPERTIES;
     private static final Set<String> ALL_SUPPORTED_KEYS;
     private static final List<LocalStackService> SERVICES;
-    public static final String DISPLAY_NAME = "LocalStack";
     private static final Map<String, LocalStackService> PROPERTY_TO_SERVICE;
 
     static {

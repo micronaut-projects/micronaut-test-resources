@@ -20,7 +20,12 @@ import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.consul.ConsulContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * A test resource provider which will spawn a Consul test container.
@@ -102,6 +107,9 @@ public class ConsulTestResourceProvider extends AbstractTestContainersProvider<C
                 case PROPERTY_CONSUL_CLIENT_DEFAULT_ZONE -> {
                     return Optional.of(
                         container.getHost() + ":" + container.getMappedPort(CONSUL_HTTP_PORT));
+                }
+                default -> {
+                    return Optional.empty();
                 }
             }
         }

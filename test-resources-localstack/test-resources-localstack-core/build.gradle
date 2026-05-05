@@ -17,7 +17,7 @@ dependencies {
     }
 
     constraints {
-        api("com.fasterxml.jackson.core:jackson-core:2.18.6") {
+        api("com.fasterxml.jackson.core:jackson-core:2.21.3") {
             because "fixes GHSA-72hv-8253-57qq from AWS SDK v1 transitive dependencies"
         }
     }

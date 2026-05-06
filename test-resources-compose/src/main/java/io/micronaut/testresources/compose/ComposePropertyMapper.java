@@ -33,6 +33,9 @@ import java.util.function.Predicate;
 final class ComposePropertyMapper {
     private static final Logger LOG = LoggerFactory.getLogger(ComposePropertyMapper.class);
     private static final String DATASOURCES_PREFIX = "datasources.";
+    private static final String POSTGRES_SERVICE = "postgres";
+    private static final String REDIS_SERVICE = "redis";
+    private static final String RABBITMQ_SERVICE = "rabbitmq";
     private static final Set<String> POSTGRES_TYPES = Set.of("postgres", "postgresql", "pg");
 
     Optional<String> resolve(String propertyName, Map<String, Object> requestedProperties, ComposeProject project) {
@@ -40,11 +43,11 @@ final class ComposePropertyMapper {
             return resolvePostgres(propertyName, requestedProperties, project);
         }
         if ("redis.uri".equals(propertyName)) {
-            return findSingle(project, "redis", service -> service.publishedPort(6379).isPresent())
+            return findSingle(project, REDIS_SERVICE, service -> service.publishedPort(6379).isPresent())
                 .flatMap(this::redisUri);
         }
         if (propertyName.startsWith("rabbitmq.")) {
-            return findSingle(project, "rabbitmq", service -> service.publishedPort(5672).isPresent())
+            return findSingle(project, RABBITMQ_SERVICE, service -> service.publishedPort(5672).isPresent())
                 .flatMap(service -> rabbitMqProperty(propertyName, service));
         }
         return Optional.empty();
@@ -60,7 +63,7 @@ final class ComposePropertyMapper {
         }
         return findSingle(
             project,
-            "postgres",
+            POSTGRES_SERVICE,
             service -> service.publishedPort(5432).isPresent() && matchesDatasource(service, datasourceProperty.datasource())
         ).flatMap(service -> postgresProperty(datasourceProperty.property(), service));
     }
@@ -91,13 +94,13 @@ final class ComposePropertyMapper {
     private boolean matchesServiceType(ComposeService service, String serviceType) {
         Optional<String> label = service.serviceLabel();
         if (label.isPresent()) {
-            return serviceType.equals(label.get()) || ("postgres".equals(serviceType) && "postgresql".equals(label.get()));
+            return serviceType.equals(label.get()) || (POSTGRES_SERVICE.equals(serviceType) && "postgresql".equals(label.get()));
         }
         String image = service.image().toLowerCase(Locale.ROOT);
         return switch (serviceType) {
-            case "postgres" -> image.contains("postgres");
-            case "redis" -> image.contains("redis");
-            case "rabbitmq" -> image.contains("rabbitmq");
+            case POSTGRES_SERVICE -> image.contains(POSTGRES_SERVICE);
+            case REDIS_SERVICE -> image.contains(REDIS_SERVICE);
+            case RABBITMQ_SERVICE -> image.contains(RABBITMQ_SERVICE);
             default -> false;
         };
     }
@@ -152,11 +155,11 @@ final class ComposePropertyMapper {
     }
 
     private String username(ComposeService service) {
-        return service.labelOrEnvironment(ComposeLabels.USERNAME, "POSTGRES_USER", "postgres");
+        return service.labelOrEnvironment(ComposeLabels.USERNAME, "POSTGRES_USER", POSTGRES_SERVICE);
     }
 
     private String password(ComposeService service) {
-        return service.labelOrEnvironment(ComposeLabels.PASSWORD, "POSTGRES_PASSWORD", "postgres");
+        return service.labelOrEnvironment(ComposeLabels.PASSWORD, "POSTGRES_PASSWORD", POSTGRES_SERVICE);
     }
 
     private String database(ComposeService service) {

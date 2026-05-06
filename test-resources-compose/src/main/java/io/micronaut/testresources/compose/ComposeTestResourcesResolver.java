@@ -34,6 +34,7 @@ import java.util.Optional;
 public class ComposeTestResourcesResolver implements ToggableTestResourcesResolver, Closeable {
     private static final Logger LOG = LoggerFactory.getLogger(ComposeTestResourcesResolver.class);
     private static final int ORDER_BEFORE_SPECIFIC_TESTCONTAINERS = -100;
+    private static final String DATASOURCES_PREFIX = "datasources.";
     private static final List<String> RABBITMQ_PROPERTIES = List.of("rabbitmq.uri", "rabbitmq.username", "rabbitmq.password");
     private static final List<String> DATASOURCE_PROPERTIES = List.of("url", "username", "password", "driver-class-name");
 
@@ -78,7 +79,7 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
         List<String> properties = new ArrayList<>();
         for (String datasource : propertyEntries.getOrDefault("datasources", Collections.emptyList())) {
             for (String property : DATASOURCE_PROPERTIES) {
-                properties.add("datasources." + datasource + "." + property);
+                properties.add(DATASOURCES_PREFIX + datasource + "." + property);
             }
         }
         properties.add("redis.uri");
@@ -93,18 +94,18 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        if (!expression.startsWith("datasources.")) {
+        if (!expression.startsWith(DATASOURCES_PREFIX)) {
             return Collections.emptyList();
         }
-        String remainder = expression.substring("datasources.".length());
+        String remainder = expression.substring(DATASOURCES_PREFIX.length());
         int separator = remainder.indexOf('.');
         if (separator < 1) {
             return Collections.emptyList();
         }
         String datasource = remainder.substring(0, separator);
         return List.of(
-            "datasources." + datasource + ".db-type",
-            "datasources." + datasource + ".dialect"
+            DATASOURCES_PREFIX + datasource + ".db-type",
+            DATASOURCES_PREFIX + datasource + ".dialect"
         );
     }
 

@@ -34,6 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Internal
 final class ComposeProjectManager implements Closeable {
     private static final Logger LOG = LoggerFactory.getLogger(ComposeProjectManager.class);
+    private static final List<String> PS_JSON_COMMAND = List.of("ps", "--format", "json");
+    private static final List<String> CONFIG_JSON_COMMAND = List.of("config", "--format", "json");
 
     private final ComposeCli composeCli;
     private final ComposeProjectParser parser;
@@ -69,11 +71,11 @@ final class ComposeProjectManager implements Closeable {
             }
             started = true;
         }
-        ComposeCommandResult config = composeCli.run(configuration, List.of("config", "--format", "json"));
+        ComposeCommandResult config = composeCli.run(configuration, CONFIG_JSON_COMMAND);
         if (!config.successful()) {
             throw new ComposeCliException("Docker Compose failed to render configuration: " + config.diagnostic());
         }
-        ComposeCommandResult ps = composeCli.run(configuration, List.of("ps", "--format", "json"));
+        ComposeCommandResult ps = composeCli.run(configuration, PS_JSON_COMMAND);
         if (!ps.successful()) {
             throw new ComposeCliException("Docker Compose failed to inspect services: " + ps.diagnostic());
         }
@@ -81,7 +83,7 @@ final class ComposeProjectManager implements Closeable {
         for (ComposeService service : project.services()) {
             if (service.ignored()) {
                 LOG.info("Ignoring Docker Compose service {}", service.name());
-            } else {
+            } else if (LOG.isDebugEnabled()) {
                 LOG.debug("Discovered Docker Compose service {}", service.redactedSummary());
             }
         }
@@ -89,9 +91,11 @@ final class ComposeProjectManager implements Closeable {
     }
 
     private Set<String> runningServices(ComposeConfiguration configuration) {
-        ComposeCommandResult result = composeCli.run(configuration, List.of("ps", "--format", "json"));
+        ComposeCommandResult result = composeCli.run(configuration, PS_JSON_COMMAND);
         if (!result.successful()) {
-            LOG.debug("Docker Compose project has no inspectable running services before startup: {}", result.diagnostic());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Docker Compose project has no inspectable running services before startup: {}", result.diagnostic());
+            }
             return Set.of();
         }
         return parser.runningServices(result.output());
@@ -126,7 +130,9 @@ final class ComposeProjectManager implements Closeable {
             arguments.addAll(entry.getValue());
             ComposeCommandResult result = composeCli.run(entry.getKey(), arguments);
             if (!result.successful()) {
-                LOG.warn("Docker Compose failed to stop managed services {}: {}", entry.getValue(), result.diagnostic());
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Docker Compose failed to stop managed services {}: {}", entry.getValue(), result.diagnostic());
+                }
             }
         }
     }

@@ -1,0 +1,14 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for resolving test resources from Docker Compose services.
+"""
+
+dependencies {
+    api(project(':micronaut-test-resources-core'))
+    api(mn.micronaut.json.core)
+
+    compileOnly(mnSerde.micronaut.serde.jackson)
+}

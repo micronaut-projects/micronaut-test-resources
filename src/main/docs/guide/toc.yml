@@ -6,6 +6,8 @@ quickStart:
   title: Quick Start
 modules:
   title: Supported Modules
+  modules-compose:
+    title: Docker Compose
   modules-databases:
     title: Databases
     modules-databases-jdbc:

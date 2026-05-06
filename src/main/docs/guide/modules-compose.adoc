@@ -1,0 +1,117 @@
+The Docker Compose module lets Micronaut Test Resources resolve supported missing properties from services declared in a local Compose file instead of starting a separate default provider container.
+This support is opt-in and intended for development and test execution only.
+
+dependency:micronaut-test-resources-compose[groupId="io.micronaut.testresources", scope="test"]
+
+Enable Compose support with the `test-resources.compose.enabled` property:
+
+[configuration]
+----
+test-resources:
+  compose:
+    enabled: true
+----
+
+When enabled, Test Resources looks for `compose.yml`, `compose.yaml`, `docker-compose.yml`, or `docker-compose.yaml` in the working directory.
+You can choose files and profiles explicitly:
+
+[configuration]
+----
+test-resources:
+  compose:
+    enabled: true
+    files:
+      - compose.yml
+      - compose.test.yml
+    profiles:
+      - dev
+      - test
+----
+
+The first supported mapping set includes PostgreSQL JDBC datasources, Redis single-node connections, and RabbitMQ connections.
+When a matching Compose service is found, the Compose value is returned first.
+When no Compose service matches, the existing Test Resources provider continues to handle the property.
+
+.PostgreSQL and Redis
+[source,yaml]
+----
+services:
+  db:
+    image: postgres:17
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: demo
+    labels:
+      io.micronaut.test-resources.service: postgres
+      io.micronaut.test-resources.datasource: default
+  cache:
+    image: redis:7
+    ports:
+      - "6379"
+    labels:
+      io.micronaut.test-resources.service: redis
+----
+
+With this Compose file, Test Resources can provide `datasources.default.url`, `datasources.default.username`, `datasources.default.password`, `datasources.default.driver-class-name`, and `redis.uri`.
+
+.RabbitMQ
+[source,yaml]
+----
+services:
+  broker:
+    image: rabbitmq:4
+    ports:
+      - "5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: demo
+      RABBITMQ_DEFAULT_PASS: secret
+    labels:
+      io.micronaut.test-resources.service: rabbitmq
+----
+
+With this Compose service, Test Resources can provide `rabbitmq.uri`, `rabbitmq.username`, and `rabbitmq.password`.
+
+Use labels when automatic image and port matching would be ambiguous:
+
+[source,yaml]
+----
+labels:
+  io.micronaut.test-resources.service: postgres
+  io.micronaut.test-resources.datasource: inventory
+----
+
+You can exclude a Compose service from Test Resources matching:
+
+[source,yaml]
+----
+labels:
+  io.micronaut.test-resources.ignore: "true"
+----
+
+Additional Compose lifecycle options are available under `test-resources.compose`:
+
+[configuration]
+----
+test-resources:
+  compose:
+    enabled: true
+    project-name: inventory-tests
+    start: true
+    stop-managed: true
+    startup-timeout: 60s
+----
+
+`start` controls whether Test Resources runs `docker compose up -d`.
+When `start` is `false`, Test Resources only inspects already-running services.
+When `stop-managed` is `true`, shutdown stops only services that Test Resources started for the current Compose project.
+Services that were already running before Test Resources started are reused and left running.
+
+The Compose resolver requires Docker Compose V2 through the Docker CLI.
+If Docker, Compose V2, a Compose file, a published host port, or an unambiguous mapping is not available, diagnostics are written to the logs and Test Resources falls back to the normal provider when possible.
+Diagnostic output redacts credential-like values such as passwords, secrets, tokens, keys, and credentials.
+
+Enabling Compose can run local images and use mounts declared by the Compose file.
+Only enable it for trusted development and test Compose files.

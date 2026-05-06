@@ -74,6 +74,18 @@ class TestResourcesClasspathTest extends Specification {
 
     }
 
+    def "passes through explicitly configured Compose test resources module"() {
+        when:
+        infer("io.micronaut.testresources:micronaut-test-resources-compose:1.0.34")
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-compose:1.0.34'
+        )
+    }
+
     def "infers Micronaut Data module"() {
         when:
         infer 'io.micronaut.data:micronaut-data-runtime:1.0', "$driver:1.0"

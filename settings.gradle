@@ -70,6 +70,7 @@ include 'test-resources-couchbase'
 include 'test-resources-codec'
 include 'test-resources-core'
 include 'test-resources-client'
+include 'test-resources-compose'
 include 'test-resources-control-panel'
 // TODO: MN5 Needs Micronaut Test milestone release
 //include 'test-resources-elasticsearch'

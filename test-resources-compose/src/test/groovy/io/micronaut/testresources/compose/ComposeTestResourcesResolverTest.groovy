@@ -438,6 +438,39 @@ class ComposeTestResourcesResolverTest extends Specification {
         resolver.resolve("redis.uri", [:], config()).empty
     }
 
+    def "returns empty when Compose startup or inspection fails"() {
+        given:
+        createComposeFile()
+        def cli = new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "cache": {"image": "redis:7"}
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "cache",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "127.0.0.1", "TargetPort": 6379, "PublishedPort": 16379}
+                ]
+              }
+            ]
+            """))
+        cli.upWaitResult = upWaitResult
+        cli.afterStartPsResult = afterStartPsResult
+        def resolver = resolver(cli)
+
+        expect:
+        resolver.resolve("redis.uri", [:], config()).empty
+
+        where:
+        upWaitResult                                                | afterStartPsResult
+        new ComposeCommandResult(1, "", "container failed to start") | null
+        new ComposeCommandResult(0, "", "")                         | new ComposeCommandResult(1, "", "ps failed")
+    }
+
     def "does not stop services that were running before Test Resources started"() {
         given:
         createComposeFile()
@@ -514,6 +547,37 @@ class ComposeTestResourcesResolverTest extends Specification {
         then:
         cli.commands.any { it == "stop db" }
         !cli.commands.any { it == "stop cache" }
+    }
+
+    def "stop failures for owned services are diagnostic only"() {
+        given:
+        createComposeFile()
+        def cli = new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "db": {"image": "postgres:17"}
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "db",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "0.0.0.0", "TargetPort": 5432, "PublishedPort": 15432}
+                ]
+              }
+            ]
+            """))
+        cli.stopResult = new ComposeCommandResult(1, "", "stop failed")
+        def resolver = resolver(cli)
+
+        when:
+        resolver.resolve("datasources.default.url", ["datasources.default.db-type": "postgres"], config())
+        resolver.close()
+
+        then:
+        cli.commands.any { it == "stop db" }
     }
 
     def "does not start or stop Compose when startup and managed stop are disabled"() {
@@ -649,6 +713,73 @@ class ComposeTestResourcesResolverTest extends Specification {
         parser.parse('{"services": {"cache": "redis"}}', "[]", [] as Set).empty
     }
 
+    def "parses empty and partially populated Compose output defensively"() {
+        given:
+        def parser = new ComposeProjectParser()
+
+        when:
+        def services = parser.parse(configJson("""
+            {
+              "services": {
+                "cache": {
+                  "image": "redis:7",
+                  "labels": {
+                    "io.micronaut.test-resources.service": "redis",
+                    "ignored-null": null
+                  },
+                  "environment": ["REDIS_PASSWORD=secret", "MALFORMED"]
+                }
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "name": "cache",
+                "state": "running",
+                "publishers": [
+                  {"url": "127.0.0.1", "target_port": "6379", "published_port": "16379"},
+                  {"url": "127.0.0.1", "published_port": "26379"}
+                ]
+              }
+            ]
+            """), [] as Set)
+
+        then:
+        parser.parse("", "", [] as Set).empty
+        parser.runningServices("").empty
+        services.size() == 1
+        services[0].labels() == [(ComposeLabels.SERVICE): "redis"]
+        services[0].environment() == ["REDIS_PASSWORD": "secret"]
+        services[0].publishedPort(6379).get().publishedPort() == 16379
+    }
+
+    def "returns empty for unsupported properties and services without published ports"() {
+        given:
+        createComposeFile()
+        def cli = new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "db": {"image": "postgres:17"},
+                "cache": {"image": "redis:7"},
+                "broker": {"image": "rabbitmq:4"}
+              }
+            }
+            """), psJson("""
+            [
+              {"Service": "db", "State": "running"},
+              {"Service": "cache", "State": "running"},
+              {"Service": "broker", "State": "running"}
+            ]
+            """))
+        def resolver = resolver(cli)
+
+        expect:
+        resolver.resolve("kafka.bootstrap.servers", [:], config()).empty
+        resolver.resolve("datasources.default.url", ["datasources.default.db-type": "postgres"], config()).empty
+        resolver.resolve("redis.uri", [:], config()).empty
+        resolver.resolve("rabbitmq.uri", [:], config()).empty
+    }
+
     def "reports Compose command diagnostics from stderr or stdout"() {
         expect:
         new ComposeCommandResult(1, "stdout problem\n", "stderr problem\n").diagnostic() == "stderr problem"
@@ -669,6 +800,8 @@ class ComposeTestResourcesResolverTest extends Specification {
                 "RABBITMQ_DEFAULT_USER": "guest",
                 "service.api-key": "******"
         ]
+        SecretRedactor.redact("access.token", "secret") == "******"
+        SecretRedactor.redact("safe.name", "visible") == "visible"
     }
 
     private ComposeTestResourcesResolver resolver(FakeComposeCli cli) {
@@ -704,6 +837,7 @@ class ComposeTestResourcesResolverTest extends Specification {
         ComposeCommandResult upWaitResult = new ComposeCommandResult(0, "", "")
         ComposeCommandResult upResult = new ComposeCommandResult(0, "", "")
         ComposeCommandResult configResult
+        ComposeCommandResult afterStartPsResult
         ComposeCommandResult stopResult = new ComposeCommandResult(0, "", "")
 
         FakeComposeCli(String config, String afterStartPs) {
@@ -716,7 +850,10 @@ class ComposeTestResourcesResolverTest extends Specification {
         ComposeCommandResult run(ComposeConfiguration configuration, List<String> arguments) {
             commands << arguments.join(" ")
             if (arguments == ["ps", "--format", "json"]) {
-                return new ComposeCommandResult(0, commands.count { it == "ps --format json" } == 1 ? beforeStartPs : afterStartPs, "")
+                if (commands.count { it == "ps --format json" } == 1) {
+                    return new ComposeCommandResult(0, beforeStartPs, "")
+                }
+                return afterStartPsResult ?: new ComposeCommandResult(0, afterStartPs, "")
             }
             if (arguments == ["up", "-d", "--wait"]) {
                 return upWaitResult

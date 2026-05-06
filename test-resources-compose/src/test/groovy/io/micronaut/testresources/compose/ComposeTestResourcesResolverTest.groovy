@@ -174,6 +174,82 @@ class ComposeTestResourcesResolverTest extends Specification {
         resolver.resolve("datasources.default.url", ["datasources.default.dialect": "MYSQL"], config()).empty
     }
 
+    def "resolves PostgreSQL aliases and label credential overrides"() {
+        given:
+        createComposeFile()
+        def cli = new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "db": {
+                  "image": "internal/database:latest",
+                  "labels": {
+                    "io.micronaut.test-resources.service": "postgresql",
+                    "io.micronaut.test-resources.datasource": "inventory",
+                    "io.micronaut.test-resources.username": "label-user",
+                    "io.micronaut.test-resources.password": "label-secret",
+                    "io.micronaut.test-resources.database": "label-db"
+                  },
+                  "environment": {
+                    "POSTGRES_USER": "env-user",
+                    "POSTGRES_PASSWORD": "env-secret",
+                    "POSTGRES_DB": "env-db"
+                  }
+                }
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "db",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "127.0.0.1", "TargetPort": 5432, "PublishedPort": 15432}
+                ]
+              }
+            ]
+            """))
+        def resolver = resolver(cli)
+
+        expect:
+        resolver.resolve("datasources.inventory.url", ["datasources.inventory.db-type": "pg"], config()).get() == "jdbc:postgresql://127.0.0.1:15432/label-db"
+        resolver.resolve("datasources.inventory.username", ["datasources.inventory.db-type": "postgresql"], config()).get() == "label-user"
+        resolver.resolve("datasources.inventory.password", ["datasources.inventory.dialect": "POSTGRES"], config()).get() == "label-secret"
+        resolver.resolve("datasources.default.url", ["datasources.default.db-type": "postgres"], config()).empty
+    }
+
+    def "ignores explicitly ignored services and unsupported datasource properties"() {
+        given:
+        createComposeFile()
+        def cli = new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "db": {
+                  "image": "postgres:17",
+                  "labels": {
+                    "io.micronaut.test-resources.ignore": "true"
+                  }
+                }
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "db",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "0.0.0.0", "TargetPort": 5432, "PublishedPort": 15432}
+                ]
+              }
+            ]
+            """))
+        def resolver = resolver(cli)
+
+        expect:
+        resolver.resolve("datasources.default.url", ["datasources.default.db-type": "postgres"], config()).empty
+        resolver.resolve("datasources.default.schema-generate", ["datasources.default.db-type": "postgres"], config()).empty
+        resolver.resolve("datasources.", ["datasources.default.db-type": "postgres"], config()).empty
+    }
+
     def "resolves RabbitMQ properties from Compose service"() {
         given:
         createComposeFile()
@@ -526,6 +602,60 @@ class ComposeTestResourcesResolverTest extends Specification {
         !configuration.start()
         !configuration.stopManaged()
         configuration.startupTimeout() == java.time.Duration.ofMinutes(2)
+    }
+
+    def "builds default configuration from discovered files and typed values"() {
+        given:
+        Files.writeString(tempDir.resolve("docker-compose.yaml"), "services: {}\n")
+
+        when:
+        def configuration = ComposeConfiguration.from([
+                "compose.enabled": true,
+                "compose.working-directory": tempDir,
+                "compose.profiles": ["dev", "", " test "],
+                "compose.startup-timeout": 30
+        ])
+
+        then:
+        configuration.usable()
+        configuration.files() == [tempDir.resolve("docker-compose.yaml").toAbsolutePath().normalize()]
+        configuration.profiles() == ["dev", "test"]
+        configuration.projectName() == "mn-tr-" + tempDir.fileName.toString().toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_-]", "-")
+        configuration.start()
+        configuration.stopManaged()
+        configuration.startupTimeout() == java.time.Duration.ofSeconds(30)
+    }
+
+    def "parses configured startup timeout formats"() {
+        expect:
+        ComposeConfiguration.from(["compose.startup-timeout": value]).startupTimeout() == expected
+
+        where:
+        value                         | expected
+        java.time.Duration.ofSeconds(5) | java.time.Duration.ofSeconds(5)
+        "1500ms"                      | java.time.Duration.ofMillis(1500)
+        "45s"                         | java.time.Duration.ofSeconds(45)
+        "PT3S"                        | java.time.Duration.ofSeconds(3)
+    }
+
+    def "parses single ps object and ignores invalid config shapes"() {
+        given:
+        def parser = new ComposeProjectParser()
+
+        expect:
+        parser.runningServices(psJson('{"Service": "db", "State": "running"}')) == ["db"] as Set
+        parser.parse("[]", "[]", [] as Set).empty
+        parser.parse('{"services": []}', "[]", [] as Set).empty
+        parser.parse('{"services": {"cache": "redis"}}', "[]", [] as Set).empty
+    }
+
+    def "reports Compose command diagnostics from stderr or stdout"() {
+        expect:
+        new ComposeCommandResult(1, "stdout problem\n", "stderr problem\n").diagnostic() == "stderr problem"
+        new ComposeCommandResult(1, "stdout problem\n", "").diagnostic() == "stdout problem"
+        new ComposeCommandResult(1, null, null).diagnostic() == ""
+        !new ComposeCommandResult(1, "", "").successful()
+        new ComposeCommandResult(0, "", "").successful()
     }
 
     def "redacts credential-like diagnostic values"() {

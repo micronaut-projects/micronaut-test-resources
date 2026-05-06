@@ -129,10 +129,8 @@ final class ComposeProjectManager implements Closeable {
             arguments.add("stop");
             arguments.addAll(entry.getValue());
             ComposeCommandResult result = composeCli.run(entry.getKey(), arguments);
-            if (!result.successful()) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Docker Compose failed to stop managed services {}: {}", entry.getValue(), result.diagnostic());
-                }
+            if (!result.successful() && LOG.isWarnEnabled()) {
+                LOG.warn("Docker Compose failed to stop managed services {}: {}", entry.getValue(), result.diagnostic());
             }
         }
     }

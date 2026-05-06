@@ -36,7 +36,7 @@ final class ComposePropertyMapper {
     private static final String POSTGRES_SERVICE = "postgres";
     private static final String REDIS_SERVICE = "redis";
     private static final String RABBITMQ_SERVICE = "rabbitmq";
-    private static final Set<String> POSTGRES_TYPES = Set.of("postgres", "postgresql", "pg");
+    private static final Set<String> POSTGRES_TYPES = Set.of(POSTGRES_SERVICE, "postgresql", "pg");
 
     Optional<String> resolve(String propertyName, Map<String, Object> requestedProperties, ComposeProject project) {
         if (propertyName.startsWith(DATASOURCES_PREFIX)) {

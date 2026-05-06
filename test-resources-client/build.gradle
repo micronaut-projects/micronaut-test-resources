@@ -13,6 +13,9 @@ dependencies {
     api(projects.micronautTestResourcesCore)
     compileOnly(mn.micronaut.context)
     implementation(projects.micronautTestResourcesCodec)
+    testImplementation(platform(libs.boms.netty)) {
+        because("Bump Netty patch version for GHSA-v8h7-rr48-vmmv")
+    }
     testImplementation(mn.micronaut.http.server.netty)
     testRuntimeOnly(mn.micronaut.http.server.netty)
 }

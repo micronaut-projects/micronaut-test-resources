@@ -60,9 +60,9 @@ test-resources:
       exposed-ports:
         - my.service.port: 1883
       ro-fs-bind:
-        - "path/to/local/readonly-file.conf": /path/to/container/readonly-file.conf
+        - "readonly-file.conf": /path/to/container/readonly-file.conf
       rw-fs-bind:
-        - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf
+        - "readwrite-file.conf": /path/to/container/readwrite-file.conf
 ----
 
 Furthermore, generic containers can use tmpfs mappings (in read-only or read-write mode):
@@ -163,10 +163,7 @@ test-resources:
   containers:
     producer:
       image-name: alpine:3.14
-      command:
-        - /bin/sh
-        - "-c"
-        - "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"
+      command: top
       network: custom
       network-aliases: bob
       hostnames: producer.host

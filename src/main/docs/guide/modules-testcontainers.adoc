@@ -49,7 +49,7 @@ public class JavamailSessionProvider implements SessionProvider {
 
 In addition, generic containers can bind file system resources (either read-only or read-write):
 
-[source,yaml]
+[configuration]
 ----
 test-resources:
   containers:
@@ -60,9 +60,9 @@ test-resources:
       exposed-ports:
         - my.service.port: 1883
       ro-fs-bind:
-        - "path/to/local/readonly-file.conf": /path/to/container/readonly-file.conf
+        - "readonly-file.conf": /path/to/container/readonly-file.conf
       rw-fs-bind:
-        - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf
+        - "readwrite-file.conf": /path/to/container/readwrite-file.conf
 ----
 
 Furthermore, generic containers can use tmpfs mappings (in read-only or read-write mode):

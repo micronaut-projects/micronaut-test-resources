@@ -1,0 +1,28 @@
+Solr support will automatically start a https://solr.apache.org/[Solr container] and provide the value of the `micronaut.solr.hosts` property.
+
+The default image (`{default-image-solr}`) can be overwritten by setting the `test-resources.containers.solr.image-name` property.
+
+Resolved properties:
+
+[[micronaut-solr-hosts]]
+`micronaut.solr.hosts`:: The Solr endpoint URL.
+
+[[micronaut-solr-zk-hosts]]
+`micronaut.solr.zk-hosts`:: The ZooKeeper endpoint when ZooKeeper is enabled.
+
+The following configuration properties can be used to customize the Solr container:
+
+[configuration]
+----
+solr:
+  collection: my-collection
+  config:
+    name: my-config
+    url: https://example.com/solr-config.zip
+  schema:
+    url: https://example.com/schema.xml
+  zookeeper:
+    enabled: true
+----
+
+`solr.collection` configures the collection name, `solr.config.name` and `solr.config.url` configure a Solr config set, `solr.schema.url` configures a schema, and `solr.zookeeper.enabled` controls whether the container starts with ZooKeeper support.

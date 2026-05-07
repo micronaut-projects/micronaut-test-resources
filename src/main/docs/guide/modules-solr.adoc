@@ -1,7 +1,6 @@
 Solr support will automatically start a https://solr.apache.org/[Solr container] and provide the value of the `micronaut.solr.hosts` property.
 
-The default image can be overwritten by setting the `test-resources.containers.solr.image-name` property.
-The default image is `solr:9.8.0`.
+The default image (`{default-image-solr}`) can be overwritten by setting the `test-resources.containers.solr.image-name` property.
 
 Resolved properties:
 

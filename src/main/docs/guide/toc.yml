@@ -42,12 +42,18 @@ modules:
     title: Redis
   modules-hazelcast:
     title: Hazelcast
+  modules-infinispan:
+    title: Infinispan
   modules-wiremock:
     title: WireMock
   modules-oauth2:
     title: OAuth2 / Keycloak
   modules-hashicorp-vault:
     title: Hashicorp Vault
+  modules-hashicorp-consul:
+    title: Hashicorp Consul
+  modules-solr:
+    title: Solr
   modules-testcontainers:
     title: Generic Testcontainers support
 extensions:

@@ -141,13 +141,19 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.16</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-wiremock"><a href="#modules-wiremock"><strong>5.17</strong><span>WireMock</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-infinispan"><a href="#modules-infinispan"><strong>5.17</strong><span>Infinispan</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.18</strong><span>OAuth2 / Keycloak</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-wiremock"><a href="#modules-wiremock"><strong>5.18</strong><span>WireMock</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.19</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.19</strong><span>OAuth2 / Keycloak</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.20</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.20</strong><span>Hashicorp Vault</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-consul"><a href="#modules-hashicorp-consul"><strong>5.21</strong><span>Hashicorp Consul</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-solr"><a href="#modules-solr"><strong>5.22</strong><span>Solr</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.23</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
         
@@ -1164,11 +1170,11 @@ r2dbc {
 
 
 <div class="paragraph">
-<p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.hosts</code> property.</p>
+<p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.http-hosts</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.2.1</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
-The default version can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
+The default tag can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
 </div>
 
 <h2 id="modules-azure"><a class="anchor" href="#modules-azure"></a>5.3 Azure Storage</h2>
@@ -1418,83 +1424,6 @@ test-resources.containers.kafka.partitions=3</code></pre>
 </td>
 <td class="content">
 See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html">Testing Kafka Listener using Testcontainers with the Micronaut Framework</a> to learn more.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><a href="https://docs.confluent.io/platform/current/kafka-metadata/kraft.html#kraft-overview">Kraft Mode</a> is supported via the <code>test-resources.containers.kafka.kraft</code> property.</p>
-</div>
-<div class="openblock">
-<div class="content">
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.kafka.kraft=true</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
-  containers:
-    kafka:
-      kraft: true</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
-  [test-resources.containers]
-    [test-resources.containers.kafka]
-      kraft=true</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
-  containers {
-    kafka {
-      kraft = true
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
-  test-resources {
-    containers {
-      kafka {
-        kraft = true
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "test-resources": {
-    "containers": {
-      "kafka": {
-        "kraft": true
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This switches to the <a href="https://docs.confluent.io/platform/current/installation/docker/image-reference.html#ak-images">confluent-local</a> Docker image with <a href="https://java.testcontainers.org/modules/kafka/#using-kraft-mode">TestContainer Kraft Support</a>
 </td>
 </tr>
 </table>
@@ -1989,7 +1918,65 @@ The default version can be overwritten by setting the <code>test-resources.conta
 </dl>
 </div>
 
-<h2 id="modules-wiremock"><a class="anchor" href="#modules-wiremock"></a>5.17 WireMock</h2>
+<h2 id="modules-infinispan"><a class="anchor" href="#modules-infinispan"></a>5.17 Infinispan</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-infinispan.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Infinispan support</p>
+</div>
+<div class="paragraph">
+<p>Infinispan support will automatically start an Infinispan container and provide the values of the <code>infinispan.client.hotrod.server.host</code> and <code>infinispan.client.hotrod.server.port</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>quay.io/infinispan/server:16.1.3</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.infinispan.image-tag</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="infinispan-client-hotrod-server-host" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.server.host</code></dt>
+<dd>
+<p>The host of the Infinispan server</p>
+</dd>
+</dl>
+</div>
+<div id="infinispan-client-hotrod-server-port" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.server.port</code></dt>
+<dd>
+<p>The port of the Infinispan server (Hot Rod protocol, 11222)</p>
+</dd>
+</dl>
+</div>
+<div id="infinispan-client-hotrod-username" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.security.authentication.username</code></dt>
+<dd>
+<p>Username for Hot Rod authentication (if configured in container)</p>
+</dd>
+</dl>
+</div>
+<div id="infinispan-client-hotrod-password" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.security.authentication.password</code></dt>
+<dd>
+<p>Password for Hot Rod authentication (if configured in container)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>See the <a href="https://testcontainers.com/modules/infinispan/">Testcontainers Infinispan module</a> for more information.</p>
+</div>
+
+<h2 id="modules-wiremock"><a class="anchor" href="#modules-wiremock"></a>5.18 WireMock</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-wiremock.adoc"'>
@@ -2212,7 +2199,7 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 <p>Mapping-specific Java helpers are not part of the initial WireMock provider surface.</p>
 </div>
 
-<h2 id="modules-oauth2"><a class="anchor" href="#modules-oauth2"></a>5.18 OAuth2 / Keycloak</h2>
+<h2 id="modules-oauth2"><a class="anchor" href="#modules-oauth2"></a>5.19 OAuth2 / Keycloak</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-oauth2.adoc"'>
@@ -2325,7 +2312,7 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 </div>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.19 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.20 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -2425,7 +2412,229 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.20 Generic Testcontainers support</h2>
+<h2 id="modules-hashicorp-consul"><a class="anchor" href="#modules-hashicorp-consul"></a>5.21 Hashicorp Consul</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-consul.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Consul support will automatically start a <a href="https://www.consul.io/">Hashicorp Consul container</a> and provide the values of the <code>consul.client.host</code>, <code>consul.client.port</code>, and <code>consul.client.default-zone</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>hashicorp/consul:1.15.4</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-consul.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Key/value pairs can be inserted into Hashicorp Consul at startup with the <code>test-resources.containers.hashicorp-consul.kv-properties</code> property:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.hashicorp-consul.kv-properties[0]=key1=value1
+test-resources.containers.hashicorp-consul.kv-properties[1]=key2=value2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    hashicorp-consul:
+      kv-properties:
+        - "key1=value1"
+        - "key2=value2"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.hashicorp-consul]
+      kv-properties=[
+        "key1=value1",
+        "key2=value2"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    hashicorpConsul {
+      kvProperties = ["key1=value1", "key2=value2"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      hashicorp-consul {
+        kv-properties = ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "hashicorp-consul": {
+        "kv-properties": ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="modules-solr"><a class="anchor" href="#modules-solr"></a>5.22 Solr</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-solr.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Solr support will automatically start a <a href="https://solr.apache.org/">Solr container</a> and provide the value of the <code>micronaut.solr.hosts</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>solr:9.8.0</code>) can be overwritten by setting the <code>test-resources.containers.solr.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="micronaut-solr-hosts" class="dlist">
+<dl>
+<dt class="hdlist1"><code>micronaut.solr.hosts</code></dt>
+<dd>
+<p>The Solr endpoint URL.</p>
+</dd>
+</dl>
+</div>
+<div id="micronaut-solr-zk-hosts" class="dlist">
+<dl>
+<dt class="hdlist1"><code>micronaut.solr.zk-hosts</code></dt>
+<dd>
+<p>The ZooKeeper endpoint when ZooKeeper is enabled.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following configuration properties can be used to customize the Solr container:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">solr.collection=my-collection
+solr.config.name=my-config
+solr.config.url=https://example.com/solr-config.zip
+solr.schema.url=https://example.com/schema.xml
+solr.zookeeper.enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">solr:
+  collection: my-collection
+  config:
+    name: my-config
+    url: https://example.com/solr-config.zip
+  schema:
+    url: https://example.com/schema.xml
+  zookeeper:
+    enabled: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[solr]
+  collection="my-collection"
+  [solr.config]
+    name="my-config"
+    url="https://example.com/solr-config.zip"
+  [solr.schema]
+    url="https://example.com/schema.xml"
+  [solr.zookeeper]
+    enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">solr {
+  collection = "my-collection"
+  config {
+    name = "my-config"
+    url = "https://example.com/solr-config.zip"
+  }
+  schema {
+    url = "https://example.com/schema.xml"
+  }
+  zookeeper {
+    enabled = true
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  solr {
+    collection = "my-collection"
+    config {
+      name = "my-config"
+      url = "https://example.com/solr-config.zip"
+    }
+    schema {
+      url = "https://example.com/schema.xml"
+    }
+    zookeeper {
+      enabled = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "solr": {
+    "collection": "my-collection",
+    "config": {
+      "name": "my-config",
+      "url": "https://example.com/solr-config.zip"
+    },
+    "schema": {
+      "url": "https://example.com/schema.xml"
+    },
+    "zookeeper": {
+      "enabled": true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><code>solr.collection</code> configures the collection name, <code>solr.config.name</code> and <code>solr.config.url</code> configure a Solr config set, <code>solr.schema.url</code> configures a schema, and <code>solr.zookeeper.enabled</code> controls whether the container starts with ZooKeeper support.</p>
+</div>
+
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.23 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>
@@ -2589,8 +2798,8 @@ public class JavamailSessionProvider implements SessionProvider {
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
 test-resources.containers.mycontainer.hostnames[0]=my.service.host
 test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
-test-resources.containers.mycontainer.ro-fs-bind[0].path/to/local/readonly-file.conf=/path/to/container/readonly-file.conf
-test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file.conf=/path/to/container/readwrite-file.conf</code></pre>
+test-resources.containers.mycontainer.ro-fs-bind[0].readonly-file.conf=/path/to/container/readonly-file.conf
+test-resources.containers.mycontainer.rw-fs-bind[0].readwrite-file.conf=/path/to/container/readwrite-file.conf</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2604,9 +2813,9 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
       exposed-ports:
         - my.service.port: 1883
       ro-fs-bind:
-        - "path/to/local/readonly-file.conf": /path/to/container/readonly-file.conf
+        - "readonly-file.conf": /path/to/container/readonly-file.conf
       rw-fs-bind:
-        - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
+        - "readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2621,9 +2830,9 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
       [[test-resources.containers.mycontainer.exposed-ports]]
         "my.service.port"=1883
       [[test-resources.containers.mycontainer.ro-fs-bind]]
-        "path/to/local/readonly-file.conf"="/path/to/container/readonly-file.conf"
+        "readonly-file.conf"="/path/to/container/readonly-file.conf"
       [[test-resources.containers.mycontainer.rw-fs-bind]]
-        "path/to/local/readwrite-file.conf"="/path/to/container/readwrite-file.conf"</code></pre>
+        "readwrite-file.conf"="/path/to/container/readwrite-file.conf"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2637,10 +2846,10 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
           my.service.port = 1883
         }]
       roFsBind = [{
-          path/to/local/readonlyFile.conf = "/path/to/container/readonly-file.conf"
+          readonlyFile.conf = "/path/to/container/readonly-file.conf"
         }]
       rwFsBind = [{
-          path/to/local/readwriteFile.conf = "/path/to/container/readwrite-file.conf"
+          readwriteFile.conf = "/path/to/container/readwrite-file.conf"
         }]
     }
   }
@@ -2659,10 +2868,10 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
             "my.service.port" = 1883
           }]
         ro-fs-bind = [{
-            "path/to/local/readonly-file.conf" = "/path/to/container/readonly-file.conf"
+            "readonly-file.conf" = "/path/to/container/readonly-file.conf"
           }]
         rw-fs-bind = [{
-            "path/to/local/readwrite-file.conf" = "/path/to/container/readwrite-file.conf"
+            "readwrite-file.conf" = "/path/to/container/readwrite-file.conf"
           }]
       }
     }
@@ -2682,10 +2891,10 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
             "my.service.port": 1883
           }],
         "ro-fs-bind": [{
-            "path/to/local/readonly-file.conf": "/path/to/container/readonly-file.conf"
+            "readonly-file.conf": "/path/to/container/readonly-file.conf"
           }],
         "rw-fs-bind": [{
-            "path/to/local/readwrite-file.conf": "/path/to/container/readwrite-file.conf"
+            "readwrite-file.conf": "/path/to/container/readwrite-file.conf"
           }]
       }
     }
@@ -3187,9 +3396,7 @@ It is possible to let containers communicate with each other by declaring the ne
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.producer.image-name=alpine:3.14
-test-resources.containers.producer.command[0]=/bin/sh
-test-resources.containers.producer.command[1]=-c
-test-resources.containers.producer.command[2]=while true ; do printf 'HTTP/1.1 200 OK\n\nyay' | nc -l -p 8080; done
+test-resources.containers.producer.command=top
 test-resources.containers.producer.network=custom
 test-resources.containers.producer.network-aliases=bob
 test-resources.containers.producer.hostnames=producer.host
@@ -3206,10 +3413,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
   containers:
     producer:
       image-name: alpine:3.14
-      command:
-        - /bin/sh
-        - "-c"
-        - "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"
+      command: top
       network: custom
       network-aliases: bob
       hostnames: producer.host
@@ -3227,11 +3431,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
   [test-resources.containers]
     [test-resources.containers.producer]
       image-name="alpine:3.14"
-      command=[
-        "/bin/sh",
-        "-c",
-        "while true ; do printf \'HTTP/1.1 200 OK\\n\\nyay\' | nc -l -p 8080; done"
-      ]
+      command="top"
       network="custom"
       network-aliases="bob"
       hostnames="producer.host"
@@ -3249,7 +3449,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
   containers {
     producer {
       imageName = "alpine:3.14"
-      command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+      command = "top"
       network = "custom"
       networkAliases = "bob"
       hostnames = "producer.host"
@@ -3272,7 +3472,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
     containers {
       producer {
         image-name = "alpine:3.14"
-        command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+        command = "top"
         network = "custom"
         network-aliases = "bob"
         hostnames = "producer.host"
@@ -3296,7 +3496,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
     "containers": {
       "producer": {
         "image-name": "alpine:3.14",
-        "command": ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"],
+        "command": "top",
         "network": "custom",
         "network-aliases": "bob",
         "hostnames": "producer.host"

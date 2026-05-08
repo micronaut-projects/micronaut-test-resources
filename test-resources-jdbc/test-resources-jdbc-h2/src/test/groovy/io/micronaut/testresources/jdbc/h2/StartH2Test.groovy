@@ -1,7 +1,6 @@
 package io.micronaut.testresources.jdbc.h2
 
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import io.micronaut.testresources.jdbc.Book
 import jakarta.inject.Inject
 
 import javax.sql.DataSource
@@ -16,7 +15,7 @@ class StartH2Test extends spock.lang.Specification {
 
     def "starts a containerless H2 server"() {
         given:
-        def book = new Book(title: "Micronaut Test Resources")
+        def book = new H2Book(title: "Micronaut Test Resources")
         repository.save(book)
 
         when:

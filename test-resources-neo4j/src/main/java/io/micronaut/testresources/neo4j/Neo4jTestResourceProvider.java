@@ -35,9 +35,9 @@ public class Neo4jTestResourceProvider extends AbstractTestContainersProvider<Ne
 
     public static final String NEO4J_SERVER_URI = "neo4j.uri";
     public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_NEO4J_IMAGE;
+    public static final String DISPLAY_NAME = "Neo4J";
 
     private static final Set<String> SUPPORTED_PROPERTIES;
-    public static final String DISPLAY_NAME = "Neo4J";
 
     static {
         Set<String> supported = new HashSet<>();

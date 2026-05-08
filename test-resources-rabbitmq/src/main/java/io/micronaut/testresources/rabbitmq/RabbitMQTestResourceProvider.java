@@ -38,6 +38,7 @@ public class RabbitMQTestResourceProvider extends AbstractTestContainersProvider
     public static final String RABBITMQ_USERNAME = "rabbitmq.username";
     public static final String RABBITMQ_PASSWORD = "rabbitmq.password";
     public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_RABBITMQ_IMAGE;
+    public static final String DISPLAY_NAME = "RabbitMQ";
 
     public static final List<String> SUPPORTED_KEYS = Collections.unmodifiableList(Arrays.asList(
         RABBITMQ_URI,
@@ -47,7 +48,6 @@ public class RabbitMQTestResourceProvider extends AbstractTestContainersProvider
     private static final Set<String> SUPPORTED_KEYSET = Collections.unmodifiableSet(
         new HashSet<>(SUPPORTED_KEYS)
     );
-    public static final String DISPLAY_NAME = "RabbitMQ";
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

@@ -28,10 +28,10 @@ import java.util.Map;
  * A test resource provider which will spawn a MySQL test container.
  */
 public class PostgreSQLTestResourceProvider extends AbstractJdbcTestResourceProvider<PostgreSQLContainer> {
+    public static final String DISPLAY_NAME = "PostgreSQL";
     private static final List<String> SUPPORTED_DB_TYPES = Collections.unmodifiableList(
         Arrays.asList("postgresql", "postgres", "pg")
     );
-    public static final String DISPLAY_NAME = "PostgreSQL";
 
     @Override
     public String getDisplayName() {

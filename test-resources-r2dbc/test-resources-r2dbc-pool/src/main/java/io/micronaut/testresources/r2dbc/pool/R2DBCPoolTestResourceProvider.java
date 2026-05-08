@@ -31,13 +31,14 @@ import java.util.Optional;
  */
 public class R2DBCPoolTestResourceProvider implements ToggableTestResourcesResolver {
 
+    public static final String DISPLAY_NAME = "R2DBC Pool";
+
     private static final String PROTOCOL = "options.protocol";
     private static final String DRIVER = "options.driver";
     private static final List<String> RESOLVABLE_KEYS = Collections.unmodifiableList(Arrays.asList(
         PROTOCOL,
         DRIVER
     ));
-    public static final String DISPLAY_NAME = "R2DBC Pool";
 
     @Override
     public String getDisplayName() {

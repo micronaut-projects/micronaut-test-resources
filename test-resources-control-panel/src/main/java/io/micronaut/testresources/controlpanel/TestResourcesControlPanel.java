@@ -24,7 +24,7 @@ import io.micronaut.controlpanel.core.config.ControlPanelConfiguration;
  * The control panel is responsible for showing the properties resolved
  * by this particular test resources resolver.
  */
-public class TestResourcesControlPanel extends AbstractControlPanel<TestResourcesControlPanelBody> {
+public final class TestResourcesControlPanel extends AbstractControlPanel<TestResourcesControlPanelBody> {
     private final ControlPanelPropertyResolutionListener resolutionListener;
     private final String id;
 

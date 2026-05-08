@@ -32,10 +32,10 @@ import java.util.Optional;
  * A test resource provider for reactive PostgreSQL.
  */
 public class R2DBCPostgreSQLTestResourceProvider extends AbstractR2DBCTestResourceProvider<PostgreSQLContainer> {
+    public static final String DISPLAY_NAME = "PostgreSQL (R2DBC)";
     private static final List<String> SUPPORTED_DB_TYPES = Collections.unmodifiableList(
         Arrays.asList("postgresql", "postgres", "pg")
     );
-    public static final String DISPLAY_NAME = "PostgreSQL (R2DBC)";
 
     @Override
     public String getDisplayName() {

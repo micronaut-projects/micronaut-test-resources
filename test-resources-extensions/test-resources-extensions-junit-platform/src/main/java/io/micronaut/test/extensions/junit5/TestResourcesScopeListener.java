@@ -149,6 +149,8 @@ public class TestResourcesScopeListener implements TestExecutionListener {
                 }
                 System.out.println("testId = " + testId + " finished and remaining nested scopes = " + nestedScopes);
             }
+            default -> {
+            }
         }
     }
 

@@ -40,9 +40,10 @@ import static io.micronaut.testresources.r2dbc.core.R2dbcSupport.r2dbDatasourceE
 @Deprecated(since = "2.4.0", forRemoval = true)
 public class R2DBCOracleXETestResourceProvider extends AbstractR2DBCTestResourceProvider<OracleContainer> {
 
+    public static final String DISPLAY_NAME = "Oracle Database (R2DBC)";
+
     private static final String R2DBC_ORACLE_DRIVER = "oracle";
     private static final String OCID = "ocid";
-    public static final String DISPLAY_NAME = "Oracle Database (R2DBC)";
 
     @Override
     public List<String> getRequiredProperties(String expression) {

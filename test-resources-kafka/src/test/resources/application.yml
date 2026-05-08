@@ -1,0 +1,6 @@
+kafka:
+  producers:
+    default:
+      delivery.timeout.ms: 5000
+      request.timeout.ms: 1000
+      max.block.ms: 1000

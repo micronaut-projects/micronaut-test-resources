@@ -19,7 +19,7 @@ import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class SomeBean {
+public final class SomeBean {
     private final String someValue;
 
     public SomeBean(@Value("${second-property}") String someValue) {

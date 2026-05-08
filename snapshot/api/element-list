@@ -22,7 +22,6 @@ io.micronaut.testresources.hibernate.reactive.oracle
 io.micronaut.testresources.hibernate.reactive.postgresql
 io.micronaut.testresources.hivemq
 io.micronaut.testresources.infinispan
-io.micronaut.testresources.info
 io.micronaut.testresources.jdbc
 io.micronaut.testresources.kafka
 io.micronaut.testresources.localstack

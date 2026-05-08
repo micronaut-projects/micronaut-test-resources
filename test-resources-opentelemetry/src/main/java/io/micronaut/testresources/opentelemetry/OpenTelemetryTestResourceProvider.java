@@ -84,6 +84,7 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
     }
 
     @Override
+    @SuppressWarnings("java:S2095") // Container lifecycle is managed by AbstractTestContainersProvider/TestContainers.
     protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         validateBackend(testResourcesConfig);
         validateProtocol(testResourcesConfig);

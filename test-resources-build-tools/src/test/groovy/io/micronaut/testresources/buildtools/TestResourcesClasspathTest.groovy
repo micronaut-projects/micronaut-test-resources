@@ -138,6 +138,35 @@ class TestResourcesClasspathTest extends Specification {
 
     }
 
+    def "infers OpenTelemetry test resources for #tracingModule with OTLP exporter"() {
+        when:
+        infer "io.micronaut.tracing:$tracingModule:1.0", "io.opentelemetry:opentelemetry-exporter-otlp:1.0"
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                "io.micronaut.testresources:micronaut-test-resources-opentelemetry:1.0.34"
+        )
+
+        where:
+        tracingModule << [
+                "micronaut-tracing-opentelemetry",
+                "micronaut-tracing-opentelemetry-http"
+        ]
+    }
+
+    def "does not infer OpenTelemetry test resources for API-only OpenTelemetry dependencies"() {
+        when:
+        infer "io.micronaut.tracing:micronaut-tracing-opentelemetry:1.0", "io.opentelemetry:opentelemetry-api:1.0"
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34'
+        )
+    }
+
     def "infers Micronaut Data R2DBC #driver"() {
         when:
         infer 'io.micronaut.data:micronaut-data-r2dbc:1.0', "$driver:1.0"

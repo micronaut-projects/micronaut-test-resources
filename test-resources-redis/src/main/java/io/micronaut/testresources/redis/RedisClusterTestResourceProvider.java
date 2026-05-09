@@ -21,6 +21,7 @@ import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -86,10 +87,14 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     @Override
     protected RedisClusterContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         RedisClusterContainer redisClusterContainer = new RedisClusterContainer(imageName);
-        redisClusterContainer.withMasters(findMasterCount(testResourcesConfig));
-        redisClusterContainer.withSlavesPerMaster(findSlavesPerMasterCount(testResourcesConfig));
-        redisClusterContainer.withInitialPort(findInitialPort(testResourcesConfig));
+        int masters = findMasterCount(testResourcesConfig);
+        int slavesPerMaster = findSlavesPerMasterCount(testResourcesConfig);
+        int initialPort = findInitialPort(testResourcesConfig);
+        redisClusterContainer.withMasters(masters);
+        redisClusterContainer.withSlavesPerMaster(slavesPerMaster);
+        redisClusterContainer.withInitialPort(initialPort);
         redisClusterContainer.withIP(findIp(testResourcesConfig));
+        redisClusterContainer.setPortBindings(portBindings(initialPort, masters, slavesPerMaster));
 
         String clusterConfig = CLUSTER_CONFIG + findNotifyKeyspaceEvents(testResourcesConfig)
             .map(NOTIFY_KEYSPACE_EVENTS_CONFIG_FORMAT::formatted)
@@ -110,5 +115,15 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return SUPPORTED_PROPERTIES.contains(propertyName);
+    }
+
+    private static List<String> portBindings(int initialPort, int masters, int slavesPerMaster) {
+        int totalNodes = masters * (slavesPerMaster + 1);
+        List<String> portBindings = new ArrayList<>(totalNodes);
+        for (int i = 0; i < totalNodes; i++) {
+            int port = initialPort + i;
+            portBindings.add(port + ":" + port);
+        }
+        return portBindings;
     }
 }

@@ -1,5 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.jdbc-module'
+    id("io.micronaut.build.internal.jdbc-module")
 }
 
 description = """
@@ -8,6 +8,5 @@ Provides support for launching a Oracle XE test container.
 
 dependencies {
     implementation(libs.managed.testcontainers.oracle.xe)
-
-    testRuntimeOnly(mnSql.ojdbc8)
+    testRuntimeOnly(mnSql.ojdbc11)
 }

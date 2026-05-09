@@ -20,6 +20,7 @@ import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.hivemq.HiveMQContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,8 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
 
     @Override
     protected HiveMQContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new HiveMQContainer(imageName);
+        return new HiveMQContainer(imageName)
+            .withStartupTimeout(Duration.ofMinutes(2));
     }
 
     @Override

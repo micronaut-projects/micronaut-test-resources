@@ -64,13 +64,6 @@ micronaut {
     }
 }
 
-micronautBuild {
-    binaryCompatibility {
-        // binary checks work on the wrong jar file
-        enabled = false
-    }
-}
-
 tasks.named("test") {
     systemProperty("test.resources.server.runtime.classpath", sourceSets.main.runtimeClasspath.asPath)
 }

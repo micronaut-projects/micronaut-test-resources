@@ -9,10 +9,3 @@ Shared binary codec support for the test resources client/server transport.
 dependencies {
     implementation(mn.micronaut.http)
 }
-
-micronautBuild {
-    binaryCompatibility {
-        // preparing major version
-        enabledAfter '4.0.0'
-    }
-}

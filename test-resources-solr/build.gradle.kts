@@ -10,9 +10,3 @@ dependencies {
     api(libs.managed.solr.testcontainers)
 }
 
-micronautBuild {
-    // new module, so disable binary check for now
-    binaryCompatibility {
-        enabled.set(false)
-    }
-}

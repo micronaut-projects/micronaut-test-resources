@@ -61,6 +61,16 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
     }
 
     @Override
+    @SuppressWarnings("java:S2095") // Container lifecycle is managed by AbstractTestContainersProvider/TestContainers.
+    protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        validateBackend(testResourcesConfig);
+        validateProtocol(testResourcesConfig);
+        return new GenericContainer<>(imageName)
+            .withExposedPorts(OTLP_GRPC_PORT, GRAFANA_PORT)
+            .waitingFor(Wait.forHttp("/api/health").forPort(GRAFANA_PORT));
+    }
+
+    @Override
     public List<String> getRequiredProperties(String expression) {
         if (OTLP_ENDPOINT.equals(expression)) {
             return List.of(OTLP_ENDPOINT_ENV);
@@ -70,27 +80,17 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
 
     @Override
     public String getDisplayName() {
-        return DISPLAY_NAME;
+        return providerName(true);
     }
 
     @Override
     protected String getSimpleName() {
-        return SIMPLE_NAME;
+        return providerName(false);
     }
 
     @Override
     protected String getDefaultImageName() {
-        return DEFAULT_IMAGE;
-    }
-
-    @Override
-    @SuppressWarnings("java:S2095") // Container lifecycle is managed by AbstractTestContainersProvider/TestContainers.
-    protected GenericContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        validateBackend(testResourcesConfig);
-        validateProtocol(testResourcesConfig);
-        return new GenericContainer<>(imageName)
-            .withExposedPorts(OTLP_GRPC_PORT, GRAFANA_PORT)
-            .waitingFor(Wait.forHttp("/api/health").forPort(GRAFANA_PORT));
+        return defaultImage();
     }
 
     @Override
@@ -149,5 +149,13 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
 
     private static String grafanaUrl(GenericContainer<?> container) {
         return "http://" + container.getHost() + ":" + container.getMappedPort(GRAFANA_PORT);
+    }
+
+    private static String providerName(boolean displayName) {
+        return displayName ? DISPLAY_NAME : SIMPLE_NAME;
+    }
+
+    private static String defaultImage() {
+        return DEFAULT_IMAGE;
     }
 }

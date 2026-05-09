@@ -138,6 +138,7 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
             {
               "realm": "%s",
               "enabled": true,
+              "sslRequired": "none",
               "clients": [
                 {
                   "clientId": "%s",

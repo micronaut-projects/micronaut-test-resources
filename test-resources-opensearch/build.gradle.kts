@@ -9,3 +9,10 @@ Provides core support for OpenSearch test resources.
 dependencies {
     api(libs.managed.opensearch.testcontainers)
 }
+
+micronautBuild {
+    // new module, so disable binary check for now
+    binaryCompatibility {
+        enabled.set(false)
+    }
+}

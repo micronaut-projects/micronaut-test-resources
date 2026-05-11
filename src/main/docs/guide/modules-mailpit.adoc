@@ -32,22 +32,31 @@ javamail:
         port: 2525
 ----
 
-You can disable the provider or override the image and container ports:
+You can disable the provider:
 
 [configuration]
 ----
 test-resources:
   containers:
     mailpit:
-      enabled: true
+      enabled: false
+----
+
+You can also override the image and Mailpit listener ports:
+
+[configuration]
+----
+test-resources:
+  containers:
+    mailpit:
       image-name: axllent/mailpit
       image-tag: latest
       smtp-port: 1025
       ui-port: 8025
 ----
 
-The `smtp-port` and `ui-port` values are Mailpit container ports.
-They are not fixed host ports.
+The `smtp-port` and `ui-port` values configure Mailpit's container listener ports.
+They are exposed through random host ports and are not fixed host ports.
 
 During development you can open the resolved `mailpit.ui.url` value in a browser to inspect captured messages.
 In integration tests you can use `mailpit.api.url` to assert messages through the Mailpit HTTP API:

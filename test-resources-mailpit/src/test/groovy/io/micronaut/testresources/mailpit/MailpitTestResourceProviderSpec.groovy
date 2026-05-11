@@ -118,6 +118,7 @@ class MailpitTestResourceProviderSpec extends Specification {
 
         then:
         container.exposedPorts == [2525, 8080]
+        container.commandParts == ['--smtp', '[::]:2525', '--listen', '[::]:8080']
     }
 
     def "rejects invalid configured container ports"() {

@@ -102,6 +102,7 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
         int smtpPort = configuredPort(testResourcesConfig, SMTP_PORT_CONFIG, DEFAULT_SMTP_PORT);
         int uiPort = configuredPort(testResourcesConfig, UI_PORT_CONFIG, DEFAULT_UI_PORT);
         return new MailpitContainer(imageName, smtpPort, uiPort)
+            .withCommand("--smtp", "[::]:" + smtpPort, "--listen", "[::]:" + uiPort)
             .withExposedPorts(smtpPort, uiPort)
             .waitingFor(Wait.forHttp("/").forPort(uiPort));
     }

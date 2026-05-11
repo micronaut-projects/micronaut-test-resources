@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.opentelemetry
 
+import io.micronaut.testresources.core.DefaultTestResourceImages
 import io.micronaut.testresources.core.TestResourcesResolutionException
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.utility.DockerImageName
@@ -52,7 +53,7 @@ class OpenTelemetryTestResourceProviderTest extends Specification {
 
     def "creates LGTM container with default gRPC support"() {
         when:
-        GenericContainer<?> container = provider.create(DockerImageName.parse("grafana/otel-lgtm:0.27.1"), [:], [:])
+        GenericContainer<?> container = provider.create(DockerImageName.parse(DefaultTestResourceImages.DEFAULT_OPENTELEMETRY_IMAGE), [:], [:])
 
         then:
         container.exposedPorts == [4317, 3000]
@@ -60,7 +61,7 @@ class OpenTelemetryTestResourceProviderTest extends Specification {
 
     def "rejects unsupported backend"() {
         when:
-        provider.create(DockerImageName.parse("grafana/otel-lgtm:0.27.1"), [:], [
+        provider.create(DockerImageName.parse(DefaultTestResourceImages.DEFAULT_OPENTELEMETRY_IMAGE), [:], [
                 "containers.opentelemetry.backend": "collector"
         ])
 
@@ -71,7 +72,7 @@ class OpenTelemetryTestResourceProviderTest extends Specification {
 
     def "rejects unsupported protocol"() {
         when:
-        provider.create(DockerImageName.parse("grafana/otel-lgtm:0.27.1"), [:], [
+        provider.create(DockerImageName.parse(DefaultTestResourceImages.DEFAULT_OPENTELEMETRY_IMAGE), [:], [
                 "containers.opentelemetry.protocol": "http"
         ])
 

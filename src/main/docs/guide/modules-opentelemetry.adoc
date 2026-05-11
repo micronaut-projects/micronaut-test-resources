@@ -33,16 +33,16 @@ otel:
       endpoint: "http://collector.example:4317"
 ----
 
-The default backend is `lgtm`, the default protocol is `grpc`, and the default image is `grafana/otel-lgtm:0.27.1`.
+The default backend is `lgtm`, the default protocol is `grpc`, and the default image is `{default-image-opentelemetry}`.
 The image can be changed with the standard container image settings:
 
-[source,yaml]
+[source,yaml,subs=attributes+]
 ----
 test-resources:
   containers:
     opentelemetry:
-      image-name: "grafana/otel-lgtm"
-      image-tag: 0.27.1
+      image-name: "{default-image-name-opentelemetry}"
+      image-tag: {default-image-tag-opentelemetry}
 ----
 
 Only `backend: lgtm` and `protocol: grpc` are supported by this initial provider.

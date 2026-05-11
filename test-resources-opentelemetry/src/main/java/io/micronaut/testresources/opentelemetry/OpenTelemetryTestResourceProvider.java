@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.opentelemetry;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
 
     public static final String OTLP_ENDPOINT = "otel.exporter.otlp.endpoint";
     public static final String OTLP_ENDPOINT_ENV = "OTEL_EXPORTER_OTLP_ENDPOINT";
-    public static final String DEFAULT_IMAGE = "grafana/otel-lgtm:0.27.1";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_OPENTELEMETRY_IMAGE;
     public static final String DISPLAY_NAME = "OpenTelemetry";
     public static final String SIMPLE_NAME = "opentelemetry";
     public static final String OTLP_ENDPOINT_PLACEHOLDER = "${auto.test.resources." + OTLP_ENDPOINT + "}";

@@ -1,0 +1,63 @@
+Mailpit support will automatically start a https://mailpit.axllent.org/[Mailpit] container and provide JavaMail SMTP properties for Micronaut Email JavaMail applications.
+Mailpit captures local development and test email, provides a browser UI, and exposes an HTTP API for assertions.
+It is not a production SMTP relay.
+
+If your application has `io.micronaut.email:micronaut-email-javamail` on the application classpath, the build tools infer the Mailpit test resources module automatically.
+You can also add the module explicitly:
+
+dependency:io.micronaut.testresources:micronaut-test-resources-mailpit[scope="testResourcesService"]
+
+When no external SMTP endpoint is configured, the provider resolves these properties:
+
+* `javamail.properties.mail.smtp.host`
+* `javamail.properties.mail.smtp.port`
+* `javamail.properties.mail.smtp.auth=false`
+* `javamail.properties.mail.smtp.starttls.enable=false`
+* `mailpit.ui.url`
+* `mailpit.api.url`
+
+The Mailpit SMTP and UI container ports are exposed through random host ports.
+The `mailpit.ui.url` and `mailpit.api.url` values contain only local endpoint URLs.
+The provider does not log captured messages, recipients, headers, credentials, or API responses.
+
+If either `javamail.properties.mail.smtp.host` or `javamail.properties.mail.smtp.port` is already configured, Mailpit does not start and the existing JavaMail SMTP configuration remains unchanged.
+
+[configuration]
+----
+javamail:
+  properties:
+    mail:
+      smtp:
+        host: smtp.example.test
+        port: 2525
+----
+
+You can disable the provider or override the image and container ports:
+
+[configuration]
+----
+test-resources:
+  containers:
+    mailpit:
+      enabled: true
+      image-name: axllent/mailpit
+      image-tag: latest
+      smtp-port: 1025
+      ui-port: 8025
+----
+
+The `smtp-port` and `ui-port` values are Mailpit container ports.
+They are not fixed host ports.
+
+During development you can open the resolved `mailpit.ui.url` value in a browser to inspect captured messages.
+In integration tests you can use `mailpit.api.url` to assert messages through the Mailpit HTTP API:
+
+[source,java]
+----
+@Value("${mailpit.api.url}")
+URI mailpitApiUrl;
+
+HttpRequest<?> request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/messages"));
+----
+
+For custom SMTP containers or non-JavaMail configuration, use <<modules-testcontainers,Generic Testcontainers support>>.

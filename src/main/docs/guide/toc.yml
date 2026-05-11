@@ -20,6 +20,8 @@ modules:
     title: OpenSearch
   modules-kafka:
     title: Kafka
+  modules-mailpit:
+    title: Mailpit
   modules-pulsar:
     title: Pulsar
   modules-localstack:

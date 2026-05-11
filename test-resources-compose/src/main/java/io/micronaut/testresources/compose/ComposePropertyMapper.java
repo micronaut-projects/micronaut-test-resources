@@ -46,6 +46,17 @@ final class ComposePropertyMapper {
     private static final String JPA_PREFIX = JPA + ".";
     private static final String MONGODB_SERVERS = "mongodb.servers";
     private static final String MONGODB_SERVERS_PREFIX = MONGODB_SERVERS + ".";
+    private static final String URL_PROPERTY = "url";
+    private static final String USERNAME_PROPERTY = "username";
+    private static final String PASSWORD_PROPERTY = "password";
+    private static final String DEFAULT_PASSWORD = PASSWORD_PROPERTY;
+    private static final String DB_TYPE_PROPERTY = "db-type";
+    private static final String DB_NAME_PROPERTY = "db-name";
+    private static final String POSTGRES = "postgres";
+    private static final String MYSQL = "mysql";
+    private static final String MARIADB = "mariadb";
+    private static final String MSSQL = "mssql";
+    private static final String ORACLE = "oracle";
     private static final String DEFAULT_AWS_ACCESS_KEY = "test";
     private static final String DEFAULT_AWS_SECRET_KEY = "test";
     private static final String DEFAULT_AWS_REGION = "us-east-1";
@@ -54,8 +65,8 @@ final class ComposePropertyMapper {
         "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==";
     private static final String DEFAULT_SEAWEEDFS_ACCESS_KEY = "some_access_key1";
     private static final String DEFAULT_SEAWEEDFS_SECRET_KEY = "some_secret_key1";
-    private static final List<String> DATASOURCE_PROPERTIES = List.of("url", "username", "password", "driver-class-name");
-    private static final List<String> R2DBC_PROPERTIES = List.of("url", "username", "password");
+    private static final List<String> DATASOURCE_PROPERTIES = List.of(URL_PROPERTY, USERNAME_PROPERTY, PASSWORD_PROPERTY, "driver-class-name");
+    private static final List<String> R2DBC_PROPERTIES = List.of(URL_PROPERTY, USERNAME_PROPERTY, PASSWORD_PROPERTY);
     private static final List<String> HIBERNATE_REACTIVE_PROPERTIES = List.of(
         "properties.hibernate.connection.url",
         "properties.hibernate.connection.username",
@@ -63,8 +74,8 @@ final class ComposePropertyMapper {
     );
     private static final List<DatabaseDefinition> DATABASES = List.of(
         new DatabaseDefinition(
-            "postgres",
-            Set.of("postgres", "postgresql", "pg"),
+            POSTGRES,
+            Set.of(POSTGRES, "postgresql", "pg"),
             5432,
             "jdbc:postgresql",
             "postgresql",
@@ -72,16 +83,16 @@ final class ComposePropertyMapper {
             "POSTGRES_USER",
             "POSTGRES_PASSWORD",
             "POSTGRES_DB",
-            "postgres",
-            "postgres",
+            POSTGRES,
+            POSTGRES,
             null
         ),
         new DatabaseDefinition(
-            "mysql",
-            Set.of("mysql"),
+            MYSQL,
+            Set.of(MYSQL),
             3306,
             "jdbc:mysql",
-            "mysql",
+            MYSQL,
             "com.mysql.cj.jdbc.Driver",
             "MYSQL_USER",
             "MYSQL_PASSWORD",
@@ -91,11 +102,11 @@ final class ComposePropertyMapper {
             "test"
         ),
         new DatabaseDefinition(
-            "mariadb",
-            Set.of("mariadb", "maria"),
+            MARIADB,
+            Set.of(MARIADB, "maria"),
             3306,
             "jdbc:mariadb",
-            "mariadb",
+            MARIADB,
             "org.mariadb.jdbc.Driver",
             "MARIADB_USER",
             "MARIADB_PASSWORD",
@@ -105,11 +116,11 @@ final class ComposePropertyMapper {
             "test"
         ),
         new DatabaseDefinition(
-            "mssql",
-            Set.of("mssql", "sqlserver", "sql-server", "microsoftsqlserver"),
+            MSSQL,
+            Set.of(MSSQL, "sqlserver", "sql-server", "microsoftsqlserver"),
             1433,
             "jdbc:sqlserver",
-            "mssql",
+            MSSQL,
             "com.microsoft.sqlserver.jdbc.SQLServerDriver",
             "MSSQL_USER",
             "MSSQL_PASSWORD",
@@ -119,11 +130,11 @@ final class ComposePropertyMapper {
             "test"
         ),
         new DatabaseDefinition(
-            "oracle",
-            Set.of("oracle", "oracle-free", "oracle-xe"),
+            ORACLE,
+            Set.of(ORACLE, "oracle-free", "oracle-xe"),
             1521,
             "jdbc:oracle:thin",
-            "oracle",
+            ORACLE,
             "oracle.jdbc.OracleDriver",
             "ORACLE_USER",
             "ORACLE_PASSWORD",
@@ -142,7 +153,7 @@ final class ComposePropertyMapper {
         service("couchbase", Set.of(), "couchbase", 11210, Map.of(
             "couchbase.uri", ctx -> "couchbase://" + hostPort(ctx.port()),
             "couchbase.username", ctx -> ctx.service().labelOrEnvironment(ComposeLabels.USERNAME, "COUCHBASE_USERNAME", "Administrator"),
-            "couchbase.password", ctx -> ctx.service().labelOrEnvironment(ComposeLabels.PASSWORD, "COUCHBASE_PASSWORD", "password")
+            "couchbase.password", ctx -> ctx.service().labelOrEnvironment(ComposeLabels.PASSWORD, "COUCHBASE_PASSWORD", DEFAULT_PASSWORD)
         )),
         service("elasticsearch", Set.of("elastic-search"), "elasticsearch", 9200, Map.of(
             "elasticsearch.http-hosts", ctx -> http(ctx.port())
@@ -173,7 +184,7 @@ final class ComposePropertyMapper {
             "infinispan.client.hotrod.security.authentication.username",
                 ctx -> ctx.service().labelOrEnvironment(ComposeLabels.USERNAME, "USER", "admin"),
             "infinispan.client.hotrod.security.authentication.password",
-                ctx -> ctx.service().labelOrEnvironment(ComposeLabels.PASSWORD, "PASS", "password")
+                ctx -> ctx.service().labelOrEnvironment(ComposeLabels.PASSWORD, "PASS", DEFAULT_PASSWORD)
         )),
         service("kafka", Set.of("redpanda"), "kafka", 9092, Map.of(
             "kafka.bootstrap.servers", ctx -> "PLAINTEXT://" + hostPort(ctx.port())
@@ -300,7 +311,7 @@ final class ComposePropertyMapper {
                 database.serviceType(),
                 service -> service.publishedPort(database.port()).isPresent()
                     && matchesDatasource(service, datasourceProperty.datasource())
-            ).flatMap(service -> jdbcProperty(datasourceProperty, database, service)));
+            ).flatMap(service -> jdbcProperty(datasourceProperty, database, service, requestedProperties)));
     }
 
     private Optional<String> resolveR2dbc(String propertyName, Map<String, Object> requestedProperties, ComposeProject project) {
@@ -408,12 +419,12 @@ final class ComposePropertyMapper {
     }
 
     private Optional<DatabaseDefinition> databaseDefinition(String datasource, Map<String, Object> requestedProperties, boolean requireType) {
-        String type = stringOrNull(requestedProperties.get(datasourceExpressionOf(DATASOURCES_PREFIX, datasource, "db-type")));
+        String type = stringOrNull(requestedProperties.get(datasourceExpressionOf(DATASOURCES_PREFIX, datasource, DB_TYPE_PROPERTY)));
         if (type == null) {
-            type = stringOrNull(requestedProperties.get(datasourceExpressionOf(R2DBC_DATASOURCES_PREFIX, datasource, "db-type")));
+            type = stringOrNull(requestedProperties.get(datasourceExpressionOf(R2DBC_DATASOURCES_PREFIX, datasource, DB_TYPE_PROPERTY)));
         }
         if (type == null) {
-            type = stringOrNull(requestedProperties.get(datasourceExpressionOf(JPA_PREFIX, datasource, "properties.hibernate.connection.db-type")));
+            type = stringOrNull(requestedProperties.get(datasourceExpressionOf(JPA_PREFIX, datasource, "properties.hibernate.connection." + DB_TYPE_PROPERTY)));
         }
         if (type == null) {
             type = stringOrNull(requestedProperties.get(datasourceExpressionOf(DATASOURCES_PREFIX, datasource, "dialect")));
@@ -422,7 +433,7 @@ final class ComposePropertyMapper {
             type = stringOrNull(requestedProperties.get(datasourceExpressionOf(R2DBC_DATASOURCES_PREFIX, datasource, "dialect")));
         }
         if (type == null) {
-            return requireType ? Optional.empty() : DATABASES.stream().filter(database -> "postgres".equals(database.serviceType())).findFirst();
+            return requireType ? Optional.empty() : DATABASES.stream().filter(database -> POSTGRES.equals(database.serviceType())).findFirst();
         }
         String normalized = normalize(type);
         return DATABASES.stream()
@@ -430,12 +441,15 @@ final class ComposePropertyMapper {
             .findFirst();
     }
 
-    private Optional<String> jdbcProperty(DatasourceProperty property, DatabaseDefinition database, ComposeService service) {
+    private Optional<String> jdbcProperty(DatasourceProperty property,
+                                          DatabaseDefinition database,
+                                          ComposeService service,
+                                          Map<String, Object> requestedProperties) {
         return service.publishedPort(database.port())
             .map(port -> switch (property.property()) {
-                case "url" -> jdbcUrl(database, service, port);
-                case "username" -> username(database, service);
-                case "password" -> password(database, service);
+                case URL_PROPERTY -> jdbcUrl(database, service, port, requestedProperties, property.datasource());
+                case USERNAME_PROPERTY -> username(database, service);
+                case PASSWORD_PROPERTY -> password(database, service);
                 case "driver-class-name" -> database.driverClassName();
                 default -> null;
             });
@@ -447,9 +461,9 @@ final class ComposePropertyMapper {
                                            Map<String, Object> requestedProperties) {
         return service.publishedPort(database.port())
             .map(port -> switch (property.property()) {
-                case "url" -> "r2dbc:" + database.r2dbcDriver() + "://" + hostPort(port) + "/" + databaseName(database, service, requestedProperties, property.datasource());
-                case "username" -> username(database, service);
-                case "password" -> password(database, service);
+                case URL_PROPERTY -> "r2dbc:" + database.r2dbcDriver() + "://" + hostPort(port) + "/" + databaseName(database, service, requestedProperties, property.datasource());
+                case USERNAME_PROPERTY -> username(database, service);
+                case PASSWORD_PROPERTY -> password(database, service);
                 default -> null;
             });
     }
@@ -467,10 +481,6 @@ final class ComposePropertyMapper {
             });
     }
 
-    private static String jdbcUrl(DatabaseDefinition database, ComposeService service, ComposePort port) {
-        return jdbcUrl(database, service, port, Map.of(), "default");
-    }
-
     private static String jdbcUrl(DatabaseDefinition database,
                                   ComposeService service,
                                   ComposePort port,
@@ -478,8 +488,8 @@ final class ComposePropertyMapper {
                                   String datasource) {
         String databaseName = databaseName(database, service, requestedProperties, datasource);
         return switch (database.serviceType()) {
-            case "mssql" -> database.jdbcPrefix() + "://" + hostPort(port) + ";databaseName=" + databaseName + ";encrypt=false";
-            case "oracle" -> database.jdbcPrefix() + ":@" + hostPort(port) + "/" + databaseName;
+            case MSSQL -> database.jdbcPrefix() + "://" + hostPort(port) + ";databaseName=" + databaseName + ";encrypt=false";
+            case ORACLE -> database.jdbcPrefix() + ":@" + hostPort(port) + "/" + databaseName;
             default -> database.jdbcPrefix() + "://" + hostPort(port) + "/" + databaseName;
         };
     }
@@ -493,9 +503,9 @@ final class ComposePropertyMapper {
     }
 
     private static String databaseName(DatabaseDefinition database, ComposeService service, Map<String, Object> requestedProperties, String datasource) {
-        Object requestedDbName = requestedProperties.get(datasourceExpressionOf(DATASOURCES_PREFIX, datasource, "db-name"));
+        Object requestedDbName = requestedProperties.get(datasourceExpressionOf(DATASOURCES_PREFIX, datasource, DB_NAME_PROPERTY));
         if (requestedDbName == null) {
-            requestedDbName = requestedProperties.get(datasourceExpressionOf(R2DBC_DATASOURCES_PREFIX, datasource, "db-name"));
+            requestedDbName = requestedProperties.get(datasourceExpressionOf(R2DBC_DATASOURCES_PREFIX, datasource, DB_NAME_PROPERTY));
         }
         if (requestedDbName != null) {
             return String.valueOf(requestedDbName);

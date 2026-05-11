@@ -410,6 +410,80 @@ class ComposeTestResourcesResolverTest extends Specification {
         resolver.resolve("rabbitmq.virtual-host", [:], config()).empty
     }
 
+    def "resolves supported database families from Compose services"() {
+        given:
+        def resolver = singleServiceResolver(
+                "database",
+                image,
+                targetPort,
+                publishedPort,
+                [:],
+                [
+                        (ComposeLabels.SERVICE): serviceLabel,
+                        (ComposeLabels.DATASOURCE): "inventory"
+                ]
+        )
+
+        expect:
+        resolver.resolve("datasources.inventory.url", [
+                "datasources.inventory.db-type": dbType,
+                "datasources.inventory.db-name": "inventory"
+        ], config()).get() == jdbcUrl
+        resolver.resolve("datasources.inventory.username", ["datasources.inventory.db-type": dbType], config()).get() == username
+        resolver.resolve("datasources.inventory.password", ["datasources.inventory.db-type": dbType], config()).get() == password
+        resolver.resolve("datasources.inventory.driver-class-name", ["datasources.inventory.db-type": dbType], config()).get() == driver
+        resolver.resolve("r2dbc.datasources.inventory.url", [
+                "r2dbc.datasources.inventory.db-type": dbType,
+                "r2dbc.datasources.inventory.db-name": "inventory"
+        ], config()).get() == r2dbcUrl
+        resolver.resolve("r2dbc.datasources.inventory.username", ["r2dbc.datasources.inventory.db-type": dbType], config()).get() == username
+        resolver.resolve("jpa.inventory.properties.hibernate.connection.url", [
+                "jpa.inventory.properties.hibernate.connection.db-type": dbType,
+                "datasources.inventory.db-name": "inventory"
+        ], config()).get() == jdbcUrl
+        resolver.resolve("jpa.inventory.properties.hibernate.connection.password", [
+                "jpa.inventory.properties.hibernate.connection.db-type": dbType
+        ], config()).get() == password
+
+        where:
+        image                                        | targetPort | publishedPort | serviceLabel  | dbType      | username | password                      | jdbcUrl                                                         | r2dbcUrl                                      | driver
+        "mysql:8"                                    | 3306       | 13306         | "mysql"       | "mysql"     | "test"   | "test"                        | "jdbc:mysql://localhost:13306/inventory"                        | "r2dbc:mysql://localhost:13306/inventory"     | "com.mysql.cj.jdbc.Driver"
+        "mariadb:11"                                 | 3306       | 13307         | "maria"       | "mariadb"   | "test"   | "test"                        | "jdbc:mariadb://localhost:13307/inventory"                      | "r2dbc:mariadb://localhost:13307/inventory"   | "org.mariadb.jdbc.Driver"
+        "mcr.microsoft.com/mssql/server:2022-latest" | 1433       | 11433         | "sql-server"  | "sqlserver" | "SA"     | "A_Str0ng_Required_Password"  | "jdbc:sqlserver://localhost:11433;databaseName=inventory;encrypt=false" | "r2dbc:mssql://localhost:11433/inventory" | "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+        "gvenzl/oracle-free:23"                      | 1521       | 11521         | "oracle-free" | "oracle"    | "test"   | "test"                        | "jdbc:oracle:thin:@localhost:11521/inventory"                   | "r2dbc:oracle://localhost:11521/inventory"    | "oracle.jdbc.OracleDriver"
+    }
+
+    def "resolves static service properties from Compose services"() {
+        given:
+        def resolver = singleServiceResolver(serviceName, image, targetPort, publishedPort, environment, labels)
+
+        expect:
+        resolver.resolve(propertyName, [:], config()).get() == expectedValue
+
+        where:
+        serviceName | image                                      | targetPort | publishedPort | environment                                      | labels                                                                                 | propertyName                                                         | expectedValue
+        "azurite"   | "mcr.microsoft.com/azure-storage/azurite"  | 10000      | 20000         | [:]                                              | [:]                                                                                    | "azure.credential.storage-shared-key.account-name"                   | "devstoreaccount1"
+        "couchbase" | "couchbase:community"                      | 11210      | 21210         | [:]                                              | [:]                                                                                    | "couchbase.uri"                                                      | "couchbase://localhost:21210"
+        "search"    | "docker.elastic.co/elasticsearch:8"        | 9200       | 19200         | [:]                                              | [:]                                                                                    | "elasticsearch.http-hosts"                                           | "http://localhost:19200"
+        "consul"    | "hashicorp/consul:1"                       | 8500       | 18500         | [:]                                              | [:]                                                                                    | "consul.client.default-zone"                                         | "localhost:18500"
+        "vault"     | "hashicorp/vault:1"                        | 8200       | 18200         | ["VAULT_DEV_ROOT_TOKEN_ID": "root"]             | [:]                                                                                    | "vault.client.token"                                                 | "root"
+        "hazelcast" | "hazelcast/hazelcast:5"                    | 5701       | 15701         | [:]                                              | [:]                                                                                    | "hazelcast.client.network.addresses"                                 | "localhost:15701"
+        "mqtt"      | "hivemq/hivemq-ce:latest"                  | 1883       | 11883         | [:]                                              | ["io.micronaut.test-resources.client-id": "mqtt-client"]                              | "mqtt.client.client-id"                                              | "mqtt-client"
+        "cachegrid" | "quay.io/infinispan/server:15"             | 11222      | 21222         | ["USER": "admin", "PASS": "secret"]            | [:]                                                                                    | "infinispan.client.hotrod.security.authentication.password"          | "secret"
+        "redpanda"  | "redpandadata/redpanda:latest"             | 9092       | 19092         | [:]                                              | [:]                                                                                    | "kafka.bootstrap.servers"                                            | "PLAINTEXT://localhost:19092"
+        "aws"       | "localstack/localstack:3"                  | 4566       | 14566         | [:]                                              | [:]                                                                                    | "aws.services.s3.endpoint-override"                                  | "http://localhost:14566"
+        "minio"     | "minio/minio:latest"                       | 9000       | 19000         | ["MINIO_ROOT_USER": "access", "MINIO_ROOT_PASSWORD": "secret"] | [:]                                                                           | "minio.secret-key"                                                   | "secret"
+        "mongodb"   | "mongo:7"                                  | 27017      | 37017         | ["MONGO_INITDB_DATABASE": "demo"]               | [:]                                                                                    | "mongodb.uri"                                                        | "mongodb://localhost:37017/demo"
+        "neo4j"     | "neo4j:5"                                  | 7687       | 17687         | [:]                                              | [:]                                                                                    | "neo4j.uri"                                                          | "bolt://localhost:17687"
+        "opensearch"| "opensearchproject/opensearch:2"           | 9200       | 19201         | [:]                                              | [:]                                                                                    | "micronaut.opensearch.httpclient5.http-hosts"                        | "http://localhost:19201"
+        "pulsar"    | "apachepulsar/pulsar:3"                    | 6650       | 16650         | [:]                                              | [:]                                                                                    | "pulsar.service-url"                                                 | "pulsar://localhost:16650"
+        "seaweedfs" | "chrislusf/seaweedfs:latest"               | 8333       | 18333         | [:]                                              | [:]                                                                                    | "seaweedfs.access-key"                                               | "some_access_key1"
+        "solr"      | "solr:9"                                   | 8983       | 18983         | [:]                                              | [:]                                                                                    | "micronaut.solr.hosts"                                               | "http://localhost:18983/solr"
+        "zk"        | "zookeeper:3"                              | 9983       | 19983         | [:]                                              | [:]                                                                                    | "micronaut.solr.zk-hosts"                                            | "localhost:19983"
+        "keycloak"  | "quay.io/keycloak/keycloak:latest"         | 8080       | 18080         | ["KEYCLOAK_REALM": "demo"]                     | [:]                                                                                    | "micronaut.security.oauth2.clients.keycloak.openid.issuer"           | "http://localhost:18080/realms/demo"
+        "wiremock"  | "wiremock/wiremock:3"                      | 8080       | 18081         | [:]                                              | [:]                                                                                    | "wiremock.url"                                                       | "http://localhost:18081"
+    }
+
     def "ambiguous automatic PostgreSQL mapping returns empty"() {
         given:
         createComposeFile()
@@ -854,6 +928,36 @@ class ComposeTestResourcesResolverTest extends Specification {
         new ComposeTestResourcesResolver(new ComposeProjectManager(cli, new ComposeProjectParser()), new ComposePropertyMapper())
     }
 
+    private ComposeTestResourcesResolver singleServiceResolver(String serviceName,
+                                                               String image,
+                                                               int targetPort,
+                                                               int publishedPort,
+                                                               Map<String, String> environment = [:],
+                                                               Map<String, String> labels = [:]) {
+        createComposeFile()
+        resolver(new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "${serviceName}": {
+                  "image": "${image}",
+                  "environment": ${json(environment)},
+                  "labels": ${json(labels)}
+                }
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "${serviceName}",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "0.0.0.0", "TargetPort": ${targetPort}, "PublishedPort": ${publishedPort}}
+                ]
+              }
+            ]
+            """)))
+    }
+
     private Map<String, Object> config() {
         [
                 "compose.enabled": true,
@@ -873,6 +977,14 @@ class ComposeTestResourcesResolverTest extends Specification {
 
     private static String psJson(String json) {
         json.stripIndent().trim()
+    }
+
+    private static String json(Map<String, String> values) {
+        "{" + values.collect { entry -> "\"${escapeJson(entry.key)}\":\"${escapeJson(entry.value)}\"" }.join(",") + "}"
+    }
+
+    private static String escapeJson(String value) {
+        value.replace("\\", "\\\\").replace("\"", "\\\"")
     }
 
     private static final class FakeComposeCli implements ComposeCli {

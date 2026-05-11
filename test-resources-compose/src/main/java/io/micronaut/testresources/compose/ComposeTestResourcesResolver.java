@@ -36,6 +36,8 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
     private static final String DATASOURCES_PREFIX = "datasources.";
     private static final String R2DBC_DATASOURCES_PREFIX = "r2dbc.datasources.";
     private static final String JPA_PREFIX = "jpa.";
+    private static final String DB_TYPE_SUFFIX = ".db-type";
+    private static final String DB_NAME_SUFFIX = ".db-name";
 
     private final ComposeProjectManager projectManager;
     private final ComposePropertyMapper propertyMapper;
@@ -91,9 +93,9 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
                 return Collections.emptyList();
             }
             return List.of(
-                DATASOURCES_PREFIX + datasource + ".db-type",
+                DATASOURCES_PREFIX + datasource + DB_TYPE_SUFFIX,
                 DATASOURCES_PREFIX + datasource + ".dialect",
-                DATASOURCES_PREFIX + datasource + ".db-name",
+                DATASOURCES_PREFIX + datasource + DB_NAME_SUFFIX,
                 DATASOURCES_PREFIX + datasource + ".test-resources.resource-name"
             );
         }
@@ -103,12 +105,12 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
                 return Collections.emptyList();
             }
             return List.of(
-                R2DBC_DATASOURCES_PREFIX + datasource + ".db-type",
+                R2DBC_DATASOURCES_PREFIX + datasource + DB_TYPE_SUFFIX,
                 R2DBC_DATASOURCES_PREFIX + datasource + ".dialect",
                 R2DBC_DATASOURCES_PREFIX + datasource + ".driverClassName",
-                R2DBC_DATASOURCES_PREFIX + datasource + ".db-name",
+                R2DBC_DATASOURCES_PREFIX + datasource + DB_NAME_SUFFIX,
                 R2DBC_DATASOURCES_PREFIX + datasource + ".test-resources.resource-name",
-                DATASOURCES_PREFIX + datasource + ".db-name"
+                DATASOURCES_PREFIX + datasource + DB_NAME_SUFFIX
             );
         }
         if (expression.startsWith(JPA_PREFIX)) {
@@ -117,8 +119,8 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
                 return Collections.emptyList();
             }
             return List.of(
-                JPA_PREFIX + datasource + ".properties.hibernate.connection.db-type",
-                DATASOURCES_PREFIX + datasource + ".db-type",
+                JPA_PREFIX + datasource + ".properties.hibernate.connection" + DB_TYPE_SUFFIX,
+                DATASOURCES_PREFIX + datasource + DB_TYPE_SUFFIX,
                 DATASOURCES_PREFIX + datasource + ".url",
                 DATASOURCES_PREFIX + datasource + ".username",
                 DATASOURCES_PREFIX + datasource + ".password"

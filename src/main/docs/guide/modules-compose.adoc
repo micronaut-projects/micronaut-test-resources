@@ -28,7 +28,7 @@ test-resources:
       - test
 ----
 
-The first supported mapping set includes PostgreSQL JDBC datasources, Redis single-node connections, and RabbitMQ connections.
+Compose matching supports the same property families implemented by Micronaut Test Resources providers, including JDBC, R2DBC, Hibernate Reactive, Redis, RabbitMQ, Kafka, MongoDB, LocalStack, OpenSearch, MinIO, OAuth2 Keycloak, and the other service modules listed in this guide.
 When a matching Compose service is found, the Compose value is returned first.
 When no Compose service matches, the existing Test Resources provider continues to handle the property.
 
@@ -56,6 +56,7 @@ services:
 ----
 
 With this Compose file, Test Resources can provide `datasources.default.url`, `datasources.default.username`, `datasources.default.password`, `datasources.default.driver-class-name`, and `redis.uri`.
+The same database service can also satisfy matching `r2dbc.datasources.<name>.*` and `jpa.<name>.properties.hibernate.connection.*` properties when the requested database type matches the Compose service.
 
 .RabbitMQ
 [source,yaml]
@@ -82,6 +83,9 @@ labels:
   io.micronaut.test-resources.service: postgres
   io.micronaut.test-resources.datasource: inventory
 ----
+
+The `io.micronaut.test-resources.service` label accepts the provider service name, such as `postgres`, `mysql`, `mariadb`, `mssql`, `oracle`, `redis`, `rabbitmq`, `kafka`, `mongodb`, `localstack`, `opensearch`, `elasticsearch`, `minio`, `keycloak`, or `wiremock`.
+Use credential labels such as `io.micronaut.test-resources.username`, `io.micronaut.test-resources.password`, and `io.micronaut.test-resources.database` when the Compose image does not use the standard environment variables for that service.
 
 You can exclude a Compose service from Test Resources matching:
 

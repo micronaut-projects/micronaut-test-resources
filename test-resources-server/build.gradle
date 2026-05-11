@@ -15,9 +15,6 @@ client.
 """
 
 dependencies {
-    implementation(platform(libs.boms.netty)) {
-        because("Bump Netty patch version for GHSA-v8h7-rr48-vmmv")
-    }
     implementation(mn.micronaut.http.server.netty)
     implementation(mn.reactor)
     implementation(projects.micronautTestResourcesCodec)

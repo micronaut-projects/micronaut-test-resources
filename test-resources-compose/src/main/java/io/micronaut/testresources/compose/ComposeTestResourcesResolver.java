@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +34,8 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
     private static final Logger LOG = LoggerFactory.getLogger(ComposeTestResourcesResolver.class);
     private static final int ORDER_BEFORE_SPECIFIC_TESTCONTAINERS = -100;
     private static final String DATASOURCES_PREFIX = "datasources.";
-    private static final List<String> RABBITMQ_PROPERTIES = List.of("rabbitmq.uri", "rabbitmq.username", "rabbitmq.password");
-    private static final List<String> DATASOURCE_PROPERTIES = List.of("url", "username", "password", "driver-class-name");
+    private static final String R2DBC_DATASOURCES_PREFIX = "r2dbc.datasources.";
+    private static final String JPA_PREFIX = "jpa.";
 
     private final ComposeProjectManager projectManager;
     private final ComposePropertyMapper propertyMapper;
@@ -76,37 +75,56 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
         if (!configuration.usable()) {
             return Collections.emptyList();
         }
-        List<String> properties = new ArrayList<>();
-        for (String datasource : propertyEntries.getOrDefault("datasources", Collections.emptyList())) {
-            for (String property : DATASOURCE_PROPERTIES) {
-                properties.add(DATASOURCES_PREFIX + datasource + "." + property);
-            }
-        }
-        properties.add("redis.uri");
-        properties.addAll(RABBITMQ_PROPERTIES);
-        return properties;
+        return propertyMapper.resolvableProperties(propertyEntries);
     }
 
     @Override
     public List<String> getRequiredPropertyEntries() {
-        return List.of("datasources");
+        return List.of("datasources", "r2dbc.datasources", "jpa", "mongodb.servers");
     }
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        if (!expression.startsWith(DATASOURCES_PREFIX)) {
-            return Collections.emptyList();
+        if (expression.startsWith(DATASOURCES_PREFIX)) {
+            String datasource = datasourceName(expression, DATASOURCES_PREFIX);
+            if (datasource == null) {
+                return Collections.emptyList();
+            }
+            return List.of(
+                DATASOURCES_PREFIX + datasource + ".db-type",
+                DATASOURCES_PREFIX + datasource + ".dialect",
+                DATASOURCES_PREFIX + datasource + ".db-name",
+                DATASOURCES_PREFIX + datasource + ".test-resources.resource-name"
+            );
         }
-        String remainder = expression.substring(DATASOURCES_PREFIX.length());
-        int separator = remainder.indexOf('.');
-        if (separator < 1) {
-            return Collections.emptyList();
+        if (expression.startsWith(R2DBC_DATASOURCES_PREFIX)) {
+            String datasource = datasourceName(expression, R2DBC_DATASOURCES_PREFIX);
+            if (datasource == null) {
+                return Collections.emptyList();
+            }
+            return List.of(
+                R2DBC_DATASOURCES_PREFIX + datasource + ".db-type",
+                R2DBC_DATASOURCES_PREFIX + datasource + ".dialect",
+                R2DBC_DATASOURCES_PREFIX + datasource + ".driverClassName",
+                R2DBC_DATASOURCES_PREFIX + datasource + ".db-name",
+                R2DBC_DATASOURCES_PREFIX + datasource + ".test-resources.resource-name",
+                DATASOURCES_PREFIX + datasource + ".db-name"
+            );
         }
-        String datasource = remainder.substring(0, separator);
-        return List.of(
-            DATASOURCES_PREFIX + datasource + ".db-type",
-            DATASOURCES_PREFIX + datasource + ".dialect"
-        );
+        if (expression.startsWith(JPA_PREFIX)) {
+            String datasource = datasourceName(expression, JPA_PREFIX);
+            if (datasource == null) {
+                return Collections.emptyList();
+            }
+            return List.of(
+                JPA_PREFIX + datasource + ".properties.hibernate.connection.db-type",
+                DATASOURCES_PREFIX + datasource + ".db-type",
+                DATASOURCES_PREFIX + datasource + ".url",
+                DATASOURCES_PREFIX + datasource + ".username",
+                DATASOURCES_PREFIX + datasource + ".password"
+            );
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -129,5 +147,14 @@ public class ComposeTestResourcesResolver implements ToggableTestResourcesResolv
     @Override
     public void close() throws IOException {
         projectManager.close();
+    }
+
+    private static String datasourceName(String expression, String prefix) {
+        String remainder = expression.substring(prefix.length());
+        int separator = remainder.indexOf('.');
+        if (separator < 1) {
+            return null;
+        }
+        return remainder.substring(0, separator);
     }
 }

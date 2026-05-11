@@ -48,7 +48,6 @@ azure-sdk = "1.3.6"
 jansi = "2.4.3"
 
 # Managed versions appear in the BOM
-managed-netty = "4.2.13.Final"
 managed-opensearch-testcontainers = "4.1.0"
 managed-testcontainers = "2.0.4"
 managed-testcontainers-pulsar = "1.21.3"
@@ -61,8 +60,6 @@ commons-compress="1.28.0"
 [libraries]
 # Testcontainers
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
-boms-netty = { module = "io.netty:netty-bom", version.ref = "managed-netty" }
-
 managed-opensearch-testcontainers = { module = "org.opensearch:opensearch-testcontainers", version.ref = "managed-opensearch-testcontainers" }
 managed-solr-testcontainers = { module = "org.testcontainers:testcontainers-solr", version.ref = "managed-testcontainers" }
 

@@ -16,8 +16,10 @@
 package io.micronaut.testresources.compose;
 
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.type.Argument;
 import io.micronaut.json.JsonMapper;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -47,18 +49,18 @@ final class ComposeProjectParser {
     }
 
     List<ComposeService> parse(String configJson, String psJson, Set<String> externallyManagedServices) {
-        Map<String, Map<String, Object>> services = parseConfigServices(configJson);
+        Map<String, ConfigService> services = parseConfigServices(configJson);
         Map<String, List<ComposePort>> ports = parsePublishedPorts(psJson);
         return services.entrySet()
             .stream()
             .map(entry -> {
                 String name = entry.getKey();
-                Map<String, Object> service = entry.getValue();
+                ConfigService service = entry.getValue();
                 return new ComposeService(
                     name,
-                    stringValue(service.get("image")),
-                    labels(service.get("labels")),
-                    environment(service.get("environment")),
+                    stringValue(service.image()),
+                    labels(service.labels()),
+                    environment(service.environment()),
                     ports.getOrDefault(name, List.of()),
                     externallyManagedServices.contains(name)
                 );
@@ -69,75 +71,63 @@ final class ComposeProjectParser {
     Set<String> runningServices(String psJson) {
         return parsePsEntries(psJson).stream()
             .filter(entry -> {
-                String state = stringValue(firstPresent(entry, "State", "state"));
+                String state = stringValue(entry.stateValue());
                 return state.toLowerCase(Locale.ROOT).contains("running");
             })
-            .map(entry -> stringValue(firstPresent(entry, "Service", "service", "Name", "name")))
+            .map(PsEntry::serviceName)
             .filter(name -> !name.isBlank())
             .collect(Collectors.toSet());
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, Map<String, Object>> parseConfigServices(String configJson) {
+    private Map<String, ConfigService> parseConfigServices(String configJson) {
         if (configJson == null || configJson.isBlank()) {
             return Map.of();
         }
-        Object parsed = readJson(configJson);
-        if (!(parsed instanceof Map<?, ?> root)) {
+        ConfigProject parsed;
+        try {
+            parsed = readJson(configJson, Argument.of(ConfigProject.class));
+        } catch (ComposeCliException e) {
             return Map.of();
         }
-        Object services = root.get("services");
-        if (!(services instanceof Map<?, ?> servicesMap)) {
-            return Map.of();
-        }
-        Map<String, Map<String, Object>> result = new LinkedHashMap<>();
-        for (Map.Entry<?, ?> entry : servicesMap.entrySet()) {
-            if (entry.getValue() instanceof Map<?, ?> service) {
-                result.put(String.valueOf(entry.getKey()), (Map<String, Object>) service);
-            }
-        }
-        return result;
+        return parsed.services() == null ? Map.of() : parsed.services();
     }
 
     private Map<String, List<ComposePort>> parsePublishedPorts(String psJson) {
         return parsePsEntries(psJson).stream()
             .collect(Collectors.toMap(
-                entry -> stringValue(firstPresent(entry, "Service", "service", "Name", "name")),
+                PsEntry::serviceName,
                 this::ports,
                 (left, right) -> left,
                 LinkedHashMap::new
             ));
     }
 
-    @SuppressWarnings("unchecked")
-    private List<Map<String, Object>> parsePsEntries(String psJson) {
+    private List<PsEntry> parsePsEntries(String psJson) {
         if (psJson == null || psJson.isBlank()) {
             return List.of();
         }
-        Object parsed = readJson(psJson);
-        if (parsed instanceof List<?> list) {
-            return list.stream()
-                .filter(Map.class::isInstance)
-                .map(Map.class::cast)
-                .map(map -> (Map<String, Object>) map)
-                .toList();
-        }
-        if (parsed instanceof Map<?, ?> map) {
-            return List.of((Map<String, Object>) map);
-        }
-        List<Map<String, Object>> entries = new ArrayList<>();
-        for (String line : psJson.lines().map(String::trim).filter(s -> !s.isBlank()).toList()) {
-            Object lineParsed = readJson(line);
-            if (lineParsed instanceof Map<?, ?> map) {
-                entries.add((Map<String, Object>) map);
+        try {
+            return readJson(psJson, Argument.listOf(PsEntry.class));
+        } catch (ComposeCliException e) {
+            try {
+                return List.of(readJson(psJson, Argument.of(PsEntry.class)));
+            } catch (ComposeCliException ignored) {
+                return parseLineDelimitedPsEntries(psJson);
             }
+        }
+    }
+
+    private List<PsEntry> parseLineDelimitedPsEntries(String psJson) {
+        List<PsEntry> entries = new ArrayList<>();
+        for (String line : psJson.lines().map(String::trim).filter(s -> !s.isBlank()).toList()) {
+            entries.add(readJson(line, Argument.of(PsEntry.class)));
         }
         return entries;
     }
 
-    private Object readJson(String json) {
+    private <T> T readJson(String json, Argument<T> type) {
         try {
-            return jsonMapper.readValue(json.getBytes(StandardCharsets.UTF_8), Argument.OBJECT_ARGUMENT);
+            return jsonMapper.readValue(json.getBytes(StandardCharsets.UTF_8), type);
         } catch (IOException e) {
             throw new ComposeCliException("Unable to parse Docker Compose JSON output", e);
         }
@@ -182,26 +172,23 @@ final class ComposeProjectParser {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
-    private List<ComposePort> ports(Map<String, Object> psEntry) {
-        Object publishers = firstPresent(psEntry, "Publishers", "publishers");
-        if (publishers instanceof Collection<?> collection) {
-            List<ComposePort> ports = new ArrayList<>();
-            for (Object item : collection) {
-                if (item instanceof Map<?, ?> publisher) {
-                    Integer target = integerValue(firstPresent((Map<String, Object>) publisher, "TargetPort", "targetPort", "target_port"));
-                    Integer published = integerValue(firstPresent((Map<String, Object>) publisher, "PublishedPort", "publishedPort", "published_port"));
-                    if (target != null && published != null) {
-                        ports.add(new ComposePort(host(firstPresent((Map<String, Object>) publisher, "URL", "url", "HostIp", "hostIp")), published, target));
-                    }
-                }
-            }
-            return List.copyOf(ports);
+    private List<ComposePort> ports(PsEntry psEntry) {
+        List<Publisher> publishers = psEntry.publisherEntries();
+        if (publishers.isEmpty()) {
+            return List.of();
         }
-        return List.of();
+        List<ComposePort> ports = new ArrayList<>();
+        for (Publisher publisher : publishers) {
+            Integer target = publisher.target();
+            Integer published = publisher.published();
+            if (target != null && published != null) {
+                ports.add(new ComposePort(host(publisher.host()), published, target));
+            }
+        }
+        return List.copyOf(ports);
     }
 
-    private String host(Object value) {
+    private String host(String value) {
         String host = stringValue(value);
         if (host.isBlank() || "0.0.0.0".equals(host) || "::".equals(host)) {
             return "localhost";
@@ -209,31 +196,102 @@ final class ComposeProjectParser {
         return host;
     }
 
-    private static Object firstPresent(Map<String, Object> map, String... keys) {
-        for (String key : keys) {
-            Object value = map.get(key);
-            if (value != null) {
-                return value;
-            }
-        }
-        return null;
-    }
-
     private static String stringValue(Object value) {
         return value == null ? "" : String.valueOf(value);
     }
 
-    private static Integer integerValue(Object value) {
-        if (value == null) {
+    @Introspected
+    @Serdeable.Deserializable
+    public record ConfigProject(Map<String, ConfigService> services) {
+    }
+
+    @Introspected
+    @Serdeable.Deserializable
+    public record ConfigService(String image, Object labels, Object environment) {
+    }
+
+    @Introspected
+    @Serdeable.Deserializable
+    public record PsEntry(
+        String Service,
+        String service,
+        String Name,
+        String name,
+        String State,
+        String state,
+        List<Publisher> Publishers,
+        List<Publisher> publishers
+    ) {
+        String serviceName() {
+            return firstNonBlank(Service, service, Name, name);
+        }
+
+        String stateValue() {
+            return firstNonBlank(State, state);
+        }
+
+        List<Publisher> publisherEntries() {
+            if (Publishers != null) {
+                return Publishers;
+            }
+            if (publishers != null) {
+                return publishers;
+            }
+            return List.of();
+        }
+
+        private static String firstNonBlank(String... values) {
+            for (String value : values) {
+                if (value != null && !value.isBlank()) {
+                    return value;
+                }
+            }
+            return "";
+        }
+    }
+
+    @Introspected
+    @Serdeable.Deserializable
+    public record Publisher(
+        String URL,
+        String url,
+        String HostIp,
+        String hostIp,
+        Integer TargetPort,
+        Integer targetPort,
+        Integer target_port,
+        Integer PublishedPort,
+        Integer publishedPort,
+        Integer published_port
+    ) {
+        String host() {
+            return firstNonBlank(URL, url, HostIp, hostIp);
+        }
+
+        Integer target() {
+            return firstPresent(TargetPort, targetPort, target_port);
+        }
+
+        Integer published() {
+            return firstPresent(PublishedPort, publishedPort, published_port);
+        }
+
+        private static Integer firstPresent(Integer... values) {
+            for (Integer value : values) {
+                if (value != null) {
+                    return value;
+                }
+            }
             return null;
         }
-        if (value instanceof Number number) {
-            return number.intValue();
+
+        private static String firstNonBlank(String... values) {
+            for (String value : values) {
+                if (value != null && !value.isBlank()) {
+                    return value;
+                }
+            }
+            return "";
         }
-        String asString = String.valueOf(value);
-        if (asString.isBlank()) {
-            return null;
-        }
-        return Integer.parseInt(asString);
     }
 }

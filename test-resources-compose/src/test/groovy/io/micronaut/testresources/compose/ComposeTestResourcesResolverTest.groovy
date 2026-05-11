@@ -78,14 +78,37 @@ class ComposeTestResourcesResolverTest extends Specification {
         resolver.order < 0
         resolver.isEnabled(["compose.enabled": true])
         !resolver.isEnabled([:])
-        resolver.getRequiredPropertyEntries() == ["datasources"]
+        resolver.getRequiredPropertyEntries() == ["datasources", "r2dbc.datasources", "jpa", "mongodb.servers"]
         resolver.getRequiredProperties("datasources.inventory.url") == [
                 "datasources.inventory.db-type",
-                "datasources.inventory.dialect"
+                "datasources.inventory.dialect",
+                "datasources.inventory.db-name",
+                "datasources.inventory.test-resources.resource-name"
+        ]
+        resolver.getRequiredProperties("r2dbc.datasources.inventory.url") == [
+                "r2dbc.datasources.inventory.db-type",
+                "r2dbc.datasources.inventory.dialect",
+                "r2dbc.datasources.inventory.driverClassName",
+                "r2dbc.datasources.inventory.db-name",
+                "r2dbc.datasources.inventory.test-resources.resource-name",
+                "datasources.inventory.db-name"
+        ]
+        resolver.getRequiredProperties("jpa.inventory.properties.hibernate.connection.url") == [
+                "jpa.inventory.properties.hibernate.connection.db-type",
+                "datasources.inventory.db-type",
+                "datasources.inventory.url",
+                "datasources.inventory.username",
+                "datasources.inventory.password"
         ]
         resolver.getRequiredProperties("redis.uri").empty
         resolver.getRequiredProperties("datasources").empty
-        resolver.getResolvableProperties(["datasources": ["default", "inventory"]], config()) == [
+        def resolvable = resolver.getResolvableProperties([
+                "datasources": ["default", "inventory"],
+                "r2dbc.datasources": ["default"],
+                "jpa": ["default"],
+                "mongodb.servers": ["inventory"]
+        ], config())
+        resolvable.containsAll([
                 "datasources.default.url",
                 "datasources.default.username",
                 "datasources.default.password",
@@ -94,11 +117,34 @@ class ComposeTestResourcesResolverTest extends Specification {
                 "datasources.inventory.username",
                 "datasources.inventory.password",
                 "datasources.inventory.driver-class-name",
+                "r2dbc.datasources.default.url",
+                "r2dbc.datasources.default.username",
+                "r2dbc.datasources.default.password",
+                "jpa.default.properties.hibernate.connection.url",
+                "jpa.default.properties.hibernate.connection.username",
+                "jpa.default.properties.hibernate.connection.password",
+                "mongodb.servers.inventory.uri",
                 "redis.uri",
+                "redis.uris",
+                "kafka.bootstrap.servers",
+                "mongodb.uri",
+                "neo4j.uri",
+                "pulsar.service-url",
                 "rabbitmq.uri",
                 "rabbitmq.username",
-                "rabbitmq.password"
-        ]
+                "rabbitmq.password",
+                "aws.services.s3.endpoint-override",
+                "azure.credential.storage-shared-key.connection-string",
+                "couchbase.uri",
+                "elasticsearch.http-hosts",
+                "hazelcast.client.network.addresses",
+                "infinispan.client.hotrod.server.host",
+                "micronaut.opensearch.rest-client.http-hosts",
+                "minio.url",
+                "micronaut.security.oauth2.clients.keycloak.openid.issuer",
+                "seaweedfs.url",
+                "wiremock.url"
+        ])
         resolver.getResolvableProperties(["datasources": ["default"]], [
                 "compose.enabled": true,
                 "compose.working-directory": Files.createDirectory(tempDir.resolve("empty")).toString()

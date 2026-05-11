@@ -7,9 +7,6 @@ Provides support for launching an Infinispan test container.
 """
 
 dependencies {
-    implementation(platform(libs.boms.netty)) {
-        because("Bump Netty patch version for GHSA-v8h7-rr48-vmmv")
-    }
     api(projects.micronautTestResourcesCore)
     api(projects.micronautTestResourcesTestcontainers)
     api(mnCache.versions.infinispan.map {"org.infinispan:infinispan-server-testdriver-core:$it" })

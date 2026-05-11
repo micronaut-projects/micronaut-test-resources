@@ -65,9 +65,6 @@ dependencies {
     implementation(platform(mn.micronaut.core.bom))
     implementation(mnLogging.slf4j.api)
     testImplementation(platform(mn.micronaut.core.bom))
-    testImplementation(platform(libs.boms.netty)) {
-        because("Bump Netty patch version for GHSA-v8h7-rr48-vmmv")
-    }
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)
     testImplementation(projects.micronautTestResourcesServer)

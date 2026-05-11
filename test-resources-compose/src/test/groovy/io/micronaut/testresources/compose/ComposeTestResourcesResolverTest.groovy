@@ -437,10 +437,14 @@ class ComposeTestResourcesResolverTest extends Specification {
                 "r2dbc.datasources.inventory.db-name": "inventory"
         ], config()).get() == r2dbcUrl
         resolver.resolve("r2dbc.datasources.inventory.username", ["r2dbc.datasources.inventory.db-type": dbType], config()).get() == username
+        resolver.resolve("r2dbc.datasources.inventory.password", ["r2dbc.datasources.inventory.db-type": dbType], config()).get() == password
         resolver.resolve("jpa.inventory.properties.hibernate.connection.url", [
                 "jpa.inventory.properties.hibernate.connection.db-type": dbType,
                 "datasources.inventory.db-name": "inventory"
         ], config()).get() == jdbcUrl
+        resolver.resolve("jpa.inventory.properties.hibernate.connection.username", [
+                "jpa.inventory.properties.hibernate.connection.db-type": dbType
+        ], config()).get() == username
         resolver.resolve("jpa.inventory.properties.hibernate.connection.password", [
                 "jpa.inventory.properties.hibernate.connection.db-type": dbType
         ], config()).get() == password
@@ -482,6 +486,80 @@ class ComposeTestResourcesResolverTest extends Specification {
         "zk"        | "zookeeper:3"                              | 9983       | 19983         | [:]                                              | [:]                                                                                    | "micronaut.solr.zk-hosts"                                            | "localhost:19983"
         "keycloak"  | "quay.io/keycloak/keycloak:latest"         | 8080       | 18080         | ["KEYCLOAK_REALM": "demo"]                     | [:]                                                                                    | "micronaut.security.oauth2.clients.keycloak.openid.issuer"           | "http://localhost:18080/realms/demo"
         "wiremock"  | "wiremock/wiremock:3"                      | 8080       | 18081         | [:]                                              | [:]                                                                                    | "wiremock.url"                                                       | "http://localhost:18081"
+    }
+
+    def "resolves additional static service property variants from Compose services"() {
+        given:
+        def resolver = singleServiceResolver(serviceName, image, targetPort, publishedPort, environment, labels)
+
+        expect:
+        resolver.resolve(propertyName, [:], config()).get() == expectedValue
+
+        where:
+        serviceName | image                                      | targetPort | publishedPort | environment                                      | labels                                                    | propertyName                                                         | expectedValue
+        "couchbase" | "couchbase:community"                      | 11210      | 21210         | ["COUCHBASE_USERNAME": "user", "COUCHBASE_PASSWORD": "secret"] | [:]                                           | "couchbase.password"                                                 | "secret"
+        "consul"    | "hashicorp/consul:1"                       | 8500       | 18500         | [:]                                              | [:]                                                       | "consul.client.port"                                                 | "18500"
+        "vault"     | "hashicorp/vault:1"                        | 8200       | 18200         | [:]                                              | [:]                                                       | "vault.client.uri"                                                   | "http://localhost:18200"
+        "mqtt"      | "hivemq/hivemq-ce:latest"                  | 1883       | 11883         | [:]                                              | [:]                                                       | "mqtt.client.server-uri"                                             | "tcp://localhost:11883"
+        "cachegrid" | "quay.io/infinispan/server:15"             | 11222      | 21222         | [:]                                              | [:]                                                       | "infinispan.client.hotrod.server.host"                               | "localhost"
+        "aws"       | "localstack/localstack:3"                  | 4566       | 14566         | [:]                                              | [:]                                                       | "aws.region"                                                         | "us-east-1"
+        "minio"     | "minio/minio:latest"                       | 9000       | 19000         | ["MINIO_ROOT_USER": "access"]                   | [:]                                                       | "minio.access-key"                                                   | "access"
+        "opensearch"| "opensearchproject/opensearch:2"           | 9200       | 19201         | [:]                                              | [:]                                                       | "micronaut.opensearch.rest-client.http-hosts"                        | "http://localhost:19201"
+        "seaweedfs" | "chrislusf/seaweedfs:latest"               | 8333       | 18333         | [:]                                              | [:]                                                       | "seaweedfs.secret-key"                                               | "some_secret_key1"
+        "keycloak"  | "quay.io/keycloak/keycloak:latest"         | 8080       | 18080         | ["KEYCLOAK_REALM": "demo", "KEYCLOAK_CLIENT_SECRET": "secret"] | ["io.micronaut.test-resources.client-id": "client"] | "micronaut.security.token.jwt.signatures.jwks.keycloak.url"          | "http://localhost:18080/realms/demo/protocol/openid-connect/certs"
+        "wiremock"  | "wiremock/wiremock:3"                      | 8080       | 18081         | [:]                                              | [:]                                                       | "wiremock.port"                                                      | "18081"
+    }
+
+    def "resolves Azurite connection string from all published service ports"() {
+        given:
+        createComposeFile()
+        def resolver = resolver(new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "azurite": {
+                  "image": "mcr.microsoft.com/azure-storage/azurite"
+                }
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "azurite",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "0.0.0.0", "TargetPort": 10000, "PublishedPort": 20000},
+                  {"URL": "0.0.0.0", "TargetPort": 10001, "PublishedPort": 20001},
+                  {"URL": "0.0.0.0", "TargetPort": 10002, "PublishedPort": 20002}
+                ]
+              }
+            ]
+            """)))
+
+        expect:
+        resolver.resolve("azure.credential.storage-shared-key.connection-string", [:], config()).get() ==
+                "DefaultEndpointsProtocol=http;" +
+                "AccountName=devstoreaccount1;" +
+                "AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;" +
+                "BlobEndpoint=http://localhost:20000/devstoreaccount1;" +
+                "QueueEndpoint=http://localhost:20001/devstoreaccount1;" +
+                "TableEndpoint=http://localhost:20002/devstoreaccount1;"
+    }
+
+    def "resolves named MongoDB server properties from Compose services"() {
+        given:
+        def resolver = singleServiceResolver(
+                "documentdb",
+                "mongo:7",
+                27017,
+                37017,
+                ["MONGO_INITDB_DATABASE": "inventory"],
+                [(ComposeLabels.DATASOURCE): "inventory"]
+        )
+
+        expect:
+        resolver.resolve("mongodb.servers.inventory.uri", [:], config()).get() == "mongodb://localhost:37017/inventory"
+        resolver.resolve("mongodb.servers.inventory.host", [:], config()).empty
+        resolver.resolve("mongodb.servers..uri", [:], config()).empty
     }
 
     def "ambiguous automatic PostgreSQL mapping returns empty"() {

@@ -124,6 +124,7 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
                                    Map<String, Object> requestedProperties,
                                    Map<String, Object> testResourcesConfig) {
         if (!SUPPORTED_PROPERTY_SET.contains(propertyName)) {
+            clearEndpointResolution();
             return false;
         }
         boolean hasHost = requestedProperties.containsKey(JAVAMAIL_SMTP_HOST);
@@ -131,8 +132,12 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
         if (!hasHost && !hasPort) {
             return true;
         }
-        return hasMailpitContainerFor(requestedProperties, JAVAMAIL_SMTP_HOST) ||
+        boolean hasMailpitContainer = hasMailpitContainerFor(requestedProperties, JAVAMAIL_SMTP_HOST) ||
             hasMailpitContainerFor(requestedProperties, JAVAMAIL_SMTP_PORT);
+        if (!hasMailpitContainer) {
+            clearEndpointResolution();
+        }
+        return hasMailpitContainer;
     }
 
     @Override
@@ -150,10 +155,15 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     private static List<String> requiredEndpointProperty(String expression, String oppositeExpression) {
         Set<String> resolving = RESOLVING_ENDPOINT_PROPERTIES.get();
         if (resolving.contains(oppositeExpression)) {
+            clearEndpointResolution();
             return List.of();
         }
         resolving.add(expression);
         return List.of(oppositeExpression);
+    }
+
+    private static void clearEndpointResolution() {
+        RESOLVING_ENDPOINT_PROPERTIES.get().clear();
     }
 
     private static Optional<MailpitContainer> findExistingMailpitContainer(Map<String, Object> properties) {

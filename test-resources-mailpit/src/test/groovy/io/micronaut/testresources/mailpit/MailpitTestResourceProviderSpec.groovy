@@ -78,6 +78,28 @@ class MailpitTestResourceProviderSpec extends Specification {
         MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT | [MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST]
     }
 
+    def "clears endpoint recursion guard after recursive endpoint lookup"() {
+        when:
+        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST)
+
+        then:
+        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT) == []
+        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT) == [MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST]
+    }
+
+    def "clears endpoint recursion guard after declining explicit SMTP endpoint"() {
+        given:
+        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST)
+
+        expect:
+        !provider.shouldAnswer(
+                MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST,
+                [(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT): '2525'],
+                [:]
+        )
+        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT) == [MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST]
+    }
+
     def "can be disabled with test resources configuration"() {
         expect:
         !provider.isEnabled(['containers.mailpit.enabled': false])

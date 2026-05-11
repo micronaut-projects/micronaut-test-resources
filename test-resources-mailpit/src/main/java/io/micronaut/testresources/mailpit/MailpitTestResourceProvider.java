@@ -73,11 +73,37 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
             return requiredEndpointProperty(expression, JAVAMAIL_SMTP_HOST);
         }
         if (SUPPORTED_PROPERTY_SET.contains(expression)) {
-            RESOLVING_ENDPOINT_PROPERTIES.get().clear();
+            clearEndpointResolution();
             return List.of(JAVAMAIL_SMTP_HOST, JAVAMAIL_SMTP_PORT);
         }
-        RESOLVING_ENDPOINT_PROPERTIES.get().clear();
+        clearEndpointResolution();
         return List.of();
+    }
+
+    @Override
+    @SuppressWarnings("java:S2095")
+    protected MailpitContainer createContainer(DockerImageName imageName,
+                                               Map<String, Object> requestedProperties,
+                                               Map<String, Object> testResourcesConfig) {
+        int smtpPort = configuredPort(testResourcesConfig, SMTP_PORT_CONFIG, DEFAULT_SMTP_PORT);
+        int uiPort = configuredPort(testResourcesConfig, UI_PORT_CONFIG, DEFAULT_UI_PORT);
+        return new MailpitContainer(imageName, smtpPort, uiPort)
+            .withCommand("--smtp", "[::]:" + smtpPort, "--listen", "[::]:" + uiPort)
+            .withExposedPorts(smtpPort, uiPort)
+            .waitingFor(Wait.forHttp("/").forPort(uiPort));
+    }
+
+    @Override
+    protected Optional<String> resolveProperty(String propertyName, MailpitContainer container) {
+        clearEndpointResolution();
+        return switch (propertyName) {
+            case JAVAMAIL_SMTP_HOST -> Optional.of(container.getHost());
+            case JAVAMAIL_SMTP_PORT -> Optional.of(String.valueOf(container.getMappedPort(container.smtpPort)));
+            case JAVAMAIL_SMTP_AUTH, JAVAMAIL_SMTP_STARTTLS -> Optional.of("false");
+            case MAILPIT_UI_URL -> Optional.of(httpUrl(container));
+            case MAILPIT_API_URL -> Optional.of(httpUrl(container) + "/api/v1");
+            default -> Optional.empty();
+        };
     }
 
     @Override
@@ -93,31 +119,6 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     @Override
     protected String getDefaultImageName() {
         return DEFAULT_IMAGE;
-    }
-
-    @Override
-    protected MailpitContainer createContainer(DockerImageName imageName,
-                                               Map<String, Object> requestedProperties,
-                                               Map<String, Object> testResourcesConfig) {
-        int smtpPort = configuredPort(testResourcesConfig, SMTP_PORT_CONFIG, DEFAULT_SMTP_PORT);
-        int uiPort = configuredPort(testResourcesConfig, UI_PORT_CONFIG, DEFAULT_UI_PORT);
-        return new MailpitContainer(imageName, smtpPort, uiPort)
-            .withCommand("--smtp", "[::]:" + smtpPort, "--listen", "[::]:" + uiPort)
-            .withExposedPorts(smtpPort, uiPort)
-            .waitingFor(Wait.forHttp("/").forPort(uiPort));
-    }
-
-    @Override
-    protected Optional<String> resolveProperty(String propertyName, MailpitContainer container) {
-        RESOLVING_ENDPOINT_PROPERTIES.get().clear();
-        return switch (propertyName) {
-            case JAVAMAIL_SMTP_HOST -> Optional.of(container.getHost());
-            case JAVAMAIL_SMTP_PORT -> Optional.of(String.valueOf(container.getMappedPort(container.smtpPort)));
-            case JAVAMAIL_SMTP_AUTH, JAVAMAIL_SMTP_STARTTLS -> Optional.of("false");
-            case MAILPIT_UI_URL -> Optional.of(httpUrl(container));
-            case MAILPIT_API_URL -> Optional.of(httpUrl(container) + "/api/v1");
-            default -> Optional.empty();
-        };
     }
 
     @Override
@@ -164,7 +165,7 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     private static void clearEndpointResolution() {
-        RESOLVING_ENDPOINT_PROPERTIES.get().clear();
+        RESOLVING_ENDPOINT_PROPERTIES.remove();
     }
 
     private static Optional<MailpitContainer> findExistingMailpitContainer(Map<String, Object> properties) {
@@ -208,6 +209,7 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     /**
      * A Mailpit container with configured SMTP and UI container ports.
      */
+    @SuppressWarnings("java:S2160")
     public static class MailpitContainer extends GenericContainer<MailpitContainer> {
         protected final int smtpPort;
         protected final int uiPort;

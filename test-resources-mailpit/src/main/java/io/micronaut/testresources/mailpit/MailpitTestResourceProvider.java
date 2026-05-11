@@ -81,6 +81,11 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
+    public String getDisplayName() {
+        return DISPLAY_NAME;
+    }
+
+    @Override
     @SuppressWarnings("java:S2095")
     protected MailpitContainer createContainer(DockerImageName imageName,
                                                Map<String, Object> requestedProperties,
@@ -107,18 +112,8 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
-    public String getDisplayName() {
-        return DISPLAY_NAME;
-    }
-
-    @Override
     protected String getSimpleName() {
         return SIMPLE_NAME;
-    }
-
-    @Override
-    protected String getDefaultImageName() {
-        return DEFAULT_IMAGE;
     }
 
     @Override
@@ -148,6 +143,11 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
                                                        Map<String, Object> testResourcesConfig) {
         return findExistingMailpitContainer(properties)
             .flatMap(container -> resolveProperty(propertyName, container));
+    }
+
+    @Override
+    protected String getDefaultImageName() {
+        return DEFAULT_IMAGE;
     }
 
     private static String httpUrl(MailpitContainer container) {

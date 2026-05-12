@@ -34,6 +34,7 @@ class DefaultTestResourceImagesTest extends Specification {
         'kafka',
         'keycloak',
         'localstack',
+        'mailpit',
         'mariadb',
         'minio',
         'mongodb',
@@ -67,6 +68,7 @@ class DefaultTestResourceImagesTest extends Specification {
         DefaultTestResourceImages.DEFAULT_KAFKA_IMAGE == DefaultTestResourceImages.image('kafka')
         DefaultTestResourceImages.DEFAULT_KEYCLOAK_IMAGE == DefaultTestResourceImages.image('keycloak')
         DefaultTestResourceImages.DEFAULT_LOCALSTACK_IMAGE == DefaultTestResourceImages.image('localstack')
+        DefaultTestResourceImages.DEFAULT_MAILPIT_IMAGE == DefaultTestResourceImages.image('mailpit')
         DefaultTestResourceImages.DEFAULT_MARIADB_IMAGE == DefaultTestResourceImages.image('mariadb')
         DefaultTestResourceImages.DEFAULT_MINIO_IMAGE == DefaultTestResourceImages.image('minio')
         DefaultTestResourceImages.DEFAULT_MONGODB_IMAGE == DefaultTestResourceImages.image('mongodb')
@@ -127,6 +129,7 @@ class DefaultTestResourceImagesTest extends Specification {
             'modules-infinispan.adoc': ['infinispan'],
             'modules-kafka.adoc': ['kafka'],
             'modules-localstack.adoc': ['localstack'],
+            'modules-mailpit.adoc': ['mailpit'],
             'modules-minio.adoc': ['minio'],
             'modules-mongodb.adoc': ['mongodb'],
             'modules-mqtt.adoc': ['hivemq'],

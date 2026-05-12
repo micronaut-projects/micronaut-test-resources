@@ -40,6 +40,23 @@ class TestResourcesClasspathTest extends Specification {
         'discovery-client' | 'hashicorp-vault'
     }
 
+    def "infers Mailpit only for Micronaut Email JavaMail"() {
+        when:
+        infer("io.micronaut.email:$artifact:1.0")
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                *expected
+        )
+
+        where:
+        artifact                  | expected
+        'micronaut-email-javamail' | ['io.micronaut.testresources:micronaut-test-resources-mailpit:1.0.34']
+        'micronaut-email'          | []
+    }
+
     def "passes through driver #driver"() {
         when:
         infer("org:foo:1.0", "$driver:1.0")

@@ -45,6 +45,10 @@ FROM quay.io/keycloak/keycloak:26.6.1 AS keycloak
 # property: test-resources.containers.localstack.image-name
 FROM localstack/localstack:4.14.0 AS localstack
 
+# provider: mailpit
+# property: test-resources.containers.mailpit.image-name
+FROM axllent/mailpit:v1.29.7 AS mailpit
+
 # provider: mariadb
 # property: test-resources.containers.mariadb.image-name
 FROM mariadb:11.8.6 AS mariadb

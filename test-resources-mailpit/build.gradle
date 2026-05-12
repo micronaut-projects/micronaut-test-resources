@@ -1,0 +1,15 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching a Mailpit SMTP test container.
+"""
+
+dependencies {
+    testImplementation(mnEmail.micronaut.email)
+    testImplementation(mnEmail.micronaut.email.javamail)
+    testImplementation(mn.micronaut.http.client)
+
+    testRuntimeOnly(mnEmail.eclipse.angus)
+}

@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
@@ -68,7 +69,9 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
         validateProtocol(testResourcesConfig);
         return new GenericContainer<>(imageName)
             .withExposedPorts(OTLP_GRPC_PORT, GRAFANA_PORT)
-            .waitingFor(Wait.forHttp("/api/health").forPort(GRAFANA_PORT));
+            .waitingFor(new WaitAllStrategy()
+                .withStrategy(Wait.forListeningPorts(OTLP_GRPC_PORT))
+                .withStrategy(Wait.forHttp("/api/health").forPort(GRAFANA_PORT)));
     }
 
     @Override

@@ -40,6 +40,8 @@ modules:
     title: MQTT
   modules-neo4j:
     title: Neo4j
+  modules-opentelemetry:
+    title: OpenTelemetry
   modules-rabbitmq:
     title: RabbitMQ
   modules-redis:

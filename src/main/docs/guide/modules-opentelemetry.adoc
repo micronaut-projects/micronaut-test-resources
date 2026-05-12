@@ -1,0 +1,73 @@
+OpenTelemetry support will automatically start a https://grafana.com/docs/opentelemetry/docker-lgtm/[Grafana OpenTelemetry LGTM] container and provide the value of the `otel.exporter.otlp.endpoint` property.
+
+The provider exposes the LGTM OpenTelemetry Collector OTLP/gRPC port and resolves the endpoint in the form `http://HOST:PORT`.
+Micronaut Test Resources uses a random mapped host port and does not bind container port `4317` directly.
+
+To use it, add the OpenTelemetry test resource module and the Micronaut Tracing OpenTelemetry dependencies required by your application:
+
+dependency:micronaut-test-resources-opentelemetry[groupId="io.micronaut.testresources", scope="testResourcesService"]
+dependency:micronaut-tracing-opentelemetry[groupId="io.micronaut.tracing", scope="implementation"]
+dependency:opentelemetry-exporter-otlp[groupId="io.opentelemetry", scope="runtimeOnly"]
+
+Micronaut Tracing keeps OpenTelemetry exporters disabled by default.
+Enable only the signals you want to send to the local backend, for example traces:
+
+[configuration]
+----
+otel:
+  traces:
+    exporter: otlp
+----
+
+Do not configure `otel.exporter.otlp.endpoint` for the local Test Resources backend.
+When that property is absent and the OpenTelemetry test resource module is on the Test Resources classpath, Test Resources resolves it from the mapped LGTM OTLP/gRPC port.
+
+If `otel.exporter.otlp.endpoint` is explicitly configured, including through the equivalent `OTEL_EXPORTER_OTLP_ENDPOINT` environment-variable configuration resolved by Micronaut, Test Resources will not start the local OpenTelemetry backend.
+This lets CI, staging, or developer machines point to an existing collector:
+
+[configuration]
+----
+otel:
+  exporter:
+    otlp:
+      endpoint: "http://collector.example:4317"
+----
+
+The default backend is `lgtm`, the default protocol is `grpc`, and the default image is `{default-image-opentelemetry}`.
+The image can be changed with the standard container image settings:
+
+[source,yaml,subs=attributes+]
+----
+test-resources:
+  containers:
+    opentelemetry:
+      image-name: "{default-image-name-opentelemetry}"
+      image-tag: {default-image-tag-opentelemetry}
+----
+
+Only `backend: lgtm` and `protocol: grpc` are supported by this initial provider.
+Unsupported values fail fast so that an application does not silently receive an endpoint for the wrong protocol.
+
+The local Grafana UI is exposed on the mapped container port for Grafana port `3000`.
+When the endpoint is resolved, Test Resources logs a sanitized URL similar to:
+
+[source]
+----
+OpenTelemetry LGTM Grafana UI available at http://localhost:<mapped port>
+----
+
+The log message contains only the local UI URL.
+It does not include telemetry payloads, headers, tokens, or application data.
+
+To disable this provider while keeping the module on the classpath:
+
+[configuration]
+----
+test-resources:
+  containers:
+    opentelemetry:
+      enabled: false
+----
+
+This module is intended for development and integration tests.
+It is not a production observability deployment, and applications should configure their production OpenTelemetry collector or managed backend independently.

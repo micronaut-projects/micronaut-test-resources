@@ -81,6 +81,10 @@ FROM neo4j:5.26.25 AS neo4j
 # property: test-resources.containers.opensearch.image-name
 FROM opensearchproject/opensearch:3.6.0 AS opensearch
 
+# provider: opentelemetry
+# property: test-resources.containers.opentelemetry.image-name
+FROM grafana/otel-lgtm:0.27.1 AS opentelemetry
+
 # provider: oracle
 # property: test-resources.containers.oracle.image-name
 FROM gvenzl/oracle-free:slim-faststart AS oracle_free

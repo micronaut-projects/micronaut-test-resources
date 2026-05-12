@@ -43,6 +43,7 @@ class DefaultTestResourceImagesTest extends Specification {
         'mysql_community',
         'neo4j',
         'opensearch',
+        'opentelemetry',
         'oracle_free',
         'oracle_xe',
         'postgres',
@@ -77,6 +78,7 @@ class DefaultTestResourceImagesTest extends Specification {
         DefaultTestResourceImages.DEFAULT_MYSQL_COMMUNITY_IMAGE == DefaultTestResourceImages.image('mysql_community')
         DefaultTestResourceImages.DEFAULT_NEO4J_IMAGE == DefaultTestResourceImages.image('neo4j')
         DefaultTestResourceImages.DEFAULT_OPENSEARCH_IMAGE == DefaultTestResourceImages.image('opensearch')
+        DefaultTestResourceImages.DEFAULT_OPENTELEMETRY_IMAGE == DefaultTestResourceImages.image('opentelemetry')
         DefaultTestResourceImages.DEFAULT_ORACLE_FREE_IMAGE == DefaultTestResourceImages.image('oracle_free')
         DefaultTestResourceImages.DEFAULT_ORACLE_XE_IMAGE == DefaultTestResourceImages.image('oracle_xe')
         DefaultTestResourceImages.DEFAULT_POSTGRES_IMAGE == DefaultTestResourceImages.image('postgres')
@@ -136,6 +138,7 @@ class DefaultTestResourceImagesTest extends Specification {
             'modules-neo4j.adoc': ['neo4j'],
             'modules-oauth2.adoc': ['keycloak'],
             'modules-opensearch.adoc': ['opensearch'],
+            'modules-opentelemetry.adoc': ['opentelemetry'],
             'modules-pulsar.adoc': ['pulsar'],
             'modules-rabbitmq.adoc': ['rabbitmq'],
             'modules-redis.adoc': ['redis', 'redis_cluster'],

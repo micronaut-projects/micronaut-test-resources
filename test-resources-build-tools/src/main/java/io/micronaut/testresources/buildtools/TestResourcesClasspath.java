@@ -55,6 +55,9 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MICRONAUT_MONGO_SYNC = "io.micronaut.mongodb:micronaut-mongo-sync";
     private static final String MICRONAUT_MONGO_REACTIVE =
         "io.micronaut.mongodb:micronaut-mongo-reactive";
+    private static final String MICRONAUT_TRACING_OPENTELEMETRY = "micronaut-tracing-opentelemetry";
+    private static final String MICRONAUT_TRACING_OPENTELEMETRY_HTTP = "micronaut-tracing-opentelemetry-http";
+    private static final String OPENTELEMETRY_EXPORTER_OTLP = "io.opentelemetry:opentelemetry-exporter-otlp";
 
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
@@ -96,6 +99,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String MONGODB_MODULE = "mongodb";
     private static final String REDIS_MODULE = "redis";
     private static final String MAILPIT_MODULE = "mailpit";
+    private static final String OPENTELEMETRY_MODULE = "opentelemetry";
     private static final String MYSQL_MODULE = "jdbc-mysql";
     private static final String REACTIVE_MYSQL_MODULE = "r2dbc-mysql";
     private static final String NEO4J_MODULE = "neo4j";
@@ -184,6 +188,8 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
             m.onModule(MICRONAUT_MONGO_SYNC, MONGODB_MODULE);
             m.onModule(MICRONAUT_MONGO_REACTIVE, MONGODB_MODULE);
+            m.onArtifact(name -> name.equals(MICRONAUT_TRACING_OPENTELEMETRY) || name.equals(MICRONAUT_TRACING_OPENTELEMETRY_HTTP),
+                deps -> deps.anyMatch(moduleEquals(OPENTELEMETRY_EXPORTER_OTLP)), OPENTELEMETRY_MODULE);
             m.onArtifact(MICRONAUT_RABBITMQ, RABBITMQ_MODULE);
             m.onArtifact(MICRONAUT_REDIS, REDIS_MODULE);
             m.onArtifact(MICRONAUT_EMAIL_JAVAMAIL, MAILPIT_MODULE);

@@ -1,8 +1,10 @@
 There are cases where the provided test resources modules don't support your use case.
-For example, there is no built-in test resource for supplying a dummy SMTP server, but you may need such a resource for testing your application.
+For example, you may need a container image or protocol mapping that is not covered by a dedicated module.
 
 In this case, Micronaut Test Resources provide generic support for starting arbitrary test containers.
 Unlike the other resources, this will require adding configuration to your application to make it work.
+
+TIP: For Micronaut Email JavaMail applications that need a local SMTP capture server, prefer the dedicated <<modules-mailpit,Mailpit support>>.
 
 Let's illustrate how we can declare an SMTP test container (here using YAML configuration) for use with https://micronaut-projects.github.io/micronaut-email[Micronaut Email]:
 

@@ -44,13 +44,16 @@ test-resources:
 
 You can also override the image and Mailpit listener ports:
 
+The default image (`{default-image-mailpit}`) can be overwritten by setting the `test-resources.containers.mailpit.image-name` property.
+The default version can be overwritten by setting the `test-resources.containers.mailpit.image-tag` property.
+
 [configuration]
 ----
 test-resources:
   containers:
     mailpit:
       image-name: axllent/mailpit
-      image-tag: latest
+      image-tag: v1.29.7
       smtp-port: 1025
       ui-port: 8025
 ----

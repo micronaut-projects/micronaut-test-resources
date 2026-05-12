@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.mailpit;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import io.micronaut.testresources.testcontainers.TestContainers;
@@ -40,7 +41,7 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     public static final String JAVAMAIL_SMTP_STARTTLS = "javamail.properties.mail.smtp.starttls.enable";
     public static final String MAILPIT_UI_URL = "mailpit.ui.url";
     public static final String MAILPIT_API_URL = "mailpit.api.url";
-    public static final String DEFAULT_IMAGE = "axllent/mailpit";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_MAILPIT_IMAGE;
     public static final String DISPLAY_NAME = "Mailpit";
     public static final String SIMPLE_NAME = "mailpit";
 

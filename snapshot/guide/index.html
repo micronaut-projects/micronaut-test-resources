@@ -137,25 +137,27 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.14</strong><span>Neo4j</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.15</strong><span>RabbitMQ</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opentelemetry"><a href="#modules-opentelemetry"><strong>5.15</strong><span>OpenTelemetry</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.16</strong><span>Redis</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.16</strong><span>RabbitMQ</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.17</strong><span>Hazelcast</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.17</strong><span>Redis</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-infinispan"><a href="#modules-infinispan"><strong>5.18</strong><span>Infinispan</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.18</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-wiremock"><a href="#modules-wiremock"><strong>5.19</strong><span>WireMock</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-infinispan"><a href="#modules-infinispan"><strong>5.19</strong><span>Infinispan</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.20</strong><span>OAuth2 / Keycloak</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-wiremock"><a href="#modules-wiremock"><strong>5.20</strong><span>WireMock</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.21</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.21</strong><span>OAuth2 / Keycloak</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-consul"><a href="#modules-hashicorp-consul"><strong>5.22</strong><span>Hashicorp Consul</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.22</strong><span>Hashicorp Vault</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-solr"><a href="#modules-solr"><strong>5.23</strong><span>Solr</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-consul"><a href="#modules-hashicorp-consul"><strong>5.23</strong><span>Hashicorp Consul</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.24</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-solr"><a href="#modules-solr"><strong>5.24</strong><span>Solr</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.25</strong><span>Generic Testcontainers support</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
         
@@ -2147,7 +2149,303 @@ listener 1883</code></pre>
 <p>The default image (<code>neo4j:5.26.25</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.15 RabbitMQ</h2>
+<h2 id="modules-opentelemetry"><a class="anchor" href="#modules-opentelemetry"></a>5.15 OpenTelemetry</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-opentelemetry.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>OpenTelemetry support will automatically start a <a href="https://grafana.com/docs/opentelemetry/docker-lgtm/">Grafana OpenTelemetry LGTM</a> container and provide the value of the <code>otel.exporter.otlp.endpoint</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The provider exposes the LGTM OpenTelemetry Collector OTLP/gRPC port and resolves the endpoint in the form <code><a href="http://HOST:PORT" class="bare">http://HOST:PORT</a></code>.
+Micronaut Test Resources uses a random mapped host port and does not bind container port <code>4317</code> directly.</p>
+</div>
+<div class="paragraph">
+<p>To use it, add the OpenTelemetry test resource module and the Micronaut Tracing OpenTelemetry dependencies required by your application:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">testResourcesService(<span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-opentelemetry")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.testresources&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-test-resources-opentelemetry&lt;/artifactId&gt;
+    &lt;scope&gt;testResourcesService&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.tracing:micronaut-tracing-opentelemetry")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.tracing&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-tracing-opentelemetry&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">runtimeOnly(<span class="hljs-string">"io.opentelemetry:opentelemetry-exporter-otlp")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.opentelemetry&lt;/groupId&gt;
+    &lt;artifactId&gt;opentelemetry-exporter-otlp&lt;/artifactId&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Micronaut Tracing keeps OpenTelemetry exporters disabled by default.
+Enable only the signals you want to send to the local backend, for example traces:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">otel.traces.exporter=otlp</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">otel:
+  traces:
+    exporter: otlp</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[otel]
+  [otel.traces]
+    exporter="otlp"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">otel {
+  traces {
+    exporter = "otlp"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  otel {
+    traces {
+      exporter = "otlp"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "otel": {
+    "traces": {
+      "exporter": "otlp"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Do not configure <code>otel.exporter.otlp.endpoint</code> for the local Test Resources backend.
+When that property is absent and the OpenTelemetry test resource module is on the Test Resources classpath, Test Resources resolves it from the mapped LGTM OTLP/gRPC port.</p>
+</div>
+<div class="paragraph">
+<p>If <code>otel.exporter.otlp.endpoint</code> is explicitly configured, including through the equivalent <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> environment-variable configuration resolved by Micronaut, Test Resources will not start the local OpenTelemetry backend.
+This lets CI, staging, or developer machines point to an existing collector:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">otel.exporter.otlp.endpoint=http://collector.example:4317</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">otel:
+  exporter:
+    otlp:
+      endpoint: "http://collector.example:4317"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[otel]
+  [otel.exporter]
+    [otel.exporter.otlp]
+      endpoint="http://collector.example:4317"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">otel {
+  exporter {
+    otlp {
+      endpoint = "http://collector.example:4317"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  otel {
+    exporter {
+      otlp {
+        endpoint = "http://collector.example:4317"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "otel": {
+    "exporter": {
+      "otlp": {
+        "endpoint": "http://collector.example:4317"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.27.1</code>.
+The image can be changed with the standard container image settings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    opentelemetry:
+      image-name: "grafana/otel-lgtm"
+      image-tag: 0.27.1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only <code>backend: lgtm</code> and <code>protocol: grpc</code> are supported by this initial provider.
+Unsupported values fail fast so that an application does not silently receive an endpoint for the wrong protocol.</p>
+</div>
+<div class="paragraph">
+<p>The local Grafana UI is exposed on the mapped container port for Grafana port <code>3000</code>.
+When the endpoint is resolved, Test Resources logs a sanitized URL similar to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">OpenTelemetry LGTM Grafana UI available at http://localhost:&lt;mapped port&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The log message contains only the local UI URL.
+It does not include telemetry payloads, headers, tokens, or application data.</p>
+</div>
+<div class="paragraph">
+<p>To disable this provider while keeping the module on the classpath:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.opentelemetry.enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    opentelemetry:
+      enabled: false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.opentelemetry]
+      enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    opentelemetry {
+      enabled = false
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      opentelemetry {
+        enabled = false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "opentelemetry": {
+        "enabled": false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This module is intended for development and integration tests.
+It is not a production observability deployment, and applications should configure their production OpenTelemetry collector or managed backend independently.</p>
+</div>
+
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.16 RabbitMQ</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
@@ -2163,7 +2461,7 @@ listener 1883</code></pre>
 <p>The default image (<code>rabbitmq:4.3.0</code>) can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.16 Redis</h2>
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.17 Redis</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-redis.adoc"'>
@@ -2206,7 +2504,7 @@ This provider can be configured with a variety of parameters:</p>
 </ul>
 </div>
 
-<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.17 Hazelcast</h2>
+<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.18 Hazelcast</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hazelcast.adoc"'>
@@ -2237,7 +2535,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 </dl>
 </div>
 
-<h2 id="modules-infinispan"><a class="anchor" href="#modules-infinispan"></a>5.18 Infinispan</h2>
+<h2 id="modules-infinispan"><a class="anchor" href="#modules-infinispan"></a>5.19 Infinispan</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-infinispan.adoc"'>
@@ -2295,7 +2593,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <p>See the <a href="https://testcontainers.com/modules/infinispan/">Testcontainers Infinispan module</a> for more information.</p>
 </div>
 
-<h2 id="modules-wiremock"><a class="anchor" href="#modules-wiremock"></a>5.19 WireMock</h2>
+<h2 id="modules-wiremock"><a class="anchor" href="#modules-wiremock"></a>5.20 WireMock</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-wiremock.adoc"'>
@@ -2518,7 +2816,7 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 <p>Mapping-specific Java helpers are not part of the initial WireMock provider surface.</p>
 </div>
 
-<h2 id="modules-oauth2"><a class="anchor" href="#modules-oauth2"></a>5.20 OAuth2 / Keycloak</h2>
+<h2 id="modules-oauth2"><a class="anchor" href="#modules-oauth2"></a>5.21 OAuth2 / Keycloak</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-oauth2.adoc"'>
@@ -2631,7 +2929,7 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 </div>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.21 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.22 Hashicorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -2731,7 +3029,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-hashicorp-consul"><a class="anchor" href="#modules-hashicorp-consul"></a>5.22 Hashicorp Consul</h2>
+<h2 id="modules-hashicorp-consul"><a class="anchor" href="#modules-hashicorp-consul"></a>5.23 Hashicorp Consul</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-consul.adoc"'>
@@ -2818,7 +3116,7 @@ test-resources.containers.hashicorp-consul.kv-properties[1]=key2=value2</code></
 </div>
 </div>
 
-<h2 id="modules-solr"><a class="anchor" href="#modules-solr"></a>5.23 Solr</h2>
+<h2 id="modules-solr"><a class="anchor" href="#modules-solr"></a>5.24 Solr</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-solr.adoc"'>
@@ -2953,7 +3251,7 @@ solr.zookeeper.enabled=true</code></pre>
 <p><code>solr.collection</code> configures the collection name, <code>solr.config.name</code> and <code>solr.config.url</code> configure a Solr config set, <code>solr.schema.url</code> configures a schema, and <code>solr.zookeeper.enabled</code> controls whether the container starts with ZooKeeper support.</p>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.24 Generic Testcontainers support</h2>
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.25 Generic Testcontainers support</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>

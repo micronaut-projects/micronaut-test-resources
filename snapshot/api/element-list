@@ -38,6 +38,7 @@ io.micronaut.testresources.mysql
 io.micronaut.testresources.neo4j
 io.micronaut.testresources.oauth2.keycloak
 io.micronaut.testresources.opensearch
+io.micronaut.testresources.opentelemetry
 io.micronaut.testresources.oracle.free
 io.micronaut.testresources.oracle.testpilot
 io.micronaut.testresources.oracle.xe

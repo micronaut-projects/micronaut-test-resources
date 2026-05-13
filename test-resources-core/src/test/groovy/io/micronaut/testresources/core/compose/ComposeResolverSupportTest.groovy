@@ -133,6 +133,102 @@ class ComposeResolverSupportTest extends Specification {
         ).empty
     }
 
+    def "resolves database properties using shared Compose database descriptors"() {
+        given:
+        createComposeFile()
+        def cli = new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "mysql": {
+                  "image": "mysql:8",
+                  "environment": {
+                    "MYSQL_USER": "demo",
+                    "MYSQL_PASSWORD": "secret",
+                    "MYSQL_DATABASE": "inventory"
+                  },
+                  "labels": {
+                    "io.micronaut.test-resources.datasource": "inventory"
+                  }
+                }
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "mysql",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "127.0.0.1", "TargetPort": 3306, "PublishedPort": 13306}
+                ]
+              }
+            ]
+            """))
+        ComposeResolverSupport.projectManager = new ComposeProjectManager(cli, new ComposeProjectParser())
+        def properties = ["datasources.inventory.db-name": "inventory_test"]
+
+        expect:
+        ComposeDatabaseResolverSupport.resolveJdbc(
+                "datasources.inventory.url",
+                properties,
+                config(),
+                ComposeDatabaseDescriptors.MYSQL
+        ).get() == "jdbc:mysql://127.0.0.1:13306/inventory_test"
+        ComposeDatabaseResolverSupport.resolveJdbc(
+                "datasources.inventory.username",
+                properties,
+                config(),
+                ComposeDatabaseDescriptors.MYSQL
+        ).get() == "demo"
+        ComposeDatabaseResolverSupport.resolveR2dbc(
+                "r2dbc.datasources.inventory.url",
+                properties,
+                config(),
+                ComposeDatabaseDescriptors.MYSQL
+        ).get() == "r2dbc:mysql://127.0.0.1:13306/inventory_test"
+        ComposeDatabaseResolverSupport.resolveHibernateReactive(
+                "jpa.inventory.properties.hibernate.connection.password",
+                properties,
+                config(),
+                ComposeDatabaseDescriptors.MYSQL
+        ).get() == "secret"
+    }
+
+    def "core exposes safe accessors for compose ports without leaking internal types"() {
+        given:
+        createComposeFile()
+        def cli = new FakeComposeCli(configJson("""
+            {
+              "services": {
+                "azurite": {
+                  "image": "mcr.microsoft.com/azure-storage/azurite"
+                }
+              }
+            }
+            """), psJson("""
+            [
+              {
+                "Service": "azurite",
+                "State": "running",
+                "Publishers": [
+                  {"URL": "127.0.0.1", "TargetPort": 10000, "PublishedPort": 11000},
+                  {"URL": "127.0.0.1", "TargetPort": 10001, "PublishedPort": 11001}
+                ]
+              }
+            ]
+            """))
+        ComposeResolverSupport.projectManager = new ComposeProjectManager(cli, new ComposeProjectParser())
+
+        expect:
+        ComposeResolverSupport.resolve(
+                "azure.credential.storage-shared-key.connection-string",
+                [:],
+                config(),
+                new ComposeResolverSupport.ServiceDescriptor("azurite", List.of("azure-storage"), 10000),
+                context -> true,
+                context -> context.host() + ":" + context.publishedPort() + " " + context.httpEndpoint(10001).get()
+        ).get() == "127.0.0.1:11000 http://127.0.0.1:11001"
+    }
+
     def "parses Compose configuration output and tracks lifecycle ownership"() {
         given:
         createComposeFile()

@@ -81,6 +81,10 @@ public final class ComposeResolverSupport {
         return port.host() + ":" + port.publishedPort();
     }
 
+    public static String http(ComposePort port) {
+        return "http://" + hostPort(port);
+    }
+
     private static Optional<ResolutionContext> findSingle(ComposeProject project,
                                                           ServiceDescriptor descriptor,
                                                           Predicate<ResolutionContext> additionalFilter) {
@@ -149,8 +153,24 @@ public final class ComposeResolverSupport {
      * @param port The published port.
      */
     public record ResolutionContext(ComposeService service, ComposePort port) {
+        public String host() {
+            return port.host();
+        }
+
+        public int publishedPort() {
+            return port.publishedPort();
+        }
+
         public String hostPort() {
             return ComposeResolverSupport.hostPort(port);
+        }
+
+        public String http() {
+            return ComposeResolverSupport.http(port);
+        }
+
+        public Optional<String> httpEndpoint(int targetPort) {
+            return service.publishedPort(targetPort).map(ComposeResolverSupport::http);
         }
 
         public String labelOrEnvironment(String label, String environmentName, String defaultValue) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.postgres;
+package io.micronaut.testresources.hibernate.reactive.postgresql;
 
 import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
 import io.micronaut.testresources.core.compose.ComposeDatabaseDescriptors;
@@ -23,18 +23,19 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resolves PostgreSQL properties from Docker Compose services.
+ * Resolves PostgreSQL Hibernate Reactive properties from Docker Compose services.
  */
-public final class PostgreSQLComposeTestResourceProvider extends PostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
+public final class HibernateReactivePostgreSQLComposeTestResourceProvider extends HibernateReactivePostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
     @Override
     public String getDisplayName() {
-        return "Docker Compose PostgreSQL";
+        return "Docker Compose PostgreSQL Hibernate Reactive";
     }
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName,
                                                        Map<String, Object> properties,
                                                        Map<String, Object> testResourcesConfig) {
-        return ComposeDatabaseResolverSupport.resolveJdbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        Optional<String> compose = ComposeDatabaseResolverSupport.resolveHibernateReactive(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        return compose.isPresent() ? compose : super.resolveWithoutContainer(propertyName, properties, testResourcesConfig);
     }
 }

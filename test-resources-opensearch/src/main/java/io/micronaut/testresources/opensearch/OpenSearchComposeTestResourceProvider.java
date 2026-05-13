@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2024 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.postgres;
+package io.micronaut.testresources.opensearch;
 
 import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
-import io.micronaut.testresources.core.compose.ComposeDatabaseDescriptors;
-import io.micronaut.testresources.core.compose.ComposeDatabaseResolverSupport;
+import io.micronaut.testresources.core.compose.ComposeResolverSupport;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resolves PostgreSQL properties from Docker Compose services.
+ * Resolves OpenSearch properties from Docker Compose services.
  */
-public final class PostgreSQLComposeTestResourceProvider extends PostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
+public final class OpenSearchComposeTestResourceProvider extends OpenSearchTestResourceProvider implements ComposeAwareTestResourcesResolver {
+    private static final ComposeResolverSupport.ServiceDescriptor OPENSEARCH =
+        new ComposeResolverSupport.ServiceDescriptor("opensearch", List.of(), 9200);
+
     @Override
     public String getDisplayName() {
-        return "Docker Compose PostgreSQL";
+        return "Docker Compose OpenSearch";
     }
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName,
                                                        Map<String, Object> properties,
                                                        Map<String, Object> testResourcesConfig) {
-        return ComposeDatabaseResolverSupport.resolveJdbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        return ComposeResolverSupport.resolve(propertyName, properties, testResourcesConfig, OPENSEARCH, context -> true, ComposeResolverSupport.ResolutionContext::http);
     }
 }

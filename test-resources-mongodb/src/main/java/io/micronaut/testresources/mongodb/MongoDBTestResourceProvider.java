@@ -97,7 +97,15 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
         return MONGODB_SERVER_URI.equals(propertyName);
     }
 
-    private Optional<String> extractMongoDbServerFrom(String propertyName) {
+    /**
+     * Extracts the configured named MongoDB server from a supported property.
+     * Subclasses can use this to preserve the same named-server parsing while
+     * resolving values from non-container sources.
+     *
+     * @param propertyName The property to inspect.
+     * @return The named MongoDB server when the property is supported.
+     */
+    protected final Optional<String> extractMongoDbServerFrom(String propertyName) {
         if (propertyName.startsWith(MONGODB_SERVERS + ".")) {
             String suffix = propertyName.substring(MONGODB_SERVERS.length() + 1);
             int dot = suffix.indexOf(".");

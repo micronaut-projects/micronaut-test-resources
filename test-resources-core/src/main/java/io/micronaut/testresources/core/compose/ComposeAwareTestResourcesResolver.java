@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.compose;
+package io.micronaut.testresources.core.compose;
 
 import io.micronaut.core.annotation.Internal;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 /**
- * Docker Compose labels understood by the Compose test resources resolver.
+ * Marker for provider-specific resolvers loaded by the Compose module.
  */
 @Internal
-final class ComposeLabels {
-    static final String SERVICE = "io.micronaut.test-resources.service";
-    static final String DATASOURCE = "io.micronaut.test-resources.datasource";
-    static final String IGNORE = "io.micronaut.test-resources.ignore";
-    static final String USERNAME = "io.micronaut.test-resources.username";
-    static final String PASSWORD = "io.micronaut.test-resources.password";
-    static final String DATABASE = "io.micronaut.test-resources.database";
-
-    private ComposeLabels() {
+public interface ComposeAwareTestResourcesResolver extends Closeable {
+    @Override
+    default void close() throws IOException {
+        ComposeResolverSupport.close();
     }
 }

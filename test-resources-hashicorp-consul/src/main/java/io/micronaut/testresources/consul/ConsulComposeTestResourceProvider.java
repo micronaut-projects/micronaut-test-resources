@@ -13,28 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.postgres;
+package io.micronaut.testresources.consul;
 
 import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
-import io.micronaut.testresources.core.compose.ComposeDatabaseDescriptors;
-import io.micronaut.testresources.core.compose.ComposeDatabaseResolverSupport;
+import io.micronaut.testresources.core.compose.ComposeResolverSupport;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resolves PostgreSQL properties from Docker Compose services.
+ * Resolves Consul properties from Docker Compose services.
  */
-public final class PostgreSQLComposeTestResourceProvider extends PostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
+public final class ConsulComposeTestResourceProvider extends ConsulTestResourceProvider implements ComposeAwareTestResourcesResolver {
+    private static final ComposeResolverSupport.ServiceDescriptor CONSUL =
+        new ComposeResolverSupport.ServiceDescriptor("hashicorp-consul", List.of("consul"), CONSUL_HTTP_PORT);
+
     @Override
     public String getDisplayName() {
-        return "Docker Compose PostgreSQL";
+        return "Docker Compose Consul";
     }
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName,
                                                        Map<String, Object> properties,
                                                        Map<String, Object> testResourcesConfig) {
-        return ComposeDatabaseResolverSupport.resolveJdbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        return ComposeResolverSupport.resolve(
+            propertyName,
+            properties,
+            testResourcesConfig,
+            CONSUL,
+            context -> true,
+            context -> switch (propertyName) {
+                case PROPERTY_CONSUL_CLIENT_HOST -> context.host();
+                case PROPERTY_CONSUL_CLIENT_PORT -> String.valueOf(context.publishedPort());
+                case PROPERTY_CONSUL_CLIENT_DEFAULT_ZONE -> context.hostPort();
+                default -> null;
+            });
     }
 }

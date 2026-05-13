@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.postgres;
+package io.micronaut.testresources.r2dbc.postgres;
 
 import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
 import io.micronaut.testresources.core.compose.ComposeDatabaseDescriptors;
@@ -23,18 +23,19 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resolves PostgreSQL properties from Docker Compose services.
+ * Resolves PostgreSQL R2DBC properties from Docker Compose services.
  */
-public final class PostgreSQLComposeTestResourceProvider extends PostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
+public final class R2DBCPostgreSQLComposeTestResourceProvider extends R2DBCPostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
     @Override
     public String getDisplayName() {
-        return "Docker Compose PostgreSQL";
+        return "Docker Compose PostgreSQL R2DBC";
     }
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName,
                                                        Map<String, Object> properties,
                                                        Map<String, Object> testResourcesConfig) {
-        return ComposeDatabaseResolverSupport.resolveJdbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        Optional<String> compose = ComposeDatabaseResolverSupport.resolveR2dbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        return compose.isPresent() ? compose : super.resolveWithoutContainer(propertyName, properties, testResourcesConfig);
     }
 }

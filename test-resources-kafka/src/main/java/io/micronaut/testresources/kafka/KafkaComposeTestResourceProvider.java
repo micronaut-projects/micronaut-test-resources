@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.postgres;
+package io.micronaut.testresources.kafka;
 
 import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
-import io.micronaut.testresources.core.compose.ComposeDatabaseDescriptors;
-import io.micronaut.testresources.core.compose.ComposeDatabaseResolverSupport;
+import io.micronaut.testresources.core.compose.ComposeResolverSupport;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resolves PostgreSQL properties from Docker Compose services.
+ * Resolves Kafka properties from Docker Compose services.
  */
-public final class PostgreSQLComposeTestResourceProvider extends PostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
+public final class KafkaComposeTestResourceProvider extends KafkaTestResourceProvider implements ComposeAwareTestResourcesResolver {
+    private static final ComposeResolverSupport.ServiceDescriptor KAFKA =
+        new ComposeResolverSupport.ServiceDescriptor("kafka", List.of("redpanda"), 9092);
+
     @Override
     public String getDisplayName() {
-        return "Docker Compose PostgreSQL";
+        return "Docker Compose Kafka";
     }
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName,
                                                        Map<String, Object> properties,
                                                        Map<String, Object> testResourcesConfig) {
-        return ComposeDatabaseResolverSupport.resolveJdbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        return ComposeResolverSupport.resolve(propertyName, properties, testResourcesConfig, KAFKA, context -> true, context -> "PLAINTEXT://" + context.hostPort());
     }
 }

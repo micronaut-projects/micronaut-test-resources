@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.postgres;
+package io.micronaut.testresources.pulsar;
 
 import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
-import io.micronaut.testresources.core.compose.ComposeDatabaseDescriptors;
-import io.micronaut.testresources.core.compose.ComposeDatabaseResolverSupport;
+import io.micronaut.testresources.core.compose.ComposeResolverSupport;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resolves PostgreSQL properties from Docker Compose services.
+ * Resolves Pulsar properties from Docker Compose services.
  */
-public final class PostgreSQLComposeTestResourceProvider extends PostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
+public final class PulsarComposeTestResourceProvider extends PulsarTestResourceProvider implements ComposeAwareTestResourcesResolver {
+    private static final ComposeResolverSupport.ServiceDescriptor PULSAR =
+        new ComposeResolverSupport.ServiceDescriptor("pulsar", List.of(), 6650);
+
     @Override
     public String getDisplayName() {
-        return "Docker Compose PostgreSQL";
+        return "Docker Compose Pulsar";
     }
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName,
                                                        Map<String, Object> properties,
                                                        Map<String, Object> testResourcesConfig) {
-        return ComposeDatabaseResolverSupport.resolveJdbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        return ComposeResolverSupport.resolve(propertyName, properties, testResourcesConfig, PULSAR, context -> true, context -> "pulsar://" + context.hostPort());
     }
 }

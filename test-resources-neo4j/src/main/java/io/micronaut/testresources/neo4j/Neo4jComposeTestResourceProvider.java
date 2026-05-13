@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.postgres;
+package io.micronaut.testresources.neo4j;
 
 import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
-import io.micronaut.testresources.core.compose.ComposeDatabaseDescriptors;
-import io.micronaut.testresources.core.compose.ComposeDatabaseResolverSupport;
+import io.micronaut.testresources.core.compose.ComposeResolverSupport;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Resolves PostgreSQL properties from Docker Compose services.
+ * Resolves Neo4j properties from Docker Compose services.
  */
-public final class PostgreSQLComposeTestResourceProvider extends PostgreSQLTestResourceProvider implements ComposeAwareTestResourcesResolver {
+public final class Neo4jComposeTestResourceProvider extends Neo4jTestResourceProvider implements ComposeAwareTestResourcesResolver {
+    private static final ComposeResolverSupport.ServiceDescriptor NEO4J =
+        new ComposeResolverSupport.ServiceDescriptor("neo4j", List.of(), 7687);
+
     @Override
     public String getDisplayName() {
-        return "Docker Compose PostgreSQL";
+        return "Docker Compose Neo4j";
     }
 
     @Override
     protected Optional<String> resolveWithoutContainer(String propertyName,
                                                        Map<String, Object> properties,
                                                        Map<String, Object> testResourcesConfig) {
-        return ComposeDatabaseResolverSupport.resolveJdbc(propertyName, properties, testResourcesConfig, ComposeDatabaseDescriptors.POSTGRES);
+        return ComposeResolverSupport.resolve(propertyName, properties, testResourcesConfig, NEO4J, context -> true, context -> "bolt://" + context.hostPort());
     }
 }

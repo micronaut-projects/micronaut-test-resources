@@ -17,3 +17,9 @@ def writeDefaultTestResourceImages = tasks.register("writeDefaultTestResourceIma
 }
 
 sourceSets.main.java.srcDir(writeDefaultTestResourceImages.flatMap { it.outputDirectory })
+
+dependencies {
+    api(mn.micronaut.json.core)
+
+    compileOnly(mnSerde.micronaut.serde.jackson)
+}

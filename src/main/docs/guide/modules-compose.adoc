@@ -3,6 +3,9 @@ This support is opt-in and intended for development and test execution only.
 
 dependency:micronaut-test-resources-compose[groupId="io.micronaut.testresources", scope="test"]
 
+Add the normal Test Resources provider modules for the services that should be resolved from Compose.
+For example, Redis and MongoDB Compose services require `micronaut-test-resources-redis`, `micronaut-test-resources-mongodb`, and `micronaut-test-resources-compose` on the classpath.
+
 Enable Compose support with the `test-resources.compose.enabled` property:
 
 [configuration]
@@ -28,7 +31,8 @@ test-resources:
       - test
 ----
 
-Compose matching supports the same property families implemented by Micronaut Test Resources providers, including JDBC, R2DBC, Hibernate Reactive, Redis, RabbitMQ, Kafka, MongoDB, LocalStack, OpenSearch, MinIO, OAuth2 Keycloak, and the other service modules listed in this guide.
+Compose matching is implemented by provider-owned resolvers.
+The Compose module currently makes PostgreSQL, Redis, RabbitMQ, and MongoDB Compose resolvers visible when the corresponding provider modules are also on the classpath.
 When a matching Compose service is found, the Compose value is returned first.
 When no Compose service matches, the existing Test Resources provider continues to handle the property.
 
@@ -56,7 +60,6 @@ services:
 ----
 
 With this Compose file, Test Resources can provide `datasources.default.url`, `datasources.default.username`, `datasources.default.password`, `datasources.default.driver-class-name`, and `redis.uri`.
-The same database service can also satisfy matching `r2dbc.datasources.<name>.*` and `jpa.<name>.properties.hibernate.connection.*` properties when the requested database type matches the Compose service.
 
 .RabbitMQ
 [source,yaml]
@@ -84,7 +87,7 @@ labels:
   io.micronaut.test-resources.datasource: inventory
 ----
 
-The `io.micronaut.test-resources.service` label accepts the provider service name, such as `postgres`, `mysql`, `mariadb`, `mssql`, `oracle`, `redis`, `rabbitmq`, `kafka`, `mongodb`, `localstack`, `opensearch`, `elasticsearch`, `minio`, `keycloak`, or `wiremock`.
+The `io.micronaut.test-resources.service` label accepts the provider service name, such as `postgres`, `redis`, `rabbitmq`, or `mongodb`.
 Use credential labels such as `io.micronaut.test-resources.username`, `io.micronaut.test-resources.password`, and `io.micronaut.test-resources.database` when the Compose image does not use the standard environment variables for that service.
 
 You can exclude a Compose service from Test Resources matching:

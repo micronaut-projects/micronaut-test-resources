@@ -1,1 +1,4 @@
-io.micronaut.testresources.compose.ComposeTestResourcesResolver
+io.micronaut.testresources.postgres.PostgreSQLComposeTestResourceProvider
+io.micronaut.testresources.redis.RedisComposeTestResourceProvider
+io.micronaut.testresources.rabbitmq.RabbitMQComposeTestResourceProvider
+io.micronaut.testresources.mongodb.MongoDBComposeTestResourceProvider

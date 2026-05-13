@@ -7,6 +7,8 @@ import spock.lang.Timeout
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.regex.Pattern
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 
 @Timeout(600)
 class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification {
@@ -24,6 +26,12 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
 
     @TempDir
     Path tempDir
+    private final List<Path> gradleUserHomes = []
+
+    def cleanup() {
+        gradleUserHomes.each { stopGradleDaemons(it) }
+        gradleUserHomes.clear()
+    }
 
     def "standalone Gradle project writes IntelliJ IDEA datasource export file"() {
         given:
@@ -37,7 +45,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
         writeStandaloneProject(sampleProject, "intellij-export-sample", outputFile, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
 
         when:
-        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
+        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "--no-parallel", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
         CommandResult build = runGradle(repoRoot, [
             "--console=plain",
             "--no-daemon",
@@ -66,6 +74,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
         Path repoRoot = findRepositoryRoot()
         Path mavenRepo = tempDir.resolve("maven-repo")
         Path gradleUserHome = tempDir.resolve("gradle-user-home")
+        gradleUserHomes << gradleUserHome
         Path firstProject = tempDir.resolve("first-project")
         Path secondProject = tempDir.resolve("second-project")
         Path firstOutput = firstProject.resolve(IntellijIdeaDatasourceExporter.DEFAULT_OUTPUT_PATH)
@@ -77,7 +86,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
         writeStandaloneProject(secondProject, "intellij-export-second", null, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
 
         when:
-        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
+        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "--no-parallel", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
         CommandResult firstBuild = runGradle(repoRoot, [
             "--console=plain",
             "--gradle-user-home", gradleUserHome.toString(),
@@ -263,9 +272,31 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
             .directory(repoRoot.toFile())
             .redirectErrorStream(true)
             .start()
-        String output = process.inputStream.text
-        int exitCode = process.waitFor()
-        new CommandResult(exitCode, output)
+        CompletableFuture<String> output = CompletableFuture.supplyAsync { process.inputStream.text }
+        if (!process.waitFor(5, TimeUnit.MINUTES)) {
+            destroyProcessTree(process)
+            return new CommandResult(124, outputNow(output) + "\nTimed out running: ${command.join(' ')}")
+        }
+        new CommandResult(process.exitValue(), outputNow(output))
+    }
+
+    private static void stopGradleDaemons(Path gradleUserHome) {
+        Path repoRoot = findRepositoryRoot()
+        runGradle(repoRoot, ["--console=plain", "--gradle-user-home", gradleUserHome.toString(), "--stop"])
+    }
+
+    private static void destroyProcessTree(Process process) {
+        process.descendants().forEach { it.destroyForcibly() }
+        process.destroyForcibly()
+        process.waitFor(10, TimeUnit.SECONDS)
+    }
+
+    private static String outputNow(CompletableFuture<String> output) {
+        try {
+            return output.get(10, TimeUnit.SECONDS)
+        } catch (Exception ignored) {
+            return ""
+        }
     }
 
     private record CommandResult(int exitCode, String output) {

@@ -27,7 +27,16 @@ class ComposeResolverSupportTest extends Specification {
     Path tempDir
 
     def cleanup() {
-        ComposeResolverSupport.projectManager = new ComposeProjectManager()
+        ComposeResolverSupport.projectManager = null
+    }
+
+    def "checking whether Compose is enabled does not initialize the project manager"() {
+        given:
+        ComposeResolverSupport.projectManager = null
+
+        expect:
+        ComposeResolverSupport.isEnabled(["compose.enabled": true])
+        ComposeResolverSupport.projectManager == null
     }
 
     def "resolves a matching Compose service before container fallback"() {

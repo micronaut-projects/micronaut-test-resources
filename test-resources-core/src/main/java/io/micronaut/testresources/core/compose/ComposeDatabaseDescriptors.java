@@ -24,10 +24,17 @@ import java.util.Set;
  */
 @Internal
 public final class ComposeDatabaseDescriptors {
+    private static final String POSTGRES_NAME = "postgres";
+    private static final String MYSQL_NAME = "mysql";
+    private static final String MARIADB_NAME = "mariadb";
+    private static final String MSSQL_NAME = "mssql";
+    private static final String ORACLE_NAME = "oracle";
+    private static final String TEST = "test";
+
     public static final ComposeDatabaseResolverSupport.DatabaseDescriptor POSTGRES =
         new ComposeDatabaseResolverSupport.DatabaseDescriptor(
-            "postgres",
-            Set.of("postgres", "postgresql", "pg"),
+            POSTGRES_NAME,
+            Set.of(POSTGRES_NAME, "postgresql", "pg"),
             5432,
             "jdbc:postgresql",
             "postgresql",
@@ -35,47 +42,47 @@ public final class ComposeDatabaseDescriptors {
             "POSTGRES_USER",
             "POSTGRES_PASSWORD",
             "POSTGRES_DB",
-            "postgres",
-            "postgres",
+            POSTGRES_NAME,
+            POSTGRES_NAME,
             null
         );
     public static final ComposeDatabaseResolverSupport.DatabaseDescriptor MYSQL =
         new ComposeDatabaseResolverSupport.DatabaseDescriptor(
-            "mysql",
-            Set.of("mysql"),
+            MYSQL_NAME,
+            Set.of(MYSQL_NAME),
             3306,
             "jdbc:mysql",
-            "mysql",
+            MYSQL_NAME,
             "com.mysql.cj.jdbc.Driver",
             "MYSQL_USER",
             "MYSQL_PASSWORD",
             "MYSQL_DATABASE",
-            "test",
-            "test",
-            "test"
+            TEST,
+            TEST,
+            TEST
         );
     public static final ComposeDatabaseResolverSupport.DatabaseDescriptor MARIADB =
         new ComposeDatabaseResolverSupport.DatabaseDescriptor(
-            "mariadb",
-            Set.of("mariadb", "maria"),
+            MARIADB_NAME,
+            Set.of(MARIADB_NAME, "maria"),
             3306,
             "jdbc:mariadb",
-            "mariadb",
+            MARIADB_NAME,
             "org.mariadb.jdbc.Driver",
             "MARIADB_USER",
             "MARIADB_PASSWORD",
             "MARIADB_DATABASE",
-            "test",
-            "test",
-            "test"
+            TEST,
+            TEST,
+            TEST
         );
     public static final ComposeDatabaseResolverSupport.DatabaseDescriptor MSSQL =
         new ComposeDatabaseResolverSupport.DatabaseDescriptor(
-            "mssql",
-            Set.of("mssql", "sqlserver", "sql-server", "microsoftsqlserver"),
+            MSSQL_NAME,
+            Set.of(MSSQL_NAME, "sqlserver", "sql-server", "microsoftsqlserver"),
             1433,
             "jdbc:sqlserver",
-            "mssql",
+            MSSQL_NAME,
             "com.microsoft.sqlserver.jdbc.SQLServerDriver",
             "MSSQL_USER",
             "MSSQL_PASSWORD",
@@ -86,17 +93,17 @@ public final class ComposeDatabaseDescriptors {
         );
     public static final ComposeDatabaseResolverSupport.DatabaseDescriptor ORACLE =
         new ComposeDatabaseResolverSupport.DatabaseDescriptor(
-            "oracle",
-            Set.of("oracle", "oracle-free", "oracle-xe"),
+            ORACLE_NAME,
+            Set.of(ORACLE_NAME, "oracle-free", "oracle-xe"),
             1521,
             "jdbc:oracle:thin",
-            "oracle",
+            ORACLE_NAME,
             "oracle.jdbc.OracleDriver",
             "ORACLE_USER",
             "ORACLE_PASSWORD",
             "ORACLE_DATABASE",
-            "test",
-            "test",
+            TEST,
+            TEST,
             "freepdb1"
         );
 

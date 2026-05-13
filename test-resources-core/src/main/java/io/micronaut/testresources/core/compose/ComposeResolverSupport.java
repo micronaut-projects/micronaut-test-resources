@@ -39,7 +39,7 @@ public final class ComposeResolverSupport {
     public static final String USERNAME_LABEL = ComposeLabels.USERNAME;
     public static final String PASSWORD_LABEL = ComposeLabels.PASSWORD;
     public static final String DATABASE_LABEL = ComposeLabels.DATABASE;
-    static ComposeProjectManager projectManager = new ComposeProjectManager();
+    static ComposeProjectManager projectManager;
 
     private static final Logger LOG = LoggerFactory.getLogger(ComposeResolverSupport.class);
 
@@ -64,7 +64,7 @@ public final class ComposeResolverSupport {
             return Optional.empty();
         }
         try {
-            return findSingle(projectManager.getOrCreate(configuration), descriptor, additionalFilter)
+            return findSingle(projectManager().getOrCreate(configuration), descriptor, additionalFilter)
                 .map(resolver)
                 .filter(value -> value != null && !value.isBlank());
         } catch (ComposeCliException ex) {
@@ -74,7 +74,10 @@ public final class ComposeResolverSupport {
     }
 
     public static synchronized void close() throws IOException {
-        projectManager.close();
+        if (projectManager != null) {
+            projectManager.close();
+            projectManager = null;
+        }
     }
 
     public static String hostPort(ComposePort port) {
@@ -124,6 +127,13 @@ public final class ComposeResolverSupport {
 
     private static String normalize(String value) {
         return value == null ? "" : value.toLowerCase(Locale.ROOT).replace("-", "").replace("_", "");
+    }
+
+    private static synchronized ComposeProjectManager projectManager() {
+        if (projectManager == null) {
+            projectManager = new ComposeProjectManager();
+        }
+        return projectManager;
     }
 
     /**

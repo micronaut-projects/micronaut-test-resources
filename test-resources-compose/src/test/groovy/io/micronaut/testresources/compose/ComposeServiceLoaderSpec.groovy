@@ -15,16 +15,20 @@
  */
 package io.micronaut.testresources.compose
 
+import io.micronaut.testresources.core.TestResourcesResolver
+import io.micronaut.testresources.core.ToggableTestResourcesResolver
+import io.micronaut.testresources.core.compose.ComposeResolverSupport
 import spock.lang.Specification
 
 class ComposeServiceLoaderSpec extends Specification {
 
+    def cleanup() {
+        ComposeResolverSupport.close()
+    }
+
     def "compose module advertises provider-owned resolvers across supported modules"() {
         when:
-        def providers = getClass().classLoader
-                .getResource("META-INF/services/io.micronaut.testresources.core.TestResourcesResolver")
-                .readLines()
-                .findAll { !it.blank && !it.startsWith("#") }
+        def providers = advertisedProviders()
 
         then:
         providers.containsAll([
@@ -39,5 +43,46 @@ class ComposeServiceLoaderSpec extends Specification {
                 "io.micronaut.testresources.wiremock.WireMockComposeTestResourceProvider"
         ])
         providers.every { it.endsWith("ComposeTestResourceProvider") }
+    }
+
+    def "advertised Compose providers expose resolver metadata without starting containers"() {
+        when:
+        def resolvers = ServiceLoader.load(TestResourcesResolver, getClass().classLoader)
+                .findAll { it.class.name.endsWith("ComposeTestResourceProvider") }
+                .sort { it.class.name }
+
+        then:
+        resolvers*.class.name == advertisedProviders().sort()
+
+        and:
+        resolvers.every { resolver ->
+            resolver.displayName.startsWith("Docker Compose ")
+            resolver.order == ComposeResolverSupport.ORDER
+            resolver instanceof ToggableTestResourcesResolver
+            resolver.name.startsWith("compose.")
+            resolver.isEnabled(["compose.enabled": true])
+            !resolver.isEnabled(["compose.enabled": false])
+        }
+    }
+
+    def "advertised Compose providers ignore unsupported properties without starting containers"() {
+        given:
+        def resolvers = ServiceLoader.load(TestResourcesResolver, getClass().classLoader)
+                .findAll { it.class.name.endsWith("ComposeTestResourceProvider") }
+
+        expect:
+        resolvers
+        resolvers.every { resolver ->
+            def method = resolver.class.getDeclaredMethod("resolveWithoutContainer", String, Map, Map)
+            method.accessible = true
+            method.invoke(resolver, "unsupported.compose.property", [:], [:]).empty
+        }
+    }
+
+    private List<String> advertisedProviders() {
+        getClass().classLoader
+                .getResource("META-INF/services/io.micronaut.testresources.core.TestResourcesResolver")
+                .readLines()
+                .findAll { !it.blank && !it.startsWith("#") }
     }
 }

@@ -12,8 +12,10 @@ dependencies {
     testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))
 }
 
-// We allow at most 2 containers to run in parallel on CI
+// Ryuk is disabled on GitHub Actions, so each test JVM falls back to JVM shutdown
+// cleanup. Keep container-backed test tasks serialized there to avoid concurrent
+// Docker prune/pull races in containerd.
 ParallelGateService.requiresResource(project,
         "containers",
-        micronautBuild.environment.isGithubAction().map { isCi -> isCi ? 2 : Runtime.getRuntime().availableProcessors() }.get()
+        micronautBuild.environment.isGithubAction().map { isCi -> isCi ? 1 : Runtime.getRuntime().availableProcessors() }.get()
 )

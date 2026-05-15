@@ -36,11 +36,19 @@ interface ComposeCli {
     ComposeCommandResult run(ComposeConfiguration configuration, List<String> arguments);
 
     final class Default implements ComposeCli {
+        private final List<String> commandPrefix;
+
+        Default() {
+            this(List.of("docker", "compose"));
+        }
+
+        Default(List<String> commandPrefix) {
+            this.commandPrefix = List.copyOf(commandPrefix);
+        }
+
         @Override
         public ComposeCommandResult run(ComposeConfiguration configuration, List<String> arguments) {
-            List<String> command = new ArrayList<>();
-            command.add("docker");
-            command.add("compose");
+            List<String> command = new ArrayList<>(commandPrefix);
             for (Path file : configuration.files()) {
                 command.add("-f");
                 command.add(file.toString());

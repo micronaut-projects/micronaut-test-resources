@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.kafka;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import org.testcontainers.containers.GenericContainer;
 
 /**
@@ -22,7 +23,7 @@ import org.testcontainers.containers.GenericContainer;
  */
 public class KafkaConnectTestResourceProvider extends AbstractKafkaServiceTestResourceProvider {
     public static final String KAFKA_CONNECT_URL = "kafka.connect.url";
-    public static final String DEFAULT_IMAGE = "confluentinc/cp-kafka-connect:8.2.0";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_KAFKA_CONNECT_IMAGE;
     public static final String DISPLAY_NAME = "Kafka Connect";
     public static final String SIMPLE_NAME = "kafka-connect";
     public static final int PORT = 8083;

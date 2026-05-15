@@ -1,5 +1,6 @@
 package io.micronaut.testresources.kafka
 
+import io.micronaut.testresources.core.DefaultTestResourceImages
 import io.micronaut.testresources.core.Scope
 import io.micronaut.testresources.testcontainers.AbstractTestContainersSpec
 import io.micronaut.testresources.testcontainers.TestContainers
@@ -101,9 +102,9 @@ class KafkaServicesTest extends AbstractTestContainersSpec {
 
     def "declares default images"() {
         expect:
-        KafkaSchemaRegistryTestResourceProvider.DEFAULT_IMAGE == "confluentinc/cp-schema-registry:8.2.0"
-        KafkaConnectTestResourceProvider.DEFAULT_IMAGE == "confluentinc/cp-kafka-connect:8.2.0"
-        KafkaKsqlDbTestResourceProvider.DEFAULT_IMAGE == "confluentinc/cp-ksqldb-server:8.2.0"
+        KafkaSchemaRegistryTestResourceProvider.DEFAULT_IMAGE == DefaultTestResourceImages.DEFAULT_KAFKA_SCHEMA_REGISTRY_IMAGE
+        KafkaConnectTestResourceProvider.DEFAULT_IMAGE == DefaultTestResourceImages.DEFAULT_KAFKA_CONNECT_IMAGE
+        KafkaKsqlDbTestResourceProvider.DEFAULT_IMAGE == DefaultTestResourceImages.DEFAULT_KAFKA_KSQLDB_IMAGE
     }
 
     def "only publishes service URL properties when requested"() {

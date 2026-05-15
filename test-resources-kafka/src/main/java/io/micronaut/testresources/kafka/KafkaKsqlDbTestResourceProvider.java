@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.kafka;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import org.testcontainers.containers.GenericContainer;
 
 /**
@@ -22,7 +23,7 @@ import org.testcontainers.containers.GenericContainer;
  */
 public class KafkaKsqlDbTestResourceProvider extends AbstractKafkaServiceTestResourceProvider {
     public static final String KAFKA_KSQLDB_URL = "kafka.ksqldb.url";
-    public static final String DEFAULT_IMAGE = "confluentinc/cp-ksqldb-server:8.2.0";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_KAFKA_KSQLDB_IMAGE;
     public static final String DISPLAY_NAME = "Kafka ksqlDB";
     public static final String SIMPLE_NAME = "kafka-ksqldb";
     public static final int PORT = 8088;

@@ -31,15 +31,15 @@ Each service depends on the Kafka broker container and uses the same test resour
 |Resolved property |Default image |REST port
 
 |`kafka.schema.registry.url`
-|`confluentinc/cp-schema-registry:8.2.0`
+|`{default-image-kafka-schema-registry}`
 |`8081`
 
 |`kafka.connect.url`
-|`confluentinc/cp-kafka-connect:8.2.0`
+|`{default-image-kafka-connect}`
 |`8083`
 
 |`kafka.ksqldb.url`
-|`confluentinc/cp-ksqldb-server:8.2.0`
+|`{default-image-kafka-ksqldb}`
 |`8088`
 |===
 
@@ -58,23 +58,6 @@ kafka:
     url: ${kafka.connect.url}
   ksqldb:
     url: ${kafka.ksqldb.url}
-----
-
-Default images can be overwritten with the standard container image configuration:
-
-[configuration]
-----
-test-resources:
-  containers:
-    kafka-schema-registry:
-      image-name: confluentinc/cp-schema-registry
-      image-tag: 8.2.0
-    kafka-connect:
-      image-name: confluentinc/cp-kafka-connect
-      image-tag: 8.2.0
-    kafka-ksqldb:
-      image-name: confluentinc/cp-ksqldb-server
-      image-tag: 8.2.0
 ----
 
 These REST APIs are intended for local test infrastructure.

@@ -43,7 +43,7 @@ final class KafkaServices {
             .withListener(KAFKA_INTERNAL_BOOTSTRAP_SERVERS);
     }
 
-    static KafkaContainer startKafka(Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+    static synchronized KafkaContainer startKafka(Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         new KafkaTestResourceProvider().resolve(
             KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS,
             requestedProperties,

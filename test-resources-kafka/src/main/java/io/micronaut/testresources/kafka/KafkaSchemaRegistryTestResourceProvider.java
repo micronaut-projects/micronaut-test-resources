@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.kafka;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import org.testcontainers.containers.GenericContainer;
 
 /**
@@ -22,7 +23,7 @@ import org.testcontainers.containers.GenericContainer;
  */
 public class KafkaSchemaRegistryTestResourceProvider extends AbstractKafkaServiceTestResourceProvider {
     public static final String KAFKA_SCHEMA_REGISTRY_URL = "kafka.schema.registry.url";
-    public static final String DEFAULT_IMAGE = "confluentinc/cp-schema-registry:8.2.0";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_KAFKA_SCHEMA_REGISTRY_IMAGE;
     public static final String DISPLAY_NAME = "Kafka Schema Registry";
     public static final String SIMPLE_NAME = "kafka-schema-registry";
     public static final int PORT = 8081;

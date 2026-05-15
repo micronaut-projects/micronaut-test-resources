@@ -103,7 +103,7 @@ class KafkaServicesTest extends AbstractTestContainersSpec {
         expect:
         KafkaSchemaRegistryTestResourceProvider.DEFAULT_IMAGE == "confluentinc/cp-schema-registry:8.2.0"
         KafkaConnectTestResourceProvider.DEFAULT_IMAGE == "confluentinc/cp-kafka-connect:8.2.0"
-        KafkaKsqlDbTestResourceProvider.DEFAULT_IMAGE == "confluentinc/ksqldb-server:0.29.0"
+        KafkaKsqlDbTestResourceProvider.DEFAULT_IMAGE == "confluentinc/cp-ksqldb-server:8.2.0"
     }
 
     def "only publishes service URL properties when requested"() {

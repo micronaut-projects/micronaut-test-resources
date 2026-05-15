@@ -32,7 +32,7 @@ import java.util.Optional;
  */
 public class KafkaKsqlDbTestResourceProvider extends AbstractTestContainersProvider<GenericContainer<?>> {
     public static final String KAFKA_KSQLDB_URL = "kafka.ksqldb.url";
-    public static final String DEFAULT_IMAGE = "confluentinc/ksqldb-server:0.29.0";
+    public static final String DEFAULT_IMAGE = "confluentinc/cp-ksqldb-server:8.2.0";
     public static final String DISPLAY_NAME = "Kafka ksqlDB";
     public static final String SIMPLE_NAME = "kafka-ksqldb";
     public static final int PORT = 8088;

@@ -39,7 +39,7 @@ Each service depends on the Kafka broker container and uses the same test resour
 |`8083`
 
 |`kafka.ksqldb.url`
-|`confluentinc/ksqldb-server:0.29.0`
+|`confluentinc/cp-ksqldb-server:8.2.0`
 |`8088`
 |===
 
@@ -73,8 +73,8 @@ test-resources:
       image-name: confluentinc/cp-kafka-connect
       image-tag: 8.2.0
     kafka-ksqldb:
-      image-name: confluentinc/ksqldb-server
-      image-tag: 0.29.0
+      image-name: confluentinc/cp-ksqldb-server
+      image-tag: 8.2.0
 ----
 
 These REST APIs are intended for local test infrastructure.

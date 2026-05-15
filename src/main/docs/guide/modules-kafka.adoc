@@ -46,7 +46,26 @@ Each service depends on the Kafka broker container and uses the same test resour
 The returned values are host-accessible `http://` URLs using random Testcontainers host ports.
 The containers communicate with Kafka on an internal Docker network, so no fixed host port is required.
 
-Resolve one of the listed URL properties when a service should be started.
+Request one of the listed URL properties when a service should be started.
+For example, a test-only bean can require and inject the Schema Registry URL:
+
+[source,java]
+----
+import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Value;
+import jakarta.inject.Singleton;
+
+@Singleton
+@Requires(property = "kafka.schema.registry.url")
+class SchemaRegistryClientConfiguration {
+
+    SchemaRegistryClientConfiguration(
+            @Value("${kafka.schema.registry.url}") String schemaRegistryUrl) {
+        // Configure a Schema Registry client for tests.
+    }
+}
+----
+
 Test Resources will provide the URL value for the matching service and start Kafka as a dependency.
 
 These REST APIs are intended for local test infrastructure.

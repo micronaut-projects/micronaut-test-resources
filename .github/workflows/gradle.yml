@@ -68,7 +68,7 @@ jobs:
           GH_TOKEN_PUBLIC_REPOS_READONLY: ${{ secrets.GH_TOKEN_PUBLIC_REPOS_READONLY }}
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
         run: |
-          ./gradlew check jacocoReport --no-daemon --no-parallel --continue
+          ./gradlew check jacocoReport --no-daemon --continue
 
       - name: "🔎 Run static analysis"
         if: env.SONAR_TOKEN_AVAILABLE == 'true' && matrix.java == '25'

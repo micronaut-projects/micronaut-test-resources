@@ -33,8 +33,17 @@ test-resources:
 
 Compose matching is implemented by provider-owned resolvers.
 The Compose module makes Compose resolvers visible for the supported database, messaging, storage, search, discovery, identity, and single-service provider modules.
-When a matching Compose service is found, the Compose value is returned first.
-When no Compose service matches, the existing Test Resources provider continues to handle the property.
+Compose resolvers run before the matching default Testcontainers provider.
+For supported modules, enabling Compose disables the original provider instance and uses the Compose-aware provider variant instead.
+That variant first tries to resolve the missing property from Compose.
+When a matching Compose service is found, the Compose value is returned and no separate default provider container is started.
+When no Compose service matches, the same provider falls back to the existing Testcontainers startup behavior.
+
+This means inference still works through the existing provider module.
+For example, if inference determines that `datasources.default.url` is missing and the PostgreSQL provider is available, the PostgreSQL Compose-aware provider tries Compose first.
+If exactly one matching Compose service can provide the datasource, Test Resources uses it.
+If Compose is disabled or no unambiguous PostgreSQL service is available, the normal PostgreSQL Test Resources container path is used.
+If multiple Compose services could satisfy the same property, Test Resources logs the ambiguity and falls back instead of choosing one arbitrarily.
 
 .PostgreSQL and Redis
 [source,yaml]
@@ -115,6 +124,37 @@ test-resources:
 When `start` is `false`, Test Resources only inspects already-running services.
 When `stop-managed` is `true`, shutdown stops only services that Test Resources started for the current Compose project.
 Services that were already running before Test Resources started are reused and left running.
+
+The build plugins still manage the lifecycle of the Test Resources server.
+Compose lifecycle is tied to that server process, so keep-alive settings affect how long Test Resources keeps ownership of Compose services it started:
+
+[cols="1,1,1,1", options="header"]
+|===
+| Test Resources server mode
+| `compose.start`
+| `compose.stop-managed`
+| Compose lifecycle result
+
+| Per-build server, no keep-alive
+| `true`
+| `true`
+| Test Resources starts missing Compose services for the build and stops only those services when the server shuts down. Services that were already running are left running.
+
+| Keep-alive/shared server
+| `true`
+| `true`
+| Test Resources starts missing Compose services once and keeps them available while the server remains alive. They are stopped only when that server process actually shuts down.
+
+| Any server mode
+| `true`
+| `false`
+| Test Resources may start Compose services, but it does not stop them. Lifecycle cleanup is left to the user or CI job.
+
+| Any server mode
+| `false`
+| Any value
+| Test Resources only inspects already-running Compose services. It does not start or stop Compose services.
+|===
 
 The Compose resolver requires Docker Compose V2 through the Docker CLI.
 If Docker, Compose V2, a Compose file, a published host port, or an unambiguous mapping is not available, diagnostics are written to the logs and Test Resources falls back to the normal provider when possible.

@@ -63,7 +63,7 @@ final class KafkaServices {
 
     static Network network(Map<String, Object> requestedProperties) {
         String scope = Scope.from(requestedProperties).toString();
-        return TestContainers.network(scope.isEmpty() ? "kafka" : "kafka-" + scope);
+        return TestContainers.network(scope.isEmpty() ? KAFKA_NETWORK_ALIAS : KAFKA_NETWORK_ALIAS + "-" + scope);
     }
 
     static String httpUrl(GenericContainer<?> container, int port) {

@@ -153,6 +153,8 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
                     } else {
                         throw e;
                     }
+                } catch (TimeoutException e) {
+                    topicsToReverify.add(topic.name());
                 }
             }
             verifyExistingTopicPartitions(adminClient, topicsToReverify, configuration);

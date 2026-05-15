@@ -26,20 +26,20 @@ import org.apache.kafka.common.errors.TopicExistsException;
 import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.math.BigDecimal;
 
 
 /**
@@ -86,7 +86,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     @Override
     protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new KafkaContainer(imageName);
+        return KafkaServices.configureKafka(new KafkaContainer(imageName), requestedProperties);
     }
 
     @Override

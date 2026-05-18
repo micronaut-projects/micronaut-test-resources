@@ -19,4 +19,4 @@ In addition, the following properties will be resolved by test resources:
 
 Avoid placing both a LocalStack and a Floci module for the same AWS service on the same test classpath unless you explicitly disable one resolver, for example by setting `test-resources.containers.localstack.enabled` or `test-resources.containers.floci.enabled` to `false`.
 
-Floci's Testcontainers integration can mount the Docker socket for Docker-backed AWS services. Treat the Floci container as trusted infrastructure with the same Docker access as other containers that use `/var/run/docker.sock`.
+The upstream Floci Testcontainers integration currently bind-mounts the Docker socket into the container unconditionally. Micronaut Test Resources disables unsupported Floci services by default and only enables the Floci services represented by the modules on the test classpath, but you should still treat the Floci container as trusted infrastructure with Docker access through `/var/run/docker.sock`.

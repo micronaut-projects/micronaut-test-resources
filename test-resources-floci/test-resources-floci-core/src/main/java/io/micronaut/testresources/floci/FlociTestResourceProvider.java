@@ -42,6 +42,11 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
     private static final String DEFAULT_IMAGE = "floci/floci:1.5.17";
     private static final String NAME = "floci";
 
+    private static final String SERVICE_DYNAMODB = "dynamodb";
+    private static final String SERVICE_S3 = "s3";
+    private static final String SERVICE_SNS = "sns";
+    private static final String SERVICE_SQS = "sqs";
+
     private static final String AWS_ACCESS_KEY_ID = "aws.access-key-id";
     private static final String AWS_SECRET_KEY = "aws.secret-key";
     private static final String AWS_REGION = "aws.region";
@@ -104,7 +109,59 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
 
     @Override
     protected FlociContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new FlociContainer(imageName);
+        FlociContainer flociContainer = new FlociContainer(imageName);
+        configureServices(flociContainer, SERVICES.stream()
+            .map(FlociService::getServiceKind)
+            .collect(Collectors.toSet()));
+        return flociContainer;
+    }
+
+    static void configureServices(FlociContainer flociContainer, Set<String> serviceKinds) {
+        flociContainer.withAcmConfig(config -> config.enabled(false));
+        flociContainer.withApiGatewayConfig(config -> config.enabled(false));
+        flociContainer.withApiGatewayV2Config(config -> config.enabled(false));
+        flociContainer.withAppConfigConfig(config -> config.enabled(false));
+        flociContainer.withAppConfigDataConfig(config -> config.enabled(false));
+        flociContainer.withAthenaConfig(config -> config.enabled(false));
+        flociContainer.withBackupConfig(config -> config.enabled(false));
+        flociContainer.withBedrockRuntimeConfig(config -> config.enabled(false));
+        flociContainer.withCloudFormationConfig(config -> config.enabled(false));
+        flociContainer.withCloudWatchLogsConfig(config -> config.enabled(false));
+        flociContainer.withCloudWatchMetricsConfig(config -> config.enabled(false));
+        flociContainer.withCodeBuildConfig(config -> config.enabled(false));
+        flociContainer.withCodeDeployConfig(config -> config.enabled(false));
+        flociContainer.withCognitoConfig(config -> config.enabled(false));
+        flociContainer.withDynamoDbConfig(config -> config.enabled(serviceKinds.contains(SERVICE_DYNAMODB)));
+        flociContainer.withEc2Config(config -> config.enabled(false));
+        flociContainer.withEcrConfig(config -> config.enabled(false));
+        flociContainer.withEcsConfig(config -> config.enabled(false));
+        flociContainer.withEksConfig(config -> config.enabled(false));
+        flociContainer.withElastiCacheConfig(config -> config.enabled(false));
+        flociContainer.withElbV2Config(config -> config.enabled(false));
+        flociContainer.withEventBridgeConfig(config -> config.enabled(false));
+        flociContainer.withFirehoseConfig(config -> config.enabled(false));
+        flociContainer.withGlueConfig(config -> config.enabled(false));
+        flociContainer.withIamConfig(config -> config.enabled(false));
+        flociContainer.withKinesisConfig(config -> config.enabled(false));
+        flociContainer.withKmsConfig(config -> config.enabled(false));
+        flociContainer.withLambdaConfig(config -> config.enabled(false));
+        flociContainer.withMskConfig(config -> config.enabled(false));
+        flociContainer.withOpenSearchConfig(config -> config.enabled(false));
+        flociContainer.withPipesConfig(config -> config.enabled(false));
+        flociContainer.withPricingConfig(config -> config.enabled(false));
+        flociContainer.withRdsConfig(config -> config.enabled(false));
+        flociContainer.withResourceGroupsTaggingConfig(config -> config.enabled(false));
+        flociContainer.withRoute53Config(config -> config.enabled(false));
+        flociContainer.withS3Config(config -> config.enabled(serviceKinds.contains(SERVICE_S3)));
+        flociContainer.withSchedulerConfig(config -> config.enabled(false));
+        flociContainer.withSecretsManagerConfig(config -> config.enabled(false));
+        flociContainer.withSesConfig(config -> config.enabled(false));
+        flociContainer.withSnsConfig(config -> config.enabled(serviceKinds.contains(SERVICE_SNS)));
+        flociContainer.withSqsConfig(config -> config.enabled(serviceKinds.contains(SERVICE_SQS)));
+        flociContainer.withSsmConfig(config -> config.enabled(false));
+        flociContainer.withStepFunctionsConfig(config -> config.enabled(false));
+        flociContainer.withTextractConfig(config -> config.enabled(false));
+        flociContainer.withTransferFamilyConfig(config -> config.enabled(false));
     }
 
     @Override

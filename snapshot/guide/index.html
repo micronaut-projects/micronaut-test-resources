@@ -1420,6 +1420,76 @@ test-resources.containers.kafka.partitions=3</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_kafka_services">Kafka services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Kafka module can also start Confluent Schema Registry, Kafka Connect, and ksqlDB test containers.
+Each service depends on the Kafka broker container and uses the same test resources scope, so requesting a service URL starts Kafka if it is not already running and reuses the broker if <code>kafka.bootstrap.servers</code> was already resolved.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Resolved property</th>
+<th class="tableblock halign-left valign-top">Default image</th>
+<th class="tableblock halign-left valign-top">REST port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.schema.registry.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-schema-registry:8.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8081</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.connect.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-kafka-connect:8.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8083</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.ksqldb.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-ksqldb-server:8.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8088</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The returned values are host-accessible <code>http://</code> URLs using random Testcontainers host ports.
+The containers communicate with Kafka on an internal Docker network, so no fixed host port is required.</p>
+</div>
+<div class="paragraph">
+<p>Request one of the listed URL properties when a service should be started.
+For example, a test-only bean can require and inject the Schema Registry URL:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Value;
+import jakarta.inject.Singleton;
+
+@Singleton
+@Requires(property = "kafka.schema.registry.url")
+class SchemaRegistryClientConfiguration {
+
+    SchemaRegistryClientConfiguration(
+            @Value("${kafka.schema.registry.url}") String schemaRegistryUrl) {
+        // Configure a Schema Registry client for tests.
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Test Resources will provide the URL value for the matching service and start Kafka as a dependency.</p>
+</div>
+<div class="paragraph">
+<p>These REST APIs are intended for local test infrastructure.
+They are exposed without credentials on random localhost ports and should not be used as production service configuration.</p>
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -1431,6 +1501,8 @@ See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-
 </td>
 </tr>
 </table>
+</div>
+</div>
 </div>
 
 <h2 id="modules-mailpit"><a class="anchor" href="#modules-mailpit"></a>5.6 Mailpit</h2>

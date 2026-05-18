@@ -21,6 +21,10 @@ FROM couchbase/server:8.0.1 AS couchbase
 # property: test-resources.containers.elasticsearch.image-name
 FROM docker.elastic.co/elasticsearch/elasticsearch:9.2.1 AS elasticsearch
 
+# provider: floci
+# property: test-resources.containers.floci.image-name
+FROM floci/floci:1.5.17 AS floci
+
 # provider: hazelcast
 # property: test-resources.containers.hazelcast.image-name
 FROM hazelcast/hazelcast:5.6.0-slim AS hazelcast

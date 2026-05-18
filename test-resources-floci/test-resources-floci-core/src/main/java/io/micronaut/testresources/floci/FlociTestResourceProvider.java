@@ -16,6 +16,7 @@
 package io.micronaut.testresources.floci;
 
 import io.floci.testcontainers.FlociContainer;
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.utility.DockerImageName;
 
@@ -39,7 +40,6 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
 
     public static final String DISPLAY_NAME = "Floci";
 
-    private static final String DEFAULT_IMAGE = "floci/floci:1.5.17";
     private static final String NAME = "floci";
 
     private static final String SERVICE_DYNAMODB = "dynamodb";
@@ -104,7 +104,7 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
 
     @Override
     protected String getDefaultImageName() {
-        return DEFAULT_IMAGE;
+        return DefaultTestResourceImages.DEFAULT_FLOCI_IMAGE;
     }
 
     @Override

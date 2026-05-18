@@ -2,7 +2,7 @@ Micronaut Test Resources supports a subset of https://github.com/floci-io/floci[
 
 Floci is an alternative AWS emulator dependency family. It does not replace LocalStack automatically, and the LocalStack modules keep their existing behavior and configuration. Choose the Floci module for the AWS service you want to emulate instead of the corresponding LocalStack module.
 
-The default image can be overwritten by setting the `test-resources.containers.floci.image-name` property. The built-in default is pinned to `floci/floci:1.5.17`.
+The default image (`{default-image-floci}`) can be overwritten by setting the `test-resources.containers.floci.image-name` property.
 
 The following services are supported:
 

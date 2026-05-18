@@ -1,0 +1,13 @@
+plugins {
+    id 'io.micronaut.build.internal.floci-module'
+}
+
+description = """
+Provides support for Floci S3.
+"""
+
+dependencies {
+    implementation(project(":micronaut-test-resources-floci-core"))
+    testImplementation(testFixtures(project(":micronaut-test-resources-floci-core")))
+    testImplementation(libs.amazon.awssdk.v2.s3)
+}

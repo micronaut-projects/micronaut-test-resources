@@ -1,0 +1,18 @@
+plugins {
+    id 'io.micronaut.build.internal.floci-module'
+    id 'io.micronaut.build.internal.test-fixtures'
+}
+
+description = """
+Provides core support for launching Floci test containers.
+"""
+
+dependencies {
+    api(libs.managed.testcontainers.floci)
+    testFixturesApi(platform(mn.micronaut.core.bom))
+    testFixturesImplementation(mn.groovy)
+    testFixturesImplementation(libs.spock)
+    testFixturesApi(testFixtures(project(":micronaut-test-resources-testcontainers"))) {
+        because "exposes AbstractTestContainersSpec"
+    }
+}

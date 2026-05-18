@@ -1,0 +1,22 @@
+Micronaut Test Resources supports a subset of https://github.com/floci-io/floci[Floci] via its Testcontainers module.
+
+Floci is an alternative AWS emulator dependency family. It does not replace LocalStack automatically, and the LocalStack modules keep their existing behavior and configuration. Choose the Floci module for the AWS service you want to emulate instead of the corresponding LocalStack module.
+
+The default image can be overwritten by setting the `test-resources.containers.floci.image-name` property. The built-in default is pinned to `floci/floci:1.5.17`.
+
+The following services are supported:
+
+- S3, by providing the `aws.services.s3.endpoint-override` property
+- DynamoDB, by providing the `aws.services.dynamodb.endpoint-override` property
+- SQS, by providing the `aws.services.sqs.endpoint-override` property
+- SNS, by providing the `aws.services.sns.endpoint-override` property
+
+In addition, the following properties will be resolved by test resources:
+
+- `aws.access-key-id`
+- `aws.secret-key`
+- `aws.region`
+
+Avoid placing both a LocalStack and a Floci module for the same AWS service on the same test classpath unless you explicitly disable one resolver, for example by setting `test-resources.containers.localstack.enabled` or `test-resources.containers.floci.enabled` to `false`.
+
+Floci's Testcontainers integration can mount the Docker socket for Docker-backed AWS services. Treat the Floci container as trusted infrastructure with the same Docker access as other containers that use `/var/run/docker.sock`.

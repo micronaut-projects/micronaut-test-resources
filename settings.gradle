@@ -63,6 +63,14 @@ def localstackModules = [
         'sns'
 ]
 
+def flociModules = [
+        'core',
+        's3',
+        'dynamodb',
+        'sqs',
+        'sns'
+]
+
 include 'test-resources-bom'
 include 'test-resources-azure'
 include 'test-resources-build-tools'
@@ -115,6 +123,11 @@ localstackModules.each {
     String projectName = "test-resources-localstack-$it"
     include projectName
     project(":test-resources-localstack-$it").projectDir = file("test-resources-localstack/$projectName")
+}
+flociModules.each {
+    String projectName = "test-resources-floci-$it"
+    include projectName
+    project(":test-resources-floci-$it").projectDir = file("test-resources-floci/$projectName")
 }
 
 

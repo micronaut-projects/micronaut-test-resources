@@ -4,4 +4,10 @@ plugins {
     id "io.micronaut.build.internal.testcontainers-module"
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter("4.0.1")
+    }
+}
+
 ParallelGateService.requiresResource(project, "floci")

@@ -64,7 +64,9 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
     }
 
     @Override
+    @SuppressWarnings("java:S2095")
     protected HiveMQContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        // The container lifecycle is owned by AbstractTestContainersProvider via TestContainers.getOrCreate.
         return new HiveMQContainer(imageName)
             .withStartupTimeout(Duration.ofMinutes(2));
     }

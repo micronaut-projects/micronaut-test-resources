@@ -1,6 +1,7 @@
 package io.micronaut.testresources.floci
 
 import io.floci.testcontainers.FlociContainer
+import io.micronaut.testresources.core.DefaultTestResourceImages
 import org.testcontainers.utility.DockerImageName
 import spock.lang.Specification
 
@@ -8,7 +9,7 @@ class FlociTestResourceProviderTest extends Specification {
 
     def "only supported service modules are enabled"() {
         given:
-        def container = new FlociContainer(DockerImageName.parse("floci/floci:1.5.17"))
+        def container = new FlociContainer(DockerImageName.parse(DefaultTestResourceImages.DEFAULT_FLOCI_IMAGE))
 
         when:
         FlociTestResourceProvider.configureServices(container, ["s3", "sqs"] as Set)

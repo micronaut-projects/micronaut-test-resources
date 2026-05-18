@@ -15,7 +15,7 @@
     <script>hljs.initHighlightingOnLoad();</script>
     <link rel="stylesheet" href="../css/multi-language-sample.css"/>
     <script src="../js/docs.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
     <script type="text/javascript">
         function addJsClass(el) {
             var classes = document.body.className.split(" ");
@@ -23,7 +23,9 @@
             document.body.className = classes.join(" ");
         }
     </script>
-
+    <style type="text/css">
+        .lang-java { display: block }; .lang-python { display: block }; .lang-kotlin { display: block }; .lang-groovy { display: block }; 
+    </style>
 </head>
 
 <body class="body" id="docs" onload="addJsClass();" onhashchange="highlightMenu()">
@@ -48,19 +50,21 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#breaks"><strong>3</strong><span>Breaking Changes</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>4</strong><span>Quick Start</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#modules"><strong>5</strong><span>Supported Modules</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#debugging"><strong>7</strong><span>Debugging</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#architecture"><strong>8</strong><span>Architecture</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#testResourcesGuides"><strong>9</strong><span>Guides</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -95,67 +99,95 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-releaseHistory"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-breaks"><a href="#breaks"><strong>3</strong><span>Breaking Changes</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-modules"><a href="#modules"><strong>4</strong><span>Supported Modules</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>4</strong><span>Quick Start</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-databases"><a href="#modules-databases"><strong>4.1</strong><span>Databases</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-modules"><a href="#modules"><strong>5</strong><span>Supported Modules</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-jdbc"><a href="#modules-databases-jdbc"><strong>4.1.1</strong><span>JDBC</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-databases"><a href="#modules-databases"><strong>5.1</strong><span>Databases</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-r2dbc"><a href="#modules-databases-r2dbc"><strong>4.1.2</strong><span>R2DBC</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-jdbc"><a href="#modules-databases-jdbc"><strong>5.1.1</strong><span>JDBC</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-elasticsearch"><a href="#modules-elasticsearch"><strong>4.2</strong><span>Elasticsearch</span></a></div>
+        <div class="toc-item" style="margin-left:20px" id="toc-item-modules-databases-r2dbc"><a href="#modules-databases-r2dbc"><strong>5.1.2</strong><span>R2DBC</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opensearch"><a href="#modules-opensearch"><strong>4.3</strong><span>OpenSearch</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-elasticsearch"><a href="#modules-elasticsearch"><strong>5.2</strong><span>Elasticsearch</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>4.4</strong><span>Kafka</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-azure"><a href="#modules-azure"><strong>5.3</strong><span>Azure Storage</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>4.5</strong><span>Localstack</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opensearch"><a href="#modules-opensearch"><strong>5.4</strong><span>OpenSearch</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>4.6</strong><span>MongoDB</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-kafka"><a href="#modules-kafka"><strong>5.5</strong><span>Kafka</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>4.7</strong><span>MQTT</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mailpit"><a href="#modules-mailpit"><strong>5.6</strong><span>Mailpit</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>4.8</strong><span>Neo4j</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-pulsar"><a href="#modules-pulsar"><strong>5.7</strong><span>Pulsar</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>4.9</strong><span>RabbitMQ</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-localstack"><a href="#modules-localstack"><strong>5.8</strong><span>Localstack</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>4.10</strong><span>Redis</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-minio"><a href="#modules-minio"><strong>5.9</strong><span>MinIO</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>4.11</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-seaweedfs"><a href="#modules-seaweedfs"><strong>5.10</strong><span>SeaweedFS</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>4.12</strong><span>Generic Testcontainers support</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-couchbase"><a href="#modules-couchbase"><strong>5.11</strong><span>Couchbase</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>5</strong><span>Micronaut Test extensions</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mongodb"><a href="#modules-mongodb"><strong>5.12</strong><span>MongoDB</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-core"><a href="#extensions-core"><strong>5.1</strong><span>Core extension</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-mqtt"><a href="#modules-mqtt"><strong>5.13</strong><span>MQTT</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-junit-platform"><a href="#extensions-junit-platform"><strong>5.2</strong><span>JUnit Platform</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-neo4j"><a href="#modules-neo4j"><strong>5.14</strong><span>Neo4j</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-debugging"><a href="#debugging"><strong>6</strong><span>Debugging</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-opentelemetry"><a href="#modules-opentelemetry"><strong>5.15</strong><span>OpenTelemetry</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-debugging-intro"><a href="#debugging-intro"><strong>6.1</strong><span>Running the test resources service in debug mode</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-rabbitmq"><a href="#modules-rabbitmq"><strong>5.16</strong><span>RabbitMQ</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-control-panel"><a href="#modules-control-panel"><strong>6.2</strong><span>Control Panel</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-redis"><a href="#modules-redis"><strong>5.17</strong><span>Redis</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>7</strong><span>Architecture</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hazelcast"><a href="#modules-hazelcast"><strong>5.18</strong><span>Hazelcast</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>7.1</strong><span>The test resources server</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-infinispan"><a href="#modules-infinispan"><strong>5.19</strong><span>Infinispan</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>7.1.1</strong><span>Sharing containers between independent builds</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-wiremock"><a href="#modules-wiremock"><strong>5.20</strong><span>WireMock</span></a></div>
         
-        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-configuration"><a href="#architecture-configuration"><strong>7.1.2</strong><span>Configuring the server</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.21</strong><span>OAuth2 / Keycloak</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>7.2</strong><span>The test resources client</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.22</strong><span>Hashicorp Vault</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>7.3</strong><span>Embedded test resources</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-consul"><a href="#modules-hashicorp-consul"><strong>5.23</strong><span>Hashicorp Consul</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>7.4</strong><span>Implementing a test resource</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-solr"><a href="#modules-solr"><strong>5.24</strong><span>Solr</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-testResourcesGuides"><a href="#testResourcesGuides"><strong>8</strong><span>Guides</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-testcontainers"><a href="#modules-testcontainers"><strong>5.25</strong><span>Generic Testcontainers support</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-extensions"><a href="#extensions"><strong>6</strong><span>Micronaut Test extensions</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-core"><a href="#extensions-core"><strong>6.1</strong><span>Core extension</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-extensions-junit-platform"><a href="#extensions-junit-platform"><strong>6.2</strong><span>JUnit Platform</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-debugging"><a href="#debugging"><strong>7</strong><span>Debugging</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-debugging-intro"><a href="#debugging-intro"><strong>7.1</strong><span>Running the test resources service in debug mode</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-control-panel"><a href="#modules-control-panel"><strong>7.2</strong><span>Control Panel</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-architecture"><a href="#architecture"><strong>8</strong><span>Architecture</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-server"><a href="#architecture-server"><strong>8.1</strong><span>The test resources server</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-shared-server"><a href="#architecture-shared-server"><strong>8.1.1</strong><span>Sharing containers between independent builds</span></a></div>
+        
+        <div class="toc-item" style="margin-left:20px" id="toc-item-architecture-configuration"><a href="#architecture-configuration"><strong>8.1.2</strong><span>Configuring the server</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-client"><a href="#architecture-client"><strong>8.2</strong><span>The test resources client</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-architecture-embedded"><a href="#architecture-embedded"><strong>8.3</strong><span>Embedded test resources</span></a></div>
+        
+        <div class="toc-item" style="margin-left:10px" id="toc-item-implementing-test-resources"><a href="#implementing-test-resources"><strong>8.4</strong><span>Implementing a test resource</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-testResourcesGuides"><a href="#testResourcesGuides"><strong>9</strong><span>Guides</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -165,13 +197,13 @@
         <h1>Micronaut Test Resources</h1>
         <p></p>
         <p>Test resources integration (like Testcontainers) for Micronaut</p>
-        <p><strong>Version:</strong> 2.10.1 </p>
+        <p><strong>Version:</strong> 4.0.0 </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -198,7 +230,7 @@ If that property is set, then the test resource will not be used.</p>
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -211,10 +243,49 @@ If that property is set, then the test resource will not be used.</p>
 <p><a href="https://github.com/micronaut-projects/micronaut-test-resources/releases">https://github.com/micronaut-projects/micronaut-test-resources/releases</a></p>
 </div>
 
-<h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
+<h1 id="breaks"><a class="anchor" href="#breaks"></a>3 Breaking Changes</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/quickStart.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/breaks.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect2">
+<h3 id="_version_4_0_0">Version 4.0.0</h3>
+<div class="paragraph">
+<p>The remote test-resources RPC transport now uses a dedicated binary protocol instead of JSON.
+This is an intentional breaking change on the unreleased <code>4.0.x</code> line.</p>
+</div>
+<div class="paragraph">
+<p>Consequences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>pre-change clients cannot talk to post-change servers, and post-change clients cannot talk to pre-change servers</p>
+</li>
+<li>
+<p>direct JSON calls with tools such as <code>curl</code> or <code>httpie</code> are no longer a supported way to drive the RPC endpoints</p>
+</li>
+<li>
+<p>the supported debugging path is the documentation in this guide, server logs, and the control panel instead of ad hoc JSON requests</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_version_3_0_0">Version 3.0.0</h3>
+<div class="paragraph">
+<p>MongoDB now defaults to using the latest image. Previously it used MongoDB 5.</p>
+</div>
+</div>
+
+<h1 id="quickStart"><a class="anchor" href="#quickStart"></a>4 Quick Start</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/quickStart.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -249,10 +320,10 @@ POM or via the command-line).</p>
 <p>Please refer to the <a href="https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/test-resources.html">Maven plugin&#8217;s Test Resources documentation</a> for more information about configuring the test resources plugin.</p>
 </div>
 
-<h1 id="modules"><a class="anchor" href="#modules"></a>4 Supported Modules</h1>
+<h1 id="modules"><a class="anchor" href="#modules"></a>5 Supported Modules</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -262,10 +333,10 @@ POM or via the command-line).</p>
 <p>The following modules are provided with Micronaut Test Resources.</p>
 </div>
 
-<h2 id="modules-databases"><a class="anchor" href="#modules-databases"></a>4.1 Databases</h2>
+<h2 id="modules-databases"><a class="anchor" href="#modules-databases"></a>5.1 Databases</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-databases.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-databases.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -296,18 +367,25 @@ POM or via the command-line).</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.h2database.com/html/main.html">H2</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>h2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://mariadb.org/">MariaDB</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb:11.8.6</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.mysql.com/">MySQL</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mysql</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server:8.4.9</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/technologies/appdev/xe.html">Oracle Database XE</a></p></td>
@@ -328,19 +406,21 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres:18.3</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.microsoft.com/sql-server">Microsoft SQL Server</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mssql</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mcr.microsoft.com/mssql/server:2022-latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04</code></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Databases are supplied via a <a href="https://www.testcontainers.com/">Testcontainers</a> container.
+<p>Most databases are supplied via a <a href="https://www.testcontainers.com/">Testcontainers</a> container.
+H2 is containerless and starts a loopback-only in-memory TCP server for the lifetime of the test-resources process.
+Shared or remote H2 test resources are not supported at this time, so the H2 resolver stays disabled when <code>micronaut.test.resources.server.uri</code> is configured.
 It is possible to override the default image of the container by setting the following property in your application configuration:</p>
 </div>
 <div class="ulist">
@@ -528,10 +608,10 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 </div>
 </div>
 
-<h2 id="modules-databases-jdbc"><a class="anchor" href="#modules-databases-jdbc"></a>4.1.1 JDBC</h2>
+<h2 id="modules-databases-jdbc"><a class="anchor" href="#modules-databases-jdbc"></a>5.1.1 JDBC</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-databases-jdbc.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-databases-jdbc.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -552,7 +632,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <p><code>datasources.*.password</code></p>
 </li>
 <li>
-<p><code>datasources.*.dialect</code></p>
+<p><code>datasources.*.driver-class-name</code></p>
 </li>
 </ul>
 </div>
@@ -566,7 +646,7 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <div class="ulist">
 <ul>
 <li>
-<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgres</code>)</p>
+<p><code>datasources.*.db-type</code>: the kind of database (preferred, one of <code>h2</code>, <code>mariadb</code>, <code>mysql</code>, <code>oracle</code>, <code>oracle-xe</code>, <code>postgres</code>)</p>
 </li>
 <li>
 <p><code>datasources.*.dialect</code>: the dialect to use for the database (fallback)</p>
@@ -574,13 +654,313 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 </ul>
 </div>
 <div class="paragraph">
-<p><code>datasources.*.driverClassName</code> should be empty because JDBC driver from testcontainers has to be used for working with URI like 'jdcb:tc:postgres:14///db'</p>
+<p>Most JDBC databases are started via Testcontainers, so <code>datasources.*.driver-class-name</code> should usually be left empty because the JDBC driver from Testcontainers has to be used for URIs like <code>jdbc:tc:postgres:14:///db</code>.
+H2 is the exception: it is supported in JDBC mode only, starts a containerless loopback-only in-memory TCP server, and automatically resolves <code>org.h2.Driver</code>.
+Shared or remote H2 test resources are not supported at this time, so the H2 resolver stays disabled when <code>micronaut.test.resources.server.uri</code> is configured.</p>
+</div>
+<div class="paragraph">
+<p>H2 support in this module is currently limited to JDBC test resources. R2DBC and Hibernate Reactive H2 support are out of scope for this feature.</p>
+</div>
+<div class="paragraph">
+<p>To opt multiple logical JDBC datasources into the same physical test resource, set <code>datasources.&lt;name&gt;.test-resources.resource-name</code> to the same value on each datasource:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">datasources.read.dialect=POSTGRES
+datasources.read.test-resources.resource-name=main-db
+datasources.write.dialect=POSTGRES
+datasources.write.test-resources.resource-name=main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">datasources:
+  read:
+    dialect: POSTGRES
+    test-resources:
+      resource-name: main-db
+  write:
+    dialect: POSTGRES
+    test-resources:
+      resource-name: main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources]
+  [datasources.read]
+    dialect="POSTGRES"
+    [datasources.read.test-resources]
+      resource-name="main-db"
+  [datasources.write]
+    dialect="POSTGRES"
+    [datasources.write.test-resources]
+      resource-name="main-db"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">datasources {
+  read {
+    dialect = "POSTGRES"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+  write {
+    dialect = "POSTGRES"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  datasources {
+    read {
+      dialect = "POSTGRES"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+    write {
+      dialect = "POSTGRES"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "datasources": {
+    "read": {
+      "dialect": "POSTGRES",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    },
+    "write": {
+      "dialect": "POSTGRES",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If those datasources also declare different <code>datasources.&lt;name&gt;.db-name</code> values, Micronaut Test Resources will create separate databases on the shared PostgreSQL, MySQL, or MariaDB container and return datasource-specific URLs:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">datasources.read.dialect=POSTGRES
+datasources.read.db-name=read_db
+datasources.read.test-resources.resource-name=main-db
+datasources.write.dialect=POSTGRES
+datasources.write.db-name=write_db
+datasources.write.test-resources.resource-name=main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">datasources:
+  read:
+    dialect: POSTGRES
+    db-name: read_db
+    test-resources:
+      resource-name: main-db
+  write:
+    dialect: POSTGRES
+    db-name: write_db
+    test-resources:
+      resource-name: main-db</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources]
+  [datasources.read]
+    dialect="POSTGRES"
+    db-name="read_db"
+    [datasources.read.test-resources]
+      resource-name="main-db"
+  [datasources.write]
+    dialect="POSTGRES"
+    db-name="write_db"
+    [datasources.write.test-resources]
+      resource-name="main-db"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">datasources {
+  read {
+    dialect = "POSTGRES"
+    dbName = "read_db"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+  write {
+    dialect = "POSTGRES"
+    dbName = "write_db"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  datasources {
+    read {
+      dialect = "POSTGRES"
+      db-name = "read_db"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+    write {
+      dialect = "POSTGRES"
+      db-name = "write_db"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "datasources": {
+    "read": {
+      "dialect": "POSTGRES",
+      "db-name": "read_db",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    },
+    "write": {
+      "dialect": "POSTGRES",
+      "db-name": "write_db",
+      "test-resources": {
+        "resource-name": "main-db"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For other engines, <code>datasources.&lt;name&gt;.test-resources.resource-name</code> still controls physical container reuse, but engine-specific multi-database bootstrap is only enabled where it is currently supported.</p>
+</div>
+<div class="paragraph">
+<p>Micronaut Test Resources can also generate an IntelliJ IDEA/DataGrip datasource export file for resolved JDBC datasources.
+The export is opt-in and disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>Enable it with:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.intellij-idea.enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  intellij-idea:
+    enabled: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.intellij-idea]
+    enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  intellijIdea {
+    enabled = true
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    intellij-idea {
+      enabled = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "intellij-idea": {
+      "enabled": true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the generated export is written to <code>.micronaut/test-resources/intellij-idea-datasources.xml</code>.
+You can override that location with <code>test-resources.intellij-idea.output-path</code>.</p>
+</div>
+<div class="paragraph">
+<p>The export is generated from resolved <code>datasources.<strong>.url</code>, <code>datasources.</strong>.username</code>, <code>datasources.<strong>.password</code>, and <code>datasources.</strong>.driver-class-name</code> values, and supports multiple named JDBC datasources in the same run.
+The file uses IntelliJ IDEA&#8217;s datasource export format so you can import or paste it into IntelliJ IDEA or DataGrip without rebuilding the connection details by hand.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The generated export contains local test usernames and passwords.
+Do not commit it, and do not point the output path at <code>.idea/</code> files in this first iteration.
+</td>
+</tr>
+</table>
 </div>
 
-<h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>4.1.2 R2DBC</h2>
+<h2 id="modules-databases-r2dbc"><a class="anchor" href="#modules-databases-r2dbc"></a>5.1.2 R2DBC</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-databases-r2dbc.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-databases-r2dbc.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -653,99 +1033,74 @@ See the guide for <a href="https://guides.micronaut.io/latest/replace-h2-with-re
 <p>In which case, the name of the datasource must match the name of the R2DBC datasource.
 This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.</p>
 </div>
-
-<h2 id="modules-elasticsearch"><a class="anchor" href="#modules-elasticsearch"></a>4.2 Elasticsearch</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-elasticsearch.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
 <div class="paragraph">
-<p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.hosts</code> property.</p>
-</div>
-<div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
-The default version can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
-</div>
-
-<h2 id="modules-opensearch"><a class="anchor" href="#modules-opensearch"></a>4.3 OpenSearch</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-opensearch.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
-<div class="paragraph">
-<p>OpenSearch support will automatically start an <a href="https://opensearch.org/">OpenSearch</a> container and provide the value of the <code>micronaut.opensearch.rest-client.http-hosts</code> or <code>micronaut.opensearch.httpclient5.http-hosts</code> properties.</p>
-</div>
-<div class="paragraph">
-<p>The default image (<code>opensearchproject/opensearch:latest</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
-</div>
-
-<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>4.4 Kafka</h2>
-
-<div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-kafka.adoc"'>
-        <i class='fa fa-pencil-square-o'></i> Improve this doc
-    </button>
-</div>
-
-
-<div class="paragraph">
-<p>Kafka support will automatically start a <a href="https://kafka.apache.org">Kafka container</a> and provide the value of the <code>kafka.bootstrap.servers</code> property.</p>
-</div>
-<div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html">Testing Kafka Listener using Testcontainers with the Micronaut Framework</a> to learn more.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><a href="https://docs.confluent.io/platform/current/kafka-metadata/kraft.html#kraft-overview">Kraft Mode</a> is supported via the <code>test-resources.containers.kafka.kraft</code> property.</p>
+<p>If the logical datasource names differ, you can still opt JDBC and R2DBC into the same physical test resource by setting <code>datasources.&lt;name&gt;.test-resources.resource-name</code> and <code>r2dbc.datasources.&lt;name&gt;.test-resources.resource-name</code> to the same value:</p>
 </div>
 <div class="openblock">
 <div class="content">
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.kafka.kraft=true</code></pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">datasources.migrations.dialect=POSTGRES
+datasources.migrations.db-name=migrations_db
+datasources.migrations.test-resources.resource-name=main-db
+r2dbc.datasources.default.dialect=POSTGRES
+r2dbc.datasources.default.db-name=default_db
+r2dbc.datasources.default.test-resources.resource-name=main-db</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
-  containers:
-    kafka:
-      kraft: true</code></pre>
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">datasources:
+  migrations:
+    dialect: POSTGRES
+    db-name: migrations_db
+    test-resources:
+      resource-name: main-db
+r2dbc:
+  datasources:
+    default:
+      dialect: POSTGRES
+      db-name: default_db
+      test-resources:
+        resource-name: main-db</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
-  [test-resources.containers]
-    [test-resources.containers.kafka]
-      kraft=true</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources]
+  [datasources.migrations]
+    dialect="POSTGRES"
+    db-name="migrations_db"
+    [datasources.migrations.test-resources]
+      resource-name="main-db"
+[r2dbc]
+  [r2dbc.datasources]
+    [r2dbc.datasources.default]
+      dialect="POSTGRES"
+      db-name="default_db"
+      [r2dbc.datasources.default.test-resources]
+        resource-name="main-db"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
-  containers {
-    kafka {
-      kraft = true
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">datasources {
+  migrations {
+    dialect = "POSTGRES"
+    dbName = "migrations_db"
+    testResources {
+      resourceName = "main-db"
+    }
+  }
+}
+r2dbc {
+  datasources {
+    'default' {
+      dialect = "POSTGRES"
+      dbName = "default_db"
+      testResources {
+        resourceName = "main-db"
+      }
     }
   }
 }</code></pre>
@@ -754,10 +1109,23 @@ See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
-  test-resources {
-    containers {
-      kafka {
-        kraft = true
+  datasources {
+    migrations {
+      dialect = "POSTGRES"
+      db-name = "migrations_db"
+      test-resources {
+        resource-name = "main-db"
+      }
+    }
+  }
+  r2dbc {
+    datasources {
+      default {
+        dialect = "POSTGRES"
+        db-name = "default_db"
+        test-resources {
+          resource-name = "main-db"
+        }
       }
     }
   }
@@ -767,11 +1135,136 @@ See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "test-resources": {
-    "containers": {
-      "kafka": {
-        "kraft": true
+  "datasources": {
+    "migrations": {
+      "dialect": "POSTGRES",
+      "db-name": "migrations_db",
+      "test-resources": {
+        "resource-name": "main-db"
       }
+    }
+  },
+  "r2dbc": {
+    "datasources": {
+      "default": {
+        "dialect": "POSTGRES",
+        "db-name": "default_db",
+        "test-resources": {
+          "resource-name": "main-db"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The same property can also be shared by multiple R2DBC datasources to reuse one physical container. When PostgreSQL, MySQL, or MariaDB datasources also declare distinct <code>db-name</code> values, Micronaut Test Resources creates those databases on the shared container and returns datasource-specific R2DBC URLs. For other engines, <code>r2dbc.datasources.&lt;name&gt;.test-resources.resource-name</code> still only controls container identity.</p>
+</div>
+
+<h2 id="modules-elasticsearch"><a class="anchor" href="#modules-elasticsearch"></a>5.2 Elasticsearch</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-elasticsearch.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.http-hosts</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.2.1</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
+The default tag can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
+</div>
+
+<h2 id="modules-azure"><a class="anchor" href="#modules-azure"></a>5.3 Azure Storage</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-azure.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Azure Storage support will automatically start an <a href="https://learn.microsoft.com/azure/storage/common/storage-use-azurite">Azurite</a> container and resolve the Micronaut Azure shared-key properties needed to talk to the emulator.</p>
+</div>
+<div class="paragraph">
+<p>The default image can be overwritten by setting the <code>test-resources.containers.azurite.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The following properties are resolved automatically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>azure.credential.storage-shared-key.account-name</code></p>
+</li>
+<li>
+<p><code>azure.credential.storage-shared-key.account-key</code></p>
+</li>
+<li>
+<p><code>azure.credential.storage-shared-key.connection-string</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The generated connection string uses Azurite&#8217;s mapped Testcontainers ports for the blob, queue, and table endpoints, so no fixed host port configuration is required.</p>
+</div>
+<div class="paragraph">
+<p>By default, the provider starts <code>mcr.microsoft.com/azure-storage/azurite:3.35.0</code> with blob, queue, and table listeners bound to all interfaces inside the container.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">storage.client.connection-string=${azure.credential.storage-shared-key.connection-string}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  client:
+    connection-string: ${azure.credential.storage-shared-key.connection-string}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[storage]
+  [storage.client]
+    connection-string="${azure.credential.storage-shared-key.connection-string}"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">storage {
+  client {
+    connectionString = "${azure.credential.storage-shared-key.connection-string}"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  storage {
+    client {
+      connection-string = "${azure.credential.storage-shared-key.connection-string}"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "storage": {
+    "client": {
+      "connection-string": "${azure.credential.storage-shared-key.connection-string}"
     }
   }
 }</code></pre>
@@ -786,16 +1279,569 @@ See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This switches to the <a href="https://docs.confluent.io/platform/current/installation/docker/image-reference.html#ak-images">confluent-local</a> Docker image with <a href="https://java.testcontainers.org/modules/kafka/#using-kraft-mode">TestContainer Kraft Support</a>
+If you need Azurite behavior outside these shared-key properties, the generic Testcontainers support remains available.
 </td>
 </tr>
 </table>
 </div>
 
-<h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>4.5 Localstack</h2>
+<h2 id="modules-opensearch"><a class="anchor" href="#modules-opensearch"></a>5.4 OpenSearch</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-localstack.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-opensearch.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>OpenSearch support will automatically start an <a href="https://opensearch.org/">OpenSearch</a> container and provide the value of the <code>micronaut.opensearch.rest-client.http-hosts</code> or <code>micronaut.opensearch.httpclient5.http-hosts</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>opensearchproject/opensearch:3.6.0</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-kafka"><a class="anchor" href="#modules-kafka"></a>5.5 Kafka</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-kafka.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Kafka support will automatically start a <a href="https://kafka.apache.org">Kafka container</a> and provide the value of the <code>kafka.bootstrap.servers</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>apache/kafka:4.1.1</code>) can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Kafka topics are only provisioned when <code>test-resources.containers.kafka.topics</code> is configured. When set, test resources creates any missing topics before returning <code>kafka.bootstrap.servers</code>.</p>
+</div>
+<div class="paragraph">
+<p>The optional <code>test-resources.containers.kafka.partitions</code> property applies the same partition count to every configured topic and defaults to <code>1</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Topic replication is fixed to <code>1</code> because the Kafka test resource starts a single-broker container. This feature is intended for test-time broker preparation, not general Kafka administration.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When a cached Kafka broker is reused inside the same test-resources scope, configured topics must agree on the partition count. If a topic already exists with a different partition count, resolution fails with a clear error instead of mutating the existing topic.
+</td>
+</tr>
+</table>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.kafka.topics[0]=orders
+test-resources.containers.kafka.topics[1]=shipments
+test-resources.containers.kafka.partitions=3</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    kafka:
+      topics:
+        - orders
+        - shipments
+      partitions: 3</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.kafka]
+      topics=[
+        "orders",
+        "shipments"
+      ]
+      partitions=3</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    kafka {
+      topics = ["orders", "shipments"]
+      partitions = 3
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      kafka {
+        topics = ["orders", "shipments"]
+        partitions = 3
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "kafka": {
+        "topics": ["orders", "shipments"],
+        "partitions": 3
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_kafka_services">Kafka services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Kafka module can also start Confluent Schema Registry, Kafka Connect, and ksqlDB test containers.
+Each service depends on the Kafka broker container and uses the same test resources scope, so requesting a service URL starts Kafka if it is not already running and reuses the broker if <code>kafka.bootstrap.servers</code> was already resolved.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Resolved property</th>
+<th class="tableblock halign-left valign-top">Default image</th>
+<th class="tableblock halign-left valign-top">REST port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.schema.registry.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-schema-registry:8.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8081</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.connect.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-kafka-connect:8.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8083</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.ksqldb.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-ksqldb-server:8.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8088</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The returned values are host-accessible <code>http://</code> URLs using random Testcontainers host ports.
+The containers communicate with Kafka on an internal Docker network, so no fixed host port is required.</p>
+</div>
+<div class="paragraph">
+<p>Request one of the listed URL properties when a service should be started.
+For example, a test-only bean can require and inject the Schema Registry URL:</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Value;
+import jakarta.inject.Singleton;
+
+@Singleton
+@Requires(property = "kafka.schema.registry.url")
+class SchemaRegistryClientConfiguration {
+
+    SchemaRegistryClientConfiguration(
+            @Value("${kafka.schema.registry.url}") String schemaRegistryUrl) {
+        // Configure a Schema Registry client for tests.
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Test Resources will provide the URL value for the matching service and start Kafka as a dependency.</p>
+</div>
+<div class="paragraph">
+<p>These REST APIs are intended for local test infrastructure.
+They are exposed without credentials on random localhost ports and should not be used as production service configuration.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See the guide for <a href="https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html">Testing Kafka Listener using Testcontainers with the Micronaut Framework</a> to learn more.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+
+<h2 id="modules-mailpit"><a class="anchor" href="#modules-mailpit"></a>5.6 Mailpit</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mailpit.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Mailpit support will automatically start a <a href="https://mailpit.axllent.org/">Mailpit</a> container and provide JavaMail SMTP properties for Micronaut Email JavaMail applications.
+Mailpit captures local development and test email, provides a browser UI, and exposes an HTTP API for assertions.
+It is not a production SMTP relay.</p>
+</div>
+<div class="paragraph">
+<p>If your application has <code>io.micronaut.email:micronaut-email-javamail</code> on the application classpath, the build tools infer the Mailpit test resources module automatically.
+You can also add the module explicitly:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">testResourcesService(<span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-mailpit")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.testresources&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-test-resources-mailpit&lt;/artifactId&gt;
+    &lt;scope&gt;testResourcesService&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>When no external SMTP endpoint is configured, the provider resolves these properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>javamail.properties.mail.smtp.host</code></p>
+</li>
+<li>
+<p><code>javamail.properties.mail.smtp.port</code></p>
+</li>
+<li>
+<p><code>javamail.properties.mail.smtp.auth=false</code></p>
+</li>
+<li>
+<p><code>javamail.properties.mail.smtp.starttls.enable=false</code></p>
+</li>
+<li>
+<p><code>mailpit.ui.url</code></p>
+</li>
+<li>
+<p><code>mailpit.api.url</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Mailpit SMTP and UI container ports are exposed through random host ports.
+The <code>mailpit.ui.url</code> and <code>mailpit.api.url</code> values contain only local endpoint URLs.
+The provider does not log captured messages, recipients, headers, credentials, or API responses.</p>
+</div>
+<div class="paragraph">
+<p>If either <code>javamail.properties.mail.smtp.host</code> or <code>javamail.properties.mail.smtp.port</code> is already configured, Mailpit does not start and the existing JavaMail SMTP configuration remains unchanged.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">javamail.properties.mail.smtp.host=smtp.example.test
+javamail.properties.mail.smtp.port=2525</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">javamail:
+  properties:
+    mail:
+      smtp:
+        host: smtp.example.test
+        port: 2525</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[javamail]
+  [javamail.properties]
+    [javamail.properties.mail]
+      [javamail.properties.mail.smtp]
+        host="smtp.example.test"
+        port=2525</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">javamail {
+  properties {
+    mail {
+      smtp {
+        host = "smtp.example.test"
+        port = 2525
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  javamail {
+    properties {
+      mail {
+        smtp {
+          host = "smtp.example.test"
+          port = 2525
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "javamail": {
+    "properties": {
+      "mail": {
+        "smtp": {
+          "host": "smtp.example.test",
+          "port": 2525
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You can disable the provider:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mailpit.enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mailpit:
+      enabled: false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mailpit]
+      enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mailpit {
+      enabled = false
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mailpit {
+        enabled = false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mailpit": {
+        "enabled": false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also override the image and Mailpit listener ports:</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>axllent/mailpit:v1.29.7</code>) can be overwritten by setting the <code>test-resources.containers.mailpit.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.mailpit.image-tag</code> property.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mailpit.image-name=axllent/mailpit
+test-resources.containers.mailpit.image-tag=v1.29.7
+test-resources.containers.mailpit.smtp-port=1025
+test-resources.containers.mailpit.ui-port=8025</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mailpit:
+      image-name: axllent/mailpit
+      image-tag: v1.29.7
+      smtp-port: 1025
+      ui-port: 8025</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mailpit]
+      image-name="axllent/mailpit"
+      image-tag="v1.29.7"
+      smtp-port=1025
+      ui-port=8025</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mailpit {
+      imageName = "axllent/mailpit"
+      imageTag = "v1.29.7"
+      smtpPort = 1025
+      uiPort = 8025
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mailpit {
+        image-name = "axllent/mailpit"
+        image-tag = "v1.29.7"
+        smtp-port = 1025
+        ui-port = 8025
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mailpit": {
+        "image-name": "axllent/mailpit",
+        "image-tag": "v1.29.7",
+        "smtp-port": 1025,
+        "ui-port": 8025
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>smtp-port</code> and <code>ui-port</code> values configure Mailpit&#8217;s container listener ports.
+They are exposed through random host ports and are not fixed host ports.</p>
+</div>
+<div class="paragraph">
+<p>During development you can open the resolved <code>mailpit.ui.url</code> value in a browser to inspect captured messages.
+In integration tests you can use <code>mailpit.api.url</code> to assert messages through the Mailpit HTTP API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Value("${mailpit.api.url}")
+URI mailpitApiUrl;
+
+HttpRequest&lt;?&gt; request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/messages"));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For custom SMTP containers or non-JavaMail configuration, use <a href="#modules-testcontainers">Generic Testcontainers support</a>.</p>
+</div>
+
+<h2 id="modules-pulsar"><a class="anchor" href="#modules-pulsar"></a>5.7 Pulsar</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-pulsar.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Pulsar support will automatically start an <a href="https://pulsar.apache.org/">Apache Pulsar container</a> and provide the value of the <code>pulsar.service-url</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>apachepulsar/pulsar:4.1.3</code>) can be overridden by setting the <code>test-resources.containers.pulsar.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>5.8 Localstack</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-localstack.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -805,7 +1851,7 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>Micronaut Test Resources supports a subset of <a href="https://localstack.cloud/">Localstack</a> via <a href="https://www.testcontainers.org/modules/localstack/">Testcontainers</a>.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.localstack.image-name</code> property.</p>
+<p>The default image (<code>localstack/localstack:4.14.0</code>) can be overwritten by setting the <code>test-resources.containers.localstack.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The following services are supported:</p>
@@ -843,10 +1889,135 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 </ul>
 </div>
 
-<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>4.6 MongoDB</h2>
+<h2 id="modules-minio"><a class="anchor" href="#modules-minio"></a>5.9 MinIO</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-mongodb.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-minio.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>MinIO support will automatically start a <a href="https://min.io">MinIO</a> container via <a href="https://java.testcontainers.org/modules/minio/">Testcontainers</a> and provide the values of the <code>minio.url</code>, <code>minio.access-key</code>, and <code>minio.secret-key</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>minio/minio:RELEASE.2025-09-07T16-13-09Z</code>) can be overwritten by setting the <code>test-resources.containers.minio.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-seaweedfs"><a class="anchor" href="#modules-seaweedfs"></a>5.10 SeaweedFS</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-seaweedfs.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>SeaweedFS support will automatically start a <a href="https://github.com/seaweedfs/seaweedfs">SeaweedFS</a> container and provide the values of the <code>seaweedfs.url</code>, <code>seaweedfs.access-key</code>, and <code>seaweedfs.secret-key</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>chrislusf/seaweedfs:4.22</code>) can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
+</div>
+
+<h2 id="modules-couchbase"><a class="anchor" href="#modules-couchbase"></a>5.11 Couchbase</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-couchbase.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Couchbase support will automatically start a <a href="https://www.couchbase.com">Couchbase Server container</a> and provide the values of the <code>couchbase.uri</code>, <code>couchbase.username</code>, and <code>couchbase.password</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The provider uses the <code>couchbase/server:8.0.1</code> image by default.</p>
+</div>
+<div class="paragraph">
+<p>You can override the image name and tag with <code>test-resources.containers.couchbase.image-name</code> and <code>test-resources.containers.couchbase.image-tag</code>.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.couchbase.image-name=my-couchbase/server
+test-resources.containers.couchbase.image-tag=custom-tag</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    couchbase:
+      image-name: my-couchbase/server
+      image-tag: custom-tag</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.couchbase]
+      image-name="my-couchbase/server"
+      image-tag="custom-tag"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    couchbase {
+      imageName = "my-couchbase/server"
+      imageTag = "custom-tag"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      couchbase {
+        image-name = "my-couchbase/server"
+        image-tag = "custom-tag"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "couchbase": {
+        "image-name": "my-couchbase/server",
+        "image-tag": "custom-tag"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If you explicitly map any of those same properties through generic Testcontainers support, the dedicated Couchbase provider stands down for the full <code>couchbase.uri</code> / <code>couchbase.username</code> / <code>couchbase.password</code> connection set so values never come from mixed containers.</p>
+</div>
+<div class="paragraph">
+<p>For unsupported Couchbase topologies or additional property shapes, continue using <a href="modules-testcontainers.html">generic Testcontainers support</a>.</p>
+</div>
+
+<h2 id="modules-mongodb"><a class="anchor" href="#modules-mongodb"></a>5.12 MongoDB</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mongodb.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -856,7 +2027,10 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <p>MongoDB support will automatically start a <a href="https://www.mongodb.com">MongoDB container</a> and provide the value of the <code>mongodb.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
+<p>The container is configured with replica set functionality enabled.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>mongo:8.2.7</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The default database name can be overwritten by setting the <code>test-resources.containers.mongodb.db-name</code> property.</p>
@@ -870,18 +2044,21 @@ This switches to the <a href="https://docs.confluent.io/platform/current/install
 <div class="paragraph">
 <p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
 </div>
+<div class="paragraph">
+<p>This existing multiplexing behavior is unchanged by <code>test-resources.resource-name</code>. MongoDB already reuses one physical server across named logical databases when you configure <code>mongodb.servers.*</code>.</p>
+</div>
 
-<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>4.7 MQTT</h2>
+<h2 id="modules-mqtt"><a class="anchor" href="#modules-mqtt"></a>5.13 MQTT</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-mqtt.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-mqtt.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
 <div class="paragraph">
-<p>MQTT support is provided using a <a href="https://www.hivemq.com/">HiveMQ</a> container by default.</p>
+<p>MQTT support is provided using the <code>hivemq/hivemq-ce:2021.3</code> <a href="https://www.hivemq.com/">HiveMQ</a> container by default.</p>
 </div>
 <div class="paragraph">
 <p>It will automatically configure the <code>mqtt.client.server-uri</code> property.</p>
@@ -1028,10 +2205,10 @@ listener 1883</code></pre>
 </div>
 </div>
 
-<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>4.8 Neo4j</h2>
+<h2 id="modules-neo4j"><a class="anchor" href="#modules-neo4j"></a>5.14 Neo4j</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-neo4j.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-neo4j.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1041,13 +2218,309 @@ listener 1883</code></pre>
 <p>Neo4j support will automatically start a <a href="https://neo4j.com/">Neo4j container</a> and provide the value of the <code>neo4j.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
+<p>The default image (<code>neo4j:5.26.25</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>4.9 RabbitMQ</h2>
+<h2 id="modules-opentelemetry"><a class="anchor" href="#modules-opentelemetry"></a>5.15 OpenTelemetry</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-opentelemetry.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>OpenTelemetry support will automatically start a <a href="https://grafana.com/docs/opentelemetry/docker-lgtm/">Grafana OpenTelemetry LGTM</a> container and provide the value of the <code>otel.exporter.otlp.endpoint</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The provider exposes the LGTM OpenTelemetry Collector OTLP/gRPC port and resolves the endpoint in the form <code><a href="http://HOST:PORT" class="bare">http://HOST:PORT</a></code>.
+Micronaut Test Resources uses a random mapped host port and does not bind container port <code>4317</code> directly.</p>
+</div>
+<div class="paragraph">
+<p>To use it, add the OpenTelemetry test resource module and the Micronaut Tracing OpenTelemetry dependencies required by your application:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">testResourcesService(<span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-opentelemetry")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.testresources&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-test-resources-opentelemetry&lt;/artifactId&gt;
+    &lt;scope&gt;testResourcesService&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.tracing:micronaut-tracing-opentelemetry")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.tracing&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-tracing-opentelemetry&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">runtimeOnly(<span class="hljs-string">"io.opentelemetry:opentelemetry-exporter-otlp")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.opentelemetry&lt;/groupId&gt;
+    &lt;artifactId&gt;opentelemetry-exporter-otlp&lt;/artifactId&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+<div class="paragraph">
+<p>Micronaut Tracing keeps OpenTelemetry exporters disabled by default.
+Enable only the signals you want to send to the local backend, for example traces:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">otel.traces.exporter=otlp</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">otel:
+  traces:
+    exporter: otlp</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[otel]
+  [otel.traces]
+    exporter="otlp"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">otel {
+  traces {
+    exporter = "otlp"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  otel {
+    traces {
+      exporter = "otlp"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "otel": {
+    "traces": {
+      "exporter": "otlp"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Do not configure <code>otel.exporter.otlp.endpoint</code> for the local Test Resources backend.
+When that property is absent and the OpenTelemetry test resource module is on the Test Resources classpath, Test Resources resolves it from the mapped LGTM OTLP/gRPC port.</p>
+</div>
+<div class="paragraph">
+<p>If <code>otel.exporter.otlp.endpoint</code> is explicitly configured, including through the equivalent <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> environment-variable configuration resolved by Micronaut, Test Resources will not start the local OpenTelemetry backend.
+This lets CI, staging, or developer machines point to an existing collector:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">otel.exporter.otlp.endpoint=http://collector.example:4317</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">otel:
+  exporter:
+    otlp:
+      endpoint: "http://collector.example:4317"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[otel]
+  [otel.exporter]
+    [otel.exporter.otlp]
+      endpoint="http://collector.example:4317"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">otel {
+  exporter {
+    otlp {
+      endpoint = "http://collector.example:4317"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  otel {
+    exporter {
+      otlp {
+        endpoint = "http://collector.example:4317"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "otel": {
+    "exporter": {
+      "otlp": {
+        "endpoint": "http://collector.example:4317"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.27.1</code>.
+The image can be changed with the standard container image settings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    opentelemetry:
+      image-name: "grafana/otel-lgtm"
+      image-tag: 0.27.1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only <code>backend: lgtm</code> and <code>protocol: grpc</code> are supported by this initial provider.
+Unsupported values fail fast so that an application does not silently receive an endpoint for the wrong protocol.</p>
+</div>
+<div class="paragraph">
+<p>The local Grafana UI is exposed on the mapped container port for Grafana port <code>3000</code>.
+When the endpoint is resolved, Test Resources logs a sanitized URL similar to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">OpenTelemetry LGTM Grafana UI available at http://localhost:&lt;mapped port&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The log message contains only the local UI URL.
+It does not include telemetry payloads, headers, tokens, or application data.</p>
+</div>
+<div class="paragraph">
+<p>To disable this provider while keeping the module on the classpath:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.opentelemetry.enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    opentelemetry:
+      enabled: false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.opentelemetry]
+      enabled=false</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    opentelemetry {
+      enabled = false
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      opentelemetry {
+        enabled = false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "opentelemetry": {
+        "enabled": false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This module is intended for development and integration tests.
+It is not a production observability deployment, and applications should configure their production OpenTelemetry collector or managed backend independently.</p>
+</div>
+
+<h2 id="modules-rabbitmq"><a class="anchor" href="#modules-rabbitmq"></a>5.16 RabbitMQ</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-rabbitmq.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1057,13 +2530,13 @@ listener 1883</code></pre>
 <p>RabbitMQ support will automatically start a <a href="https://www.rabbitmq.com/">RabbitMQ container</a> and provide the value of the <code>rabbitmq.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
+<p>The default image (<code>rabbitmq:4.3.0</code>) can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
-<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>4.10 Redis</h2>
+<h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.17 Redis</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-redis.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-redis.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1076,7 +2549,7 @@ This provider can be configured with a variety of parameters:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The default image can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
+<p>The default image (<code>redis:6.2.21</code>, or <code>grokzen/redis-cluster:6.2.14</code> in cluster mode) can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
 </li>
 <li>
 <p>Have Test Resources spawn a Redis cluster by setting <code>test-resources.containers.redis.cluster-mode</code> to <code>true</code>. With this setting, the property <code>redis.uris</code> will be defined instead of <code>redis.uri</code>, and some cluster-specific parameters may be provided under <code>test-resources.containers.redis.cluster</code>:</p>
@@ -1103,10 +2576,435 @@ This provider can be configured with a variety of parameters:</p>
 </ul>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>4.11 Hashicorp Vault</h2>
+<h2 id="modules-hazelcast"><a class="anchor" href="#modules-hazelcast"></a>5.18 Hazelcast</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hazelcast.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Hazelcast support</p>
+</div>
+<div class="paragraph">
+<p>Hazelcast support will automatically start a Hazelcast container and provide the values of the <code>hazelcast.client.network.addresses</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>hazelcast/hazelcast:5.6.0-slim</code>) can be overwritten by setting the <code>test-resources.containers.hazelcast.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.hazelcast.image-tag</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="hazelcast-client-network-addresses" class="dlist">
+<dl>
+<dt class="hdlist1"><code>hazelcast.client.network.addresses</code></dt>
+<dd>
+<p>The list of Hazelcast client addresses (host:port) to connect to.</p>
+</dd>
+</dl>
+</div>
+
+<h2 id="modules-infinispan"><a class="anchor" href="#modules-infinispan"></a>5.19 Infinispan</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-infinispan.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Infinispan support</p>
+</div>
+<div class="paragraph">
+<p>Infinispan support will automatically start an Infinispan container and provide the values of the <code>infinispan.client.hotrod.server.host</code> and <code>infinispan.client.hotrod.server.port</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>quay.io/infinispan/server:16.1.3</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.infinispan.image-tag</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="infinispan-client-hotrod-server-host" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.server.host</code></dt>
+<dd>
+<p>The host of the Infinispan server</p>
+</dd>
+</dl>
+</div>
+<div id="infinispan-client-hotrod-server-port" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.server.port</code></dt>
+<dd>
+<p>The port of the Infinispan server (Hot Rod protocol, 11222)</p>
+</dd>
+</dl>
+</div>
+<div id="infinispan-client-hotrod-username" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.security.authentication.username</code></dt>
+<dd>
+<p>Username for Hot Rod authentication (if configured in container)</p>
+</dd>
+</dl>
+</div>
+<div id="infinispan-client-hotrod-password" class="dlist">
+<dl>
+<dt class="hdlist1"><code>infinispan.client.hotrod.security.authentication.password</code></dt>
+<dd>
+<p>Password for Hot Rod authentication (if configured in container)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>See the <a href="https://testcontainers.com/modules/infinispan/">Testcontainers Infinispan module</a> for more information.</p>
+</div>
+
+<h2 id="modules-wiremock"><a class="anchor" href="#modules-wiremock"></a>5.20 WireMock</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-wiremock.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>WireMock support automatically starts a <a href="https://wiremock.org/">WireMock</a> container and provides the values of the <code>wiremock.host</code>, <code>wiremock.port</code>, and <code>wiremock.url</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The provider module is <code>io.micronaut.testresources:micronaut-test-resources-wiremock</code>.
+Use it when your build needs to add WireMock support explicitly to the Test Resources server classpath.</p>
+</div>
+<div class="paragraph">
+<p>You can inject <code>wiremock.url</code> into a test and use it to configure the WireMock client:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Value("${wiremock.url}")
+String wireMockUrl;
+
+URI uri = URI.create(wireMockUrl);
+WireMock.configureFor(uri.getHost(), uri.getPort());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default image (<code>wiremock/wiremock:3.13.2-2</code>) can be overwritten by setting the <code>test-resources.containers.wiremock.image-name</code> property.
+The default version can be overwritten by setting the <code>test-resources.containers.wiremock.image-tag</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Additional WireMock CLI arguments can be configured with <code>test-resources.containers.wiremock.cli-args</code>.
+The value may be a single argument string or a list of argument strings, which are passed directly to the WireMock container.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.wiremock.cli-args[0]=--verbose
+test-resources.containers.wiremock.cli-args[1]=--global-response-templating</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    wiremock:
+      cli-args:
+        - "--verbose"
+        - "--global-response-templating"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.wiremock]
+      cli-args=[
+        "--verbose",
+        "--global-response-templating"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    wiremock {
+      cliArgs = ["--verbose", "--global-response-templating"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      wiremock {
+        cli-args = ["--verbose", "--global-response-templating"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "wiremock": {
+        "cli-args": ["--verbose", "--global-response-templating"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>WireMock mappings can be copied into the container with the generic Test Resources <code>copy-to-container</code> metadata.
+Copy JSON mapping files to <code>/home/wiremock/mappings/</code> and response body files to <code>/home/wiremock/__files/</code>:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.wiremock.copy-to-container[0].classpath:wiremock/mappings/hello.json=/home/wiremock/mappings/hello.json
+test-resources.containers.wiremock.copy-to-container[1].classpath:wiremock/__files/hello.txt=/home/wiremock/__files/hello.txt</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    wiremock:
+      copy-to-container:
+        - "classpath:wiremock/mappings/hello.json": /home/wiremock/mappings/hello.json
+        - "classpath:wiremock/__files/hello.txt": /home/wiremock/__files/hello.txt</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.wiremock]
+      [[test-resources.containers.wiremock.copy-to-container]]
+        "classpath:wiremock/mappings/hello.json"="/home/wiremock/mappings/hello.json"
+      [[test-resources.containers.wiremock.copy-to-container]]
+        "classpath:wiremock/__files/hello.txt"="/home/wiremock/__files/hello.txt"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    wiremock {
+      copyToContainer = [{
+          classpath:wiremock/mappings/hello.json = "/home/wiremock/mappings/hello.json"
+        }, {
+          classpath:wiremock/__files/hello.txt = "/home/wiremock/__files/hello.txt"
+        }]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      wiremock {
+        copy-to-container = [{
+            "classpath:wiremock/mappings/hello.json" = "/home/wiremock/mappings/hello.json"
+          }, {
+            "classpath:wiremock/__files/hello.txt" = "/home/wiremock/__files/hello.txt"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "wiremock": {
+        "copy-to-container": [{
+            "classpath:wiremock/mappings/hello.json": "/home/wiremock/mappings/hello.json"
+          }, {
+            "classpath:wiremock/__files/hello.txt": "/home/wiremock/__files/hello.txt"
+          }]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The same metadata can also copy files from host paths.
+See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the full list of container metadata options.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="wiremock-host" class="dlist">
+<dl>
+<dt class="hdlist1"><code>wiremock.host</code></dt>
+<dd>
+<p>The host name of the WireMock container.</p>
+</dd>
+</dl>
+</div>
+<div id="wiremock-port" class="dlist">
+<dl>
+<dt class="hdlist1"><code>wiremock.port</code></dt>
+<dd>
+<p>The mapped HTTP port of the WireMock container.</p>
+</dd>
+</dl>
+</div>
+<div id="wiremock-url" class="dlist">
+<dl>
+<dt class="hdlist1"><code>wiremock.url</code></dt>
+<dd>
+<p>The base HTTP URL of the WireMock container.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Mapping-specific Java helpers are not part of the initial WireMock provider surface.</p>
+</div>
+
+<h2 id="modules-oauth2"><a class="anchor" href="#modules-oauth2"></a>5.21 OAuth2 / Keycloak</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-oauth2.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>OAuth2 support currently provisions <a href="https://www.keycloak.org/">Keycloak</a> for a Micronaut Security OAuth2 client named <code>keycloak</code>.</p>
+</div>
+<div class="paragraph">
+<p>When <code>micronaut-security-oauth2</code> is on the application classpath, Test Resources can resolve these properties automatically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>micronaut.security.oauth2.clients.keycloak.client-id</code></p>
+</li>
+<li>
+<p><code>micronaut.security.oauth2.clients.keycloak.client-secret</code></p>
+</li>
+<li>
+<p><code>micronaut.security.oauth2.clients.keycloak.openid.issuer</code></p>
+</li>
+<li>
+<p><code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The default image (<code>quay.io/keycloak/keycloak:26.6.1</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
+The default image tag can be overwritten by setting the <code>test-resources.containers.keycloak.image-tag</code> property.</p>
+</div>
+<div class="paragraph">
+<p>You can customize the imported realm and client credentials with:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.keycloak.realm=micronaut
+test-resources.containers.keycloak.client-id=my-client
+test-resources.containers.keycloak.client-secret=my-secret</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    keycloak:
+      realm: 'micronaut'
+      client-id: 'my-client'
+      client-secret: 'my-secret'</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.keycloak]
+      realm="micronaut"
+      client-id="my-client"
+      client-secret="my-secret"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    keycloak {
+      realm = "micronaut"
+      clientId = "my-client"
+      clientSecret = "my-secret"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      keycloak {
+        realm = "micronaut"
+        client-id = "my-client"
+        client-secret = "my-secret"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "keycloak": {
+        "realm": "micronaut",
+        "client-id": "my-client",
+        "client-secret": "my-secret"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.22 Hashicorp Vault</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1118,7 +3016,7 @@ This provider can be configured with a variety of parameters:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The default image can be overwritten by setting the <code>test-resources.containers.hashicorp-vault.image-name</code> property.</p>
+<p>The default image (<code>vault:1.13.3</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-vault.image-name</code> property.</p>
 </li>
 <li>
 <p>The default Vault access token is <code>vault-token</code> but this can be overridden by setting the <code>test-resources.containers.hashicorp-vault.token</code> property.</p>
@@ -1203,10 +3101,232 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>4.12 Generic Testcontainers support</h2>
+<h2 id="modules-hashicorp-consul"><a class="anchor" href="#modules-hashicorp-consul"></a>5.23 Hashicorp Consul</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-testcontainers.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-consul.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Consul support will automatically start a <a href="https://www.consul.io/">Hashicorp Consul container</a> and provide the values of the <code>consul.client.host</code>, <code>consul.client.port</code>, and <code>consul.client.default-zone</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>hashicorp/consul:1.15.4</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-consul.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Key/value pairs can be inserted into Hashicorp Consul at startup with the <code>test-resources.containers.hashicorp-consul.kv-properties</code> property:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.hashicorp-consul.kv-properties[0]=key1=value1
+test-resources.containers.hashicorp-consul.kv-properties[1]=key2=value2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    hashicorp-consul:
+      kv-properties:
+        - "key1=value1"
+        - "key2=value2"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.hashicorp-consul]
+      kv-properties=[
+        "key1=value1",
+        "key2=value2"
+      ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    hashicorpConsul {
+      kvProperties = ["key1=value1", "key2=value2"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      hashicorp-consul {
+        kv-properties = ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "hashicorp-consul": {
+        "kv-properties": ["key1=value1", "key2=value2"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<h2 id="modules-solr"><a class="anchor" href="#modules-solr"></a>5.24 Solr</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-solr.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>Solr support will automatically start a <a href="https://solr.apache.org/">Solr container</a> and provide the value of the <code>micronaut.solr.hosts</code> property.</p>
+</div>
+<div class="paragraph">
+<p>The default image (<code>solr:9.8.0</code>) can be overwritten by setting the <code>test-resources.containers.solr.image-name</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Resolved properties:</p>
+</div>
+<div id="micronaut-solr-hosts" class="dlist">
+<dl>
+<dt class="hdlist1"><code>micronaut.solr.hosts</code></dt>
+<dd>
+<p>The Solr endpoint URL.</p>
+</dd>
+</dl>
+</div>
+<div id="micronaut-solr-zk-hosts" class="dlist">
+<dl>
+<dt class="hdlist1"><code>micronaut.solr.zk-hosts</code></dt>
+<dd>
+<p>The ZooKeeper endpoint when ZooKeeper is enabled.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following configuration properties can be used to customize the Solr container:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">solr.collection=my-collection
+solr.config.name=my-config
+solr.config.url=https://example.com/solr-config.zip
+solr.schema.url=https://example.com/schema.xml
+solr.zookeeper.enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">solr:
+  collection: my-collection
+  config:
+    name: my-config
+    url: https://example.com/solr-config.zip
+  schema:
+    url: https://example.com/schema.xml
+  zookeeper:
+    enabled: true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[solr]
+  collection="my-collection"
+  [solr.config]
+    name="my-config"
+    url="https://example.com/solr-config.zip"
+  [solr.schema]
+    url="https://example.com/schema.xml"
+  [solr.zookeeper]
+    enabled=true</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">solr {
+  collection = "my-collection"
+  config {
+    name = "my-config"
+    url = "https://example.com/solr-config.zip"
+  }
+  schema {
+    url = "https://example.com/schema.xml"
+  }
+  zookeeper {
+    enabled = true
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  solr {
+    collection = "my-collection"
+    config {
+      name = "my-config"
+      url = "https://example.com/solr-config.zip"
+    }
+    schema {
+      url = "https://example.com/schema.xml"
+    }
+    zookeeper {
+      enabled = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "solr": {
+    "collection": "my-collection",
+    "config": {
+      "name": "my-config",
+      "url": "https://example.com/solr-config.zip"
+    },
+    "schema": {
+      "url": "https://example.com/schema.xml"
+    },
+    "zookeeper": {
+      "enabled": true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><code>solr.collection</code> configures the collection name, <code>solr.config.name</code> and <code>solr.config.url</code> configure a Solr config set, <code>solr.schema.url</code> configures a schema, and <code>solr.zookeeper.enabled</code> controls whether the container starts with ZooKeeper support.</p>
+</div>
+
+<h2 id="modules-testcontainers"><a class="anchor" href="#modules-testcontainers"></a>5.25 Generic Testcontainers support</h2>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-testcontainers.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1214,11 +3334,23 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 
 <div class="paragraph">
 <p>There are cases where the provided test resources modules don&#8217;t support your use case.
-For example, there is no built-in test resource for supplying a dummy SMTP server, but you may need such a resource for testing your application.</p>
+For example, you may need a container image or protocol mapping that is not covered by a dedicated module.</p>
 </div>
 <div class="paragraph">
 <p>In this case, Micronaut Test Resources provide generic support for starting arbitrary test containers.
 Unlike the other resources, this will require adding configuration to your application to make it work.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+For Micronaut Email JavaMail applications that need a local SMTP capture server, prefer the dedicated <a href="#modules-mailpit">Mailpit support</a>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s illustrate how we can declare an SMTP test container (here using YAML configuration) for use with <a href="https://micronaut-projects.github.io/micronaut-email">Micronaut Email</a>:</p>
@@ -1367,8 +3499,8 @@ public class JavamailSessionProvider implements SessionProvider {
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
 test-resources.containers.mycontainer.hostnames[0]=my.service.host
 test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
-test-resources.containers.mycontainer.ro-fs-bind[0].path/to/local/readonly-file.conf=/path/to/container/readonly-file.conf
-test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file.conf=/path/to/container/readwrite-file.conf</code></pre>
+test-resources.containers.mycontainer.ro-fs-bind[0].readonly-file.conf=/path/to/container/readonly-file.conf
+test-resources.containers.mycontainer.rw-fs-bind[0].readwrite-file.conf=/path/to/container/readwrite-file.conf</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1382,9 +3514,9 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
       exposed-ports:
         - my.service.port: 1883
       ro-fs-bind:
-        - "path/to/local/readonly-file.conf": /path/to/container/readonly-file.conf
+        - "readonly-file.conf": /path/to/container/readonly-file.conf
       rw-fs-bind:
-        - "path/to/local/readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
+        - "readwrite-file.conf": /path/to/container/readwrite-file.conf</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1399,9 +3531,9 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
       [[test-resources.containers.mycontainer.exposed-ports]]
         "my.service.port"=1883
       [[test-resources.containers.mycontainer.ro-fs-bind]]
-        "path/to/local/readonly-file.conf"="/path/to/container/readonly-file.conf"
+        "readonly-file.conf"="/path/to/container/readonly-file.conf"
       [[test-resources.containers.mycontainer.rw-fs-bind]]
-        "path/to/local/readwrite-file.conf"="/path/to/container/readwrite-file.conf"</code></pre>
+        "readwrite-file.conf"="/path/to/container/readwrite-file.conf"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1415,10 +3547,10 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
           my.service.port = 1883
         }]
       roFsBind = [{
-          path/to/local/readonlyFile.conf = "/path/to/container/readonly-file.conf"
+          readonlyFile.conf = "/path/to/container/readonly-file.conf"
         }]
       rwFsBind = [{
-          path/to/local/readwriteFile.conf = "/path/to/container/readwrite-file.conf"
+          readwriteFile.conf = "/path/to/container/readwrite-file.conf"
         }]
     }
   }
@@ -1437,10 +3569,10 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
             "my.service.port" = 1883
           }]
         ro-fs-bind = [{
-            "path/to/local/readonly-file.conf" = "/path/to/container/readonly-file.conf"
+            "readonly-file.conf" = "/path/to/container/readonly-file.conf"
           }]
         rw-fs-bind = [{
-            "path/to/local/readwrite-file.conf" = "/path/to/container/readwrite-file.conf"
+            "readwrite-file.conf" = "/path/to/container/readwrite-file.conf"
           }]
       }
     }
@@ -1460,10 +3592,10 @@ test-resources.containers.mycontainer.rw-fs-bind[0].path/to/local/readwrite-file
             "my.service.port": 1883
           }],
         "ro-fs-bind": [{
-            "path/to/local/readonly-file.conf": "/path/to/container/readonly-file.conf"
+            "readonly-file.conf": "/path/to/container/readonly-file.conf"
           }],
         "rw-fs-bind": [{
-            "path/to/local/readwrite-file.conf": "/path/to/container/readwrite-file.conf"
+            "readwrite-file.conf": "/path/to/container/readwrite-file.conf"
           }]
       }
     }
@@ -1578,6 +3710,115 @@ test-resources.containers.mycontainer.rw-tmpfs-mappings[0]=/path/to/readwrite/co
 </div>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>Generic containers can also declare Docker-managed anonymous volumes when you need container-local storage without binding any host filesystem path:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
+test-resources.containers.mycontainer.hostnames[0]=my.service.host
+test-resources.containers.mycontainer.exposed-ports[0].my.service.port=1883
+test-resources.containers.mycontainer.ro-anonymous-volumes[0]=/path/to/readonly/container/data
+test-resources.containers.mycontainer.rw-anonymous-volumes[0]=/path/to/readwrite/container/data</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">test-resources:
+  containers:
+    mycontainer:
+      image-name: my/container
+      hostnames:
+        - my.service.host
+      exposed-ports:
+        - my.service.port: 1883
+      ro-anonymous-volumes:
+        - /path/to/readonly/container/data
+      rw-anonymous-volumes:
+        - /path/to/readwrite/container/data</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources]
+  [test-resources.containers]
+    [test-resources.containers.mycontainer]
+      image-name="my/container"
+      hostnames=[
+        "my.service.host"
+      ]
+      ro-anonymous-volumes=[
+        "/path/to/readonly/container/data"
+      ]
+      rw-anonymous-volumes=[
+        "/path/to/readwrite/container/data"
+      ]
+      [[test-resources.containers.mycontainer.exposed-ports]]
+        "my.service.port"=1883</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">testResources {
+  containers {
+    mycontainer {
+      imageName = "my/container"
+      hostnames = ["my.service.host"]
+      exposedPorts = [{
+          my.service.port = 1883
+        }]
+      roAnonymousVolumes = ["/path/to/readonly/container/data"]
+      rwAnonymousVolumes = ["/path/to/readwrite/container/data"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  test-resources {
+    containers {
+      mycontainer {
+        image-name = "my/container"
+        hostnames = ["my.service.host"]
+        exposed-ports = [{
+            "my.service.port" = 1883
+          }]
+        ro-anonymous-volumes = ["/path/to/readonly/container/data"]
+        rw-anonymous-volumes = ["/path/to/readwrite/container/data"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "test-resources": {
+    "containers": {
+      "mycontainer": {
+        "image-name": "my/container",
+        "hostnames": ["my.service.host"],
+        "exposed-ports": [{
+            "my.service.port": 1883
+          }],
+        "ro-anonymous-volumes": ["/path/to/readonly/container/data"],
+        "rw-anonymous-volumes": ["/path/to/readwrite/container/data"]
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Unlike <code>*-fs-bind</code>, anonymous volumes do not map a host path. They use Docker-managed storage attached only to the container path, which is useful when the container expects persistent writable directories but you do not want filesystem exposure from the host. Anonymous volume targets must remain distinct from any existing bind, mount, or tmpfs target for the same container path.</p>
 </div>
 <div class="paragraph">
 <p>It is also possible to copy files from the host to the container:</p>
@@ -1856,9 +4097,7 @@ It is possible to let containers communicate with each other by declaring the ne
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.producer.image-name=alpine:3.14
-test-resources.containers.producer.command[0]=/bin/sh
-test-resources.containers.producer.command[1]=-c
-test-resources.containers.producer.command[2]=while true ; do printf 'HTTP/1.1 200 OK\n\nyay' | nc -l -p 8080; done
+test-resources.containers.producer.command=top
 test-resources.containers.producer.network=custom
 test-resources.containers.producer.network-aliases=bob
 test-resources.containers.producer.hostnames=producer.host
@@ -1875,10 +4114,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
   containers:
     producer:
       image-name: alpine:3.14
-      command:
-        - /bin/sh
-        - "-c"
-        - "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"
+      command: top
       network: custom
       network-aliases: bob
       hostnames: producer.host
@@ -1896,11 +4132,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
   [test-resources.containers]
     [test-resources.containers.producer]
       image-name="alpine:3.14"
-      command=[
-        "/bin/sh",
-        "-c",
-        "while true ; do printf \'HTTP/1.1 200 OK\\n\\nyay\' | nc -l -p 8080; done"
-      ]
+      command="top"
       network="custom"
       network-aliases="bob"
       hostnames="producer.host"
@@ -1918,7 +4150,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
   containers {
     producer {
       imageName = "alpine:3.14"
-      command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+      command = "top"
       network = "custom"
       networkAliases = "bob"
       hostnames = "producer.host"
@@ -1941,7 +4173,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
     containers {
       producer {
         image-name = "alpine:3.14"
-        command = ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"]
+        command = "top"
         network = "custom"
         network-aliases = "bob"
         hostnames = "producer.host"
@@ -1965,7 +4197,7 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
     "containers": {
       "producer": {
         "image-name": "alpine:3.14",
-        "command": ["/bin/sh", "-c", "while true ; do printf 'HTTP/1.1 200 OK\\n\\nyay' | nc -l -p 8080; done"],
+        "command": "top",
         "network": "custom",
         "network-aliases": "bob",
         "hostnames": "producer.host"
@@ -1997,7 +4229,7 @@ The <code>network-aliases</code> can be used to assign host names to the contain
 <h2 id="_wait_strategies">Wait strategies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Micronaut Test Resources uses the default <a href="https://www.testcontainers.org/features/startup_and_waits/">Testcontainers wait strategies</a>.</p>
+<p>Micronaut Test Resources uses the underlying container&#8217;s default <a href="https://www.testcontainers.org/features/startup_and_waits/">Testcontainers wait strategies</a> unless you configure <code>test-resources.containers.&lt;name&gt;.wait-strategy&#8230;&#8203;</code> or a provider documents a more specific default.</p>
 </div>
 <div class="paragraph">
 <p>It is however possible to override the default by configuration.</p>
@@ -2116,7 +4348,7 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 <p><code>status-code</code>: the list of expected status codes</p>
 </li>
 <li>
-<p><code>port</code> strategy (this is the default strategy)</p>
+<p><code>port</code> strategy</p>
 </li>
 <li>
 <p><code>healthcheck</code>: Docker healthcheck strategy</p>
@@ -2429,13 +4661,16 @@ Dependencies between containers <strong>only work between generic containers</st
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Container-backed resolvers can distinguish between the logical consumer name and the physical test resource identity. When multiple consumers set the same <code>test-resources.resource-name</code>, Micronaut Test Resources can reuse one physical container for the same provider and scope. Supported database resolvers can also combine that shared resource name with per-datasource <code>db-name</code> values to create multiple databases on the same shared container. Without that opt-in property, each logical consumer keeps the default isolated behavior.</p>
+</div>
 </div>
 </div>
 
-<h1 id="extensions"><a class="anchor" href="#extensions"></a>5 Micronaut Test extensions</h1>
+<h1 id="extensions"><a class="anchor" href="#extensions"></a>6 Micronaut Test extensions</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/extensions.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/extensions.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2446,10 +4681,10 @@ Dependencies between containers <strong>only work between generic containers</st
 The core extension provides a way to expand the set of test properties available to tests, while the JUnit Platform extension provides ways to isolate resources needed by different tests.</p>
 </div>
 
-<h2 id="extensions-core"><a class="anchor" href="#extensions-core"></a>5.1 Core extension</h2>
+<h2 id="extensions-core"><a class="anchor" href="#extensions-core"></a>6.1 Core extension</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/extensions-core.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/extensions-core.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2473,7 +4708,8 @@ The core extension provides a way to expand the set of test properties available
     &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div></p>
+</div>
+</p>
 </div>
 <div class="sect1">
 <h2 id="_expanding_the_set_of_test_properties">Expanding the set of test properties</h2>
@@ -2573,10 +4809,10 @@ class ConnectionSpec {
 </div>
 </div>
 
-<h2 id="extensions-junit-platform"><a class="anchor" href="#extensions-junit-platform"></a>5.2 JUnit Platform</h2>
+<h2 id="extensions-junit-platform"><a class="anchor" href="#extensions-junit-platform"></a>6.2 JUnit Platform</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/extensions-junit-platform.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/extensions-junit-platform.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2600,7 +4836,8 @@ class ConnectionSpec {
     &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div></p>
+</div>
+</p>
 </div>
 <div class="paragraph">
 <p>This extension is compatible with test frameworks which use JUnit Platform, which means in particular all test frameworks supported by Micronaut:</p>
@@ -2725,21 +4962,39 @@ Similarly, using the test distribution plugin of Gradle will trigger the same pr
 </div>
 </div>
 
-<h1 id="debugging"><a class="anchor" href="#debugging"></a>6 Debugging</h1>
+<h1 id="debugging"><a class="anchor" href="#debugging"></a>7 Debugging</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/debugging.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/debugging.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
 
 
+<div class="paragraph">
+<p>The supported debugging path for the remote protocol is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Gradle debug mode for the test resources server process</p>
+</li>
+<li>
+<p>server logs</p>
+</li>
+<li>
+<p>the control panel when it is available on the server classpath</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Mixed client/server versions across the JSON and binary protocol boundary are not supported.</p>
+</div>
 
-
-<h2 id="debugging-intro"><a class="anchor" href="#debugging-intro"></a>6.1 Running the test resources service in debug mode</h2>
+<h2 id="debugging-intro"><a class="anchor" href="#debugging-intro"></a>7.1 Running the test resources service in debug mode</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/debugging-intro.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/debugging-intro.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2769,11 +5024,15 @@ This can be configured using the following code:</p>
 <div class="paragraph">
 <p>Alternatively, you may want to add the test resources control panel.</p>
 </div>
+<div class="paragraph">
+<p>On <code>4.0.x</code>, the remote RPC endpoints are binary rather than JSON.
+If you need to understand what the server is doing, prefer server logs, Gradle debug mode, and the control panel instead of calling the RPC routes with <code>curl</code> or <code>httpie</code>.</p>
+</div>
 
-<h2 id="modules-control-panel"><a class="anchor" href="#modules-control-panel"></a>6.2 Control Panel</h2>
+<h2 id="modules-control-panel"><a class="anchor" href="#modules-control-panel"></a>7.2 Control Panel</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/modules-control-panel.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-control-panel.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2823,10 +5082,10 @@ It provides information about:</p>
 That request context is displayed</p>
 </div>
 
-<h1 id="architecture"><a class="anchor" href="#architecture"></a>7 Architecture</h1>
+<h1 id="architecture"><a class="anchor" href="#architecture"></a>8 Architecture</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/architecture.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/architecture.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2853,11 +5112,15 @@ That request context is displayed</p>
 For example, if a bean needs the value of the <code>datasources.default.url</code> property and that this property isn&#8217;t set, then the client will issue a request on the test resources server to give the value of that property.
 As a side effect of providing the value, a database container may be started.</p>
 </div>
+<div class="paragraph">
+<p>On the <code>4.0.x</code> line, the client/server RPC boundary uses a dedicated binary media type instead of JSON.
+This keeps the remote protocol narrow and removes the JSON transport requirement from the client side.</p>
+</div>
 
-<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>7.1 The test resources server</h2>
+<h2 id="architecture-server"><a class="anchor" href="#architecture-server"></a>8.1 The test resources server</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/architecture-server.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/architecture-server.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2875,11 +5138,15 @@ As a side effect of providing the value, a database container may be started.</p
 <div class="paragraph">
 <p>It means, for example, that with <a href="https://docs.gradle.org/current/userguide/userguide_single.html#sec:continuous_build">Gradle continuous builds</a>, the test resources server would outlive a single build, making it possible to develop your application while not paying the price of starting a container on each build.</p>
 </div>
+<div class="paragraph">
+<p>The remote RPC endpoints exposed by the server now consume and produce a dedicated binary media type.
+Manual JSON callers are therefore not a supported integration path for those endpoints on <code>4.0.x</code>.</p>
+</div>
 
-<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>7.1.1 Sharing containers between independent builds</h2>
+<h2 id="architecture-shared-server"><a class="anchor" href="#architecture-shared-server"></a>8.1.1 Sharing containers between independent builds</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/architecture-shared-server.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/architecture-shared-server.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2910,10 +5177,10 @@ If you use a shared server, then you must make sure that the <em>first build</em
 </table>
 </div>
 
-<h2 id="architecture-configuration"><a class="anchor" href="#architecture-configuration"></a>7.1.2 Configuring the server</h2>
+<h2 id="architecture-configuration"><a class="anchor" href="#architecture-configuration"></a>8.1.2 Configuring the server</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/architecture-configuration.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/architecture-configuration.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2929,10 +5196,10 @@ To configure the timeout, you can pass a system property <code>docker.check.time
 </div>
 </div>
 
-<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>7.2 The test resources client</h2>
+<h2 id="architecture-client"><a class="anchor" href="#architecture-client"></a>8.2 The test resources client</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/architecture-client.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/architecture-client.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2946,11 +5213,57 @@ It basically delegates requests of property resolution from Micronaut to the ser
 <p>This client is automatically injected on the application classpath in development mode or during tests.
 As a user, you should never have to deal with this module directly.</p>
 </div>
+<div class="sect1">
+<h2 id="_conventional_lookup_locations">Conventional lookup locations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When the client is configured automatically, Micronaut Test Resources prefers system properties.
+This is the most reliable option because it supports the full client configuration, including shared servers and namespaces.</p>
+</div>
+<div class="paragraph">
+<p>If the client cannot find the server settings in system properties, it falls back to <code>test-resources.properties</code> files in conventional locations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>./.micronaut/test-resources/test-resources.properties</code></p>
+</li>
+<li>
+<p><code>~/.micronaut/test-resources/test-resources.properties</code> when the <code>TEST_RESOURCES_NAMESPACE</code> environment variable is not set</p>
+</li>
+<li>
+<p><code>~/.micronaut/test-resources-&lt;namespace&gt;/test-resources.properties</code> when the <code>TEST_RESOURCES_NAMESPACE</code> environment variable is set</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Build tools write this file when they start a server and create fresh recorded settings, then reuse it when reconnecting to an already-running shared server.
+The working-directory location is scoped to the current project checkout.
+The user-home location is intended for settings shared across builds, so it can survive older experiments or manually managed shared servers.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If Micronaut Test Resources unexpectedly connects to an old server or fails because a recorded server is no longer running, remove the stale <code>test-resources.properties</code> file from the relevant <code>.micronaut</code> directory and rerun the build so the settings can be recreated.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The remote transport is a small binary protocol shared with the server.
+That protocol is intentionally limited to the value shapes used by the RPC layer: strings, booleans, integral numbers, lists, maps, and <code>null</code>.</p>
+</div>
+</div>
+</div>
 
-<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>7.3 Embedded test resources</h2>
+<h2 id="architecture-embedded"><a class="anchor" href="#architecture-embedded"></a>8.3 Embedded test resources</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/architecture-embedded.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/architecture-embedded.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -2968,10 +5281,10 @@ However, we don&#8217;t recommend it because it would enhance the application cl
 <p>The client/server model is designed to avoid this situation, while offering a more fine-grained control over the lifecycle of the test resources.</p>
 </div>
 
-<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>7.4 Implementing a test resource</h2>
+<h2 id="implementing-test-resources"><a class="anchor" href="#implementing-test-resources"></a>8.4 Implementing a test resource</h2>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/implementing-test-resources.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/implementing-test-resources.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3071,10 +5384,10 @@ If, for some reason, the resolver cannot resolve the expression then <code>Optio
 </div>
 </div>
 
-<h1 id="testResourcesGuides"><a class="anchor" href="#testResourcesGuides"></a>8 Guides</h1>
+<h1 id="testResourcesGuides"><a class="anchor" href="#testResourcesGuides"></a>9 Guides</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/testResourcesGuides.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/testResourcesGuides.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -3097,10 +5410,10 @@ If, for some reason, the resolver cannot resolve the expression then <code>Optio
 </ul>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>9 Repository</h1>
+<h1 id="repository"><a class="anchor" href="#repository"></a>10 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/2.10.x/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>

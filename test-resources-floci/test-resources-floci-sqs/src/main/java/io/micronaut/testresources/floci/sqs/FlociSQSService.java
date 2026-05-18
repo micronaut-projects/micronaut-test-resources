@@ -15,36 +15,17 @@
  */
 package io.micronaut.testresources.floci.sqs;
 
-import io.floci.testcontainers.FlociContainer;
-import io.micronaut.testresources.floci.FlociService;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import io.micronaut.testresources.floci.AbstractFlociService;
 
 /**
  * Adds support for Floci SQS.
  */
-public class FlociSQSService implements FlociService {
+public class FlociSQSService extends AbstractFlociService {
 
     private static final String AWS_SQS_ENDPOINT_OVERRIDE = "aws.services.sqs.endpoint-override";
     private static final String SERVICE = "sqs";
 
-    @Override
-    public Optional<String> resolveProperty(String propertyName, FlociContainer container) {
-        if (AWS_SQS_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpoint());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public String getServiceKind() {
-        return SERVICE;
-    }
-
-    @Override
-    public List<String> getResolvableProperties() {
-        return Collections.singletonList(AWS_SQS_ENDPOINT_OVERRIDE);
+    public FlociSQSService() {
+        super(SERVICE, AWS_SQS_ENDPOINT_OVERRIDE);
     }
 }

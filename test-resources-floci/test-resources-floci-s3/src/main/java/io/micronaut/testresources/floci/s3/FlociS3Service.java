@@ -15,36 +15,17 @@
  */
 package io.micronaut.testresources.floci.s3;
 
-import io.floci.testcontainers.FlociContainer;
-import io.micronaut.testresources.floci.FlociService;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import io.micronaut.testresources.floci.AbstractFlociService;
 
 /**
  * Adds support for Floci S3.
  */
-public class FlociS3Service implements FlociService {
+public class FlociS3Service extends AbstractFlociService {
 
     private static final String AWS_S3_ENDPOINT_OVERRIDE = "aws.services.s3.endpoint-override";
     private static final String SERVICE = "s3";
 
-    @Override
-    public Optional<String> resolveProperty(String propertyName, FlociContainer container) {
-        if (AWS_S3_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpoint());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public String getServiceKind() {
-        return SERVICE;
-    }
-
-    @Override
-    public List<String> getResolvableProperties() {
-        return Collections.singletonList(AWS_S3_ENDPOINT_OVERRIDE);
+    public FlociS3Service() {
+        super(SERVICE, AWS_S3_ENDPOINT_OVERRIDE);
     }
 }

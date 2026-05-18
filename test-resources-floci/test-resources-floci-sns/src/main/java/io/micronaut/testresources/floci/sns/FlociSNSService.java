@@ -15,36 +15,17 @@
  */
 package io.micronaut.testresources.floci.sns;
 
-import io.floci.testcontainers.FlociContainer;
-import io.micronaut.testresources.floci.FlociService;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import io.micronaut.testresources.floci.AbstractFlociService;
 
 /**
  * Adds support for Floci SNS.
  */
-public class FlociSNSService implements FlociService {
+public class FlociSNSService extends AbstractFlociService {
 
     private static final String AWS_SNS_ENDPOINT_OVERRIDE = "aws.services.sns.endpoint-override";
     private static final String SERVICE = "sns";
 
-    @Override
-    public Optional<String> resolveProperty(String propertyName, FlociContainer container) {
-        if (AWS_SNS_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpoint());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public String getServiceKind() {
-        return SERVICE;
-    }
-
-    @Override
-    public List<String> getResolvableProperties() {
-        return Collections.singletonList(AWS_SNS_ENDPOINT_OVERRIDE);
+    public FlociSNSService() {
+        super(SERVICE, AWS_SNS_ENDPOINT_OVERRIDE);
     }
 }

@@ -60,7 +60,7 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
 
     static {
         SERVICES = StreamSupport.stream(ServiceLoader.load(FlociService.class).spliterator(), false)
-            .collect(Collectors.toList());
+            .toList();
         Map<String, List<String>> resolvableProperties = new HashMap<>();
         Map<String, FlociService> propertyToService = new HashMap<>();
         COMMON_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
@@ -94,7 +94,7 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
                 SERVICES.stream().flatMap(service -> service.getResolvableProperties().stream()),
                 COMMON_PROPERTIES.stream()
             ).distinct()
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Override

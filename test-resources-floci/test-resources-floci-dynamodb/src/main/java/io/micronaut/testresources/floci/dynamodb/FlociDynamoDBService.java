@@ -15,36 +15,17 @@
  */
 package io.micronaut.testresources.floci.dynamodb;
 
-import io.floci.testcontainers.FlociContainer;
-import io.micronaut.testresources.floci.FlociService;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import io.micronaut.testresources.floci.AbstractFlociService;
 
 /**
  * Adds support for Floci DynamoDB.
  */
-public class FlociDynamoDBService implements FlociService {
+public class FlociDynamoDBService extends AbstractFlociService {
 
     private static final String AWS_DYNAMODB_ENDPOINT_OVERRIDE = "aws.services.dynamodb.endpoint-override";
     private static final String SERVICE = "dynamodb";
 
-    @Override
-    public Optional<String> resolveProperty(String propertyName, FlociContainer container) {
-        if (AWS_DYNAMODB_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpoint());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public String getServiceKind() {
-        return SERVICE;
-    }
-
-    @Override
-    public List<String> getResolvableProperties() {
-        return Collections.singletonList(AWS_DYNAMODB_ENDPOINT_OVERRIDE);
+    public FlociDynamoDBService() {
+        super(SERVICE, AWS_DYNAMODB_ENDPOINT_OVERRIDE);
     }
 }

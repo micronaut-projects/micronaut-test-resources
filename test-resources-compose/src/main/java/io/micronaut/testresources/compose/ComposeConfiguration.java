@@ -16,6 +16,7 @@
 package io.micronaut.testresources.compose;
 
 import io.micronaut.testresources.core.Scope;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -98,7 +99,7 @@ record ComposeConfiguration(
         return Boolean.parseBoolean(String.valueOf(value));
     }
 
-    private static String stringValue(Map<String, Object> testResourcesConfig, String key) {
+    private static @Nullable String stringValue(Map<String, Object> testResourcesConfig, String key) {
         Object value = testResourcesConfig.get(PREFIX + key);
         return value == null ? null : String.valueOf(value);
     }
@@ -127,7 +128,7 @@ record ComposeConfiguration(
         return Duration.parse(text);
     }
 
-    private static List<String> listValue(Object value) {
+    private static List<String> listValue(@Nullable Object value) {
         if (value == null) {
             return List.of();
         }
@@ -142,7 +143,7 @@ record ComposeConfiguration(
         return List.copyOf(result);
     }
 
-    private static void addValue(List<String> values, Object value) {
+    private static void addValue(List<String> values, @Nullable Object value) {
         if (value != null) {
             String text = String.valueOf(value).trim();
             if (!text.isBlank()) {
@@ -151,7 +152,7 @@ record ComposeConfiguration(
         }
     }
 
-    private static String defaultProjectName(Path workingDirectory, Object scope) {
+    private static String defaultProjectName(Path workingDirectory, @Nullable Object scope) {
         String directory = Objects.toString(workingDirectory.getFileName(), "micronaut-test-resources");
         String suffix = scope == null || String.valueOf(scope).isBlank() ? "" : "-" + scope;
         String normalized = (directory + suffix).toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_-]", "-");

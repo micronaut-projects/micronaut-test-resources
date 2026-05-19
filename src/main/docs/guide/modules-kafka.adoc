@@ -21,4 +21,39 @@ test-resources:
       partitions: 3
 ----
 
+== Kafka services
+
+The Kafka module can also start Confluent Schema Registry, Kafka Connect, and ksqlDB test containers.
+Each service depends on the Kafka broker container and uses the same test resources scope, so requesting a service URL starts Kafka if it is not already running and reuses the broker if `kafka.bootstrap.servers` was already resolved.
+
+[cols="1,1,1"]
+|===
+|Resolved property |Default image |REST port
+
+|`kafka.schema.registry.url`
+|`{default-image-kafka-schema-registry}`
+|`8081`
+
+|`kafka.connect.url`
+|`{default-image-kafka-connect}`
+|`8083`
+
+|`kafka.ksqldb.url`
+|`{default-image-kafka-ksqldb}`
+|`8088`
+|===
+
+The returned values are host-accessible `http://` URLs using random Testcontainers host ports.
+The containers communicate with Kafka on an internal Docker network, so no fixed host port is required.
+
+Request one of the listed URL properties when a service should be started.
+For example, a test-only bean can require and inject the Schema Registry URL:
+
+snippet::io.micronaut.testresources.kafka.SchemaRegistryClientConfiguration[project=test-resources-kafka,source=test,tags=clazz]
+
+Test Resources will provide the URL value for the matching service and start Kafka as a dependency.
+
+These REST APIs are intended for local test infrastructure.
+They are exposed without credentials on random localhost ports and should not be used as production service configuration.
+
 TIP: See the guide for https://guides.micronaut.io/latest/testing-micronaut-kafka-listener-using-testcontainers.html[Testing Kafka Listener using Testcontainers with the Micronaut Framework] to learn more.

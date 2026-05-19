@@ -26,6 +26,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
 
     @TempDir
     Path tempDir
+
     private final List<Path> gradleUserHomes = []
 
     def cleanup() {
@@ -45,7 +46,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
         writeStandaloneProject(sampleProject, "intellij-export-sample", outputFile, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
 
         when:
-        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "--no-parallel", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
+        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
         CommandResult build = runGradle(repoRoot, [
             "--console=plain",
             "--no-daemon",
@@ -86,7 +87,7 @@ class IntellijIdeaDatasourceExporterStandaloneProjectTest extends Specification 
         writeStandaloneProject(secondProject, "intellij-export-second", null, projectVersion, micronautPlatformVersion, micronautGradlePluginVersion)
 
         when:
-        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "--no-parallel", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
+        CommandResult publish = runGradle(repoRoot, ["--console=plain", "--no-daemon", "-Dmaven.repo.local=${mavenRepo}".toString()] + SNAPSHOT_PUBLISH_TASKS)
         CommandResult firstBuild = runGradle(repoRoot, [
             "--console=plain",
             "--gradle-user-home", gradleUserHome.toString(),

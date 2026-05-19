@@ -71,11 +71,13 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     }
 
     @Override
+    @SuppressWarnings("java:S2095")
     protected MongoDBContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         Object configuredDbName = testResourcesConfig.get(DB_NAME);
         if (configuredDbName != null) {
             this.dbName = configuredDbName.toString();
         }
+        // The container lifecycle is owned by AbstractTestContainersProvider via TestContainers.getOrCreate.
         return new MongoDBContainer(imageName).withReplicaSet();
     }
 

@@ -32,6 +32,9 @@ class DefaultTestResourceImagesTest extends Specification {
         'hivemq',
         'infinispan',
         'kafka',
+        'kafka_schema_registry',
+        'kafka_connect',
+        'kafka_ksqldb',
         'keycloak',
         'localstack',
         'mailpit',
@@ -67,6 +70,9 @@ class DefaultTestResourceImagesTest extends Specification {
         DefaultTestResourceImages.DEFAULT_HIVEMQ_IMAGE == DefaultTestResourceImages.image('hivemq')
         DefaultTestResourceImages.DEFAULT_INFINISPAN_IMAGE == DefaultTestResourceImages.image('infinispan')
         DefaultTestResourceImages.DEFAULT_KAFKA_IMAGE == DefaultTestResourceImages.image('kafka')
+        DefaultTestResourceImages.DEFAULT_KAFKA_SCHEMA_REGISTRY_IMAGE == DefaultTestResourceImages.image('kafka_schema_registry')
+        DefaultTestResourceImages.DEFAULT_KAFKA_CONNECT_IMAGE == DefaultTestResourceImages.image('kafka_connect')
+        DefaultTestResourceImages.DEFAULT_KAFKA_KSQLDB_IMAGE == DefaultTestResourceImages.image('kafka_ksqldb')
         DefaultTestResourceImages.DEFAULT_KEYCLOAK_IMAGE == DefaultTestResourceImages.image('keycloak')
         DefaultTestResourceImages.DEFAULT_LOCALSTACK_IMAGE == DefaultTestResourceImages.image('localstack')
         DefaultTestResourceImages.DEFAULT_MAILPIT_IMAGE == DefaultTestResourceImages.image('mailpit')
@@ -129,7 +135,7 @@ class DefaultTestResourceImagesTest extends Specification {
             'modules-hashicorp-vault.adoc': ['vault'],
             'modules-hazelcast.adoc': ['hazelcast'],
             'modules-infinispan.adoc': ['infinispan'],
-            'modules-kafka.adoc': ['kafka'],
+            'modules-kafka.adoc': ['kafka', 'kafka_schema_registry', 'kafka_connect', 'kafka_ksqldb'],
             'modules-localstack.adoc': ['localstack'],
             'modules-mailpit.adoc': ['mailpit'],
             'modules-minio.adoc': ['minio'],

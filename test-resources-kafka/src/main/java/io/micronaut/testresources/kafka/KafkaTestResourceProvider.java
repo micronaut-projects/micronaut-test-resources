@@ -16,8 +16,8 @@
 package io.micronaut.testresources.kafka;
 
 import io.micronaut.testresources.core.DefaultTestResourceImages;
-import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
+import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -26,21 +26,21 @@ import org.apache.kafka.common.errors.TopicExistsException;
 import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.math.BigDecimal;
-
 
 /**
  * A test resource provider which will spawn a Kafka test container.
@@ -86,7 +86,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     @Override
     protected KafkaContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new KafkaContainer(imageName);
+        return KafkaServices.configureKafka(new KafkaContainer(imageName), requestedProperties);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             }
             beforeCreateTopics(container, configuration, topicsToCreate);
             var createTopicsResult = adminClient.createTopics(topicsToCreate);
-            List<String> topicsToReverify = new java.util.ArrayList<String>();
+            List<String> topicsToReverify = new ArrayList<>();
             for (NewTopic topic : topicsToCreate) {
                 try {
                     createTopicsResult.values().get(topic.name()).get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -153,6 +153,8 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
                     } else {
                         throw e;
                     }
+                } catch (TimeoutException e) {
+                    topicsToReverify.add(topic.name());
                 }
             }
             verifyExistingTopicPartitions(adminClient, topicsToReverify, configuration);

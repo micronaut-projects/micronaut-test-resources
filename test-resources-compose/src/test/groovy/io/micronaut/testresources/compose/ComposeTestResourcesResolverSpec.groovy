@@ -357,6 +357,22 @@ services:
         "oracle"    | "jpa.default.properties.hibernate.connection.url"     | ["jpa.default.properties.hibernate.connection.db-type": "oracle"]         | "jdbc:oracle:thin:@//compose.test:12345/orders"
     }
 
+    def "configured datasource database names override compose service defaults"() {
+        given:
+        def descriptor = ComposeServiceDescriptors.findDatabaseDescriptor("datasources.inventory.url", [
+                "datasources.inventory.db-type": "postgres",
+                "datasources.inventory.db-name": "configured"
+        ]).get()
+        def service = new ComposeService("db", "postgres:17", [:], ["POSTGRES_DB": "environment"], [5432], [])
+        def endpoint = new ComposeEndpoint("compose.test", 12345)
+
+        expect:
+        descriptor.resolve("datasources.inventory.url", endpoint, service, [
+                "datasources.inventory.db-type": "postgres",
+                "datasources.inventory.db-name": "configured"
+        ]) == "jdbc:postgresql://compose.test:12345/configured"
+    }
+
     def "database descriptor returns empty when property is not datasource backed"() {
         expect:
         ComposeServiceDescriptors.findDatabaseDescriptor("server.port", [:]).empty
@@ -552,6 +568,17 @@ services:
     def "container manager close operations are idempotent without running environments"() {
         expect:
         !ComposeContainerManager.closeScope("test")
+        !ComposeContainerManager.closeAll()
+    }
+
+    def "lifecycle close operations are noops when no compose environment was started"() {
+        given:
+        def lifecycle = new ComposeTestResourcesLifecycle()
+
+        expect:
+        !lifecycle.closeScope("scope")
+        !lifecycle.closeAll()
+        !ComposeContainerManager.closeScope("scope")
         !ComposeContainerManager.closeAll()
     }
 

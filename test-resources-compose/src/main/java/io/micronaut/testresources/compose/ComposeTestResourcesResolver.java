@@ -234,7 +234,9 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
                 matches.stream().map(ComposeService::redactedSummary).toList());
             return Optional.empty();
         }
-        LOG.info("Matched Docker Compose service {} for {}", matches.get(0).redactedSummary(), description);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Matched Docker Compose service {} for {}", matches.get(0).redactedSummary(), description);
+        }
         return Optional.of(matches.get(0));
     }
 

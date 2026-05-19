@@ -69,7 +69,51 @@ labels:
   io.micronaut.test-resources.datasource: inventory
 ----
 
-Supported labels in the initial implementation are:
+The `io.micronaut.test-resources.service` label accepts the canonical service type or a supported alias.
+The resolver also tries to match by image name and the service's exposed internal port, but explicit labels are preferred for custom images and multi-service Compose files.
+
+Supported service families include:
+
+[cols="1,2", options="header"]
+|===
+| Service family
+| Resolved properties
+
+| JDBC, R2DBC, and Hibernate Reactive databases
+| PostgreSQL, MySQL, MariaDB, MSSQL, and Oracle services can resolve datasource URLs, usernames, passwords, and driver names from Compose metadata.
+
+| Redis
+| Resolves unauthenticated single-node `redis.uri`.
+
+| RabbitMQ
+| Resolves `rabbitmq.uri`, `rabbitmq.username`, and `rabbitmq.password`.
+
+| Kafka and Redpanda
+| Resolves `kafka.bootstrap.servers`.
+
+| MongoDB
+| Resolves `mongodb.uri` and named `mongodb.servers.*.uri` entries.
+
+| LocalStack
+| Resolves common AWS credentials, region, and S3, DynamoDB, SQS, and SNS endpoint overrides.
+
+| Azure Storage / Azurite
+| Resolves the storage shared-key account name, key, and connection string.
+
+| Couchbase
+| Resolves `couchbase.uri`, `couchbase.username`, and `couchbase.password`.
+
+| Consul and Vault
+| Resolves client host, port, URI, and token properties.
+
+| Hazelcast, HiveMQ, Infinispan, Mailpit, MinIO, Neo4j, Keycloak, OpenSearch/Elasticsearch, OpenTelemetry, Pulsar, SeaweedFS, Solr, and WireMock
+| Resolves the same primary connection properties as the matching Test Resources provider.
+|===
+
+H2, Oracle Test Pilot, R2DBC pool, and the generic Testcontainers provider do not map to reusable Compose service discovery.
+They remain handled by their existing provider behavior.
+
+Supported labels are:
 
 [cols="1,1", options="header"]
 |===
@@ -77,27 +121,45 @@ Supported labels in the initial implementation are:
 | Purpose
 
 | `io.micronaut.test-resources.service`
-| Selects the supported service type, currently `postgres`, `postgresql`, `pg`, or `redis`.
+| Selects the supported service type, such as `postgres`, `mysql`, `redis`, `rabbitmq`, `kafka`, `localstack`, `azure-storage`, `keycloak`, or `wiremock`.
 
 | `io.micronaut.test-resources.datasource`
-| Selects the logical datasource name for PostgreSQL. If omitted, an unambiguous PostgreSQL service maps to `default`.
+| Selects the logical datasource name for database services. If omitted, an unambiguous database service maps to `default`.
 
 | `io.micronaut.test-resources.username`
-| Overrides the PostgreSQL username.
+| Overrides the service username when the service family supports username resolution.
 
 | `io.micronaut.test-resources.password`
-| Overrides the PostgreSQL password.
+| Overrides the service password when the service family supports password resolution.
 
 | `io.micronaut.test-resources.database`
-| Overrides the PostgreSQL database name.
+| Overrides the service database name when the service family supports database selection.
+
+| `io.micronaut.test-resources.access-key`
+| Overrides the access key for object-storage style services.
+
+| `io.micronaut.test-resources.secret-key`
+| Overrides the secret key for object-storage style services.
+
+| `io.micronaut.test-resources.token`
+| Overrides token-based service credentials.
+
+| `io.micronaut.test-resources.realm`
+| Selects the Keycloak realm used in generated issuer and JWKS URLs.
+
+| `io.micronaut.test-resources.client-id`
+| Overrides OAuth2 or MQTT client IDs when the service family supports them.
+
+| `io.micronaut.test-resources.client-secret`
+| Overrides OAuth2 client secrets when the service family supports them.
 
 | `io.micronaut.test-resources.ignore`
 | Excludes a service from Compose matching when set to `true`.
 |===
 
-PostgreSQL values are read from explicit labels first, then from `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB`.
+Database values are read from explicit labels first, then from the common image-specific environment variables, and finally from the same defaults used by the matching Test Resources provider where possible.
 Redis support resolves unauthenticated single-node `redis.uri`.
-If Redis authentication is configured, the Compose resolver logs that it cannot safely map the URI in this initial implementation and falls back to the normal Redis provider.
+If Redis authentication is configured, the Compose resolver logs that it cannot safely map the URI and falls back to the normal Redis provider.
 
 Additional Compose options are available under `test-resources.compose`:
 

@@ -22,6 +22,12 @@ final class ComposeLabels {
     static final String USERNAME = "io.micronaut.test-resources.username";
     static final String PASSWORD = "io.micronaut.test-resources.password";
     static final String DATABASE = "io.micronaut.test-resources.database";
+    static final String ACCESS_KEY = "io.micronaut.test-resources.access-key";
+    static final String SECRET_KEY = "io.micronaut.test-resources.secret-key";
+    static final String TOKEN = "io.micronaut.test-resources.token";
+    static final String REALM = "io.micronaut.test-resources.realm";
+    static final String CLIENT_ID = "io.micronaut.test-resources.client-id";
+    static final String CLIENT_SECRET = "io.micronaut.test-resources.client-secret";
 
     private ComposeLabels() {
     }

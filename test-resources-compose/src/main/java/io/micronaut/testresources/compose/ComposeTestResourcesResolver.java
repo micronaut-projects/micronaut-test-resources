@@ -22,10 +22,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -33,21 +31,8 @@ import java.util.stream.Stream;
  * Resolves supported missing Micronaut properties from a Testcontainers-managed Docker Compose environment.
  */
 public final class ComposeTestResourcesResolver implements ToggableTestResourcesResolver {
-    static final int POSTGRES_PORT = 5432;
-    static final int REDIS_PORT = 6379;
     private static final Logger LOG = LoggerFactory.getLogger(ComposeTestResourcesResolver.class);
     private static final int ORDER = -10;
-    private static final String PREFIX = "datasources";
-    private static final String URL = "url";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-    private static final String DRIVER = "driver-class-name";
-    private static final String DB_NAME = "db-name";
-    private static final String TYPE = "db-type";
-    private static final String DIALECT = "dialect";
-    private static final String RESOURCE_NAME = "test-resources.resource-name";
-    private static final String REDIS_URI = "redis.uri";
-    private static final Set<String> POSTGRES_TYPES = Set.of("postgres", "postgresql", "pg");
 
     private final ComposeMetadataParser parser;
     private final ComposeEnvironmentManager manager;
@@ -88,30 +73,75 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
         List<String> resolvable = new ArrayList<>();
-        Collection<String> datasources = propertyEntries.getOrDefault(PREFIX, List.of());
+        Collection<String> datasources = propertyEntries.getOrDefault(ComposeServiceDescriptors.DATASOURCES, List.of());
         for (String datasource : datasources) {
-            resolvable.add(PREFIX + "." + datasource + "." + URL);
-            resolvable.add(PREFIX + "." + datasource + "." + USERNAME);
-            resolvable.add(PREFIX + "." + datasource + "." + PASSWORD);
-            resolvable.add(PREFIX + "." + datasource + "." + DRIVER);
+            resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.URL));
+            resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.USERNAME));
+            resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.PASSWORD));
+            resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.DRIVER));
         }
-        resolvable.add(REDIS_URI);
+        Collection<String> r2dbcDatasources = propertyEntries.getOrDefault(ComposeServiceDescriptors.R2DBC_DATASOURCES, List.of());
+        Stream.concat(r2dbcDatasources.stream(), datasources.stream())
+            .distinct()
+            .forEach(datasource -> {
+                resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.URL));
+                resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.USERNAME));
+                resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.PASSWORD));
+            });
+        Collection<String> jpaDatasources = propertyEntries.getOrDefault(ComposeServiceDescriptors.JPA, List.of());
+        Stream.concat(jpaDatasources.stream(), datasources.stream())
+            .distinct()
+            .forEach(datasource -> {
+                resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.JPA, datasource, ComposeServiceDescriptors.HIBERNATE_CONNECTION + ComposeServiceDescriptors.URL));
+                resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.JPA, datasource, ComposeServiceDescriptors.HIBERNATE_CONNECTION + ComposeServiceDescriptors.USERNAME));
+                resolvable.add(ComposeServiceDescriptors.property(ComposeServiceDescriptors.JPA, datasource, ComposeServiceDescriptors.HIBERNATE_CONNECTION + ComposeServiceDescriptors.PASSWORD));
+            });
+        ComposeServiceDescriptors.SERVICES.stream()
+            .flatMap(descriptor -> descriptor.properties().stream())
+            .distinct()
+            .forEach(resolvable::add);
+        propertyEntries.getOrDefault("mongodb.servers", List.of()).stream()
+            .map(server -> "mongodb.servers." + server + ".uri")
+            .forEach(resolvable::add);
         return resolvable;
     }
 
     @Override
     public List<String> getRequiredPropertyEntries() {
-        return List.of(PREFIX);
+        return List.of(ComposeServiceDescriptors.DATASOURCES, ComposeServiceDescriptors.R2DBC_DATASOURCES, ComposeServiceDescriptors.JPA, "mongodb.servers");
     }
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        if (!isDatasourceExpression(expression)) {
+        String datasource = ComposeServiceDescriptors.datasourceName(expression);
+        if (datasource == null) {
             return List.of();
         }
-        String datasource = datasourceName(expression);
-        return Stream.of(TYPE, DIALECT, DB_NAME, RESOURCE_NAME)
-            .map(property -> datasourceProperty(datasource, property))
+        if (expression.startsWith(ComposeServiceDescriptors.R2DBC_DATASOURCES + ".")) {
+            return Stream.of(
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.URL),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.TYPE),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.DIALECT),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.R2DBC_DRIVER),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.DB_NAME),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.R2DBC_DATASOURCES, datasource, ComposeServiceDescriptors.RESOURCE_NAME),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.DB_NAME)
+                )
+                .toList();
+        }
+        if (expression.startsWith(ComposeServiceDescriptors.JPA + ".")) {
+            return Stream.of(
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.JPA, datasource, ComposeServiceDescriptors.HIBERNATE_CONNECTION + ComposeServiceDescriptors.TYPE),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.TYPE),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.URL),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.USERNAME),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.PASSWORD),
+                    ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, ComposeServiceDescriptors.DB_NAME)
+                )
+                .toList();
+        }
+        return Stream.of(ComposeServiceDescriptors.TYPE, ComposeServiceDescriptors.DIALECT, ComposeServiceDescriptors.DB_NAME, ComposeServiceDescriptors.RESOURCE_NAME)
+            .map(property -> ComposeServiceDescriptors.property(ComposeServiceDescriptors.DATASOURCES, datasource, property))
             .toList();
     }
 
@@ -123,11 +153,13 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
         }
         try {
             ComposeProject project = parser.parse(configuration);
-            if (REDIS_URI.equals(propertyName)) {
-                return resolveRedis(configuration, project, properties);
+            Optional<String> simple = resolveService(propertyName, configuration, project, properties);
+            if (simple.isPresent()) {
+                return simple;
             }
-            if (isDatasourceExpression(propertyName)) {
-                return resolvePostgres(propertyName, configuration, project, properties);
+            Optional<String> database = resolveDatabase(propertyName, configuration, project, properties);
+            if (database.isPresent()) {
+                return database;
             }
             return Optional.empty();
         } catch (RuntimeException e) {
@@ -136,41 +168,47 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
         }
     }
 
-    private Optional<String> resolvePostgres(String propertyName,
+    private Optional<String> resolveService(String propertyName,
+                                            ComposeConfiguration configuration,
+                                            ComposeProject project,
+                                            Map<String, Object> properties) {
+        Optional<ComposeServiceDescriptors.ServiceDescriptor> descriptor = ComposeServiceDescriptors.findServiceDescriptor(propertyName);
+        if (descriptor.isEmpty()) {
+            return Optional.empty();
+        }
+        Optional<ComposeService> service = match(project, configuration, descriptor.get()::matches, descriptor.get().serviceType());
+        if (service.isEmpty()) {
+            return Optional.empty();
+        }
+        if (descriptor.get().serviceType().equals("redis") && (service.get().labels().containsKey(ComposeLabels.PASSWORD) || service.get().environment().containsKey("REDIS_PASSWORD"))) {
+            LOG.warn("Ignoring Docker Compose Redis service {} because authenticated Redis URI mapping is not supported", service.get().name());
+            return Optional.empty();
+        }
+        return manager.endpoint(configuration, project, service.get(), descriptor.get().port(), properties)
+            .map(endpoint -> descriptor.get().resolve(new ComposeServiceDescriptors.ResolutionContext(propertyName, endpoint, service.get())))
+            .filter(value -> value != null && !value.isBlank());
+    }
+
+    private Optional<String> resolveDatabase(String propertyName,
                                              ComposeConfiguration configuration,
                                              ComposeProject project,
                                              Map<String, Object> properties) {
-        String datasource = datasourceName(propertyName);
-        if (!postgresRequested(datasource, properties)) {
+        Optional<ComposeServiceDescriptors.DatabaseDescriptor> descriptor = ComposeServiceDescriptors.findDatabaseDescriptor(propertyName, properties);
+        if (descriptor.isEmpty()) {
             return Optional.empty();
         }
-        Optional<ComposeService> service = match(project, configuration, serviceCandidate -> isPostgresForDatasource(serviceCandidate, datasource), "PostgreSQL datasource '" + datasource + "'");
+        String datasource = ComposeServiceDescriptors.datasourceName(propertyName);
+        Optional<ComposeService> service = match(project, configuration, candidate -> descriptor.get().matches(candidate) && matchesDatasource(candidate, datasource), descriptor.get().serviceType() + " datasource '" + datasource + "'");
         if (service.isEmpty()) {
             return Optional.empty();
         }
-        ComposeService postgres = service.get();
-        return switch (datasourceProperty(propertyName)) {
-            case URL -> manager.endpoint(configuration, project, postgres, POSTGRES_PORT, properties)
-                .map(endpoint -> "jdbc:postgresql://" + endpoint.hostPort() + "/" + database(postgres, datasource, properties));
-            case USERNAME -> Optional.of(username(postgres));
-            case PASSWORD -> Optional.of(password(postgres));
-            case DRIVER -> Optional.of("org.postgresql.Driver");
-            default -> Optional.empty();
-        };
-    }
-
-    private Optional<String> resolveRedis(ComposeConfiguration configuration, ComposeProject project, Map<String, Object> properties) {
-        Optional<ComposeService> service = match(project, configuration, ComposeTestResourcesResolver::isRedisCandidate, "Redis");
-        if (service.isEmpty()) {
-            return Optional.empty();
+        String endpointIndependentValue = descriptor.get().resolveWithoutEndpoint(propertyName, service.get(), properties);
+        if (endpointIndependentValue != null) {
+            return Optional.of(endpointIndependentValue);
         }
-        ComposeService redis = service.get();
-        if (redis.labels().containsKey(ComposeLabels.PASSWORD) || redis.environment().containsKey("REDIS_PASSWORD")) {
-            LOG.warn("Ignoring Docker Compose Redis service {} because authenticated Redis URI mapping is not supported in the initial implementation", redis.name());
-            return Optional.empty();
-        }
-        return manager.endpoint(configuration, project, redis, REDIS_PORT, properties)
-            .map(endpoint -> "redis://" + endpoint.hostPort());
+        return manager.endpoint(configuration, project, service.get(), descriptor.get().port(), properties)
+            .map(endpoint -> descriptor.get().resolve(propertyName, endpoint, service.get(), properties))
+            .filter(value -> value != null && !value.isBlank());
     }
 
     private Optional<ComposeService> match(ComposeProject project,
@@ -196,83 +234,11 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
         return Optional.of(matches.get(0));
     }
 
-    private boolean isPostgresForDatasource(ComposeService service, String datasource) {
-        if (!isPostgresCandidate(service)) {
-            return false;
-        }
+    private static boolean matchesDatasource(ComposeService service, String datasource) {
         String label = service.labels().get(ComposeLabels.DATASOURCE);
         if (label != null) {
             return label.equalsIgnoreCase(datasource);
         }
         return "default".equals(datasource);
-    }
-
-    static boolean isPostgresCandidate(ComposeService service) {
-        return explicitService(service, POSTGRES_TYPES)
-            || imageContains(service, "postgres")
-            || service.exposes(POSTGRES_PORT);
-    }
-
-    static boolean isRedisCandidate(ComposeService service) {
-        return explicitService(service, Set.of("redis"))
-            || imageContains(service, "redis")
-            || service.exposes(REDIS_PORT);
-    }
-
-    private static boolean explicitService(ComposeService service, Set<String> names) {
-        return service.serviceLabel().filter(names::contains).isPresent();
-    }
-
-    private static boolean imageContains(ComposeService service, String token) {
-        return service.image().toLowerCase(Locale.ROOT).contains(token);
-    }
-
-    private boolean postgresRequested(String datasource, Map<String, Object> properties) {
-        String type = stringValue(properties.get(datasourceProperty(datasource, TYPE)));
-        if (type != null) {
-            return POSTGRES_TYPES.contains(type.toLowerCase(Locale.ROOT));
-        }
-        String dialect = stringValue(properties.get(datasourceProperty(datasource, DIALECT)));
-        return dialect != null && POSTGRES_TYPES.contains(dialect.toLowerCase(Locale.ROOT));
-    }
-
-    private static String username(ComposeService service) {
-        return service.labelOrEnvironment(ComposeLabels.USERNAME, "POSTGRES_USER", "test");
-    }
-
-    private static String password(ComposeService service) {
-        return service.labelOrEnvironment(ComposeLabels.PASSWORD, "POSTGRES_PASSWORD", "test");
-    }
-
-    private static String database(ComposeService service, String datasource, Map<String, Object> properties) {
-        String configured = stringValue(properties.get(datasourceProperty(datasource, DB_NAME)));
-        if (configured != null) {
-            return configured;
-        }
-        return service.labelOrEnvironment(ComposeLabels.DATABASE, "POSTGRES_DB", "test");
-    }
-
-    private static boolean isDatasourceExpression(String expression) {
-        return expression.startsWith(PREFIX + ".") && expression.indexOf('.', PREFIX.length() + 1) > 0;
-    }
-
-    private static String datasourceName(String expression) {
-        int start = PREFIX.length() + 1;
-        int end = expression.indexOf('.', start);
-        return expression.substring(start, end);
-    }
-
-    private static String datasourceProperty(String expression) {
-        int start = PREFIX.length() + 1;
-        int propertyStart = expression.indexOf('.', start) + 1;
-        return expression.substring(propertyStart);
-    }
-
-    private static String datasourceProperty(String datasource, String property) {
-        return PREFIX + "." + datasource + "." + property;
-    }
-
-    private static String stringValue(Object value) {
-        return value == null ? null : String.valueOf(value);
     }
 }

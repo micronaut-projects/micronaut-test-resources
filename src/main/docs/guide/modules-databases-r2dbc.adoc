@@ -1,6 +1,6 @@
 In addition to traditional JDBC support, Micronaut Test Resources also supports R2DBC databases.
 
-The following properties will automatically be set when using a JDBC database:
+The following properties will automatically be set when using an R2DBC database:
 
 - `r2dbc.datasources.*.url`
 - `r2dbc.datasources.*.username`

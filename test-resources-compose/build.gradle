@@ -14,3 +14,10 @@ dependencies {
     testImplementation(project(':micronaut-test-resources-jdbc-postgresql'))
     testImplementation(project(':micronaut-test-resources-redis'))
 }
+
+micronautBuild {
+    // new module, so disable binary check for now
+    binaryCompatibility {
+        enabled = false
+    }
+}

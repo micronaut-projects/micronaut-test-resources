@@ -141,7 +141,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             if (topicsToCreate.isEmpty()) {
                 return;
             }
-            beforeCreateTopics(container, configuration, topicsToCreate);
+            beforeCreateTopics(container, configuration, topicsToCreate, adminClient);
             var createTopicsResult = adminClient.createTopics(topicsToCreate);
             List<String> topicsToReverify = new java.util.ArrayList<String>();
             for (NewTopic topic : topicsToCreate) {
@@ -175,6 +175,22 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
                                       TopicProvisioningConfiguration configuration,
                                       List<NewTopic> topicsToCreate) {
         // Default no-op hook for tests that need to force a topic-creation race.
+    }
+
+    /**
+     * Invoked after existing topics have been listed and before missing topics are created.
+     * Implementations must not close the provided admin client.
+     *
+     * @param container the Kafka container
+     * @param configuration the requested topic provisioning configuration
+     * @param topicsToCreate topics that are about to be created
+     * @param adminClient the admin client used for topic provisioning
+     */
+    protected void beforeCreateTopics(KafkaContainer container,
+                                      TopicProvisioningConfiguration configuration,
+                                      List<NewTopic> topicsToCreate,
+                                      AdminClient adminClient) {
+        beforeCreateTopics(container, configuration, topicsToCreate);
     }
 
     private void verifyExistingTopicPartitions(AdminClient adminClient,

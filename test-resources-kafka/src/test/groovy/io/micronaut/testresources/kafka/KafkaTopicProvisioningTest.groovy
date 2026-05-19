@@ -137,11 +137,11 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
 
     def "rejects partition mismatch when the topic appears between listing and create"() {
         given:
-        def bootstrapServers = new KafkaTestResourceProvider()
+        def provider = new RacingKafkaTestResourceProvider()
+        def bootstrapServers = provider
             .resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, properties, [:])
             .orElseThrow()
         waitForAdminClient(bootstrapServers)
-        def provider = new RacingKafkaTestResourceProvider()
 
         when:
         provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, properties, [
@@ -160,10 +160,9 @@ class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
     @Override
     protected void beforeCreateTopics(org.testcontainers.kafka.KafkaContainer container,
                                       TopicProvisioningConfiguration configuration,
-                                      List<NewTopic> topicsToCreate) {
-        Properties properties = new Properties()
-        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.bootstrapServers)
-        try (AdminClient adminClient = AdminClient.create(properties)) {
+                                      List<NewTopic> topicsToCreate,
+                                      AdminClient adminClient) {
+        try {
             NewTopic topic = new NewTopic(topicsToCreate.first().name(), 1, (short) 1)
             adminClient.createTopics([topic]).all().get(30, TimeUnit.SECONDS)
         } catch (ExecutionException e) {

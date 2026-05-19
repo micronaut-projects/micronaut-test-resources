@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 record ComposeProject(List<ComposeService> services) {
 }
@@ -45,7 +46,15 @@ record ComposeService(
 
     Optional<String> serviceLabel() {
         return Optional.ofNullable(labels.get(ComposeLabels.SERVICE))
-            .map(s -> s.toLowerCase(Locale.ROOT));
+            .map(ComposeService::normalize);
+    }
+
+    boolean explicitService(Set<String> names) {
+        return serviceLabel().filter(names::contains).isPresent();
+    }
+
+    boolean imageContains(String token) {
+        return normalize(image).contains(token);
     }
 
     boolean exposes(int port) {
@@ -63,6 +72,10 @@ record ComposeService(
             + ", environment=" + SecretRedactor.redact(environment)
             + ", ports=" + ports
             + ", profiles=" + profiles;
+    }
+
+    private static String normalize(String value) {
+        return value.toLowerCase(Locale.ROOT).replace("-", "").replace("_", "");
     }
 }
 

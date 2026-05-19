@@ -94,11 +94,8 @@ final class ComposeContainerManager implements ComposeEnvironmentManager {
             if (service.ignored() || !service.activeFor(configuration.profiles())) {
                 continue;
             }
-            if (ComposeTestResourcesResolver.isPostgresCandidate(service)) {
-                container.withExposedService(service.instanceName(), ComposeTestResourcesResolver.POSTGRES_PORT, Wait.forListeningPort().withStartupTimeout(configuration.startupTimeout()));
-            }
-            if (ComposeTestResourcesResolver.isRedisCandidate(service)) {
-                container.withExposedService(service.instanceName(), ComposeTestResourcesResolver.REDIS_PORT, Wait.forListeningPort().withStartupTimeout(configuration.startupTimeout()));
+            for (Integer port : ComposeServiceDescriptors.exposedPorts(service)) {
+                container.withExposedService(service.instanceName(), port, Wait.forListeningPort().withStartupTimeout(configuration.startupTimeout()));
             }
         }
         container.start();

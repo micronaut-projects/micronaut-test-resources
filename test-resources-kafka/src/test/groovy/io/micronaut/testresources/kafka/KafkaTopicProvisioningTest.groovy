@@ -35,6 +35,16 @@ abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
             throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s describing Kafka topics ${topicNames.toList()} for ${bootstrapServers}", e)
         }
     }
+
+    protected static void waitForAdminClient(String bootstrapServers) {
+        Properties properties = new Properties()
+        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+        try (AdminClient adminClient = AdminClient.create(properties)) {
+            adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        } catch (TimeoutException e) {
+            throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s listing Kafka topics for ${bootstrapServers}", e)
+        }
+    }
 }
 
 @MicronautTest
@@ -127,6 +137,10 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
 
     def "rejects partition mismatch when the topic appears between listing and create"() {
         given:
+        def bootstrapServers = new KafkaTestResourceProvider()
+            .resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, properties, [:])
+            .orElseThrow()
+        waitForAdminClient(bootstrapServers)
         def provider = new RacingKafkaTestResourceProvider()
 
         when:

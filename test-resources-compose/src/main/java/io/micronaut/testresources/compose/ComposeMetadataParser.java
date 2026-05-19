@@ -112,6 +112,7 @@ final class ComposeMetadataParser {
         return List.copyOf(ports);
     }
 
+    @SuppressWarnings("java:S7467")
     private static int targetPort(@Nullable String value) {
         if (value == null || value.isBlank()) {
             return -1;

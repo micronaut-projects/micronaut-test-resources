@@ -434,9 +434,12 @@ final class ComposeServiceDescriptors {
         }
 
         String database(ComposeService service, @Nullable String datasource, Map<String, Object> properties) {
-            @Nullable String configured = stringValue(properties.get(property(DATASOURCES, datasource, DB_NAME)));
-            if (configured == null) {
-                configured = stringValue(properties.get(property(R2DBC_DATASOURCES, datasource, DB_NAME)));
+            @Nullable String configured = null;
+            if (datasource != null) {
+                configured = stringValue(properties.get(property(DATASOURCES, datasource, DB_NAME)));
+                if (configured == null) {
+                    configured = stringValue(properties.get(property(R2DBC_DATASOURCES, datasource, DB_NAME)));
+                }
             }
             return configured == null ? service.labelOrEnvironment(ComposeLabels.DATABASE, databaseEnvironment, defaultDatabase) : configured;
         }

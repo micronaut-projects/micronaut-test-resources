@@ -46,6 +46,15 @@ record ComposeConfiguration(
         "docker-compose.yaml"
     );
 
+    ComposeConfiguration {
+        workingDirectory = Objects.requireNonNull(workingDirectory, "workingDirectory");
+        files = List.copyOf(Objects.requireNonNull(files, "files"));
+        profiles = List.copyOf(Objects.requireNonNull(profiles, "profiles"));
+        startupTimeout = Objects.requireNonNull(startupTimeout, "startupTimeout");
+        dockerImageName = Objects.requireNonNull(dockerImageName, "dockerImageName");
+        projectName = Objects.requireNonNull(projectName, "projectName");
+    }
+
     static ComposeConfiguration from(Map<String, Object> testResourcesConfig, Map<String, Object> requestedProperties) {
         boolean enabled = booleanValue(testResourcesConfig, "enabled", false);
         Path workingDirectory = Optional.ofNullable(stringValue(testResourcesConfig, "working-directory"))

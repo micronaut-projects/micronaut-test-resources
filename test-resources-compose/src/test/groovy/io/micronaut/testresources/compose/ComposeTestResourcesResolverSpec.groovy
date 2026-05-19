@@ -203,6 +203,140 @@ services:
         resolver.resolve("aws.region", [:], config).get() == "us-east-1"
     }
 
+    def "resolves additional database descriptor variants"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  db:
+    image: ${image}
+    labels:
+      io.micronaut.test-resources.service: ${service}
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def config = ["compose.enabled": true, "compose.files": [composeFile.toString()]]
+        def props = ["datasources.default.db-type": service]
+
+        expect:
+        resolver.resolve("datasources.default.url", props, config).get() == expectedUrl
+        resolver.resolve("datasources.default.username", props, config).get() == expectedUsername
+        resolver.resolve("datasources.default.password", props, config).get() == expectedPassword
+        resolver.resolve("datasources.default.driver-class-name", props, config).get() == expectedDriver
+        manager.requests == ["db:${port}".toString()]
+
+        where:
+        service   | image                 | port | expectedUrl                                               | expectedUsername | expectedPassword              | expectedDriver
+        "mariadb" | "mariadb:11"          | 3306 | "jdbc:mariadb://localhost:13306/test"                     | "test"           | "test"                        | "org.mariadb.jdbc.Driver"
+        "mssql"   | "mcr.microsoft/mssql" | 1433 | "jdbc:sqlserver://localhost:11433;databaseName=test"      | "SA"             | "A_Str0ng_Required_Password"  | "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+        "oracle"  | "gvenzl/oracle-free"  | 1521 | "jdbc:oracle:thin:@//localhost:11521/freepdb1"            | "test"           | "test"                        | "oracle.jdbc.OracleDriver"
+    }
+
+    def "resolves supported non database service descriptors"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  service:
+    image: internal/${service}
+    labels:
+      io.micronaut.test-resources.service: ${service}
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def config = ["compose.enabled": true, "compose.files": [composeFile.toString()]]
+
+        expect:
+        resolver.resolve(property, [:], config).get() == expected
+        manager.requests == ["service:${port}".toString()]
+
+        where:
+        service             | property                                                               | port  | expected
+        "azurite"           | "azure.credential.storage-shared-key.account-name"                     | 10000 | "devstoreaccount1"
+        "couchbase"         | "couchbase.uri"                                                        | 11210 | "couchbase://localhost:21210"
+        "hashicorp-consul"  | "consul.client.port"                                                   | 8500  | "18500"
+        "hashicorp-vault"   | "vault.client.uri"                                                     | 8200  | "http://localhost:18200"
+        "hazelcast"         | "hazelcast.client.network.addresses"                                   | 5701  | "localhost:15701"
+        "hivemq"            | "mqtt.client.server-uri"                                               | 1883  | "tcp://localhost:11883"
+        "infinispan"        | "infinispan.client.hotrod.security.authentication.username"            | 11222 | "admin"
+        "mailpit"           | "javamail.properties.mail.smtp.auth"                                   | 1025  | "false"
+        "minio"             | "minio.url"                                                           | 9000  | "http://localhost:19000"
+        "neo4j"             | "neo4j.uri"                                                           | 7687  | "bolt://localhost:17687"
+        "keycloak"          | "micronaut.security.oauth2.clients.keycloak.openid.issuer"            | 8080  | "http://localhost:18080/realms/micronaut"
+        "opensearch"        | "micronaut.opensearch.rest-client.http-hosts"                         | 9200  | "localhost:19200"
+        "opentelemetry"     | "otel.exporter.otlp.endpoint"                                         | 4317  | "http://localhost:14317"
+        "pulsar"            | "pulsar.service-url"                                                   | 6650  | "pulsar://localhost:16650"
+        "seaweedfs"         | "seaweedfs.access-key"                                                 | 8333  | "some_access_key1"
+        "solr"              | "micronaut.solr.hosts"                                                 | 8983  | "http://localhost:18983/solr"
+        "wiremock"          | "wiremock.url"                                                         | 8080  | "http://localhost:18080"
+    }
+
+    def "parses compose configuration files profiles durations and project names"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yaml")
+        Files.writeString(composeFile, "services: {}\n")
+
+        when:
+        def configuration = ComposeConfiguration.from([
+                "compose.enabled": "true",
+                "compose.working-directory": tempDir.toString(),
+                "compose.files": "compose.yaml",
+                "compose.profiles": "dev,test",
+                "compose.startup-timeout": "1500ms",
+                "compose.local-compose": "true",
+                "compose.project-name": "explicit-project"
+        ], [:])
+
+        then:
+        configuration.usable()
+        configuration.files() == [composeFile.toAbsolutePath().normalize()]
+        configuration.profiles() == ["dev", "test"]
+        configuration.startupTimeout().toMillis() == 1500
+        configuration.localCompose()
+        configuration.projectName() == "explicit-project"
+    }
+
+    def "parses compose metadata maps lists exposed ports and inactive profiles"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  mapped:
+    image: redis:7
+    labels:
+      io.micronaut.test-resources.service: redis
+    environment:
+      REDIS_MODE: standalone
+    ports:
+      - target: 6379
+      - "127.0.0.1:15432:5432/tcp"
+      - "19092-19093"
+    expose:
+      - "11222"
+    profiles:
+      - test
+""".stripIndent())
+
+        when:
+        def project = new ComposeMetadataParser().parse(ComposeConfiguration.from([
+                "compose.enabled": true,
+                "compose.files": [composeFile.toString()]
+        ], [:]))
+        def service = project.services().first()
+
+        then:
+        service.name() == "mapped"
+        service.imageContains("redis")
+        service.labels()["io.micronaut.test-resources.service"] == "redis"
+        service.environment()["REDIS_MODE"] == "standalone"
+        service.exposes(6379)
+        service.exposes(5432)
+        service.exposes(19092)
+        service.exposes(11222)
+        service.activeFor(["test"])
+        !service.activeFor(["dev"])
+    }
+
     def "compose support documents provider coverage and explicit non applicable modules"() {
         expect:
         ComposeServiceDescriptors.allCoveredServiceKinds().containsAll([

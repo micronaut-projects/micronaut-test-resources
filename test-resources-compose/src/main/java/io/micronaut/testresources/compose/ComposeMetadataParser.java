@@ -16,6 +16,7 @@
 package io.micronaut.testresources.compose;
 
 import org.yaml.snakeyaml.Yaml;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,7 +64,7 @@ final class ComposeMetadataParser {
         );
     }
 
-    private static Map<String, Object> objectMap(Object value) {
+    private static Map<String, Object> objectMap(@Nullable Object value) {
         if (!(value instanceof Map<?, ?> map)) {
             return Map.of();
         }
@@ -72,7 +73,7 @@ final class ComposeMetadataParser {
         return result;
     }
 
-    private static Map<String, String> stringMap(Object value) {
+    private static Map<String, String> stringMap(@Nullable Object value) {
         if (value instanceof Map<?, ?> map) {
             Map<String, String> result = new LinkedHashMap<>();
             map.forEach((key, mapValue) -> {
@@ -111,7 +112,7 @@ final class ComposeMetadataParser {
         return List.copyOf(ports);
     }
 
-    private static int targetPort(String value) {
+    private static int targetPort(@Nullable String value) {
         if (value == null || value.isBlank()) {
             return -1;
         }
@@ -135,7 +136,7 @@ final class ComposeMetadataParser {
         }
     }
 
-    private static List<String> list(Object value) {
+    private static List<String> list(@Nullable Object value) {
         if (value == null) {
             return List.of();
         }
@@ -156,7 +157,7 @@ final class ComposeMetadataParser {
         return List.of(String.valueOf(value));
     }
 
-    private static String stringValue(Object value) {
+    private static String stringValue(@Nullable Object value) {
         return value == null ? "" : String.valueOf(value).toLowerCase(Locale.ROOT);
     }
 }

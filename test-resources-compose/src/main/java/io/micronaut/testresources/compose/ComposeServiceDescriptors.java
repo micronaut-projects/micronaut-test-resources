@@ -15,6 +15,8 @@
  */
 package io.micronaut.testresources.compose;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -38,10 +40,19 @@ final class ComposeServiceDescriptors {
     static final String R2DBC_DRIVER = "driverClassName";
     static final String JPA = "jpa";
     static final String HIBERNATE_CONNECTION = "properties.hibernate.connection.";
+    static final String MONGODB_SERVERS = "mongodb.servers";
+
+    private static final String POSTGRES_SERVICE = "postgres";
+    private static final String MYSQL_SERVICE = "mysql";
+    private static final String MARIADB_SERVICE = "mariadb";
+    private static final String MSSQL_SERVICE = "mssql";
+    private static final String ORACLE_SERVICE = "oracle";
+    private static final String MONGODB_SERVICE = "mongodb";
+    private static final String MONGODB_SERVERS_PREFIX = MONGODB_SERVERS + ".";
 
     private static final DatabaseDescriptor POSTGRES = new DatabaseDescriptor(
-        "postgres",
-        Set.of("postgres", "postgresql", "pg"),
+        POSTGRES_SERVICE,
+        Set.of(POSTGRES_SERVICE, "postgresql", "pg"),
         5432,
         "jdbc:postgresql",
         "postgresql",
@@ -54,11 +65,11 @@ final class ComposeServiceDescriptors {
         "test"
     );
     private static final DatabaseDescriptor MYSQL = new DatabaseDescriptor(
-        "mysql",
-        Set.of("mysql"),
+        MYSQL_SERVICE,
+        Set.of(MYSQL_SERVICE),
         3306,
         "jdbc:mysql",
-        "mysql",
+        MYSQL_SERVICE,
         "com.mysql.cj.jdbc.Driver",
         "MYSQL_USER",
         "MYSQL_PASSWORD",
@@ -68,11 +79,11 @@ final class ComposeServiceDescriptors {
         "test"
     );
     private static final DatabaseDescriptor MARIADB = new DatabaseDescriptor(
-        "mariadb",
-        Set.of("mariadb", "maria"),
+        MARIADB_SERVICE,
+        Set.of(MARIADB_SERVICE, "maria"),
         3306,
         "jdbc:mariadb",
-        "mariadb",
+        MARIADB_SERVICE,
         "org.mariadb.jdbc.Driver",
         "MARIADB_USER",
         "MARIADB_PASSWORD",
@@ -82,11 +93,11 @@ final class ComposeServiceDescriptors {
         "test"
     );
     private static final DatabaseDescriptor MSSQL = new DatabaseDescriptor(
-        "mssql",
-        Set.of("mssql", "sqlserver", "sql-server", "microsoftsqlserver"),
+        MSSQL_SERVICE,
+        Set.of(MSSQL_SERVICE, "sqlserver", "sql-server", "microsoftsqlserver"),
         1433,
         "jdbc:sqlserver",
-        "mssql",
+        MSSQL_SERVICE,
         "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "MSSQL_USER",
         "MSSQL_PASSWORD",
@@ -96,11 +107,11 @@ final class ComposeServiceDescriptors {
         "test"
     );
     private static final DatabaseDescriptor ORACLE = new DatabaseDescriptor(
-        "oracle",
-        Set.of("oracle", "oracle-free", "oracle-xe"),
+        ORACLE_SERVICE,
+        Set.of(ORACLE_SERVICE, "oracle-free", "oracle-xe"),
         1521,
         "jdbc:oracle:thin",
-        "oracle",
+        ORACLE_SERVICE,
         "oracle.jdbc.OracleDriver",
         "ORACLE_USER",
         "ORACLE_PASSWORD",
@@ -121,7 +132,7 @@ final class ComposeServiceDescriptors {
             default -> null;
         }),
         service("kafka", Set.of("kafka", "redpanda"), 9092, List.of("kafka.bootstrap.servers"), ResolutionContext::hostPort),
-        service("mongodb", Set.of("mongodb", "mongo"), 27017, List.of("mongodb.uri"), context -> "mongodb://" + context.hostPort() + "/" + context.database(mongoDatabase(context.propertyName()))),
+        service(MONGODB_SERVICE, Set.of(MONGODB_SERVICE, "mongo"), 27017, List.of("mongodb.uri"), context -> "mongodb://" + context.hostPort() + "/" + context.database(mongoDatabase(context.propertyName()))),
         service("localstack", Set.of("localstack"), 4566, List.of(
             "aws.access-key-id",
             "aws.secret-key",
@@ -149,7 +160,7 @@ final class ComposeServiceDescriptors {
         service("couchbase", Set.of("couchbase"), 11210, List.of("couchbase.uri", "couchbase.username", "couchbase.password"), context -> switch (context.propertyName()) {
             case "couchbase.uri" -> "couchbase://" + context.hostPort();
             case "couchbase.username" -> context.labelOrEnvironment(ComposeLabels.USERNAME, "COUCHBASE_ADMINISTRATOR_USERNAME", "Administrator");
-            case "couchbase.password" -> context.labelOrEnvironment(ComposeLabels.PASSWORD, "COUCHBASE_ADMINISTRATOR_PASSWORD", "password");
+            case "couchbase.password" -> context.labelOrEnvironment(ComposeLabels.PASSWORD, "COUCHBASE_ADMINISTRATOR_PASSWORD", PASSWORD);
             default -> null;
         }),
         service("hashicorp-consul", Set.of("consul", "hashicorp-consul"), 8500, List.of("consul.client.host", "consul.client.port"), context -> switch (context.propertyName()) {
@@ -257,12 +268,12 @@ final class ComposeServiceDescriptors {
 
     static Optional<ServiceDescriptor> findServiceDescriptor(String propertyName) {
         return SERVICES.stream()
-            .filter(descriptor -> descriptor.properties().contains(propertyName) || descriptor.serviceType().equals("mongodb") && propertyName.startsWith("mongodb.servers.") && propertyName.endsWith(".uri"))
+            .filter(descriptor -> descriptor.properties().contains(propertyName) || descriptor.serviceType().equals(MONGODB_SERVICE) && propertyName.startsWith(MONGODB_SERVERS_PREFIX) && propertyName.endsWith(".uri"))
             .findFirst();
     }
 
     static Optional<DatabaseDescriptor> findDatabaseDescriptor(String propertyName, Map<String, Object> properties) {
-        String datasource = datasourceName(propertyName);
+        @Nullable String datasource = datasourceName(propertyName);
         if (datasource == null) {
             return Optional.empty();
         }
@@ -274,7 +285,7 @@ final class ComposeServiceDescriptors {
         return Optional.empty();
     }
 
-    static String datasourceName(String expression) {
+    static @Nullable String datasourceName(String expression) {
         if (expression.startsWith(DATASOURCES + ".")) {
             return nameAfterPrefix(expression, DATASOURCES);
         }
@@ -288,7 +299,7 @@ final class ComposeServiceDescriptors {
     }
 
     static String propertyName(String expression) {
-        String datasource = datasourceName(expression);
+        @Nullable String datasource = datasourceName(expression);
         if (datasource == null) {
             return expression;
         }
@@ -299,11 +310,11 @@ final class ComposeServiceDescriptors {
         return prefix + "." + datasource + "." + property;
     }
 
-    static String stringValue(Object value) {
+    static @Nullable String stringValue(@Nullable Object value) {
         return value == null ? null : String.valueOf(value);
     }
 
-    private static ServiceDescriptor service(String serviceType, Set<String> aliases, int port, List<String> properties, Function<ResolutionContext, String> resolver) {
+    private static ServiceDescriptor service(String serviceType, Set<String> aliases, int port, List<String> properties, Function<ResolutionContext, @Nullable String> resolver) {
         return new ServiceDescriptor(serviceType, aliases(serviceType, aliases), port, properties, resolver);
     }
 
@@ -314,19 +325,19 @@ final class ComposeServiceDescriptors {
         return Set.copyOf(allAliases);
     }
 
-    private static String nameAfterPrefix(String expression, String prefix) {
+    private static @Nullable String nameAfterPrefix(String expression, String prefix) {
         int start = prefix.length() + 1;
         int end = expression.indexOf('.', start);
         return end > start ? expression.substring(start, end) : null;
     }
 
     private static String normalize(String value) {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT).replace("-", "").replace("_", "");
+        return value.toLowerCase(Locale.ROOT).replace("-", "").replace("_", "");
     }
 
     private static String mongoDatabase(String propertyName) {
-        if (propertyName.startsWith("mongodb.servers.") && propertyName.endsWith(".uri")) {
-            String suffix = propertyName.substring("mongodb.servers.".length());
+        if (propertyName.startsWith(MONGODB_SERVERS_PREFIX) && propertyName.endsWith(".uri")) {
+            String suffix = propertyName.substring(MONGODB_SERVERS_PREFIX.length());
             return suffix.substring(0, suffix.length() - ".uri".length());
         }
         return "test";
@@ -378,8 +389,8 @@ final class ComposeServiceDescriptors {
             return driver != null && aliases.stream().anyMatch(normalize(driver)::contains);
         }
 
-        String resolve(String propertyName, ComposeEndpoint endpoint, ComposeService service, Map<String, Object> properties) {
-            String datasource = datasourceName(propertyName);
+        @Nullable String resolve(String propertyName, ComposeEndpoint endpoint, ComposeService service, Map<String, Object> properties) {
+            @Nullable String datasource = datasourceName(propertyName);
             String leaf = propertyName(propertyName);
             return switch (leaf) {
                 case URL -> propertyName.startsWith(R2DBC_DATASOURCES + ".") ? r2dbcUrl(endpoint, service, datasource, properties) : jdbcUrl(endpoint, service, datasource, properties);
@@ -391,7 +402,7 @@ final class ComposeServiceDescriptors {
             };
         }
 
-        String resolveWithoutEndpoint(String propertyName, ComposeService service, Map<String, Object> properties) {
+        @Nullable String resolveWithoutEndpoint(String propertyName, ComposeService service, Map<String, Object> properties) {
             return switch (propertyName(propertyName)) {
                 case USERNAME, HIBERNATE_CONNECTION + USERNAME -> username(service);
                 case PASSWORD, HIBERNATE_CONNECTION + PASSWORD -> password(service);
@@ -404,8 +415,8 @@ final class ComposeServiceDescriptors {
             String hostPort = endpoint.hostPort();
             String database = database(service, datasource, properties);
             return switch (serviceType) {
-                case "mssql" -> jdbcScheme + "://" + hostPort + ";databaseName=" + database;
-                case "oracle" -> jdbcScheme + ":@" + "//" + hostPort + "/" + database;
+                case MSSQL_SERVICE -> jdbcScheme + "://" + hostPort + ";databaseName=" + database;
+                case ORACLE_SERVICE -> jdbcScheme + ":@" + "//" + hostPort + "/" + database;
                 default -> jdbcScheme + "://" + hostPort + "/" + database;
             };
         }
@@ -423,7 +434,7 @@ final class ComposeServiceDescriptors {
         }
 
         String database(ComposeService service, String datasource, Map<String, Object> properties) {
-            String configured = stringValue(properties.get(property(DATASOURCES, datasource, DB_NAME)));
+            @Nullable String configured = stringValue(properties.get(property(DATASOURCES, datasource, DB_NAME)));
             if (configured == null) {
                 configured = stringValue(properties.get(property(R2DBC_DATASOURCES, datasource, DB_NAME)));
             }
@@ -431,14 +442,14 @@ final class ComposeServiceDescriptors {
         }
     }
 
-    record ServiceDescriptor(String serviceType, Set<String> aliases, int port, List<String> properties, Function<ResolutionContext, String> resolver) {
+    record ServiceDescriptor(String serviceType, Set<String> aliases, int port, List<String> properties, Function<ResolutionContext, @Nullable String> resolver) {
         boolean matches(ComposeService service) {
             return service.explicitService(aliases)
                 || aliases.stream().anyMatch(service::imageContains)
                 || service.exposes(port);
         }
 
-        String resolve(ResolutionContext context) {
+        @Nullable String resolve(ResolutionContext context) {
             return resolver.apply(context);
         }
     }

@@ -16,6 +16,7 @@
 package io.micronaut.testresources.compose;
 
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,7 +114,7 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        String datasource = ComposeServiceDescriptors.datasourceName(expression);
+        @Nullable String datasource = ComposeServiceDescriptors.datasourceName(expression);
         if (datasource == null) {
             return List.of();
         }
@@ -197,12 +198,15 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
         if (descriptor.isEmpty()) {
             return Optional.empty();
         }
-        String datasource = ComposeServiceDescriptors.datasourceName(propertyName);
+        @Nullable String datasource = ComposeServiceDescriptors.datasourceName(propertyName);
+        if (datasource == null) {
+            return Optional.empty();
+        }
         Optional<ComposeService> service = match(project, configuration, candidate -> descriptor.get().matches(candidate) && matchesDatasource(candidate, datasource), descriptor.get().serviceType() + " datasource '" + datasource + "'");
         if (service.isEmpty()) {
             return Optional.empty();
         }
-        String endpointIndependentValue = descriptor.get().resolveWithoutEndpoint(propertyName, service.get(), properties);
+        @Nullable String endpointIndependentValue = descriptor.get().resolveWithoutEndpoint(propertyName, service.get(), properties);
         if (endpointIndependentValue != null) {
             return Optional.of(endpointIndependentValue);
         }

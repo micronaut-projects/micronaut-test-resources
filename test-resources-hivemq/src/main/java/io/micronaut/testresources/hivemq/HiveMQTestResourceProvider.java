@@ -64,6 +64,7 @@ public class HiveMQTestResourceProvider extends AbstractTestContainersProvider<H
     }
 
     @Override
+    @SuppressWarnings("java:S2095")
     protected HiveMQContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         return new HiveMQContainer(imageName)
             .withStartupTimeout(Duration.ofMinutes(2));

@@ -33,6 +33,11 @@ final class SecretRedactor {
 
     private static boolean sensitive(String key) {
         String normalized = key.toLowerCase(Locale.ROOT);
+        String tokenized = "." + normalized
+            .replace('-', '.')
+            .replace('_', '.')
+            .replace(' ', '.')
+            + ".";
         return normalized.contains("password")
             || normalized.contains("passwd")
             || normalized.contains("pwd")
@@ -41,6 +46,11 @@ final class SecretRedactor {
             || normalized.contains("credential")
             || normalized.endsWith(".key")
             || normalized.endsWith("_key")
+            || normalized.endsWith("-key")
+            || tokenized.contains(".pass.")
+            || tokenized.contains(".access.key.")
+            || tokenized.contains(".account.key.")
+            || tokenized.contains(".api.key.")
             || normalized.contains("api-key")
             || normalized.contains("apikey");
     }

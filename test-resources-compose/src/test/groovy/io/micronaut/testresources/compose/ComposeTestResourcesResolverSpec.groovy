@@ -48,6 +48,21 @@ class ComposeTestResourcesResolverSpec extends Specification {
         lifecycles.size() == 1
     }
 
+    def "redacts compose diagnostic credential keys"() {
+        expect:
+        SecretRedactor.redact([(key): "secret"])[key] == "****"
+
+        where:
+        key << [
+                "PASS",
+                "io.micronaut.test-resources.access-key",
+                "azure.credential.storage-shared-key.account-key",
+                "AWS_ACCESS_KEY_ID",
+                "datasources.default.password",
+                "vault.client.token"
+        ]
+    }
+
     def "resolves PostgreSQL datasource and Redis properties from compose metadata"() {
         given:
         Path composeFile = tempDir.resolve("compose.yml")

@@ -188,7 +188,7 @@ final class ComposeServiceDescriptors {
             case "infinispan.client.hotrod.server.host" -> context.endpoint().host();
             case "infinispan.client.hotrod.server.port" -> String.valueOf(context.endpoint().port());
             case "infinispan.client.hotrod.security.authentication.username" -> context.labelOrEnvironment(ComposeLabels.USERNAME, "USER", "admin");
-            case "infinispan.client.hotrod.security.authentication.password" -> context.labelOrEnvironment(ComposeLabels.PASSWORD, "PASS", "password");
+            case "infinispan.client.hotrod.security.authentication.password" -> context.labelOrEnvironment(ComposeLabels.PASSWORD, "PASS", PASSWORD);
             default -> null;
         }),
         service("mailpit", Set.of("mailpit"), 1025, List.of(
@@ -411,7 +411,7 @@ final class ComposeServiceDescriptors {
             };
         }
 
-        String jdbcUrl(ComposeEndpoint endpoint, ComposeService service, String datasource, Map<String, Object> properties) {
+        String jdbcUrl(ComposeEndpoint endpoint, ComposeService service, @Nullable String datasource, Map<String, Object> properties) {
             String hostPort = endpoint.hostPort();
             String database = database(service, datasource, properties);
             return switch (serviceType) {
@@ -421,7 +421,7 @@ final class ComposeServiceDescriptors {
             };
         }
 
-        String r2dbcUrl(ComposeEndpoint endpoint, ComposeService service, String datasource, Map<String, Object> properties) {
+        String r2dbcUrl(ComposeEndpoint endpoint, ComposeService service, @Nullable String datasource, Map<String, Object> properties) {
             return "r2dbc:" + r2dbcScheme + "://" + endpoint.hostPort() + "/" + database(service, datasource, properties);
         }
 
@@ -433,7 +433,7 @@ final class ComposeServiceDescriptors {
             return service.labelOrEnvironment(ComposeLabels.PASSWORD, passwordEnvironment, defaultPassword);
         }
 
-        String database(ComposeService service, String datasource, Map<String, Object> properties) {
+        String database(ComposeService service, @Nullable String datasource, Map<String, Object> properties) {
             @Nullable String configured = stringValue(properties.get(property(DATASOURCES, datasource, DB_NAME)));
             if (configured == null) {
                 configured = stringValue(properties.get(property(R2DBC_DATASOURCES, datasource, DB_NAME)));

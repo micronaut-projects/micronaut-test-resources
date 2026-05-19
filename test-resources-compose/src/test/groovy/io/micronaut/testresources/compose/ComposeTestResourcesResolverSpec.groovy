@@ -271,6 +271,82 @@ services:
         "wiremock"          | "wiremock.url"                                                         | 8080  | "http://localhost:18080"
     }
 
+    def "service descriptor mappings resolve all property variants"() {
+        given:
+        def descriptor = ComposeServiceDescriptors.findServiceDescriptor(property).get()
+        def service = new ComposeService("service", "internal/${serviceType}".toString(), labels + [(ComposeLabels.SERVICE): serviceType], environment, [descriptor.port()], [])
+        def context = new ComposeServiceDescriptors.ResolutionContext(property, new ComposeEndpoint("compose.test", 12345), service)
+
+        expect:
+        descriptor.resolve(context) == expected
+
+        where:
+        serviceType         | property                                                               | labels                                       | environment                                      | expected
+        "rabbitmq"          | "rabbitmq.uri"                                                         | [:]                                          | [:]                                              | "amqp://compose.test:12345"
+        "rabbitmq"          | "rabbitmq.username"                                                    | [:]                                          | ["RABBITMQ_DEFAULT_USER": "rabbit"]              | "rabbit"
+        "rabbitmq"          | "rabbitmq.password"                                                    | [:]                                          | ["RABBITMQ_DEFAULT_PASS": "secret"]              | "secret"
+        "mongodb"           | "mongodb.uri"                                                          | [:]                                          | [:]                                              | "mongodb://compose.test:12345/test"
+        "mongodb"           | "mongodb.servers.analytics.uri"                                        | [:]                                          | [:]                                              | "mongodb://compose.test:12345/analytics"
+        "localstack"        | "aws.access-key-id"                                                    | [:]                                          | ["AWS_ACCESS_KEY_ID": "access"]                  | "access"
+        "localstack"        | "aws.secret-key"                                                       | [:]                                          | ["AWS_SECRET_ACCESS_KEY": "secret"]              | "secret"
+        "localstack"        | "aws.region"                                                           | ["io.micronaut.test-resources.region": "eu"] | [:]                                              | "eu"
+        "localstack"        | "aws.services.dynamodb.endpoint-override"                              | [:]                                          | [:]                                              | "http://compose.test:12345"
+        "azurite"           | "azure.credential.storage-shared-key.account-key"                      | [:]                                          | [:]                                              | "Eby8vdM02xNOcqFeqCnf2A=="
+        "azurite"           | "azure.credential.storage-shared-key.connection-string"                | [:]                                          | [:]                                              | "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFeqCnf2A==;BlobEndpoint=http://compose.test:12345/devstoreaccount1;"
+        "couchbase"         | "couchbase.username"                                                   | [(ComposeLabels.USERNAME): "admin"]          | [:]                                              | "admin"
+        "couchbase"         | "couchbase.password"                                                   | [(ComposeLabels.PASSWORD): "secret"]         | [:]                                              | "secret"
+        "hashicorp-consul"  | "consul.client.host"                                                   | [:]                                          | [:]                                              | "compose.test"
+        "hashicorp-vault"   | "vault.client.token"                                                   | [:]                                          | ["VAULT_DEV_ROOT_TOKEN_ID": "token"]             | "token"
+        "hivemq"            | "mqtt.client.client-id"                                                | [:]                                          | ["MQTT_CLIENT_ID": "client"]                     | "client"
+        "infinispan"        | "infinispan.client.hotrod.server.host"                                 | [:]                                          | [:]                                              | "compose.test"
+        "infinispan"        | "infinispan.client.hotrod.server.port"                                 | [:]                                          | [:]                                              | "12345"
+        "infinispan"        | "infinispan.client.hotrod.security.authentication.password"            | [:]                                          | ["PASS": "secret"]                              | "secret"
+        "mailpit"           | "javamail.properties.mail.smtp.host"                                   | [:]                                          | [:]                                              | "compose.test"
+        "mailpit"           | "javamail.properties.mail.smtp.port"                                   | [:]                                          | [:]                                              | "12345"
+        "mailpit"           | "javamail.properties.mail.smtp.starttls.enable"                        | [:]                                          | [:]                                              | "false"
+        "minio"             | "minio.access-key"                                                     | [:]                                          | ["MINIO_ROOT_USER": "minio"]                     | "minio"
+        "minio"             | "minio.secret-key"                                                     | [:]                                          | ["MINIO_ROOT_PASSWORD": "secret"]                | "secret"
+        "keycloak"          | "micronaut.security.oauth2.clients.keycloak.client-id"                 | [(ComposeLabels.CLIENT_ID): "client"]        | [:]                                              | "client"
+        "keycloak"          | "micronaut.security.oauth2.clients.keycloak.client-secret"             | [:]                                          | ["KEYCLOAK_CLIENT_SECRET": "secret"]             | "secret"
+        "keycloak"          | "micronaut.security.token.jwt.signatures.jwks.keycloak.url"            | [(ComposeLabels.REALM): "custom"]            | [:]                                              | "http://compose.test:12345/realms/custom/protocol/openid-connect/certs"
+        "seaweedfs"         | "seaweedfs.secret-key"                                                 | [:]                                          | ["AWS_SECRET_ACCESS_KEY": "secret"]              | "secret"
+        "wiremock"          | "wiremock.host"                                                        | [:]                                          | [:]                                              | "compose.test"
+        "wiremock"          | "wiremock.port"                                                        | [:]                                          | [:]                                              | "12345"
+    }
+
+    def "database descriptor mappings resolve jdbc r2dbc and hibernate properties"() {
+        given:
+        def descriptor = ComposeServiceDescriptors.findDatabaseDescriptor(property, properties).get()
+        def service = new ComposeService("db", "internal/${serviceType}".toString(), [
+                (ComposeLabels.SERVICE): serviceType,
+                (ComposeLabels.DATABASE): "orders",
+                (ComposeLabels.USERNAME): "user",
+                (ComposeLabels.PASSWORD): "secret"
+        ], [:], [descriptor.port()], [])
+        def endpoint = new ComposeEndpoint("compose.test", 12345)
+
+        expect:
+        descriptor.resolve(property, endpoint, service, properties) == expected
+
+        where:
+        serviceType | property                                              | properties                                                                | expected
+        "postgres"  | "datasources.default.url"                             | ["datasources.default.db-type": "postgres"]                               | "jdbc:postgresql://compose.test:12345/orders"
+        "postgres"  | "r2dbc.datasources.default.url"                       | ["r2dbc.datasources.default.db-type": "postgres"]                         | "r2dbc:postgresql://compose.test:12345/orders"
+        "postgres"  | "jpa.default.properties.hibernate.connection.url"     | ["jpa.default.properties.hibernate.connection.db-type": "postgres"]       | "jdbc:postgresql://compose.test:12345/orders"
+        "postgres"  | "datasources.default.username"                        | ["datasources.default.db-type": "postgres"]                               | "user"
+        "postgres"  | "datasources.default.password"                        | ["datasources.default.db-type": "postgres"]                               | "secret"
+        "postgres"  | "datasources.default.driver-class-name"               | ["datasources.default.db-type": "postgres"]                               | "org.postgresql.Driver"
+        "mysql"     | "datasources.default.url"                             | ["datasources.default.dialect": "mysql"]                                  | "jdbc:mysql://compose.test:12345/orders"
+        "mariadb"   | "r2dbc.datasources.default.url"                       | ["r2dbc.datasources.default.driverClassName": "mariadb"]                  | "r2dbc:mariadb://compose.test:12345/orders"
+        "mssql"     | "datasources.default.url"                             | ["datasources.default.db-type": "mssql"]                                  | "jdbc:sqlserver://compose.test:12345;databaseName=orders"
+        "oracle"    | "jpa.default.properties.hibernate.connection.url"     | ["jpa.default.properties.hibernate.connection.db-type": "oracle"]         | "jdbc:oracle:thin:@//compose.test:12345/orders"
+    }
+
+    def "database descriptor returns empty when property is not datasource backed"() {
+        expect:
+        ComposeServiceDescriptors.findDatabaseDescriptor("server.port", [:]).empty
+    }
+
     def "parses compose configuration files profiles durations and project names"() {
         given:
         Path composeFile = tempDir.resolve("compose.yaml")

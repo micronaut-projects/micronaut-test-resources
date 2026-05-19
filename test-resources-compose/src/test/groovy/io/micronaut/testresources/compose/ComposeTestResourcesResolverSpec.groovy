@@ -450,6 +450,174 @@ services:
         ])
     }
 
+    def "resolver reports required and resolvable property metadata"() {
+        given:
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), new FakeManager())
+
+        when:
+        def resolvable = resolver.getResolvableProperties([
+                "datasources": ["default"],
+                "r2dbc.datasources": ["reactive"],
+                "jpa": ["inventory"],
+                "mongodb.servers": ["analytics"]
+        ], [:])
+
+        then:
+        resolver.order == -10
+        resolver.requiredPropertyEntries == ["datasources", "r2dbc.datasources", "jpa", "mongodb.servers"]
+        resolvable.containsAll([
+                "datasources.default.url",
+                "datasources.default.username",
+                "datasources.default.password",
+                "datasources.default.driver-class-name",
+                "r2dbc.datasources.reactive.url",
+                "r2dbc.datasources.reactive.username",
+                "r2dbc.datasources.reactive.password",
+                "jpa.inventory.properties.hibernate.connection.url",
+                "jpa.inventory.properties.hibernate.connection.username",
+                "jpa.inventory.properties.hibernate.connection.password",
+                "mongodb.servers.analytics.uri",
+                "redis.uri",
+                "rabbitmq.uri"
+        ])
+    }
+
+    def "resolver reports required datasource properties for datasource families"() {
+        given:
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), new FakeManager())
+
+        expect:
+        resolver.getRequiredProperties("server.port").empty
+        resolver.getRequiredProperties("datasources.default.url").containsAll([
+                "datasources.default.db-type",
+                "datasources.default.dialect",
+                "datasources.default.db-name",
+                "datasources.default.test-resources.resource-name"
+        ])
+        resolver.getRequiredProperties("r2dbc.datasources.default.url").containsAll([
+                "datasources.default.url",
+                "r2dbc.datasources.default.db-type",
+                "r2dbc.datasources.default.dialect",
+                "r2dbc.datasources.default.driverClassName",
+                "r2dbc.datasources.default.db-name",
+                "r2dbc.datasources.default.test-resources.resource-name",
+                "datasources.default.db-name"
+        ])
+        resolver.getRequiredProperties("jpa.default.properties.hibernate.connection.url").containsAll([
+                "jpa.default.properties.hibernate.connection.db-type",
+                "datasources.default.db-type",
+                "datasources.default.url",
+                "datasources.default.username",
+                "datasources.default.password",
+                "datasources.default.db-name"
+        ])
+    }
+
+    def "disabled missing or unreadable compose configuration falls back without endpoint lookup"() {
+        given:
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+
+        expect:
+        resolver.resolve("redis.uri", [:], ["compose.files": [tempDir.resolve("compose.yml").toString()]]).empty
+        resolver.resolve("redis.uri", [:], ["compose.enabled": true, "compose.working-directory": tempDir.toString()]).empty
+        resolver.resolve("redis.uri", [:], ["compose.enabled": true, "compose.files": [tempDir.resolve("missing.yml").toString()]]).empty
+        manager.requests.empty
+    }
+
+    def "configuration discovers default files and derives scoped project names"() {
+        given:
+        Files.writeString(tempDir.resolve("docker-compose.yaml"), "services: {}\n")
+
+        when:
+        def configuration = ComposeConfiguration.from([
+                "compose.enabled": true,
+                "compose.working-directory": tempDir.toString(),
+                "compose.startup-timeout": 2,
+                "compose.profiles": ["dev", " ", "test"]
+        ], [
+                "micronaut.test.resources.scope": "Feature/One"
+        ])
+
+        then:
+        configuration.usable()
+        configuration.files() == [tempDir.resolve("docker-compose.yaml").toAbsolutePath().normalize()]
+        configuration.profiles() == ["dev", "test"]
+        configuration.startupTimeout().seconds == 2
+        configuration.dockerImageName() == "docker"
+        configuration.projectName().startsWith("mn-tr-")
+        configuration.projectName().contains("-feature-one")
+    }
+
+    def "configuration parses duration suffixes and explicit docker image"() {
+        expect:
+        ComposeConfiguration.from(["compose.startup-timeout": "2s"], [:]).startupTimeout().seconds == 2
+        ComposeConfiguration.from(["compose.startup-timeout": "3m"], [:]).startupTimeout().seconds == 180
+        ComposeConfiguration.from(["compose.startup-timeout": "PT4S"], [:]).startupTimeout().seconds == 4
+        ComposeConfiguration.from(["compose.docker-image-name": "docker:27"], [:]).dockerImageName() == "docker:27"
+    }
+
+    def "parses compose list labels environments scalar profiles and invalid ports"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  mapped:
+    image: redis:7
+    labels:
+      - io.micronaut.test-resources.service=redis
+    environment:
+      - REDIS_MODE=standalone
+      - IGNORED
+    ports:
+      - invalid
+      - "127.0.0.1:16379:6379/tcp"
+    profiles: test
+""".stripIndent())
+
+        when:
+        def project = new ComposeMetadataParser().parse(ComposeConfiguration.from([
+                "compose.enabled": true,
+                "compose.files": [composeFile.toString()]
+        ], [:]))
+        def service = project.services().first()
+
+        then:
+        service.labels()[ComposeLabels.SERVICE] == "redis"
+        service.environment()["REDIS_MODE"] == "standalone"
+        service.exposes(6379)
+        !service.exposes(1)
+        service.activeFor(["test"])
+        !service.activeFor(["dev"])
+    }
+
+    def "resolves explicitly labelled non default datasource"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  defaultdb:
+    image: postgres:17
+    labels:
+      io.micronaut.test-resources.service: postgres
+      io.micronaut.test-resources.datasource: default
+  inventorydb:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: inventory
+    labels:
+      io.micronaut.test-resources.service: postgres
+      io.micronaut.test-resources.datasource: inventory
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def config = ["compose.enabled": true, "compose.files": [composeFile.toString()]]
+
+        expect:
+        resolver.resolve("datasources.inventory.url", ["datasources.inventory.db-type": "postgres"], config).get() == "jdbc:postgresql://localhost:15432/inventory"
+        manager.requests == ["inventorydb:5432"]
+    }
+
     private static final class FakeManager implements ComposeEnvironmentManager {
         final List<String> requests = []
 

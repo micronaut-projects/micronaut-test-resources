@@ -16,6 +16,7 @@
 package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.testresources.core.Scope;
+import io.micronaut.testresources.core.ScopedTestResourcesLifecycle;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -257,7 +259,7 @@ public final class TestContainers {
             DATABASE_LOCKS_BY_CONTAINER.clear();
             NETWORKS_BY_KEY.values().forEach(Network::close);
             NETWORKS_BY_KEY.clear();
-            return closed;
+            return closeLifecycleResources(null) || closed;
         });
     }
 
@@ -287,8 +289,16 @@ public final class TestContainers {
                     }
                 }
             }
-            return closed;
+            return closeLifecycleResources(id) || closed;
         });
+    }
+
+    private static boolean closeLifecycleResources(String scopeId) {
+        boolean closed = false;
+        for (ScopedTestResourcesLifecycle lifecycle : ServiceLoader.load(ScopedTestResourcesLifecycle.class)) {
+            closed = scopeId == null ? lifecycle.closeAll() || closed : lifecycle.closeScope(scopeId) || closed;
+        }
+        return closed;
     }
 
     public static List<GenericContainer<?>> findByRequestedProperty(Scope scope, String property) {

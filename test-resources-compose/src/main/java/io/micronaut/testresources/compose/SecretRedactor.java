@@ -13,49 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.core.compose;
+package io.micronaut.testresources.compose;
 
-import io.micronaut.core.annotation.Internal;
-
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-/**
- * Redacts sensitive diagnostic values.
- */
-@Internal
 final class SecretRedactor {
-    private static final String REDACTED = "******";
+    private static final String REDACTED = "****";
 
     private SecretRedactor() {
     }
 
     static Map<String, String> redact(Map<String, String> values) {
-        return values.entrySet()
-            .stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                e -> isSensitive(e.getKey()) ? REDACTED : e.getValue()
-            ));
+        Map<String, String> redacted = new LinkedHashMap<>();
+        values.forEach((key, value) -> redacted.put(key, sensitive(key) ? REDACTED : value));
+        return redacted;
     }
 
-    static String redact(String name, String value) {
-        return isSensitive(name) ? REDACTED : value;
-    }
-
-    static boolean isSensitive(String name) {
-        String normalized = name.toLowerCase(Locale.ROOT);
+    private static boolean sensitive(String key) {
+        String normalized = key.toLowerCase(Locale.ROOT);
         return normalized.contains("password")
             || normalized.contains("passwd")
             || normalized.contains("pwd")
             || normalized.contains("secret")
             || normalized.contains("token")
-            || normalized.contains("api-key")
-            || normalized.contains("apikey")
+            || normalized.contains("credential")
             || normalized.endsWith(".key")
             || normalized.endsWith("_key")
-            || normalized.equals("key")
-            || normalized.contains("credential");
+            || normalized.contains("api-key")
+            || normalized.contains("apikey");
     }
 }

@@ -13,36 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.core.compose;
-
-import io.micronaut.core.annotation.Internal;
+package io.micronaut.testresources.compose;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Normalized Docker Compose service metadata.
- *
- * @param name The Compose service name.
- * @param image The configured image name.
- * @param labels The service labels.
- * @param environment The service environment.
- * @param ports The published service ports.
- * @param externallyManaged Whether the service was already running before Test Resources started.
- */
-@Internal
+record ComposeProject(List<ComposeService> services) {
+}
+
 record ComposeService(
     String name,
     String image,
     Map<String, String> labels,
     Map<String, String> environment,
-    List<ComposePort> ports,
-    boolean externallyManaged
+    List<Integer> ports,
+    List<String> profiles
 ) {
+    String instanceName() {
+        return name + "-1";
+    }
+
     boolean ignored() {
         return Boolean.parseBoolean(labels.getOrDefault(ComposeLabels.IGNORE, "false"));
+    }
+
+    boolean activeFor(List<String> activeProfiles) {
+        return profiles.isEmpty() || profiles.stream().anyMatch(activeProfiles::contains);
     }
 
     Optional<String> serviceLabel() {
@@ -50,18 +48,12 @@ record ComposeService(
             .map(s -> s.toLowerCase(Locale.ROOT));
     }
 
-    Optional<ComposePort> publishedPort(int targetPort) {
-        return ports.stream()
-            .filter(port -> port.targetPort() == targetPort)
-            .findFirst();
-    }
-
-    String environment(String name, String defaultValue) {
-        return environment.getOrDefault(name, defaultValue);
+    boolean exposes(int port) {
+        return ports.contains(port);
     }
 
     String labelOrEnvironment(String label, String environmentName, String defaultValue) {
-        return labels.getOrDefault(label, environment(environmentName, defaultValue));
+        return labels.getOrDefault(label, environment.getOrDefault(environmentName, defaultValue));
     }
 
     String redactedSummary() {
@@ -70,10 +62,12 @@ record ComposeService(
             + ", labels=" + SecretRedactor.redact(labels)
             + ", environment=" + SecretRedactor.redact(environment)
             + ", ports=" + ports
-            + ", externallyManaged=" + externallyManaged;
+            + ", profiles=" + profiles;
     }
 }
 
-@Internal
-record ComposePort(String host, int publishedPort, int targetPort) {
+record ComposeEndpoint(String host, int port) {
+    String hostPort() {
+        return host + ":" + port;
+    }
 }

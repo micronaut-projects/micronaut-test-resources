@@ -154,6 +154,50 @@ services:
         manager.requests == ["storage:10000"]
     }
 
+    def "explicit service label prevents same-port service heuristic match"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  mock:
+    image: quay.io/keycloak/keycloak:26
+    ports:
+      - "8080"
+    labels:
+      io.micronaut.test-resources.service: wiremock
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def config = ["compose.enabled": true, "compose.files": [composeFile.toString()]]
+
+        expect:
+        resolver.resolve("micronaut.security.oauth2.clients.keycloak.openid.issuer", [:], config).empty
+        resolver.resolve("wiremock.url", [:], config).get() == "http://localhost:18080"
+        manager.requests == ["mock:8080"]
+    }
+
+    def "explicit service label prevents same-port database heuristic match"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  db:
+    image: mariadb:11
+    ports:
+      - "3306"
+    labels:
+      io.micronaut.test-resources.service: mysql
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def config = ["compose.enabled": true, "compose.files": [composeFile.toString()]]
+
+        expect:
+        resolver.resolve("datasources.default.url", ["datasources.default.db-type": "mariadb"], config).empty
+        resolver.resolve("datasources.default.url", ["datasources.default.db-type": "mysql"], config).get() == "jdbc:mysql://localhost:13306/test"
+        manager.requests == ["db:3306"]
+    }
+
     def "authenticated redis is ignored for initial support"() {
         given:
         Path composeFile = tempDir.resolve("compose.yml")

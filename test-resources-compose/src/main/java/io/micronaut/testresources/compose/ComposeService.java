@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 record ComposeProject(List<ComposeService> services) {
 }
@@ -47,10 +46,6 @@ record ComposeService(
     Optional<String> serviceLabel() {
         return Optional.ofNullable(labels.get(ComposeLabels.SERVICE))
             .map(ComposeService::normalize);
-    }
-
-    boolean explicitService(Set<String> names) {
-        return serviceLabel().filter(names::contains).isPresent();
     }
 
     boolean imageContains(String token) {

@@ -335,6 +335,12 @@ final class ComposeServiceDescriptors {
         return value.toLowerCase(Locale.ROOT).replace("-", "").replace("_", "");
     }
 
+    private static boolean matchesDescriptor(ComposeService service, Set<String> aliases, int port) {
+        return service.serviceLabel()
+            .map(aliases::contains)
+            .orElseGet(() -> aliases.stream().anyMatch(service::imageContains) || service.exposes(port));
+    }
+
     private static String mongoDatabase(String propertyName) {
         if (propertyName.startsWith(MONGODB_SERVERS_PREFIX) && propertyName.endsWith(".uri")) {
             String suffix = propertyName.substring(MONGODB_SERVERS_PREFIX.length());
@@ -362,9 +368,7 @@ final class ComposeServiceDescriptors {
         }
 
         boolean matches(ComposeService service) {
-            return service.explicitService(aliases)
-                || aliases.stream().anyMatch(service::imageContains)
-                || service.exposes(port);
+            return matchesDescriptor(service, aliases, port);
         }
 
         boolean requested(String datasource, String propertyName, Map<String, Object> properties) {
@@ -447,9 +451,7 @@ final class ComposeServiceDescriptors {
 
     record ServiceDescriptor(String serviceType, Set<String> aliases, int port, List<String> properties, Function<ResolutionContext, @Nullable String> resolver) {
         boolean matches(ComposeService service) {
-            return service.explicitService(aliases)
-                || aliases.stream().anyMatch(service::imageContains)
-                || service.exposes(port);
+            return matchesDescriptor(service, aliases, port);
         }
 
         @Nullable String resolve(ResolutionContext context) {

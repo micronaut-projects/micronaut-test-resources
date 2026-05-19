@@ -55,6 +55,14 @@ public final class DockerSupport {
             available = false;
         } finally {
             executor.shutdown();
+            try {
+                if (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
+                    executor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executor.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
         }
         if (!available) {
             LOGGER.error("Docker support doesn't seem to be available, test resources will not work correctly. Please check your Docker install.");

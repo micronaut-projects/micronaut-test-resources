@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.core.compose;
+package io.micronaut.testresources.compose;
 
-import io.micronaut.core.annotation.Internal;
+final class ComposeLabels {
+    static final String SERVICE = "io.micronaut.test-resources.service";
+    static final String DATASOURCE = "io.micronaut.test-resources.datasource";
+    static final String IGNORE = "io.micronaut.test-resources.ignore";
+    static final String USERNAME = "io.micronaut.test-resources.username";
+    static final String PASSWORD = "io.micronaut.test-resources.password";
+    static final String DATABASE = "io.micronaut.test-resources.database";
 
-import java.io.Closeable;
-import java.io.IOException;
-
-/**
- * Marker for provider-specific resolvers loaded by the Compose module.
- */
-@Internal
-public interface ComposeAwareTestResourcesResolver extends Closeable {
-    @Override
-    default void close() throws IOException {
-        ComposeResolverSupport.close();
+    private ComposeLabels() {
     }
 }

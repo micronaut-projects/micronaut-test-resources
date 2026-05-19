@@ -1,10 +1,13 @@
-The Docker Compose module lets Micronaut Test Resources resolve supported missing properties from services declared in a local Compose file instead of starting a separate default provider container.
+The Docker Compose module lets Micronaut Test Resources resolve supported missing properties from services declared in a Compose file.
 This support is opt-in and intended for development and test execution only.
 
 dependency:micronaut-test-resources-compose[groupId="io.micronaut.testresources", scope="test"]
 
-The Compose module exposes provider-owned Compose resolvers for the built-in container-backed Test Resources modules.
-Containerless or delegating modules, such as H2, R2DBC pool, Oracle Test Pilot, and generic Testcontainers mappings, do not have independent Compose service matching.
+Add the normal provider module for the service you use, then add the Compose module.
+For example, a PostgreSQL application still needs the PostgreSQL Test Resources provider on the Test Resources server classpath, and Redis support still needs the Redis provider.
+The Compose module acts as an overlay that runs before the default providers.
+When it finds one unambiguous supported Compose service, it resolves the missing property from that service.
+When it cannot safely resolve the property, the existing provider starts the normal Testcontainers resource.
 
 Enable Compose support with the `test-resources.compose.enabled` property:
 
@@ -15,7 +18,7 @@ test-resources:
     enabled: true
 ----
 
-When enabled, Test Resources looks for `compose.yml`, `compose.yaml`, `docker-compose.yml`, or `docker-compose.yaml` in the working directory.
+When enabled, Test Resources checks for `compose.yml`, `compose.yaml`, `docker-compose.yml`, or `docker-compose.yaml` in the working directory.
 You can choose files and profiles explicitly:
 
 [configuration]
@@ -31,19 +34,10 @@ test-resources:
       - test
 ----
 
-Compose matching is implemented by provider-owned resolvers.
-The Compose module makes Compose resolvers visible for the supported database, messaging, storage, search, discovery, identity, and single-service provider modules.
-Compose resolvers run before the matching default Testcontainers provider.
-For supported modules, enabling Compose disables the original provider instance and uses the Compose-aware provider variant instead.
-That variant first tries to resolve the missing property from Compose.
-When a matching Compose service is found, the Compose value is returned and no separate default provider container is started.
-When no Compose service matches, the same provider falls back to the existing Testcontainers startup behavior.
-
-This means inference still works through the existing provider module.
-For example, if inference determines that `datasources.default.url` is missing and the PostgreSQL provider is available, the PostgreSQL Compose-aware provider tries Compose first.
-If exactly one matching Compose service can provide the datasource, Test Resources uses it.
-If Compose is disabled or no unambiguous PostgreSQL service is available, the normal PostgreSQL Test Resources container path is used.
-If multiple Compose services could satisfy the same property, Test Resources logs the ambiguity and falls back instead of choosing one arbitrarily.
+Test Resources uses Testcontainers' Docker Compose support to start an isolated Compose environment.
+Services are exposed through Testcontainers, so the Compose file does not need host-published `ports` for Test Resources to connect.
+Test Resources does not adopt arbitrary Compose projects that are already running outside Testcontainers.
+If you want to use a fully external Compose stack, keep supplying explicit Micronaut properties for that stack.
 
 .PostgreSQL and Redis
 [source,yaml]
@@ -51,8 +45,6 @@ If multiple Compose services could satisfy the same property, Test Resources log
 services:
   db:
     image: postgres:17
-    ports:
-      - "5432"
     environment:
       POSTGRES_USER: demo
       POSTGRES_PASSWORD: secret
@@ -62,30 +54,11 @@ services:
       io.micronaut.test-resources.datasource: default
   cache:
     image: redis:7
-    ports:
-      - "6379"
     labels:
       io.micronaut.test-resources.service: redis
 ----
 
 With this Compose file, Test Resources can provide `datasources.default.url`, `datasources.default.username`, `datasources.default.password`, `datasources.default.driver-class-name`, and `redis.uri`.
-
-.RabbitMQ
-[source,yaml]
-----
-services:
-  broker:
-    image: rabbitmq:4
-    ports:
-      - "5672"
-    environment:
-      RABBITMQ_DEFAULT_USER: demo
-      RABBITMQ_DEFAULT_PASS: secret
-    labels:
-      io.micronaut.test-resources.service: rabbitmq
-----
-
-With this Compose service, Test Resources can provide `rabbitmq.uri`, `rabbitmq.username`, and `rabbitmq.password`.
 
 Use labels when automatic image and port matching would be ambiguous:
 
@@ -96,68 +69,74 @@ labels:
   io.micronaut.test-resources.datasource: inventory
 ----
 
-The `io.micronaut.test-resources.service` label accepts the provider service name, such as `postgres`, `mysql`, `mariadb`, `mssql`, `oracle`, `redis`, `rabbitmq`, `mongodb`, `kafka`, `localstack`, `minio`, `opensearch`, `solr`, `keycloak`, or `wiremock`.
-Use credential labels such as `io.micronaut.test-resources.username`, `io.micronaut.test-resources.password`, and `io.micronaut.test-resources.database` when the Compose image does not use the standard environment variables for that service.
+Supported labels in the initial implementation are:
 
-You can exclude a Compose service from Test Resources matching:
+[cols="1,1", options="header"]
+|===
+| Label
+| Purpose
 
-[source,yaml]
-----
-labels:
-  io.micronaut.test-resources.ignore: "true"
-----
+| `io.micronaut.test-resources.service`
+| Selects the supported service type, currently `postgres`, `postgresql`, `pg`, or `redis`.
 
-Additional Compose lifecycle options are available under `test-resources.compose`:
+| `io.micronaut.test-resources.datasource`
+| Selects the logical datasource name for PostgreSQL. If omitted, an unambiguous PostgreSQL service maps to `default`.
+
+| `io.micronaut.test-resources.username`
+| Overrides the PostgreSQL username.
+
+| `io.micronaut.test-resources.password`
+| Overrides the PostgreSQL password.
+
+| `io.micronaut.test-resources.database`
+| Overrides the PostgreSQL database name.
+
+| `io.micronaut.test-resources.ignore`
+| Excludes a service from Compose matching when set to `true`.
+|===
+
+PostgreSQL values are read from explicit labels first, then from `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB`.
+Redis support resolves unauthenticated single-node `redis.uri`.
+If Redis authentication is configured, the Compose resolver logs that it cannot safely map the URI in this initial implementation and falls back to the normal Redis provider.
+
+Additional Compose options are available under `test-resources.compose`:
 
 [configuration]
 ----
 test-resources:
   compose:
     enabled: true
-    project-name: inventory-tests
-    start: true
-    stop-managed: true
     startup-timeout: 60s
+    local-compose: false
+    docker-image-name: docker
 ----
 
-`start` controls whether Test Resources runs `docker compose up -d`.
-When `start` is `false`, Test Resources only inspects already-running services.
-When `stop-managed` is `true`, shutdown stops only services that Test Resources started for the current Compose project.
-Services that were already running before Test Resources started are reused and left running.
+`startup-timeout` controls the Testcontainers wait timeout for exposed Compose services.
+`local-compose` switches Testcontainers to host Docker Compose execution for teams that require host credential helpers or local Compose behavior.
+When `local-compose` is `false`, Testcontainers uses its containerized Compose mode with the configured `docker-image-name`.
 
 The build plugins still manage the lifecycle of the Test Resources server.
-Compose lifecycle is tied to that server process, so keep-alive settings affect how long Test Resources keeps ownership of Compose services it started:
+Compose services live for the same Test Resources scope that created them:
 
-[cols="1,1,1,1", options="header"]
+[cols="1,1", options="header"]
 |===
-| Test Resources server mode
-| `compose.start`
-| `compose.stop-managed`
+| Test Resources event
 | Compose lifecycle result
 
-| Per-build server, no keep-alive
-| `true`
-| `true`
-| Test Resources starts missing Compose services for the build and stops only those services when the server shuts down. Services that were already running are left running.
+| Per-build server shutdown
+| Testcontainers stops the Compose environment started for that server.
 
 | Keep-alive/shared server
-| `true`
-| `true`
-| Test Resources starts missing Compose services once and keeps them available while the server remains alive. They are stopped only when that server process actually shuts down.
+| Testcontainers-managed Compose services remain running until the shared Test Resources server or owning scope closes.
 
-| Any server mode
-| `true`
-| `false`
-| Test Resources may start Compose services, but it does not stop them. Lifecycle cleanup is left to the user or CI job.
+| Scope close
+| Compose environments for that scope and child scopes are stopped.
 
-| Any server mode
-| `false`
-| Any value
-| Test Resources only inspects already-running Compose services. It does not start or stop Compose services.
+| Server close all
+| All Testcontainers-managed Compose environments are stopped.
 |===
 
-The Compose resolver requires Docker Compose V2 through the Docker CLI.
-If Docker, Compose V2, a Compose file, a published host port, or an unambiguous mapping is not available, diagnostics are written to the logs and Test Resources falls back to the normal provider when possible.
+Diagnostics are written to the logs for matched, ignored, unmatched, and ambiguous services, Docker/Testcontainers startup failures, Compose file parsing problems, and missing local Compose support when `local-compose=true`.
 Diagnostic output redacts credential-like values such as passwords, secrets, tokens, keys, and credentials.
 
 Enabling Compose can run local images and use mounts declared by the Compose file.

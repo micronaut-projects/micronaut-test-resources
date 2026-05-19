@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.core.compose;
+package io.micronaut.testresources.compose;
 
-import io.micronaut.core.annotation.Internal;
+import io.micronaut.testresources.core.Scope;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,28 +27,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * Configuration for Compose-backed test resources.
- *
- * @param enabled Whether Compose support is enabled.
- * @param workingDirectory The directory where Compose commands should run.
- * @param files The Compose files to use.
- * @param profiles The Compose profiles to activate.
- * @param projectName The Compose project name.
- * @param start Whether Test Resources should start Compose services.
- * @param stopManaged Whether Test Resources should stop services it started.
- * @param startupTimeout The bounded timeout for Compose commands.
- */
-@Internal
 record ComposeConfiguration(
     boolean enabled,
     Path workingDirectory,
     List<Path> files,
     List<String> profiles,
-    String projectName,
-    boolean start,
-    boolean stopManaged,
-    Duration startupTimeout
+    Duration startupTimeout,
+    boolean localCompose,
+    String dockerImageName,
+    String projectName
 ) {
     private static final String PREFIX = "compose.";
     private static final List<String> DEFAULT_FILES = List.of(
@@ -57,11 +44,6 @@ record ComposeConfiguration(
         "docker-compose.yml",
         "docker-compose.yaml"
     );
-    private static final String SCOPE_PROPERTY = "micronaut.test.resources.scope";
-
-    static ComposeConfiguration from(Map<String, Object> testResourcesConfig) {
-        return from(testResourcesConfig, Map.of());
-    }
 
     static ComposeConfiguration from(Map<String, Object> testResourcesConfig, Map<String, Object> requestedProperties) {
         boolean enabled = booleanValue(testResourcesConfig, "enabled", false);
@@ -72,13 +54,15 @@ record ComposeConfiguration(
             .normalize();
         List<Path> files = files(testResourcesConfig, workingDirectory);
         List<String> profiles = listValue(testResourcesConfig.get(PREFIX + "profiles"));
-        String projectName = Optional.ofNullable(explicitProjectName(testResourcesConfig))
+        Duration startupTimeout = durationValue(testResourcesConfig, "startup-timeout", Duration.ofSeconds(60));
+        boolean localCompose = booleanValue(testResourcesConfig, "local-compose", false);
+        String dockerImageName = Optional.ofNullable(stringValue(testResourcesConfig, "docker-image-name"))
             .filter(s -> !s.isBlank())
-            .orElseGet(() -> defaultProjectName(workingDirectory, requestedProperties.get(SCOPE_PROPERTY)));
-        boolean start = booleanValue(testResourcesConfig, "start", true);
-        boolean stopManaged = booleanValue(testResourcesConfig, "stop-managed", true);
-        Duration timeout = durationValue(testResourcesConfig, "startup-timeout", Duration.ofSeconds(60));
-        return new ComposeConfiguration(enabled, workingDirectory, files, profiles, projectName, start, stopManaged, timeout);
+            .orElse("docker");
+        String projectName = Optional.ofNullable(stringValue(testResourcesConfig, "project-name"))
+            .filter(s -> !s.isBlank())
+            .orElseGet(() -> defaultProjectName(workingDirectory, requestedProperties.get(Scope.PROPERTY_KEY)));
+        return new ComposeConfiguration(enabled, workingDirectory, files, profiles, startupTimeout, localCompose, dockerImageName, projectName);
     }
 
     boolean usable() {
@@ -114,10 +98,6 @@ record ComposeConfiguration(
         return Boolean.parseBoolean(String.valueOf(value));
     }
 
-    private static String explicitProjectName(Map<String, Object> testResourcesConfig) {
-        return stringValue(testResourcesConfig, "project-name");
-    }
-
     private static String stringValue(Map<String, Object> testResourcesConfig, String key) {
         Object value = testResourcesConfig.get(PREFIX + key);
         return value == null ? null : String.valueOf(value);
@@ -134,17 +114,17 @@ record ComposeConfiguration(
         if (value instanceof Number number) {
             return Duration.ofSeconds(number.longValue());
         }
-        String asString = String.valueOf(value).trim();
-        if (asString.endsWith("ms")) {
-            return Duration.ofMillis(Long.parseLong(asString.substring(0, asString.length() - 2)));
+        String text = String.valueOf(value).trim();
+        if (text.endsWith("ms")) {
+            return Duration.ofMillis(Long.parseLong(text.substring(0, text.length() - 2)));
         }
-        if (asString.endsWith("s")) {
-            return Duration.ofSeconds(Long.parseLong(asString.substring(0, asString.length() - 1)));
+        if (text.endsWith("s")) {
+            return Duration.ofSeconds(Long.parseLong(text.substring(0, text.length() - 1)));
         }
-        if (asString.endsWith("m")) {
-            return Duration.ofMinutes(Long.parseLong(asString.substring(0, asString.length() - 1)));
+        if (text.endsWith("m")) {
+            return Duration.ofMinutes(Long.parseLong(text.substring(0, text.length() - 1)));
         }
-        return Duration.parse(asString);
+        return Duration.parse(text);
     }
 
     private static List<String> listValue(Object value) {
@@ -153,20 +133,20 @@ record ComposeConfiguration(
         }
         List<String> result = new ArrayList<>();
         if (value instanceof Iterable<?> iterable) {
-            iterable.forEach(v -> addListValue(result, v));
+            iterable.forEach(v -> addValue(result, v));
         } else {
             for (String item : String.valueOf(value).split(",")) {
-                addListValue(result, item);
+                addValue(result, item);
             }
         }
         return List.copyOf(result);
     }
 
-    private static void addListValue(List<String> values, Object value) {
+    private static void addValue(List<String> values, Object value) {
         if (value != null) {
-            String asString = String.valueOf(value).trim();
-            if (!asString.isBlank()) {
-                values.add(asString);
+            String text = String.valueOf(value).trim();
+            if (!text.isBlank()) {
+                values.add(text);
             }
         }
     }

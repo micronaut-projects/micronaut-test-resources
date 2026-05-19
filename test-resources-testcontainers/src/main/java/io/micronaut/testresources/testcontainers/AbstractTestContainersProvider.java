@@ -17,20 +17,12 @@ package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
-import io.micronaut.testresources.core.compose.ComposeAwareTestResourcesResolver;
-import io.micronaut.testresources.core.compose.ComposeResolverSupport;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,70 +38,14 @@ import static io.micronaut.testresources.testcontainers.TestContainerMetadataSup
  */
 public abstract class AbstractTestContainersProvider<T extends GenericContainer<? extends T>>
     implements ToggableTestResourcesResolver {
-    private static final String TEST_RESOURCES_RESOLVER_SERVICE =
-        "META-INF/services/io.micronaut.testresources.core.TestResourcesResolver";
-
     @Override
     public String getName() {
-        if (this instanceof ComposeAwareTestResourcesResolver) {
-            return "compose." + getSimpleName();
-        }
         return "containers." + getSimpleName();
     }
 
     @Override
     public int getOrder() {
-        if (this instanceof ComposeAwareTestResourcesResolver) {
-            return ComposeResolverSupport.ORDER;
-        }
         return SPECIFIC_ORDER;
-    }
-
-    @Override
-    public boolean isEnabled(Map<String, Object> testResourcesConfig) {
-        if (this instanceof ComposeAwareTestResourcesResolver) {
-            return ComposeResolverSupport.isEnabled(testResourcesConfig);
-        }
-        if (ComposeResolverSupport.isEnabled(testResourcesConfig) && hasComposeAwareReplacement()) {
-            return false;
-        }
-        return ToggableTestResourcesResolver.super.isEnabled(testResourcesConfig);
-    }
-
-    private boolean hasComposeAwareReplacement() {
-        String className = getClass().getName();
-        if (!className.endsWith("TestResourceProvider")) {
-            return false;
-        }
-        String composeClassName = className.substring(0, className.length() - "TestResourceProvider".length())
-            + "ComposeTestResourceProvider";
-        if (!isComposeReplacementAdvertised(composeClassName)) {
-            return false;
-        }
-        try {
-            Class<?> composeClass = Class.forName(composeClassName, false, getClass().getClassLoader());
-            return ComposeAwareTestResourcesResolver.class.isAssignableFrom(composeClass);
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
-    private boolean isComposeReplacementAdvertised(String composeClassName) {
-        ClassLoader classLoader = getClass().getClassLoader();
-        try {
-            Enumeration<URL> resources = classLoader.getResources(TEST_RESOURCES_RESOLVER_SERVICE);
-            while (resources.hasMoreElements()) {
-                URL resource = resources.nextElement();
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream(), StandardCharsets.UTF_8))) {
-                    if (reader.lines().map(String::trim).anyMatch(composeClassName::equals)) {
-                        return true;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            return false;
-        }
-        return false;
     }
 
     /**

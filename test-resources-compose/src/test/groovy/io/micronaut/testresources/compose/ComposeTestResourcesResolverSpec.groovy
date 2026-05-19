@@ -540,6 +540,21 @@ services:
         manager.requests.empty
     }
 
+    def "container manager returns empty for unusable configuration"() {
+        given:
+        def configuration = ComposeConfiguration.from(["compose.enabled": true], [:])
+        def project = new ComposeProject([new ComposeService("cache", "redis:7", [:], [:], [6379], [])])
+
+        expect:
+        new ComposeContainerManager().endpoint(configuration, project, project.services().first(), 6379, [:]).empty
+    }
+
+    def "container manager close operations are idempotent without running environments"() {
+        expect:
+        !ComposeContainerManager.closeScope("test")
+        !ComposeContainerManager.closeAll()
+    }
+
     def "configuration discovers default files and derives scoped project names"() {
         given:
         Files.writeString(tempDir.resolve("docker-compose.yaml"), "services: {}\n")

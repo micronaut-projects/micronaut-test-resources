@@ -107,11 +107,14 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
 
     @Override
     public Optional<String> resolve(String propertyName, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
-        ComposeConfiguration configuration = ComposeConfiguration.from(testResourcesConfig, properties);
-        if (!configuration.usable()) {
-            return Optional.empty();
-        }
         try {
+            ComposeConfiguration configuration = ComposeConfiguration.from(testResourcesConfig, properties);
+            if (!configuration.usable()) {
+                if (configuration.enabled()) {
+                    LOG.debug("Docker Compose support is enabled but no Compose files were found for property {}", propertyName);
+                }
+                return Optional.empty();
+            }
             ComposeProject project = parser.parse(configuration);
             for (ComposeTestResourcesProvider provider : providers) {
                 if (provider.supports(propertyName, properties)) {
@@ -153,13 +156,28 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
                                            ComposeConfiguration configuration,
                                            Predicate<ComposeService> predicate,
                                            String description) {
-        List<ComposeService> matches = project.services().stream()
+        List<ComposeService> ignored = project.services().stream()
+            .filter(ComposeService::ignored)
+            .toList();
+        logServices("Ignored Docker Compose services while matching", description, ignored);
+
+        List<ComposeService> inactive = project.services().stream()
+            .filter(service -> !service.ignored())
+            .filter(service -> !service.activeFor(configuration.profiles()))
+            .toList();
+        logServices("Skipped Docker Compose services inactive for configured profiles while matching", description, inactive);
+
+        List<ComposeService> candidates = project.services().stream()
             .filter(service -> !service.ignored())
             .filter(service -> service.activeFor(configuration.profiles()))
+            .toList();
+        List<ComposeService> matches = candidates.stream()
             .filter(predicate)
             .toList();
         if (matches.isEmpty()) {
-            LOG.debug("No Docker Compose service matched {}", description);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No Docker Compose service matched {}. Unmatched services: {}", description, summaries(candidates));
+            }
             return Optional.empty();
         }
         if (matches.size() > 1) {
@@ -172,6 +190,18 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
             LOG.info("Matched Docker Compose service {} for {}", matches.get(0).redactedSummary(), description);
         }
         return Optional.of(matches.get(0));
+    }
+
+    private static void logServices(String action, String description, List<ComposeService> services) {
+        if (!services.isEmpty() && LOG.isDebugEnabled()) {
+            LOG.debug("{} {}: {}", action, description, summaries(services));
+        }
+    }
+
+    private static List<String> summaries(List<ComposeService> services) {
+        return services.stream()
+            .map(ComposeService::redactedSummary)
+            .toList();
     }
 
     private static List<ComposeTestResourcesProvider> loadProviders() {

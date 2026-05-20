@@ -32,14 +32,18 @@ final class ComposeMetadataParser {
     private final Yaml yaml = new Yaml();
 
     ComposeProject parse(ComposeConfiguration configuration) {
-        Map<String, ComposeService> services = new LinkedHashMap<>();
+        Map<String, Map<String, Object>> services = new LinkedHashMap<>();
         for (Path file : configuration.files()) {
-            services.putAll(parseFile(file));
+            parseFile(file).forEach((name, definition) ->
+                services.merge(name, definition, ComposeMetadataParser::mergeService)
+            );
         }
-        return new ComposeProject(List.copyOf(services.values()));
+        return new ComposeProject(services.entrySet().stream()
+            .map(entry -> service(entry.getKey(), entry.getValue()))
+            .toList());
     }
 
-    private Map<String, ComposeService> parseFile(Path file) {
+    private Map<String, Map<String, Object>> parseFile(Path file) {
         Object loaded;
         try (InputStream inputStream = Files.newInputStream(file)) {
             loaded = yaml.load(inputStream);
@@ -48,9 +52,36 @@ final class ComposeMetadataParser {
         }
         Map<String, Object> root = objectMap(loaded);
         Map<String, Object> serviceDefinitions = objectMap(root.get("services"));
-        Map<String, ComposeService> services = new LinkedHashMap<>();
-        serviceDefinitions.forEach((name, value) -> services.put(name, service(name, objectMap(value))));
+        Map<String, Map<String, Object>> services = new LinkedHashMap<>();
+        serviceDefinitions.forEach((name, value) -> services.put(name, objectMap(value)));
         return services;
+    }
+
+    private static Map<String, Object> mergeService(Map<String, Object> base, Map<String, Object> override) {
+        Map<String, Object> merged = new LinkedHashMap<>(base);
+        override.forEach((key, value) -> {
+            if (value == null) {
+                return;
+            }
+            switch (key) {
+                case "environment", "labels" -> merged.put(key, mergeStringMap(merged.get(key), value));
+                case "expose", "ports", "profiles" -> merged.put(key, mergeList(merged.get(key), value));
+                default -> merged.put(key, value);
+            }
+        });
+        return merged;
+    }
+
+    private static Map<String, String> mergeStringMap(@Nullable Object base, @Nullable Object override) {
+        Map<String, String> merged = new LinkedHashMap<>(stringMap(base));
+        merged.putAll(stringMap(override));
+        return Map.copyOf(merged);
+    }
+
+    private static List<String> mergeList(@Nullable Object base, @Nullable Object override) {
+        List<String> merged = new ArrayList<>(list(base));
+        merged.addAll(list(override));
+        return List.copyOf(merged);
     }
 
     private ComposeService service(String name, Map<String, Object> definition) {

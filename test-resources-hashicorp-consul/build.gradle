@@ -13,6 +13,7 @@ micronautBuild {
 }
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     implementation(libs.managed.testcontainers.consul)
 
     testImplementation(testFixtures(project(":micronaut-test-resources-testcontainers")))

@@ -311,10 +311,17 @@ services:
                 ["test-resources-compose"]
         def coveredModules = COMPOSE_SUPPORTED_PROVIDER_MODULES + NON_COMPOSE_PROVIDER_RATIONALE.keySet()
         def providerServiceTypes = ServiceLoader.load(ComposeTestResourcesProvider, getClass().classLoader)*.serviceType as Set
+        def providerRegistrations = COMPOSE_SUPPORTED_PROVIDER_MODULES.collectEntries {
+            [(it): composeProviderRegistrations(root, it)]
+        }
 
         expect:
         resolverModules == coveredModules
         providerServiceTypes.containsAll(REQUIRED_COMPOSE_SERVICE_TYPES)
+        !Files.exists(root.resolve("test-resources-compose/src/main/resources/META-INF/services/io.micronaut.testresources.compose.ComposeTestResourcesProvider"))
+        providerRegistrations.every { module, registrations ->
+            registrations && registrations.every { providerSourceExists(root, module, it) }
+        }
         NON_COMPOSE_PROVIDER_RATIONALE.every { module, reason ->
             module && reason.trim()
         }
@@ -632,6 +639,21 @@ services:
                     .forEach { modules << it.substring(0, it.length() - suffix.length() - 1) }
         }
         modules
+    }
+
+    private static List<String> composeProviderRegistrations(Path root, String module) {
+        Path serviceFile = root.resolve(module)
+                .resolve("src/main/resources/META-INF/services/io.micronaut.testresources.compose.ComposeTestResourcesProvider")
+        Files.readAllLines(serviceFile)
+                .collect { it.trim() }
+                .findAll { it && !it.startsWith("#") }
+    }
+
+    private static boolean providerSourceExists(Path root, String module, String providerClassName) {
+        Path sourceFile = root.resolve(module)
+                .resolve("src/main/java")
+                .resolve(providerClassName.replace('.', FileSystems.default.separator) + ".java")
+        Files.isRegularFile(sourceFile)
     }
 
     private static Path repositoryRoot() {

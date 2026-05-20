@@ -23,13 +23,15 @@ import java.util.Set;
  * Resolves Oracle XE JDBC properties from Docker Compose services.
  */
 public final class OracleXEComposeTestResourcesProvider extends AbstractComposeDatabaseTestResourcesProvider {
+    private static final String SERVICE_TYPE = "oracle";
+
     public OracleXEComposeTestResourcesProvider() {
         super(Kind.JDBC, new Metadata(
-            "oracle",
-            Set.of("oracle", "oracle-free", "oracle-xe"),
+            SERVICE_TYPE,
+            Set.of(SERVICE_TYPE, "oracle-free", "oracle-xe"),
             1521,
             "jdbc:oracle:thin",
-            "oracle",
+            SERVICE_TYPE,
             "oracle.jdbc.OracleDriver",
             "ORACLE_USER",
             "ORACLE_PASSWORD",

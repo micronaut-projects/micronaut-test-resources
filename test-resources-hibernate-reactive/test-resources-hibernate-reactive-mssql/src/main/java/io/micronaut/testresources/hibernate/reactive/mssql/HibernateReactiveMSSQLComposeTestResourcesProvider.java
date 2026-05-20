@@ -23,13 +23,15 @@ import java.util.Set;
  * Resolves MSSQL Hibernate Reactive properties from Docker Compose services.
  */
 public final class HibernateReactiveMSSQLComposeTestResourcesProvider extends AbstractComposeDatabaseTestResourcesProvider {
+    private static final String SERVICE_TYPE = "mssql";
+
     public HibernateReactiveMSSQLComposeTestResourcesProvider() {
         super(Kind.HIBERNATE_REACTIVE, new Metadata(
-            "mssql",
-            Set.of("mssql", "sqlserver", "sql-server", "microsoftsqlserver"),
+            SERVICE_TYPE,
+            Set.of(SERVICE_TYPE, "sqlserver", "sql-server", "microsoftsqlserver"),
             1433,
             "jdbc:sqlserver",
-            "mssql",
+            SERVICE_TYPE,
             "com.microsoft.sqlserver.jdbc.SQLServerDriver",
             "MSSQL_USER",
             "MSSQL_PASSWORD",

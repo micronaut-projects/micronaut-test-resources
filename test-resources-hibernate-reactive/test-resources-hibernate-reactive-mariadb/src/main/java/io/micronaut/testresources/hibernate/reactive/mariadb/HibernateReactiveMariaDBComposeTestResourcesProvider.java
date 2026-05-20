@@ -23,13 +23,15 @@ import java.util.Set;
  * Resolves MariaDB Hibernate Reactive properties from Docker Compose services.
  */
 public final class HibernateReactiveMariaDBComposeTestResourcesProvider extends AbstractComposeDatabaseTestResourcesProvider {
+    private static final String SERVICE_TYPE = "mariadb";
+
     public HibernateReactiveMariaDBComposeTestResourcesProvider() {
         super(Kind.HIBERNATE_REACTIVE, new Metadata(
-            "mariadb",
-            Set.of("mariadb", "maria"),
+            SERVICE_TYPE,
+            Set.of(SERVICE_TYPE, "maria"),
             3306,
             "jdbc:mariadb",
-            "mariadb",
+            SERVICE_TYPE,
             "org.mariadb.jdbc.Driver",
             "MARIADB_USER",
             "MARIADB_PASSWORD",

@@ -122,10 +122,10 @@ final class ComposeContainerManager implements ComposeEnvironmentManager {
         return new ComposeContainer(DockerImageName.parse(configuration.dockerImageName()), configuration.projectName(), files);
     }
 
-    private List<Integer> exposedPorts(ComposeService service) {
+    List<Integer> exposedPorts(ComposeService service) {
         return providers.stream()
             .filter(provider -> provider.matches(service))
-            .map(ComposeTestResourcesProvider::getPort)
+            .flatMap(provider -> provider.getPorts().stream())
             .distinct()
             .toList();
     }

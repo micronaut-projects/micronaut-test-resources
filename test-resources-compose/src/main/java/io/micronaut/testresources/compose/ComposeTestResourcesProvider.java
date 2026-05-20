@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.IntFunction;
 
 /**
  * Provider-owned Docker Compose property mapping.
@@ -79,14 +80,37 @@ public interface ComposeTestResourcesProvider {
      * @param endpoint The Testcontainers endpoint for the matched service.
      * @param service The matched Compose service.
      * @param properties Already-known application properties.
+     * @param endpointLookup Lookup for additional Testcontainers endpoints on the same service.
      */
-    record ResolutionContext(String propertyName, ComposeEndpoint endpoint, ComposeService service, Map<String, Object> properties) {
+    record ResolutionContext(
+        String propertyName,
+        ComposeEndpoint endpoint,
+        ComposeService service,
+        Map<String, Object> properties,
+        IntFunction<Optional<ComposeEndpoint>> endpointLookup
+    ) {
+        public ResolutionContext(String propertyName, ComposeEndpoint endpoint, ComposeService service, Map<String, Object> properties) {
+            this(propertyName, endpoint, service, properties, port -> endpoint.port() == port ? Optional.of(endpoint) : Optional.empty());
+        }
+
         public String hostPort() {
             return endpoint.hostPort();
         }
 
         public String http() {
             return "http://" + hostPort();
+        }
+
+        public Optional<ComposeEndpoint> endpoint(int port) {
+            return endpointLookup.apply(port);
+        }
+
+        public Optional<String> hostPort(int port) {
+            return endpoint(port).map(ComposeEndpoint::hostPort);
+        }
+
+        public Optional<String> http(int port) {
+            return hostPort(port).map(value -> "http://" + value);
         }
 
         public String labelOrEnvironment(String label, String environmentName, String defaultValue) {

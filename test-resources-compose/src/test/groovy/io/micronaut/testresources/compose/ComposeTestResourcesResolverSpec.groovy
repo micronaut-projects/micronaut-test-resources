@@ -48,7 +48,21 @@ class ComposeTestResourcesResolverSpec extends Specification {
         !resolvers[0].isEnabled([:])
         resolvers[0].isEnabled(["compose.enabled": true])
         lifecycles.size() == 1
-        providers*.serviceType.containsAll(["postgres", "redis", "rabbitmq", "kafka", "mongodb", "localstack"])
+        providers*.serviceType.containsAll([
+                "postgres",
+                "mysql",
+                "mariadb",
+                "mssql",
+                "oracle",
+                "redis",
+                "rabbitmq",
+                "kafka",
+                "mongodb",
+                "localstack",
+                "azurite",
+                "minio",
+                "wiremock"
+        ])
     }
 
     def "redacts compose diagnostic credential keys"() {
@@ -214,6 +228,55 @@ services:
         resolver.resolve("aws.region", [:], config).get() == "us-east-1"
     }
 
+    def "resolves expanded service backed provider catalog from compose metadata"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    labels:
+      io.micronaut.test-resources.service: azurite
+  minio:
+    image: minio/minio
+    labels:
+      io.micronaut.test-resources.service: minio
+      io.micronaut.test-resources.access-key: compose-access
+      io.micronaut.test-resources.secret-key: compose-secret
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    labels:
+      io.micronaut.test-resources.service: keycloak
+      io.micronaut.test-resources.realm: demo
+  mail:
+    image: axllent/mailpit
+    labels:
+      io.micronaut.test-resources.service: mailpit
+  wiremock:
+    image: wiremock/wiremock
+    labels:
+      io.micronaut.test-resources.service: wiremock
+  otel:
+    image: grafana/otel-lgtm
+    labels:
+      io.micronaut.test-resources.service: opentelemetry
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def config = ["compose.enabled": true, "compose.files": [composeFile.toString()]]
+
+        expect:
+        resolver.resolve("azure.credential.storage-shared-key.connection-string", [:], config).get().contains("BlobEndpoint=http://localhost:20000/devstoreaccount1")
+        resolver.resolve("minio.url", [:], config).get() == "http://localhost:19000"
+        resolver.resolve("minio.access-key", [:], config).get() == "compose-access"
+        resolver.resolve("minio.secret-key", [:], config).get() == "compose-secret"
+        resolver.resolve("micronaut.security.oauth2.clients.keycloak.openid.issuer", [:], config).get() == "http://localhost:18080/realms/demo"
+        resolver.resolve("mailpit.ui.url", [:], config).get() == "http://localhost:18025"
+        resolver.resolve("javamail.properties.mail.smtp.port", [:], config).get() == "11025"
+        resolver.resolve("wiremock.url", [:], config).get() == "http://localhost:18080"
+        resolver.resolve("otel.exporter.otlp.endpoint", [:], config).get() == "http://localhost:14317"
+    }
+
     def "resolver reports required and resolvable property metadata from providers"() {
         given:
         def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), new FakeManager())
@@ -245,12 +308,12 @@ services:
         Path root = repositoryRoot()
         def resolverModules = modulesWithService(root, "io.micronaut.testresources.core.TestResourcesResolver") -
                 ["test-resources-compose"]
-        def composeProviderModules = modulesWithService(root, "io.micronaut.testresources.compose.ComposeTestResourcesProvider")
         def coveredModules = COMPOSE_SUPPORTED_PROVIDER_MODULES + NON_COMPOSE_PROVIDER_RATIONALE.keySet()
+        def providerServiceTypes = ServiceLoader.load(ComposeTestResourcesProvider, getClass().classLoader)*.serviceType as Set
 
         expect:
         resolverModules == coveredModules
-        composeProviderModules == COMPOSE_SUPPORTED_PROVIDER_MODULES
+        providerServiceTypes.containsAll(REQUIRED_COMPOSE_SERVICE_TYPES)
         NON_COMPOSE_PROVIDER_RATIONALE.every { module, reason ->
             module && reason.trim()
         }
@@ -547,94 +610,90 @@ services:
     }
 
     private static final Set<String> COMPOSE_SUPPORTED_PROVIDER_MODULES = [
+            "test-resources-azure",
+            "test-resources-couchbase",
+            "test-resources-hashicorp-consul",
+            "test-resources-hashicorp-vault",
+            "test-resources-hazelcast",
+            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-mariadb",
+            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-mssql",
+            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-mysql",
+            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-oracle-free",
+            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-oracle-xe",
+            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-postgresql",
+            "test-resources-hivemq",
+            "test-resources-infinispan",
+            "test-resources-jdbc/test-resources-jdbc-mariadb",
+            "test-resources-jdbc/test-resources-jdbc-mssql",
+            "test-resources-jdbc/test-resources-jdbc-mysql",
+            "test-resources-jdbc/test-resources-jdbc-oracle-free",
+            "test-resources-jdbc/test-resources-jdbc-oracle-xe",
             "test-resources-jdbc/test-resources-jdbc-postgresql",
             "test-resources-kafka",
             "test-resources-localstack/test-resources-localstack-core",
+            "test-resources-mailpit",
+            "test-resources-minio",
             "test-resources-mongodb",
+            "test-resources-neo4j",
+            "test-resources-oauth2",
+            "test-resources-opensearch",
+            "test-resources-opentelemetry",
+            "test-resources-pulsar",
+            "test-resources-r2dbc/test-resources-r2dbc-mariadb",
+            "test-resources-r2dbc/test-resources-r2dbc-mssql",
+            "test-resources-r2dbc/test-resources-r2dbc-mysql",
+            "test-resources-r2dbc/test-resources-r2dbc-oracle-free",
+            "test-resources-r2dbc/test-resources-r2dbc-oracle-xe",
+            "test-resources-r2dbc/test-resources-r2dbc-postgresql",
             "test-resources-rabbitmq",
-            "test-resources-redis"
+            "test-resources-redis",
+            "test-resources-seaweedfs",
+            "test-resources-solr",
+            "test-resources-wiremock"
     ] as Set
 
     private static final Map<String, String> NON_COMPOSE_PROVIDER_RATIONALE = [
-            "test-resources-azure":
-                    "Azurite mapping is not implemented in this revision; normal provider fallback remains.",
-            "test-resources-couchbase":
-                    "Couchbase bucket/user/bootstrap mapping is not implemented in this revision.",
             "test-resources-elasticsearch":
                     "Module is disabled in settings.gradle and not part of regular build scope.",
-            "test-resources-hashicorp-consul":
-                    "Consul token and endpoint mapping is not implemented in this revision.",
-            "test-resources-hashicorp-vault":
-                    "Vault token and endpoint mapping is not implemented in this revision.",
-            "test-resources-hazelcast":
-                    "Hazelcast cluster/member mapping is not implemented in this revision.",
-            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-mariadb":
-                    "Hibernate Reactive MariaDB Compose mapping is not implemented in this revision.",
-            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-mssql":
-                    "Hibernate Reactive MSSQL Compose mapping is not implemented in this revision.",
-            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-mysql":
-                    "Hibernate Reactive MySQL Compose mapping is not implemented in this revision.",
-            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-oracle-free":
-                    "Hibernate Reactive Oracle Free Compose mapping is not implemented in this revision.",
-            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-oracle-xe":
-                    "Hibernate Reactive Oracle XE Compose mapping is not implemented in this revision.",
-            "test-resources-hibernate-reactive/test-resources-hibernate-reactive-postgresql":
-                    "Hibernate Reactive PostgreSQL Compose mapping is not implemented in this revision.",
-            "test-resources-hivemq":
-                    "MQTT broker mapping is not implemented in this revision.",
-            "test-resources-infinispan":
-                    "Infinispan endpoint and credential mapping is not implemented in this revision.",
             "test-resources-jdbc/test-resources-jdbc-h2":
                     "H2 is an in-process database provider and has no reusable Compose service.",
-            "test-resources-jdbc/test-resources-jdbc-mariadb":
-                    "JDBC MariaDB Compose mapping is not implemented in this revision.",
-            "test-resources-jdbc/test-resources-jdbc-mssql":
-                    "JDBC MSSQL Compose mapping is not implemented in this revision.",
-            "test-resources-jdbc/test-resources-jdbc-mysql":
-                    "JDBC MySQL Compose mapping is not implemented in this revision.",
-            "test-resources-jdbc/test-resources-jdbc-oracle-free":
-                    "JDBC Oracle Free Compose mapping is not implemented in this revision.",
             "test-resources-jdbc/test-resources-jdbc-oracle-test-pilot":
-                    "Oracle Test Pilot has no reusable Compose service contract in this revision.",
-            "test-resources-jdbc/test-resources-jdbc-oracle-xe":
-                    "JDBC Oracle XE Compose mapping is not implemented in this revision.",
-            "test-resources-mailpit":
-                    "Mailpit SMTP/API property mapping is not implemented in this revision.",
-            "test-resources-minio":
-                    "MinIO endpoint and credential mapping is not implemented in this revision.",
-            "test-resources-neo4j":
-                    "Neo4j URI and credential mapping is not implemented in this revision.",
-            "test-resources-oauth2":
-                    "Keycloak realm/client mapping is not implemented in this revision.",
-            "test-resources-opensearch":
-                    "OpenSearch endpoint and credential mapping is not implemented in this revision.",
-            "test-resources-opentelemetry":
-                    "OpenTelemetry collector endpoint mapping is not implemented in this revision.",
-            "test-resources-pulsar":
-                    "Pulsar broker/admin endpoint mapping is not implemented in this revision.",
-            "test-resources-r2dbc/test-resources-r2dbc-mariadb":
-                    "R2DBC MariaDB Compose mapping is not implemented in this revision.",
-            "test-resources-r2dbc/test-resources-r2dbc-mssql":
-                    "R2DBC MSSQL Compose mapping is not implemented in this revision.",
-            "test-resources-r2dbc/test-resources-r2dbc-mysql":
-                    "R2DBC MySQL Compose mapping is not implemented in this revision.",
-            "test-resources-r2dbc/test-resources-r2dbc-oracle-free":
-                    "R2DBC Oracle Free Compose mapping is not implemented in this revision.",
-            "test-resources-r2dbc/test-resources-r2dbc-oracle-xe":
-                    "R2DBC Oracle XE Compose mapping is not implemented in this revision.",
+                    "Oracle Test Pilot is an integration with Oracle Test Pilot environment variables, not a reusable Compose service contract.",
             "test-resources-r2dbc/test-resources-r2dbc-pool":
                     "R2DBC pool is a wrapper provider and has no independent Compose service.",
-            "test-resources-r2dbc/test-resources-r2dbc-postgresql":
-                    "R2DBC PostgreSQL Compose mapping is not implemented in this revision.",
-            "test-resources-seaweedfs":
-                    "SeaweedFS S3 endpoint and credential mapping is not implemented in this revision.",
-            "test-resources-solr":
-                    "Solr endpoint mapping is not implemented in this revision.",
             "test-resources-testcontainers":
-                    "Generic Testcontainers has no stable provider-specific property contract.",
-            "test-resources-wiremock":
-                    "WireMock endpoint mapping is not implemented in this revision."
+                    "Generic Testcontainers is already the user-supplied container contract and has no stable provider-specific Compose service mapping."
     ]
+
+    private static final Set<String> REQUIRED_COMPOSE_SERVICE_TYPES = [
+            "azurite",
+            "couchbase",
+            "hashicorp-consul",
+            "hashicorp-vault",
+            "hazelcast",
+            "hivemq",
+            "infinispan",
+            "kafka",
+            "localstack",
+            "mailpit",
+            "mariadb",
+            "minio",
+            "mongodb",
+            "mssql",
+            "mysql",
+            "neo4j",
+            "opensearch",
+            "opentelemetry",
+            "oracle",
+            "postgres",
+            "pulsar",
+            "rabbitmq",
+            "redis",
+            "seaweedfs",
+            "solr",
+            "solr-zookeeper",
+            "wiremock"
+    ] as Set
 
     private static final class TestDatabaseComposeTestResourcesProvider extends AbstractComposeDatabaseTestResourcesProvider {
         TestDatabaseComposeTestResourcesProvider(Kind kind, Metadata metadata) {

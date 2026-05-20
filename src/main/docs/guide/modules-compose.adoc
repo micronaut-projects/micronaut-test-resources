@@ -10,13 +10,13 @@ When it finds one unambiguous supported Compose service, it resolves the missing
 When it cannot safely resolve the property, the existing provider starts the normal Testcontainers resource.
 
 The Compose module does not replace provider modules.
-It provides the shared Compose lifecycle and lookup support used by Compose-aware provider resolvers.
+It provides the shared Compose lifecycle, lookup support, and a catalog of Compose mappings for the provider property contracts.
 For example:
 
 * PostgreSQL JDBC needs `micronaut-test-resources-jdbc-postgresql` and `micronaut-test-resources-compose`.
 * Redis needs `micronaut-test-resources-redis` and `micronaut-test-resources-compose`.
 * RabbitMQ needs `micronaut-test-resources-rabbitmq` and `micronaut-test-resources-compose`.
-* Kafka, MongoDB, and LocalStack follow the same pattern: add the normal provider module plus `micronaut-test-resources-compose`.
+* Other supported services follow the same pattern: add the normal provider module plus `micronaut-test-resources-compose`.
 
 Enable Compose support with the `test-resources.compose.enabled` property:
 
@@ -127,8 +127,35 @@ Compose-mapped service families in this revision include:
 | Service family
 | Resolved properties
 
-| PostgreSQL JDBC
-| Resolves datasource URLs, usernames, passwords, and driver names from Compose metadata when `micronaut-test-resources-jdbc-postgresql` is present.
+| JDBC databases
+| Resolves datasource URLs, usernames, passwords, and driver names for PostgreSQL, MySQL, MariaDB, MSSQL, Oracle Free, and Oracle XE from Compose metadata.
+
+| R2DBC databases
+| Resolves R2DBC datasource URLs, usernames, and passwords for PostgreSQL, MySQL, MariaDB, MSSQL, Oracle Free, and Oracle XE.
+
+| Hibernate Reactive databases
+| Resolves Hibernate Reactive connection URLs, usernames, and passwords for PostgreSQL, MySQL, MariaDB, MSSQL, Oracle Free, and Oracle XE.
+
+| Azurite
+| Resolves Azure shared-key account name, account key, and connection string.
+
+| Couchbase
+| Resolves `couchbase.uri`, `couchbase.username`, and `couchbase.password`.
+
+| Consul
+| Resolves `consul.client.host`, `consul.client.port`, and `consul.client.default-zone`.
+
+| Vault
+| Resolves `vault.client.uri` and `vault.client.token`.
+
+| Hazelcast
+| Resolves `hazelcast.client.network.addresses`.
+
+| HiveMQ / MQTT
+| Resolves `mqtt.client.client-id` and `mqtt.client.server-uri`.
+
+| Infinispan
+| Resolves Hot Rod host, port, username, and password properties.
 
 | Redis
 | Resolves unauthenticated single-node `redis.uri`.
@@ -145,107 +172,39 @@ Compose-mapped service families in this revision include:
 | LocalStack
 | Resolves common AWS credentials, region, and S3, DynamoDB, SQS, and SNS endpoint overrides.
 
+| Mailpit
+| Resolves JavaMail SMTP host, port, auth, and STARTTLS properties plus Mailpit UI/API URLs.
+
+| MinIO
+| Resolves `minio.url`, `minio.access-key`, and `minio.secret-key`.
+
+| Neo4j
+| Resolves `neo4j.uri`.
+
+| Keycloak OAuth2
+| Resolves Keycloak client ID, client secret, issuer, and JWKS URL.
+
+| OpenSearch
+| Resolves OpenSearch REST and HTTP client hosts.
+
+| OpenTelemetry
+| Resolves `otel.exporter.otlp.endpoint`.
+
+| Pulsar
+| Resolves `pulsar.service-url`.
+
+| SeaweedFS
+| Resolves `seaweedfs.url`, `seaweedfs.access-key`, and `seaweedfs.secret-key`.
+
+| Solr
+| Resolves Solr hosts, ZooKeeper hosts, and passes through configured Solr config/schema URLs.
+
+| WireMock
+| Resolves `wiremock.host`, `wiremock.port`, and `wiremock.url`.
 |===
 
-Provider modules own their Compose mappings, so additional Test Resources providers can add Compose support without editing the Compose module.
-Every TestResourcesResolver-backed provider module is either mapped above or intentionally left to its existing provider fallback below.
-This inventory is also checked by the Compose module test suite so newly added provider modules are not silently omitted.
-
-[cols="1,2", options="header"]
-|===
-| Provider module
-| Compose status
-
-| `micronaut-test-resources-azure`
-| Not mapped in this revision; Azurite endpoint and credential mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-couchbase`
-| Not mapped in this revision; bucket, user, and bootstrap mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-elasticsearch`
-| Not mapped because the Elasticsearch module is disabled in this repository's regular build scope.
-
-| `micronaut-test-resources-hashicorp-consul`
-| Not mapped in this revision; Consul token and endpoint mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-hashicorp-vault`
-| Not mapped in this revision; Vault token and endpoint mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-hazelcast`
-| Not mapped in this revision; cluster/member mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-hibernate-reactive-*`
-| Not mapped in this revision; Hibernate Reactive datasource URL and credential mapping remains handled by the normal providers.
-
-| `micronaut-test-resources-hivemq`
-| Not mapped in this revision; MQTT broker mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-infinispan`
-| Not mapped in this revision; endpoint and credential mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-jdbc-h2`
-| Not applicable; H2 is an in-process database provider with no reusable Compose service.
-
-| `micronaut-test-resources-jdbc-mariadb`, `micronaut-test-resources-jdbc-mssql`, `micronaut-test-resources-jdbc-mysql`, `micronaut-test-resources-jdbc-oracle-free`, `micronaut-test-resources-jdbc-oracle-xe`
-| Not mapped in this revision; JDBC Compose database mapping is currently implemented only for PostgreSQL.
-
-| `micronaut-test-resources-jdbc-oracle-test-pilot`
-| Not applicable in this revision; Oracle Test Pilot has no reusable Compose service contract.
-
-| `micronaut-test-resources-jdbc-postgresql`
-| Mapped; resolves datasource URLs, usernames, passwords, and driver names from Compose metadata.
-
-| `micronaut-test-resources-kafka`
-| Mapped; resolves Kafka/Redpanda bootstrap servers from the Compose service endpoint.
-
-| `micronaut-test-resources-localstack-core`
-| Mapped; resolves common AWS credentials, region, and LocalStack-backed S3, DynamoDB, SQS, and SNS endpoint overrides.
-
-| `micronaut-test-resources-mailpit`
-| Not mapped in this revision; SMTP/API property mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-minio`
-| Not mapped in this revision; endpoint and credential mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-mongodb`
-| Mapped; resolves `mongodb.uri` and named `mongodb.servers.*.uri` entries.
-
-| `micronaut-test-resources-neo4j`
-| Not mapped in this revision; URI and credential mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-oauth2`
-| Not mapped in this revision; Keycloak realm/client mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-opensearch`
-| Not mapped in this revision; endpoint and credential mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-opentelemetry`
-| Not mapped in this revision; collector endpoint mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-pulsar`
-| Not mapped in this revision; broker/admin endpoint mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-r2dbc-*`
-| Not mapped in this revision; R2DBC datasource mapping remains handled by the normal providers. `micronaut-test-resources-r2dbc-pool` is a wrapper provider with no independent Compose service.
-
-| `micronaut-test-resources-rabbitmq`
-| Mapped; resolves `rabbitmq.uri`, `rabbitmq.username`, and `rabbitmq.password`.
-
-| `micronaut-test-resources-redis`
-| Mapped for unauthenticated standalone Redis; authenticated Redis remains handled by the normal provider fallback.
-
-| `micronaut-test-resources-seaweedfs`
-| Not mapped in this revision; S3 endpoint and credential mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-solr`
-| Not mapped in this revision; endpoint mapping remains handled by the normal provider.
-
-| `micronaut-test-resources-testcontainers`
-| Not applicable; the generic Testcontainers provider has no stable provider-specific property contract.
-
-| `micronaut-test-resources-wiremock`
-| Not mapped in this revision; endpoint mapping remains handled by the normal provider.
-|===
+Every TestResourcesResolver-backed provider module is covered by the Compose module test suite.
+The only intentionally non-applicable modules are H2, because it is an in-process database provider; Oracle Test Pilot, because it resolves from Oracle Test Pilot environment variables instead of a reusable Compose service; R2DBC pool, because it is a wrapper provider; disabled Elasticsearch; and generic Testcontainers, because the user-supplied container definition is already its configuration contract.
 
 The supported service families use the following service-specific configuration sources:
 
@@ -255,9 +214,9 @@ The supported service families use the following service-specific configuration 
 | Standard Compose environment variables
 | Defaults and notes
 
-| PostgreSQL JDBC
-| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
-| These are the official PostgreSQL image variables. If they are absent, the provider falls back to its normal `test` user, password, and database defaults unless explicit labels override them.
+| JDBC, R2DBC, and Hibernate Reactive databases
+| PostgreSQL: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`; MySQL: `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE`; MariaDB: `MARIADB_USER`, `MARIADB_PASSWORD`, `MARIADB_DATABASE`; MSSQL: `MSSQL_USER`, `MSSQL_PASSWORD`, `MSSQL_DATABASE`; Oracle: `ORACLE_USER`, `ORACLE_PASSWORD`, `ORACLE_DATABASE`
+| If they are absent, the provider falls back to the stable Test Resources defaults unless explicit labels override them.
 
 | Redis
 | None
@@ -279,6 +238,26 @@ The supported service families use the following service-specific configuration 
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`
 | If they are absent, the provider uses LocalStack-compatible defaults: access key `test`, secret key `test`, and region `us-east-1`. S3, DynamoDB, SQS, and SNS endpoint overrides come from the Compose service endpoint.
 
+| MinIO
+| `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`
+| Access and secret keys can also be supplied with explicit access-key and secret-key labels.
+
+| Keycloak
+| `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET`, `KEYCLOAK_REALM`
+| Client and realm labels override environment variables. Defaults are intended only for local development and tests.
+
+| Vault
+| `VAULT_DEV_ROOT_TOKEN_ID`
+| The password label can override the token value.
+
+| Infinispan
+| `USER`, `PASS`
+| If absent, the provider uses the same Hot Rod defaults as the Testcontainers provider.
+
+| Mailpit, WireMock, Neo4j, OpenSearch, OpenTelemetry, Pulsar, Hazelcast, Consul, HiveMQ, Couchbase, Azurite, SeaweedFS, and Solr
+| Service-specific endpoint ports; provider-specific credential labels where applicable.
+| Compose supplies endpoints through Testcontainers. Explicit labels are recommended when images or exposed ports are ambiguous.
+
 |===
 
 Supported labels are:
@@ -289,7 +268,7 @@ Supported labels are:
 | Purpose
 
 | `io.micronaut.test-resources.service`
-| Selects the supported service type, such as `postgres`, `redis`, `rabbitmq`, `kafka`, `mongodb`, or `localstack`.
+| Selects the supported service type, such as `postgres`, `mysql`, `redis`, `rabbitmq`, `kafka`, `mongodb`, `localstack`, `keycloak`, `minio`, or `wiremock`.
 
 | `io.micronaut.test-resources.datasource`
 | Selects the logical datasource name for database services. If omitted, an unambiguous database service maps to `default`.
@@ -310,16 +289,16 @@ Supported labels are:
 | Overrides the secret key for object-storage style services.
 
 | `io.micronaut.test-resources.token`
-| Reserved for provider mappings that support token-based service credentials.
+| Overrides token-based service credentials when the service family supports them.
 
 | `io.micronaut.test-resources.realm`
-| Reserved for provider mappings that support realm-based services.
+| Overrides realm-based services such as Keycloak.
 
 | `io.micronaut.test-resources.client-id`
-| Reserved for provider mappings that support client IDs.
+| Overrides client IDs when the service family supports them.
 
 | `io.micronaut.test-resources.client-secret`
-| Reserved for provider mappings that support client secrets.
+| Overrides client secrets when the service family supports them.
 
 | `io.micronaut.test-resources.ignore`
 | Excludes a service from Compose matching when set to `true`.

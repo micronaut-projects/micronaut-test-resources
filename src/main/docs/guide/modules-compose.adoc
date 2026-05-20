@@ -151,6 +151,40 @@ Provider modules own their Compose mappings, so additional Test Resources provid
 H2, Oracle Test Pilot, R2DBC pool, the generic Testcontainers provider, and providers not listed above do not map to reusable Compose service discovery in this module revision.
 They remain handled by their existing provider behavior.
 
+The supported service families use the following service-specific configuration sources:
+
+[cols="1,2,2", options="header"]
+|===
+| Service family
+| Standard Compose environment variables
+| Defaults and notes
+
+| PostgreSQL JDBC
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
+| These are the official PostgreSQL image variables. If they are absent, the provider falls back to its normal `test` user, password, and database defaults unless explicit labels override them.
+
+| Redis
+| None
+| Only unauthenticated single-node Redis is mapped. If `REDIS_PASSWORD` or `io.micronaut.test-resources.password` is present, Compose resolution is skipped and the normal Redis provider remains the fallback.
+
+| RabbitMQ
+| `RABBITMQ_DEFAULT_USER`, `RABBITMQ_DEFAULT_PASS`
+| If they are absent, the provider uses RabbitMQ's `guest` user and password defaults unless explicit labels override them.
+
+| Kafka and Redpanda
+| None
+| Compose supplies only the mapped bootstrap endpoint. Topic provisioning and credentials are not inferred from Compose in this module revision.
+
+| MongoDB
+| `MONGO_INITDB_DATABASE`
+| The database name comes from the explicit database label, `MONGO_INITDB_DATABASE`, the named `mongodb.servers.*` entry, or the default `test` database. Username and password are not inferred in this module revision.
+
+| LocalStack
+| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`
+| If they are absent, the provider uses LocalStack-compatible defaults: access key `test`, secret key `test`, and region `us-east-1`. S3, DynamoDB, SQS, and SNS endpoint overrides come from the Compose service endpoint.
+
+|===
+
 Supported labels are:
 
 [cols="1,1", options="header"]

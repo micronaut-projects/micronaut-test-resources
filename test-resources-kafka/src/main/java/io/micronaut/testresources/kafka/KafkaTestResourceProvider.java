@@ -55,7 +55,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     public static final String DISPLAY_NAME = "Kafka";
     public static final String SIMPLE_NAME = "kafka";
-    private static final long ADMIN_TIMEOUT_SECONDS = 30;
+    private static final long ADMIN_TIMEOUT_SECONDS = 60;
     private static final TopicProvisioningConfiguration NO_TOPICS =
         new TopicProvisioningConfiguration(Collections.emptyList(), DEFAULT_PARTITIONS);
 
@@ -129,35 +129,36 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     private void provisionTopics(KafkaContainer container, TopicProvisioningConfiguration configuration) {
         Properties adminClientConfiguration = new Properties();
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
-        try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
-            Set<String> existingTopics = adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            verifyExistingTopicPartitions(adminClient, configuration.topics().stream()
-                .filter(existingTopics::contains)
-                .toList(), configuration);
+        adminClientConfiguration.put(
+            AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG,
+            String.valueOf(TimeUnit.SECONDS.toMillis(ADMIN_TIMEOUT_SECONDS * 2))
+        );
+        adminClientConfiguration.put(
+            AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG,
+            String.valueOf(TimeUnit.SECONDS.toMillis(ADMIN_TIMEOUT_SECONDS))
+        );
+        try {
             List<NewTopic> topicsToCreate = configuration.topics().stream()
-                .filter(topic -> !existingTopics.contains(topic))
                 .map(topic -> new NewTopic(topic, configuration.partitions(), (short) 1))
                 .toList();
-            if (topicsToCreate.isEmpty()) {
-                return;
-            }
             beforeCreateTopics(container, configuration, topicsToCreate);
-            var createTopicsResult = adminClient.createTopics(topicsToCreate);
-            List<String> topicsToReverify = new ArrayList<>();
-            for (NewTopic topic : topicsToCreate) {
-                try {
-                    createTopicsResult.values().get(topic.name()).get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                } catch (ExecutionException e) {
-                    if (e.getCause() instanceof TopicExistsException) {
-                        topicsToReverify.add(topic.name());
-                    } else {
-                        throw e;
+            try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
+                var createTopicsResult = adminClient.createTopics(topicsToCreate);
+                for (NewTopic topic : topicsToCreate) {
+                    try {
+                        createTopicsResult.values().get(topic.name()).get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    } catch (ExecutionException e) {
+                        if (!(e.getCause() instanceof TopicExistsException)) {
+                            throw e;
+                        }
+                    } catch (TimeoutException e) {
+                        // Re-verify below. Some brokers report concurrent create races as a timeout.
                     }
-                } catch (TimeoutException e) {
-                    topicsToReverify.add(topic.name());
                 }
             }
-            verifyExistingTopicPartitions(adminClient, topicsToReverify, configuration);
+            try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
+                verifyExistingTopicPartitions(adminClient, new ArrayList<>(configuration.topics()), configuration);
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new TestResourcesResolutionException("Interrupted while provisioning Kafka topics " + topicProvisioningDetails(configuration), e);

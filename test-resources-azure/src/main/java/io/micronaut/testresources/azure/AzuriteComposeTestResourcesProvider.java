@@ -38,6 +38,11 @@ public final class AzuriteComposeTestResourcesProvider extends AbstractComposeTe
     }
 
     @Override
+    public List<Integer> getPorts() {
+        return List.of(10000, 10001, 10002);
+    }
+
+    @Override
     public @Nullable String resolve(ComposeTestResourcesProvider.ResolutionContext context) {
         return switch (context.propertyName()) {
             case ACCOUNT_NAME -> DEFAULT_ACCOUNT_NAME;

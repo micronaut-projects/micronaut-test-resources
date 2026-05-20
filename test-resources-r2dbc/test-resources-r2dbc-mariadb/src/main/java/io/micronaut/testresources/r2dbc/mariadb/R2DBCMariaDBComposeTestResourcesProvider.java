@@ -23,13 +23,15 @@ import java.util.Set;
  * Resolves MariaDB R2DBC properties from Docker Compose services.
  */
 public final class R2DBCMariaDBComposeTestResourcesProvider extends AbstractComposeDatabaseTestResourcesProvider {
+    private static final String SERVICE_TYPE = "mariadb";
+
     public R2DBCMariaDBComposeTestResourcesProvider() {
         super(Kind.R2DBC, new Metadata(
-            "mariadb",
-            Set.of("mariadb", "maria"),
+            SERVICE_TYPE,
+            Set.of(SERVICE_TYPE, "maria"),
             3306,
             "jdbc:mariadb",
-            "mariadb",
+            SERVICE_TYPE,
             "org.mariadb.jdbc.Driver",
             "MARIADB_USER",
             "MARIADB_PASSWORD",

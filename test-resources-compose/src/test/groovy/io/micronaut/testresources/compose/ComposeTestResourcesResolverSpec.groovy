@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.compose
 
+import io.micronaut.testresources.azure.AzuriteComposeTestResourcesProvider
 import io.micronaut.testresources.core.ScopedTestResourcesLifecycle
 import io.micronaut.testresources.core.TestResourcesResolver
 import io.micronaut.testresources.core.ToggableTestResourcesResolver
@@ -302,6 +303,22 @@ services:
                 "kafka.bootstrap.servers",
                 "aws.services.s3.endpoint-override"
         ])
+    }
+
+    def "compose manager exposes all ports required by a matched provider"() {
+        given:
+        def service = new ComposeService(
+                "azurite",
+                "mcr.microsoft.com/azure-storage/azurite",
+                ["io.micronaut.test-resources.service": "azurite"],
+                [:],
+                [],
+                []
+        )
+        def manager = new ComposeContainerManager([new AzuriteComposeTestResourcesProvider()])
+
+        expect:
+        manager.exposedPorts(service) == [10000, 10001, 10002]
     }
 
     def "compose coverage inventory covers every resolver backed provider module"() {

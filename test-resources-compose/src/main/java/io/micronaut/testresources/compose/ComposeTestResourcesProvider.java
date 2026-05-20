@@ -38,6 +38,10 @@ public interface ComposeTestResourcesProvider {
 
     int getPort();
 
+    default List<Integer> getPorts() {
+        return List.of(getPort());
+    }
+
     List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries);
 
     default List<String> getRequiredPropertyEntries() {

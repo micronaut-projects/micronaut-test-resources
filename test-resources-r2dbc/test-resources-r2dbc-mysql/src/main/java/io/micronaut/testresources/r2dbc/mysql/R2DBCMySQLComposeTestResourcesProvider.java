@@ -23,13 +23,15 @@ import java.util.Set;
  * Resolves MySQL R2DBC properties from Docker Compose services.
  */
 public final class R2DBCMySQLComposeTestResourcesProvider extends AbstractComposeDatabaseTestResourcesProvider {
+    private static final String SERVICE_TYPE = "mysql";
+
     public R2DBCMySQLComposeTestResourcesProvider() {
         super(Kind.R2DBC, new Metadata(
-            "mysql",
-            Set.of("mysql"),
+            SERVICE_TYPE,
+            Set.of(SERVICE_TYPE),
             3306,
             "jdbc:mysql",
-            "mysql",
+            SERVICE_TYPE,
             "com.mysql.cj.jdbc.Driver",
             "MYSQL_USER",
             "MYSQL_PASSWORD",

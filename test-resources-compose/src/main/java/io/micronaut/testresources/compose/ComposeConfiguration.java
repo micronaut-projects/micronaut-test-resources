@@ -168,7 +168,7 @@ record ComposeConfiguration(
         return "mn-tr-" + normalized;
     }
 
-    private static void requireNonNull(Object value, String name) {
+    private static void requireNonNull(@Nullable Object value, String name) {
         Objects.requireNonNull(value, name);
     }
 }

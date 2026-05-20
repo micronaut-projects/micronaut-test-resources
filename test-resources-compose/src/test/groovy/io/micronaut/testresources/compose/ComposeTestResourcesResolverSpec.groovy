@@ -491,6 +491,84 @@ services:
         logger.detachAppender(appender)
     }
 
+    def "diagnostics explain ignored and unmatched services without leaking secrets"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, """
+services:
+  ignored:
+    image: redis:7
+    environment:
+      REDIS_PASSWORD: super-secret
+    labels:
+      io.micronaut.test-resources.ignore: "true"
+  db:
+    image: postgres:17
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def logger = LoggerFactory.getLogger(ComposeTestResourcesResolver)
+        def originalLevel = logger.level
+        def level = Class.forName("ch.qos.logback.classic.Level")
+        logger.level = level.getField("DEBUG").get(null)
+        def appender = Class.forName("ch.qos.logback.core.read.ListAppender").getDeclaredConstructor().newInstance()
+        appender.start()
+        logger.addAppender(appender)
+
+        when:
+        def resolved = resolver.resolve("redis.uri", [:], ["compose.enabled": true, "compose.files": [composeFile.toString()]])
+
+        then:
+        resolved.empty
+        manager.requests.empty
+        def messages = appender.list*.formattedMessage.join("\n")
+        messages.contains("Ignored Docker Compose services while matching redis")
+        messages.contains("No Docker Compose service matched redis")
+        messages.contains("service=db")
+        !messages.contains("super-secret")
+
+        cleanup:
+        logger.detachAppender(appender)
+        logger.level = originalLevel
+    }
+
+    def "merges service metadata from multiple compose files"() {
+        given:
+        Path baseComposeFile = tempDir.resolve("compose.yml")
+        Files.writeString(baseComposeFile, """
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432"
+""".stripIndent())
+        Path overrideComposeFile = tempDir.resolve("compose.test.yml")
+        Files.writeString(overrideComposeFile, """
+services:
+  db:
+    environment:
+      POSTGRES_DB: inventory
+    labels:
+      io.micronaut.test-resources.service: postgres
+      io.micronaut.test-resources.datasource: default
+""".stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def config = [
+                "compose.enabled": true,
+                "compose.files": [baseComposeFile.toString(), overrideComposeFile.toString()]
+        ]
+        def props = ["datasources.default.db-type": "postgres"]
+
+        expect:
+        resolver.resolve("datasources.default.url", props, config).get() == "jdbc:postgresql://localhost:15432/inventory"
+        resolver.resolve("datasources.default.username", props, config).get() == "demo"
+        resolver.resolve("datasources.default.password", props, config).get() == "secret"
+    }
+
     def "parses compose metadata maps lists exposed ports and inactive profiles"() {
         given:
         Path composeFile = tempDir.resolve("compose.yml")

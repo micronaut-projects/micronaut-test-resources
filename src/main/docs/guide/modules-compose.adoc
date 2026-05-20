@@ -9,6 +9,14 @@ The Compose module acts as an overlay that runs before the default providers.
 When it finds one unambiguous supported Compose service, it resolves the missing property from that service.
 When it cannot safely resolve the property, the existing provider starts the normal Testcontainers resource.
 
+The Compose module does not replace provider modules.
+It only makes Compose-aware resolvers visible to the Test Resources server.
+For example:
+
+* PostgreSQL JDBC needs `micronaut-test-resources-jdbc-postgresql` and `micronaut-test-resources-compose`.
+* Redis needs `micronaut-test-resources-redis` and `micronaut-test-resources-compose`.
+* RabbitMQ needs `micronaut-test-resources-rabbitmq` and `micronaut-test-resources-compose`.
+
 Enable Compose support with the `test-resources.compose.enabled` property:
 
 [configuration]
@@ -39,6 +47,17 @@ Services are exposed through Testcontainers, so the Compose file does not need h
 Test Resources does not adopt arbitrary Compose projects that are already running outside Testcontainers.
 If you want to use a fully external Compose stack, keep supplying explicit Micronaut properties for that stack.
 
+Compose resolution is attempted only for missing properties that the matching provider can normally supply.
+A service is considered only when:
+
+* Compose support is enabled.
+* The service is not marked with `io.micronaut.test-resources.ignore=true`.
+* The service matches a supported descriptor by explicit service label, image name, or exposed internal port.
+* Exactly one candidate can satisfy the requested property.
+
+If any of those checks fail, the Compose resolver returns no value and the normal provider fallback remains in control.
+This keeps existing Test Resources behavior unchanged for applications that do not enable Compose, do not add the Compose module, or have an unsupported Compose service.
+
 .PostgreSQL and Redis
 [source,yaml]
 ----
@@ -56,6 +75,12 @@ services:
 With this Compose file, Test Resources can provide `datasources.default.url`, `datasources.default.username`, `datasources.default.password`, `datasources.default.driver-class-name`, and `redis.uri`.
 The PostgreSQL credentials use the standard environment variable names from the official PostgreSQL image; use explicit labels when a custom image uses different names.
 
+Credential and database values are resolved in this order:
+
+1. Explicit Micronaut labels on the Compose service.
+2. Supported image-specific environment variables, such as `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB` for the official PostgreSQL image.
+3. Provider defaults where the matching Test Resources provider has a stable default.
+
 Use labels when automatic image and port matching would be ambiguous:
 
 [source,yaml]
@@ -67,6 +92,32 @@ labels:
 
 The `io.micronaut.test-resources.service` label accepts the canonical service type or a supported alias.
 The resolver also tries to match by image name and the service's exposed internal port, but explicit labels are preferred for custom images and multi-service Compose files.
+
+Use credential labels when the Compose image does not use one of the supported standard environment variable names:
+
+[source,yaml]
+----
+services:
+  inventory-db:
+    image: internal/postgres-dev:latest
+    labels:
+      io.micronaut.test-resources.service: postgres
+      io.micronaut.test-resources.datasource: inventory
+      io.micronaut.test-resources.username: inventory
+      io.micronaut.test-resources.password: secret
+      io.micronaut.test-resources.database: inventory
+----
+
+Use the ignore label for services that should not participate in Test Resources matching:
+
+[source,yaml]
+----
+services:
+  manually-configured-db:
+    image: postgres:17
+    labels:
+      io.micronaut.test-resources.ignore: "true"
+----
 
 Supported service families include:
 
@@ -156,6 +207,7 @@ Supported labels are:
 Database values are read from explicit labels first, then from the common image-specific environment variables, and finally from the same defaults used by the matching Test Resources provider where possible.
 Redis support resolves unauthenticated single-node `redis.uri`.
 If Redis authentication is configured, the Compose resolver logs that it cannot safely map the URI and falls back to the normal Redis provider.
+When more than one service could satisfy the same property, add `io.micronaut.test-resources.service` and the provider-specific selector label, such as `io.micronaut.test-resources.datasource`, to the intended service.
 
 Additional Compose options are available under `test-resources.compose`:
 
@@ -196,6 +248,15 @@ Compose services live for the same Test Resources scope that created them:
 
 Diagnostics are written to the logs for matched, ignored, unmatched, and ambiguous services, Docker/Testcontainers startup failures, Compose file parsing problems, and missing local Compose support when `local-compose=true`.
 Diagnostic output redacts credential-like values such as passwords, secrets, tokens, keys, and credentials.
+
+Common troubleshooting checks:
+
+* If Compose is not used, verify that `micronaut-test-resources-compose` and the normal provider module are both on the Test Resources server classpath.
+* If no Compose file is found, set `test-resources.compose.files` or run the build from the directory that contains `compose.yml` or `docker-compose.yml`.
+* If a service is unmatched, add `io.micronaut.test-resources.service` with the supported service type.
+* If a service is ambiguous, add the provider selector label, such as `io.micronaut.test-resources.datasource`.
+* If a credential is missing for a custom image, add the explicit username, password, database, token, or key label supported by the service family.
+* If `local-compose=true` fails, verify that Docker Compose V2 is available to the build environment.
 
 Enabling Compose can run local images and use mounts declared by the Compose file.
 Only enable it for trusted development and test Compose files.

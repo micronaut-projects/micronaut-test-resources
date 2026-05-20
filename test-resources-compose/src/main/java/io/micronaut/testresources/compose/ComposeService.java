@@ -23,7 +23,17 @@ import java.util.Optional;
 record ComposeProject(List<ComposeService> services) {
 }
 
-record ComposeService(
+/**
+ * Parsed Compose service metadata used by provider-owned mappings.
+ *
+ * @param name The Compose service name.
+ * @param image The configured image name.
+ * @param labels Service labels.
+ * @param environment Service environment variables.
+ * @param ports Exposed internal service ports.
+ * @param profiles Compose profiles that activate the service.
+ */
+public record ComposeService(
     String name,
     String image,
     Map<String, String> labels,
@@ -56,7 +66,7 @@ record ComposeService(
         return ports.contains(port);
     }
 
-    String labelOrEnvironment(String label, String environmentName, String defaultValue) {
+    public String labelOrEnvironment(String label, String environmentName, String defaultValue) {
         return labels.getOrDefault(label, environment.getOrDefault(environmentName, defaultValue));
     }
 

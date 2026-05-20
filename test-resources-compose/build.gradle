@@ -13,6 +13,10 @@ dependencies {
 
     testImplementation(project(':micronaut-test-resources-jdbc-postgresql'))
     testImplementation(project(':micronaut-test-resources-redis'))
+    testImplementation(project(':micronaut-test-resources-rabbitmq'))
+    testImplementation(project(':micronaut-test-resources-kafka'))
+    testImplementation(project(':micronaut-test-resources-mongodb'))
+    testImplementation(project(':micronaut-test-resources-localstack-core'))
 }
 
 micronautBuild {

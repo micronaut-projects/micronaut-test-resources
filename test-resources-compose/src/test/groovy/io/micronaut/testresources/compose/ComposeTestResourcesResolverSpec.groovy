@@ -338,10 +338,19 @@ services:
 
     def "configuration parses duration suffixes and explicit docker image"() {
         expect:
+        !ComposeConfiguration.from(["compose.enabled": "true"], [:]).usable()
+        ComposeConfiguration.from(["compose.enabled": "true"], [:]).enabled()
+        ComposeConfiguration.from(["compose.enabled": false], [:]).dockerImageName() == "docker"
         ComposeConfiguration.from(["compose.startup-timeout": "2s"], [:]).startupTimeout().seconds == 2
+        ComposeConfiguration.from(["compose.startup-timeout": "250ms"], [:]).startupTimeout().toMillis() == 250
         ComposeConfiguration.from(["compose.startup-timeout": "3m"], [:]).startupTimeout().seconds == 180
         ComposeConfiguration.from(["compose.startup-timeout": "PT4S"], [:]).startupTimeout().seconds == 4
+        ComposeConfiguration.from(["compose.startup-timeout": 5], [:]).startupTimeout().seconds == 5
         ComposeConfiguration.from(["compose.docker-image-name": "docker:27"], [:]).dockerImageName() == "docker:27"
+        ComposeConfiguration.from(["compose.docker-image-name": " "], [:]).dockerImageName() == "docker"
+        ComposeConfiguration.from(["compose.local-compose": "true"], [:]).localCompose()
+        ComposeConfiguration.from(["compose.project-name": "compose-project"], [:]).projectName() == "compose-project"
+        ComposeConfiguration.from([:], ["micronaut.test.resources.scope": " "]).projectName().startsWith("mn-tr-")
     }
 
     def "resolves explicitly labelled non default datasource"() {
@@ -369,6 +378,141 @@ services:
         expect:
         resolver.resolve("datasources.inventory.url", ["datasources.inventory.db-type": "postgres"], config).get() == "jdbc:postgresql://localhost:15432/inventory"
         manager.requests == ["inventorydb:5432"]
+    }
+
+    def "database compose providers expose JDBC R2DBC and Hibernate Reactive metadata"() {
+        given:
+        def jdbc = databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind.JDBC, "postgres", "postgresql", "postgresql")
+        def r2dbc = databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind.R2DBC, "postgres", "postgresql", "postgresql")
+        def hibernate = databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind.HIBERNATE_REACTIVE, "postgres", "postgresql", "postgresql")
+
+        expect:
+        jdbc.requiredPropertyEntries == ["datasources"]
+        jdbc.getResolvableProperties(["datasources": ["default"]]).containsAll([
+                "datasources.default.url",
+                "datasources.default.username",
+                "datasources.default.password",
+                "datasources.default.driver-class-name"
+        ])
+        jdbc.getRequiredProperties("datasources.default.url").containsAll([
+                "datasources.default.db-type",
+                "datasources.default.dialect",
+                "datasources.default.db-name",
+                "datasources.default.test-resources.resource-name"
+        ])
+
+        r2dbc.requiredPropertyEntries == ["datasources", "r2dbc.datasources"]
+        r2dbc.getResolvableProperties([
+                "r2dbc.datasources": ["default", "analytics"],
+                "datasources": ["default"]
+        ]).count { it.endsWith(".url") } == 2
+        r2dbc.getRequiredProperties("r2dbc.datasources.default.url").containsAll([
+                "datasources.default.url",
+                "r2dbc.datasources.default.db-type",
+                "r2dbc.datasources.default.dialect",
+                "r2dbc.datasources.default.driverClassName",
+                "r2dbc.datasources.default.db-name",
+                "r2dbc.datasources.default.test-resources.resource-name",
+                "datasources.default.db-name"
+        ])
+
+        hibernate.requiredPropertyEntries == ["datasources", "jpa"]
+        hibernate.getResolvableProperties([
+                "jpa": ["default"],
+                "datasources": ["default"]
+        ]) == [
+                "jpa.default.properties.hibernate.connection.url",
+                "jpa.default.properties.hibernate.connection.username",
+                "jpa.default.properties.hibernate.connection.password"
+        ]
+        hibernate.getRequiredProperties("jpa.default.properties.hibernate.connection.url").containsAll([
+                "jpa.default.properties.hibernate.connection.db-type",
+                "datasources.default.db-type",
+                "datasources.default.url",
+                "datasources.default.username",
+                "datasources.default.password",
+                "datasources.default.db-name"
+        ])
+    }
+
+    def "database compose providers match requested datasource and configured database type"() {
+        given:
+        def provider = databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind.JDBC, "postgres", "postgresql", "postgresql")
+        def defaultService = new ComposeService("db", "custom/image", [
+                (ComposeLabels.SERVICE): "postgres"
+        ], [:], [5432], [])
+        def inventoryService = new ComposeService("inventory", "custom/image", [
+                (ComposeLabels.SERVICE): "postgres",
+                (ComposeLabels.DATASOURCE): "inventory"
+        ], [:], [5432], [])
+
+        expect:
+        provider.matches("datasources.default.url", defaultService)
+        provider.matches("datasources.inventory.url", inventoryService)
+        !provider.matches("datasources.analytics.url", inventoryService)
+        !provider.matches("redis.uri", defaultService)
+        provider.supports("datasources.default.url", ["datasources.default.db-type": "postgres"])
+        provider.supports("datasources.default.url", ["datasources.default.dialect": "PostgreSQL"])
+        provider.supports("r2dbc.datasources.default.url", ["r2dbc.datasources.default.driverClassName": "io.r2dbc.postgresql.PostgresqlConnectionFactoryProvider"])
+        provider.supports("jpa.default.properties.hibernate.connection.url", ["jpa.default.properties.hibernate.connection.db-type": "postgres"])
+        !provider.supports("datasources.default.url", ["datasources.default.db-type": "mysql"])
+        !provider.supports("redis.uri", [:])
+    }
+
+    def "database compose providers resolve URLs and credentials from labels environment and properties"() {
+        given:
+        def postgres = databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind.JDBC, "postgres", "postgresql", "postgresql")
+        def mssql = databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind.JDBC, "mssql", "sqlserver", "mssql")
+        def oracle = databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind.R2DBC, "oracle", "oracle:thin", "oracle")
+        def service = new ComposeService("db", "postgres:17", [
+                (ComposeLabels.USERNAME): "label-user"
+        ], [
+                "POSTGRES_PASSWORD": "env-secret",
+                "POSTGRES_DB": "envdb"
+        ], [5432], [])
+
+        expect:
+        postgres.resolve(context("datasources.default.url", 5432, service, [:])) == "jdbc:postgresql://localhost:15432/envdb"
+        postgres.resolve(context("datasources.default.username", 5432, service, [:])) == "label-user"
+        postgres.resolve(context("datasources.default.password", 5432, service, [:])) == "env-secret"
+        postgres.resolve(context("datasources.default.driver-class-name", 5432, service, [:])) == "driver.Postgres"
+        postgres.resolve(context("datasources.default.db-name", 5432, service, [:])) == null
+        postgres.resolve(context("datasources.inventory.url", 5432, service, ["datasources.inventory.db-name": "configured"])) == "jdbc:postgresql://localhost:15432/configured"
+        mssql.resolve(context("datasources.default.url", 1433, service, [:])) == "jdbc:sqlserver://localhost:11433;databaseName=envdb"
+        oracle.resolve(context("r2dbc.datasources.default.url", 1521, service, [:])) == "r2dbc:oracle://localhost:11521/envdb"
+    }
+
+    private static ComposeTestResourcesProvider.ResolutionContext context(String propertyName,
+                                                                          int port,
+                                                                          ComposeService service,
+                                                                          Map<String, Object> properties) {
+        new ComposeTestResourcesProvider.ResolutionContext(propertyName, new ComposeEndpoint("localhost", port + 10000), service, properties)
+    }
+
+    private static AbstractComposeDatabaseTestResourcesProvider databaseProvider(AbstractComposeDatabaseTestResourcesProvider.Kind kind,
+                                                                                String serviceType,
+                                                                                String jdbcScheme,
+                                                                                String r2dbcScheme) {
+        new TestDatabaseComposeTestResourcesProvider(kind, new AbstractComposeDatabaseTestResourcesProvider.Metadata(
+                serviceType,
+                [serviceType + "-alias", r2dbcScheme] as Set,
+                5432,
+                "jdbc:" + jdbcScheme,
+                r2dbcScheme,
+                "driver." + serviceType.capitalize(),
+                "POSTGRES_USER",
+                "POSTGRES_PASSWORD",
+                "POSTGRES_DB",
+                "user",
+                "password",
+                "db"
+        ))
+    }
+
+    private static final class TestDatabaseComposeTestResourcesProvider extends AbstractComposeDatabaseTestResourcesProvider {
+        TestDatabaseComposeTestResourcesProvider(Kind kind, Metadata metadata) {
+            super(kind, metadata)
+        }
     }
 
     private static final class FakeManager implements ComposeEnvironmentManager {

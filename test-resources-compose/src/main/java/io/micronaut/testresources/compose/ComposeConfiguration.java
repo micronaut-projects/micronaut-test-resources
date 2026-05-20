@@ -47,12 +47,12 @@ record ComposeConfiguration(
     );
 
     ComposeConfiguration {
-        workingDirectory = Objects.requireNonNull(workingDirectory, "workingDirectory");
+        requireNonNull(workingDirectory, "workingDirectory");
         files = List.copyOf(Objects.requireNonNull(files, "files"));
         profiles = List.copyOf(Objects.requireNonNull(profiles, "profiles"));
-        startupTimeout = Objects.requireNonNull(startupTimeout, "startupTimeout");
-        dockerImageName = Objects.requireNonNull(dockerImageName, "dockerImageName");
-        projectName = Objects.requireNonNull(projectName, "projectName");
+        requireNonNull(startupTimeout, "startupTimeout");
+        requireNonNull(dockerImageName, "dockerImageName");
+        requireNonNull(projectName, "projectName");
     }
 
     static ComposeConfiguration from(Map<String, Object> testResourcesConfig, Map<String, Object> requestedProperties) {
@@ -71,7 +71,7 @@ record ComposeConfiguration(
             .orElse("docker");
         String projectName = Optional.ofNullable(stringValue(testResourcesConfig, "project-name"))
             .filter(s -> !s.isBlank())
-            .orElseGet(() -> defaultProjectName(workingDirectory, requestedProperties.get(Scope.PROPERTY_KEY)));
+            .orElseGet(() -> defaultProjectName(workingDirectory, Objects.toString(requestedProperties.get(Scope.PROPERTY_KEY), "")));
         return new ComposeConfiguration(enabled, workingDirectory, files, profiles, startupTimeout, localCompose, dockerImageName, projectName);
     }
 
@@ -161,10 +161,14 @@ record ComposeConfiguration(
         }
     }
 
-    private static String defaultProjectName(Path workingDirectory, @Nullable Object scope) {
+    private static String defaultProjectName(Path workingDirectory, String scope) {
         String directory = Objects.toString(workingDirectory.getFileName(), "micronaut-test-resources");
-        String suffix = scope == null || String.valueOf(scope).isBlank() ? "" : "-" + scope;
+        String suffix = scope.isBlank() ? "" : "-" + scope;
         String normalized = (directory + suffix).toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_-]", "-");
         return "mn-tr-" + normalized;
+    }
+
+    private static void requireNonNull(Object value, String name) {
+        Objects.requireNonNull(value, name);
     }
 }

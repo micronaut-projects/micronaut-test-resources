@@ -49,13 +49,8 @@ services:
       POSTGRES_USER: demo
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: demo
-    labels:
-      io.micronaut.test-resources.service: postgres
-      io.micronaut.test-resources.datasource: default
   cache:
     image: redis:7
-    labels:
-      io.micronaut.test-resources.service: redis
 ----
 
 With this Compose file, Test Resources can provide `datasources.default.url`, `datasources.default.username`, `datasources.default.password`, `datasources.default.driver-class-name`, and `redis.uri`.

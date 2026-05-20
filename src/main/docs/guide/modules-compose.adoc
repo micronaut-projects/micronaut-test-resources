@@ -120,7 +120,7 @@ services:
       io.micronaut.test-resources.ignore: "true"
 ----
 
-Supported service families include:
+Compose-mapped service families in this revision include:
 
 [cols="1,2", options="header"]
 |===
@@ -148,8 +148,104 @@ Supported service families include:
 |===
 
 Provider modules own their Compose mappings, so additional Test Resources providers can add Compose support without editing the Compose module.
-H2, Oracle Test Pilot, R2DBC pool, the generic Testcontainers provider, and providers not listed above do not map to reusable Compose service discovery in this module revision.
-They remain handled by their existing provider behavior.
+Every TestResourcesResolver-backed provider module is either mapped above or intentionally left to its existing provider fallback below.
+This inventory is also checked by the Compose module test suite so newly added provider modules are not silently omitted.
+
+[cols="1,2", options="header"]
+|===
+| Provider module
+| Compose status
+
+| `micronaut-test-resources-azure`
+| Not mapped in this revision; Azurite endpoint and credential mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-couchbase`
+| Not mapped in this revision; bucket, user, and bootstrap mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-elasticsearch`
+| Not mapped because the Elasticsearch module is disabled in this repository's regular build scope.
+
+| `micronaut-test-resources-hashicorp-consul`
+| Not mapped in this revision; Consul token and endpoint mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-hashicorp-vault`
+| Not mapped in this revision; Vault token and endpoint mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-hazelcast`
+| Not mapped in this revision; cluster/member mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-hibernate-reactive-*`
+| Not mapped in this revision; Hibernate Reactive datasource URL and credential mapping remains handled by the normal providers.
+
+| `micronaut-test-resources-hivemq`
+| Not mapped in this revision; MQTT broker mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-infinispan`
+| Not mapped in this revision; endpoint and credential mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-jdbc-h2`
+| Not applicable; H2 is an in-process database provider with no reusable Compose service.
+
+| `micronaut-test-resources-jdbc-mariadb`, `micronaut-test-resources-jdbc-mssql`, `micronaut-test-resources-jdbc-mysql`, `micronaut-test-resources-jdbc-oracle-free`, `micronaut-test-resources-jdbc-oracle-xe`
+| Not mapped in this revision; JDBC Compose database mapping is currently implemented only for PostgreSQL.
+
+| `micronaut-test-resources-jdbc-oracle-test-pilot`
+| Not applicable in this revision; Oracle Test Pilot has no reusable Compose service contract.
+
+| `micronaut-test-resources-jdbc-postgresql`
+| Mapped; resolves datasource URLs, usernames, passwords, and driver names from Compose metadata.
+
+| `micronaut-test-resources-kafka`
+| Mapped; resolves Kafka/Redpanda bootstrap servers from the Compose service endpoint.
+
+| `micronaut-test-resources-localstack-core`
+| Mapped; resolves common AWS credentials, region, and LocalStack-backed S3, DynamoDB, SQS, and SNS endpoint overrides.
+
+| `micronaut-test-resources-mailpit`
+| Not mapped in this revision; SMTP/API property mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-minio`
+| Not mapped in this revision; endpoint and credential mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-mongodb`
+| Mapped; resolves `mongodb.uri` and named `mongodb.servers.*.uri` entries.
+
+| `micronaut-test-resources-neo4j`
+| Not mapped in this revision; URI and credential mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-oauth2`
+| Not mapped in this revision; Keycloak realm/client mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-opensearch`
+| Not mapped in this revision; endpoint and credential mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-opentelemetry`
+| Not mapped in this revision; collector endpoint mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-pulsar`
+| Not mapped in this revision; broker/admin endpoint mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-r2dbc-*`
+| Not mapped in this revision; R2DBC datasource mapping remains handled by the normal providers. `micronaut-test-resources-r2dbc-pool` is a wrapper provider with no independent Compose service.
+
+| `micronaut-test-resources-rabbitmq`
+| Mapped; resolves `rabbitmq.uri`, `rabbitmq.username`, and `rabbitmq.password`.
+
+| `micronaut-test-resources-redis`
+| Mapped for unauthenticated standalone Redis; authenticated Redis remains handled by the normal provider fallback.
+
+| `micronaut-test-resources-seaweedfs`
+| Not mapped in this revision; S3 endpoint and credential mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-solr`
+| Not mapped in this revision; endpoint mapping remains handled by the normal provider.
+
+| `micronaut-test-resources-testcontainers`
+| Not applicable; the generic Testcontainers provider has no stable provider-specific property contract.
+
+| `micronaut-test-resources-wiremock`
+| Not mapped in this revision; endpoint mapping remains handled by the normal provider.
+|===
 
 The supported service families use the following service-specific configuration sources:
 

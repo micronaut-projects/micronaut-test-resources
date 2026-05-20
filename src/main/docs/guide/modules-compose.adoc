@@ -54,6 +54,7 @@ services:
 ----
 
 With this Compose file, Test Resources can provide `datasources.default.url`, `datasources.default.username`, `datasources.default.password`, `datasources.default.driver-class-name`, and `redis.uri`.
+The PostgreSQL credentials use the standard environment variable names from the official PostgreSQL image; use explicit labels when a custom image uses different names.
 
 Use labels when automatic image and port matching would be ambiguous:
 

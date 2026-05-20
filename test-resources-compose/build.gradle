@@ -7,16 +7,16 @@ Provides support for resolving test resources from Docker Compose services.
 """
 
 dependencies {
-    api(project(':micronaut-test-resources-core'))
-    implementation(project(':micronaut-test-resources-testcontainers'))
+    api(projects.micronautTestResourcesCore)
+    implementation(projects.micronautTestResourcesTestcontainers)
     implementation(mn.snakeyaml)
 
-    testImplementation(project(':micronaut-test-resources-jdbc-postgresql'))
-    testImplementation(project(':micronaut-test-resources-redis'))
-    testImplementation(project(':micronaut-test-resources-rabbitmq'))
-    testImplementation(project(':micronaut-test-resources-kafka'))
-    testImplementation(project(':micronaut-test-resources-mongodb'))
-    testImplementation(project(':micronaut-test-resources-localstack-core'))
+    testImplementation(projects.micronautTestResourcesJdbcPostgresql)
+    testImplementation(projects.micronautTestResourcesRedis)
+    testImplementation(projects.micronautTestResourcesRabbitmq)
+    testImplementation(projects.micronautTestResourcesKafka)
+    testImplementation(projects.micronautTestResourcesMongodb)
+    testImplementation(projects.micronautTestResourcesLocalstackCore)
 }
 
 micronautBuild {

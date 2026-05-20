@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
 interface ComposeEnvironmentManager {
     Optional<ComposeEndpoint> endpoint(ComposeConfiguration configuration,
@@ -37,6 +38,15 @@ interface ComposeEnvironmentManager {
 
 final class ComposeContainerManager implements ComposeEnvironmentManager {
     private static final Map<Key, ManagedEnvironment> ENVIRONMENTS = new LinkedHashMap<>();
+    private final List<ComposeTestResourcesProvider> providers;
+
+    ComposeContainerManager() {
+        this(ServiceLoader.load(ComposeTestResourcesProvider.class).stream().map(ServiceLoader.Provider::get).toList());
+    }
+
+    ComposeContainerManager(List<ComposeTestResourcesProvider> providers) {
+        this.providers = List.copyOf(providers);
+    }
 
     @Override
     public Optional<ComposeEndpoint> endpoint(ComposeConfiguration configuration,
@@ -94,7 +104,7 @@ final class ComposeContainerManager implements ComposeEnvironmentManager {
             if (service.ignored() || !service.activeFor(configuration.profiles())) {
                 continue;
             }
-            for (Integer port : ComposeServiceDescriptors.exposedPorts(service)) {
+            for (Integer port : exposedPorts(service)) {
                 container.withExposedService(service.instanceName(), port, Wait.forListeningPort().withStartupTimeout(configuration.startupTimeout()));
             }
         }
@@ -110,6 +120,14 @@ final class ComposeContainerManager implements ComposeEnvironmentManager {
             return new ComposeContainer(configuration.projectName(), files);
         }
         return new ComposeContainer(DockerImageName.parse(configuration.dockerImageName()), configuration.projectName(), files);
+    }
+
+    private List<Integer> exposedPorts(ComposeService service) {
+        return providers.stream()
+            .filter(provider -> provider.matches(service))
+            .map(ComposeTestResourcesProvider::getPort)
+            .distinct()
+            .toList();
     }
 
     private record Key(Scope scope, List<Path> files, List<String> profiles, boolean localCompose, String image, String projectName) {

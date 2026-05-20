@@ -15,19 +15,22 @@
  */
 package io.micronaut.testresources.compose;
 
-final class ComposeLabels {
-    static final String SERVICE = "io.micronaut.test-resources.service";
-    static final String DATASOURCE = "io.micronaut.test-resources.datasource";
-    static final String IGNORE = "io.micronaut.test-resources.ignore";
-    static final String USERNAME = "io.micronaut.test-resources.username";
-    static final String PASSWORD = "io.micronaut.test-resources.password";
-    static final String DATABASE = "io.micronaut.test-resources.database";
-    static final String ACCESS_KEY = "io.micronaut.test-resources.access-key";
-    static final String SECRET_KEY = "io.micronaut.test-resources.secret-key";
-    static final String TOKEN = "io.micronaut.test-resources.token";
-    static final String REALM = "io.micronaut.test-resources.realm";
-    static final String CLIENT_ID = "io.micronaut.test-resources.client-id";
-    static final String CLIENT_SECRET = "io.micronaut.test-resources.client-secret";
+/**
+ * Labels understood by Compose-aware providers.
+ */
+public final class ComposeLabels {
+    public static final String SERVICE = "io.micronaut.test-resources.service";
+    public static final String DATASOURCE = "io.micronaut.test-resources.datasource";
+    public static final String IGNORE = "io.micronaut.test-resources.ignore";
+    public static final String USERNAME = "io.micronaut.test-resources.username";
+    public static final String PASSWORD = "io.micronaut.test-resources.password";
+    public static final String DATABASE = "io.micronaut.test-resources.database";
+    public static final String ACCESS_KEY = "io.micronaut.test-resources.access-key";
+    public static final String SECRET_KEY = "io.micronaut.test-resources.secret-key";
+    public static final String TOKEN = "io.micronaut.test-resources.token";
+    public static final String REALM = "io.micronaut.test-resources.realm";
+    public static final String CLIENT_ID = "io.micronaut.test-resources.client-id";
+    public static final String CLIENT_SECRET = "io.micronaut.test-resources.client-secret";
 
     private ComposeLabels() {
     }

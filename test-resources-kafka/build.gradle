@@ -8,6 +8,7 @@ Provides support for launching a Kafka test container.
 """
 
 dependencies {
+    compileOnly(project(':micronaut-test-resources-compose'))
     implementation(libs.managed.testcontainers.kafka)
     implementation(mnKafka.kafka.clients)
 

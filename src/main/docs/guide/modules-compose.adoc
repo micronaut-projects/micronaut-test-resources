@@ -10,12 +10,13 @@ When it finds one unambiguous supported Compose service, it resolves the missing
 When it cannot safely resolve the property, the existing provider starts the normal Testcontainers resource.
 
 The Compose module does not replace provider modules.
-It only makes Compose-aware resolvers visible to the Test Resources server.
+It provides the shared Compose lifecycle and lookup support used by Compose-aware provider resolvers.
 For example:
 
 * PostgreSQL JDBC needs `micronaut-test-resources-jdbc-postgresql` and `micronaut-test-resources-compose`.
 * Redis needs `micronaut-test-resources-redis` and `micronaut-test-resources-compose`.
 * RabbitMQ needs `micronaut-test-resources-rabbitmq` and `micronaut-test-resources-compose`.
+* Kafka, MongoDB, and LocalStack follow the same pattern: add the normal provider module plus `micronaut-test-resources-compose`.
 
 Enable Compose support with the `test-resources.compose.enabled` property:
 
@@ -126,8 +127,8 @@ Supported service families include:
 | Service family
 | Resolved properties
 
-| JDBC, R2DBC, and Hibernate Reactive databases
-| PostgreSQL, MySQL, MariaDB, MSSQL, and Oracle services can resolve datasource URLs, usernames, passwords, and driver names from Compose metadata.
+| PostgreSQL JDBC
+| Resolves datasource URLs, usernames, passwords, and driver names from Compose metadata when `micronaut-test-resources-jdbc-postgresql` is present.
 
 | Redis
 | Resolves unauthenticated single-node `redis.uri`.
@@ -144,20 +145,10 @@ Supported service families include:
 | LocalStack
 | Resolves common AWS credentials, region, and S3, DynamoDB, SQS, and SNS endpoint overrides.
 
-| Azure Storage / Azurite
-| Resolves the storage shared-key account name, key, and connection string.
-
-| Couchbase
-| Resolves `couchbase.uri`, `couchbase.username`, and `couchbase.password`.
-
-| Consul and Vault
-| Resolves client host, port, URI, and token properties.
-
-| Hazelcast, HiveMQ, Infinispan, Mailpit, MinIO, Neo4j, Keycloak, OpenSearch/Elasticsearch, OpenTelemetry, Pulsar, SeaweedFS, Solr, and WireMock
-| Resolves the same primary connection properties as the matching Test Resources provider.
 |===
 
-H2, Oracle Test Pilot, R2DBC pool, and the generic Testcontainers provider do not map to reusable Compose service discovery.
+Provider modules own their Compose mappings, so additional Test Resources providers can add Compose support without editing the Compose module.
+H2, Oracle Test Pilot, R2DBC pool, the generic Testcontainers provider, and providers not listed above do not map to reusable Compose service discovery in this module revision.
 They remain handled by their existing provider behavior.
 
 Supported labels are:
@@ -168,7 +159,7 @@ Supported labels are:
 | Purpose
 
 | `io.micronaut.test-resources.service`
-| Selects the supported service type, such as `postgres`, `mysql`, `redis`, `rabbitmq`, `kafka`, `localstack`, `azure-storage`, `keycloak`, or `wiremock`.
+| Selects the supported service type, such as `postgres`, `redis`, `rabbitmq`, `kafka`, `mongodb`, or `localstack`.
 
 | `io.micronaut.test-resources.datasource`
 | Selects the logical datasource name for database services. If omitted, an unambiguous database service maps to `default`.
@@ -189,16 +180,16 @@ Supported labels are:
 | Overrides the secret key for object-storage style services.
 
 | `io.micronaut.test-resources.token`
-| Overrides token-based service credentials.
+| Reserved for provider mappings that support token-based service credentials.
 
 | `io.micronaut.test-resources.realm`
-| Selects the Keycloak realm used in generated issuer and JWKS URLs.
+| Reserved for provider mappings that support realm-based services.
 
 | `io.micronaut.test-resources.client-id`
-| Overrides OAuth2 or MQTT client IDs when the service family supports them.
+| Reserved for provider mappings that support client IDs.
 
 | `io.micronaut.test-resources.client-secret`
-| Overrides OAuth2 client secrets when the service family supports them.
+| Reserved for provider mappings that support client secrets.
 
 | `io.micronaut.test-resources.ignore`
 | Excludes a service from Compose matching when set to `true`.

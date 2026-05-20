@@ -8,6 +8,7 @@ Provides core support for launching Localstack test containers.
 """
 
 dependencies {
+    compileOnly(project(':micronaut-test-resources-compose'))
     api(libs.managed.testcontainers.localstack)
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesImplementation(mn.groovy)

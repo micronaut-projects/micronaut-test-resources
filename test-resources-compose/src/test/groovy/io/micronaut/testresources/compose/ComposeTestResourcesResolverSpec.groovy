@@ -18,6 +18,7 @@ package io.micronaut.testresources.compose
 import io.micronaut.testresources.core.ScopedTestResourcesLifecycle
 import io.micronaut.testresources.core.TestResourcesResolver
 import io.micronaut.testresources.core.ToggableTestResourcesResolver
+import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import spock.lang.TempDir
 
@@ -329,6 +330,38 @@ services:
         resolver.resolve("redis.uri", [:], ["compose.enabled": true, "compose.working-directory": tempDir.toString()]).empty
         resolver.resolve("redis.uri", [:], ["compose.enabled": true, "compose.files": [tempDir.resolve("missing.yml").toString()]]).empty
         manager.requests.empty
+    }
+
+    def "malformed compose diagnostics do not leak credential-bearing yaml lines"() {
+        given:
+        Path composeFile = tempDir.resolve("compose.yml")
+        Files.writeString(composeFile, '''
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: "super-secret
+'''.stripIndent())
+        def manager = new FakeManager()
+        def resolver = new ComposeTestResourcesResolver(new ComposeMetadataParser(), manager)
+        def logger = LoggerFactory.getLogger(ComposeTestResourcesResolver)
+        def appender = Class.forName("ch.qos.logback.core.read.ListAppender").getDeclaredConstructor().newInstance()
+        appender.start()
+        logger.addAppender(appender)
+
+        when:
+        def resolved = resolver.resolve("datasources.default.url", ["datasources.default.db-type": "postgres"], ["compose.enabled": true, "compose.files": [composeFile.toString()]])
+
+        then:
+        resolved.empty
+        manager.requests.empty
+        def messages = appender.list*.formattedMessage.join("\n")
+        messages.contains("Unable to resolve datasources.default.url from Docker Compose")
+        !messages.contains("POSTGRES_PASSWORD")
+        !messages.contains("super-secret")
+
+        cleanup:
+        logger.detachAppender(appender)
     }
 
     def "parses compose metadata maps lists exposed ports and inactive profiles"() {

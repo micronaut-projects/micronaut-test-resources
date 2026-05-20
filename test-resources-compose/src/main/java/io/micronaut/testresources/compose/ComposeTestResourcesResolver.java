@@ -123,7 +123,7 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
             }
             return Optional.empty();
         } catch (RuntimeException e) {
-            LOG.warn("Unable to resolve {} from Docker Compose; falling back to the normal Test Resources provider: {}", propertyName, e.getMessage());
+            LOG.warn("Unable to resolve {} from Docker Compose; falling back to the normal Test Resources provider.", propertyName);
             return Optional.empty();
         }
     }

@@ -7,6 +7,7 @@ Provides core support for OpenSearch test resources.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     api(libs.managed.opensearch.testcontainers)
 }
 

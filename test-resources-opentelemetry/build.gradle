@@ -5,3 +5,7 @@ plugins {
 description = """
 Provides support for launching an OpenTelemetry LGTM test container.
 """
+
+dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
+}

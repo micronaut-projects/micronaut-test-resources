@@ -7,6 +7,7 @@ Provides support for launching a WireMock test container.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     api(libs.managed.wiremock.testcontainers)
 }
 

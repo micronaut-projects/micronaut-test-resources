@@ -138,7 +138,13 @@ public final class ComposeTestResourcesResolver implements ToggableTestResources
             return Optional.empty();
         }
         return manager.endpoint(configuration, project, service.get(), provider.getPort(), properties)
-            .map(endpoint -> provider.resolve(new ComposeTestResourcesProvider.ResolutionContext(propertyName, endpoint, service.get(), properties)))
+            .map(endpoint -> provider.resolve(new ComposeTestResourcesProvider.ResolutionContext(
+                propertyName,
+                endpoint,
+                service.get(),
+                properties,
+                port -> manager.endpoint(configuration, project, service.get(), port, properties)
+            )))
             .filter(value -> value != null && !value.isBlank());
     }
 

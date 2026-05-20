@@ -46,13 +46,24 @@ record ComposeConfiguration(
         "docker-compose.yaml"
     );
 
-    ComposeConfiguration {
-        requireNonNull(workingDirectory, "workingDirectory");
-        files = List.copyOf(Objects.requireNonNull(files, "files"));
-        profiles = List.copyOf(Objects.requireNonNull(profiles, "profiles"));
-        requireNonNull(startupTimeout, "startupTimeout");
-        requireNonNull(dockerImageName, "dockerImageName");
-        requireNonNull(projectName, "projectName");
+    ComposeConfiguration(
+        boolean enabled,
+        @Nullable Path workingDirectory,
+        @Nullable List<Path> files,
+        @Nullable List<String> profiles,
+        @Nullable Duration startupTimeout,
+        boolean localCompose,
+        @Nullable String dockerImageName,
+        @Nullable String projectName
+    ) {
+        this.enabled = enabled;
+        this.workingDirectory = Objects.requireNonNull(workingDirectory, "workingDirectory");
+        this.files = List.copyOf(Objects.requireNonNull(files, "files"));
+        this.profiles = List.copyOf(Objects.requireNonNull(profiles, "profiles"));
+        this.startupTimeout = Objects.requireNonNull(startupTimeout, "startupTimeout");
+        this.localCompose = localCompose;
+        this.dockerImageName = Objects.requireNonNull(dockerImageName, "dockerImageName");
+        this.projectName = Objects.requireNonNull(projectName, "projectName");
     }
 
     static ComposeConfiguration from(Map<String, Object> testResourcesConfig, Map<String, Object> requestedProperties) {
@@ -168,7 +179,4 @@ record ComposeConfiguration(
         return "mn-tr-" + normalized;
     }
 
-    private static void requireNonNull(@Nullable Object value, String name) {
-        Objects.requireNonNull(value, name);
-    }
 }

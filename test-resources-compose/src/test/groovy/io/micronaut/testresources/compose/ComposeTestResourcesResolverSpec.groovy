@@ -16,9 +16,19 @@
 package io.micronaut.testresources.compose
 
 import io.micronaut.testresources.azure.AzuriteComposeTestResourcesProvider
+import io.micronaut.testresources.consul.ConsulComposeTestResourcesProvider
 import io.micronaut.testresources.core.ScopedTestResourcesLifecycle
 import io.micronaut.testresources.core.TestResourcesResolver
 import io.micronaut.testresources.core.ToggableTestResourcesResolver
+import io.micronaut.testresources.couchbase.CouchbaseComposeTestResourcesProvider
+import io.micronaut.testresources.hashicorp.vault.VaultComposeTestResourcesProvider
+import io.micronaut.testresources.hivemq.HiveMQComposeTestResourcesProvider
+import io.micronaut.testresources.infinispan.InfinispanComposeTestResourcesProvider
+import io.micronaut.testresources.mailpit.MailpitSmtpComposeTestResourcesProvider
+import io.micronaut.testresources.oauth2.keycloak.KeycloakComposeTestResourcesProvider
+import io.micronaut.testresources.seaweedfs.SeaweedFsComposeTestResourcesProvider
+import io.micronaut.testresources.solr.SolrComposeTestResourcesProvider
+import io.micronaut.testresources.wiremock.WireMockComposeTestResourcesProvider
 import org.slf4j.LoggerFactory
 import spock.lang.Specification
 import spock.lang.TempDir
@@ -319,6 +329,99 @@ services:
 
         expect:
         manager.exposedPorts(service) == [10000, 10001, 10002]
+    }
+
+    def "simple compose providers resolve their supported property branches"() {
+        given:
+        def service = new ComposeService("service", "custom/image", [
+                (ComposeLabels.USERNAME): "label-user",
+                (ComposeLabels.PASSWORD): "label-password",
+                (ComposeLabels.ACCESS_KEY): "label-access",
+                (ComposeLabels.SECRET_KEY): "label-secret",
+                (ComposeLabels.TOKEN): "label-token",
+                (ComposeLabels.CLIENT_ID): "label-client",
+                (ComposeLabels.CLIENT_SECRET): "label-client-secret",
+                (ComposeLabels.REALM): "label-realm"
+        ], ["MQTT_CLIENT_ID": "env-mqtt"], [11222], [])
+        def mqttService = new ComposeService("mqtt", "custom/image", [:], ["MQTT_CLIENT_ID": "env-mqtt"], [1883], [])
+
+        expect:
+        verifyAll(new InfinispanComposeTestResourcesProvider()) {
+            resolve(context("infinispan.client.hotrod.server.host", port, service, [:])) == "localhost"
+            resolve(context("infinispan.client.hotrod.server.port", port, service, [:])) == "21222"
+            resolve(context("infinispan.client.hotrod.security.authentication.username", port, service, [:])) == "label-user"
+            resolve(context("infinispan.client.hotrod.security.authentication.password", port, service, [:])) == "label-password"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+
+        verifyAll(new CouchbaseComposeTestResourcesProvider()) {
+            resolve(context("couchbase.uri", port, service, [:])) == "couchbase://localhost:21210"
+            resolve(context("couchbase.username", port, service, [:])) == "label-user"
+            resolve(context("couchbase.password", port, service, [:])) == "label-password"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+
+        verifyAll(new ConsulComposeTestResourcesProvider()) {
+            resolve(context("consul.client.host", port, service, [:])) == "localhost"
+            resolve(context("consul.client.port", port, service, [:])) == "18500"
+            resolve(context("consul.client.default-zone", port, service, [:])) == "localhost:18500"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+
+        verifyAll(new SeaweedFsComposeTestResourcesProvider()) {
+            resolve(context("seaweedfs.url", port, service, [:])) == "http://localhost:18333"
+            resolve(context("seaweedfs.access-key", port, service, [:])) == "label-access"
+            resolve(context("seaweedfs.secret-key", port, service, [:])) == "label-secret"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+
+        verifyAll(new VaultComposeTestResourcesProvider()) {
+            resolve(context("vault.client.uri", port, service, [:])) == "http://localhost:18200"
+            resolve(context("vault.client.token", port, service, [:])) == "label-token"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+
+        verifyAll(new HiveMQComposeTestResourcesProvider()) {
+            resolve(context("mqtt.client.client-id", port, mqttService, [:])) == "env-mqtt"
+            resolve(context("mqtt.client.server-uri", port, mqttService, [:])) == "tcp://localhost:11883"
+            resolve(context("unsupported", port, mqttService, [:])) == null
+        }
+
+        verifyAll(new KeycloakComposeTestResourcesProvider()) {
+            resolve(context("micronaut.security.oauth2.clients.keycloak.client-id", port, service, [:])) == "label-client"
+            resolve(context("micronaut.security.oauth2.clients.keycloak.client-secret", port, service, [:])) == "label-client-secret"
+            resolve(context("micronaut.security.oauth2.clients.keycloak.openid.issuer", port, service, [:])) == "http://localhost:18080/realms/label-realm"
+            resolve(context("micronaut.security.token.jwt.signatures.jwks.keycloak.url", port, service, [:])) == "http://localhost:18080/realms/label-realm/protocol/openid-connect/certs"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+
+        verifyAll(new MailpitSmtpComposeTestResourcesProvider()) {
+            resolve(context("javamail.properties.mail.smtp.host", port, service, [:])) == "localhost"
+            resolve(context("javamail.properties.mail.smtp.port", port, service, [:])) == "11025"
+            resolve(context("javamail.properties.mail.smtp.auth", port, service, [:])) == "false"
+            resolve(context("javamail.properties.mail.smtp.starttls.enable", port, service, [:])) == "false"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+
+        verifyAll(new WireMockComposeTestResourcesProvider()) {
+            resolve(context("wiremock.host", port, service, [:])) == "localhost"
+            resolve(context("wiremock.port", port, service, [:])) == "18080"
+            resolve(context("wiremock.url", port, service, [:])) == "http://localhost:18080"
+            resolve(context("unsupported", port, service, [:])) == null
+        }
+    }
+
+    def "solr compose provider preserves user supplied config and schema URLs"() {
+        given:
+        def provider = new SolrComposeTestResourcesProvider()
+        def service = new ComposeService("solr", "custom/image", [:], [:], [8983], [])
+
+        expect:
+        provider.resolve(context("micronaut.solr.hosts", provider.port, service, [:])) == "http://localhost:18983/solr"
+        provider.resolve(context("solr.config.url", provider.port, service, ["solr.config.url": "classpath:solrconfig.xml"])) == "classpath:solrconfig.xml"
+        provider.resolve(context("solr.schema.url", provider.port, service, ["solr.schema.url": "classpath:schema.xml"])) == "classpath:schema.xml"
+        provider.resolve(context("solr.config.url", provider.port, service, [:])) == null
+        provider.resolve(context("unsupported", provider.port, service, [:])) == null
     }
 
     def "compose coverage inventory covers every resolver backed provider module"() {

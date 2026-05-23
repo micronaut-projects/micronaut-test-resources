@@ -16,32 +16,10 @@
 package io.micronaut.testresources.floci;
 
 import io.floci.testcontainers.FlociContainer;
-
-import java.util.List;
-import java.util.Optional;
+import io.micronaut.testresources.aws.AwsEmulatorService;
 
 /**
  * Interface for Floci service loading.
  */
-public interface FlociService {
-    /**
-     * Returns the service kind.
-     * @return the service kind.
-     */
-    String getServiceKind();
-
-    /**
-     * Returns the list of properties that this service
-     * can configure.
-     * @return the list of supported properties
-     */
-    List<String> getResolvableProperties();
-
-    /**
-     * Resolves a property.
-     * @param propertyName the property to resolve
-     * @param container the Floci container
-     * @return the resolved property, if available
-     */
-    Optional<String> resolveProperty(String propertyName, FlociContainer container);
+public interface FlociService extends AwsEmulatorService<FlociContainer> {
 }

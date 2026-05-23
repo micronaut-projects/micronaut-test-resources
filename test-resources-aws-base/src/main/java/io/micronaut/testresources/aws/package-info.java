@@ -13,19 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.testresources.floci;
-
-import io.floci.testcontainers.FlociContainer;
-import io.micronaut.testresources.aws.AbstractAwsEndpointService;
-import io.micronaut.core.annotation.Internal;
-
 /**
- * Base implementation for Floci services which expose one endpoint override.
+ * Shared AWS emulator test resource support.
  */
-@Internal
-public abstract class AbstractFlociService extends AbstractAwsEndpointService<FlociContainer> implements FlociService {
+@NullMarked
+package io.micronaut.testresources.aws;
 
-    protected AbstractFlociService(String serviceKind, String endpointProperty) {
-        super(serviceKind, endpointProperty, FlociContainer::getEndpoint);
-    }
-}
+import org.jspecify.annotations.NullMarked;

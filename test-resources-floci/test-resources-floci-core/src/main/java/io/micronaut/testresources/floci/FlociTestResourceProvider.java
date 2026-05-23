@@ -16,27 +16,17 @@
 package io.micronaut.testresources.floci;
 
 import io.floci.testcontainers.FlociContainer;
+import io.micronaut.testresources.aws.AbstractAwsTestResourceProvider;
 import io.micronaut.testresources.core.DefaultTestResourceImages;
-import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * A test resource provider which will spawn Floci test containers.
  */
-public class FlociTestResourceProvider extends AbstractTestContainersProvider<FlociContainer> {
+public class FlociTestResourceProvider extends AbstractAwsTestResourceProvider<FlociContainer, FlociService> {
 
     public static final String DISPLAY_NAME = "Floci";
 
@@ -47,54 +37,13 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
     private static final String SERVICE_SNS = "sns";
     private static final String SERVICE_SQS = "sqs";
 
-    private static final String AWS_ACCESS_KEY_ID = "aws.access-key-id";
-    private static final String AWS_SECRET_KEY = "aws.secret-key";
-    private static final String AWS_REGION = "aws.region";
-
-    private static final List<String> COMMON_PROPERTIES;
-
-    private static final Map<String, List<String>> RESOLVABLE_PROPERTIES;
-    private static final Set<String> ALL_SUPPORTED_KEYS;
-    private static final List<FlociService> SERVICES;
-    private static final Map<String, FlociService> PROPERTY_TO_SERVICE;
-
-    static {
-        SERVICES = StreamSupport.stream(ServiceLoader.load(FlociService.class).spliterator(), false)
-            .toList();
-        Map<String, List<String>> resolvableProperties = new HashMap<>();
-        Map<String, FlociService> propertyToService = new HashMap<>();
-        COMMON_PROPERTIES = Collections.unmodifiableList(Arrays.asList(
-            AWS_ACCESS_KEY_ID,
-            AWS_SECRET_KEY,
-            AWS_REGION
-        ));
-        for (FlociService flociService : SERVICES) {
-            List<String> supportedProperties = flociService.getResolvableProperties();
-            resolvableProperties.put(flociService.getServiceKind(), supportedProperties);
-            for (String supportedProperty : supportedProperties) {
-                propertyToService.put(supportedProperty, flociService);
-            }
-        }
-        RESOLVABLE_PROPERTIES = Collections.unmodifiableMap(resolvableProperties);
-        ALL_SUPPORTED_KEYS = Stream.concat(
-            COMMON_PROPERTIES.stream(),
-            RESOLVABLE_PROPERTIES.values().stream().flatMap(Collection::stream)
-        ).collect(Collectors.toSet());
-        PROPERTY_TO_SERVICE = Collections.unmodifiableMap(propertyToService);
+    public FlociTestResourceProvider() {
+        super(FlociService.class);
     }
 
     @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
-    }
-
-    @Override
-    public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-        return Stream.concat(
-                SERVICES.stream().flatMap(service -> service.getResolvableProperties().stream()),
-                COMMON_PROPERTIES.stream()
-            ).distinct()
-            .toList();
     }
 
     @Override
@@ -110,9 +59,7 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
     @Override
     protected FlociContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         FlociContainer flociContainer = new FlociContainer(imageName);
-        configureServices(flociContainer, SERVICES.stream()
-            .map(FlociService::getServiceKind)
-            .collect(Collectors.toSet()));
+        configureServices(flociContainer, getServiceKinds());
         return flociContainer;
     }
 
@@ -165,25 +112,17 @@ public class FlociTestResourceProvider extends AbstractTestContainersProvider<Fl
     }
 
     @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return ALL_SUPPORTED_KEYS.contains(propertyName);
+    protected String resolveAccessKey(FlociContainer container) {
+        return container.getAccessKey();
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, FlociContainer container) {
-        switch (propertyName) {
-            case AWS_ACCESS_KEY_ID:
-                return Optional.of(container.getAccessKey());
-            case AWS_SECRET_KEY:
-                return Optional.of(container.getSecretKey());
-            case AWS_REGION:
-                return Optional.of(container.getRegion());
-            default:
-                FlociService service = PROPERTY_TO_SERVICE.get(propertyName);
-                if (service != null) {
-                    return service.resolveProperty(propertyName, container);
-                }
-        }
-        return Optional.empty();
+    protected String resolveSecretKey(FlociContainer container) {
+        return container.getSecretKey();
+    }
+
+    @Override
+    protected String resolveRegion(FlociContainer container) {
+        return container.getRegion();
     }
 }

@@ -8,12 +8,12 @@ Provides core support for launching Localstack test containers.
 """
 
 dependencies {
-    api(project(":micronaut-test-resources-aws-base"))
+    api(projects.micronautTestResourcesAwsBase)
     api(libs.managed.testcontainers.localstack)
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesImplementation(mn.groovy)
     testFixturesImplementation(libs.spock)
-    testFixturesApi(testFixtures(project(":micronaut-test-resources-testcontainers"))) {
+    testFixturesApi(testFixtures(projects.micronautTestResourcesTestcontainers)) {
         because "exposes AbstractTestContainersSpec"
     }
 

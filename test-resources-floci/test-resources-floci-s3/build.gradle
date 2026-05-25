@@ -7,7 +7,7 @@ Provides support for Floci S3.
 """
 
 dependencies {
-    implementation(project(":micronaut-test-resources-floci-core"))
-    testImplementation(testFixtures(project(":micronaut-test-resources-floci-core")))
+    implementation(projects.micronautTestResourcesFlociCore)
+    testImplementation(testFixtures(projects.micronautTestResourcesFlociCore))
     testImplementation(libs.amazon.awssdk.v2.s3)
 }

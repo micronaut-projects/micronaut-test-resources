@@ -55,7 +55,14 @@ public abstract class AbstractAwsTestResourceProvider<C extends GenericContainer
     private final Map<String, S> propertyToService;
 
     protected AbstractAwsTestResourceProvider(Class<S> serviceType) {
-        services = StreamSupport.stream(ServiceLoader.load(serviceType).spliterator(), false)
+        this(serviceType, Collections.emptyList());
+    }
+
+    protected AbstractAwsTestResourceProvider(Class<S> serviceType, Collection<S> additionalServices) {
+        services = Stream.concat(
+                StreamSupport.stream(ServiceLoader.load(serviceType).spliterator(), false),
+                additionalServices.stream()
+            )
             .toList();
         Map<String, S> propertyToService = new HashMap<>();
         for (S service : services) {

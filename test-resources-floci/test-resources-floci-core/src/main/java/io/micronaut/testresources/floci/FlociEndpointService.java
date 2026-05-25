@@ -15,17 +15,15 @@
  */
 package io.micronaut.testresources.floci;
 
-import io.floci.testcontainers.FlociContainer;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.testresources.aws.AbstractAwsEndpointService;
 
 /**
- * Base implementation for Floci services which expose one endpoint override.
+ * Floci endpoint resolver for Micronaut AWS SDK v2 service clients.
  */
 @Internal
-public abstract class AbstractFlociService extends AbstractAwsEndpointService<FlociContainer> implements FlociService {
+final class FlociEndpointService extends AbstractFlociService {
 
-    protected AbstractFlociService(String serviceKind, String endpointProperty) {
-        super(serviceKind, endpointProperty, FlociContainer::getEndpoint);
+    FlociEndpointService(String serviceKind) {
+        super(serviceKind, "aws.services." + serviceKind + ".endpoint-override");
     }
 }

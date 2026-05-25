@@ -20,6 +20,8 @@ import io.micronaut.testresources.aws.AbstractAwsTestResourceProvider;
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,13 +34,32 @@ public class FlociTestResourceProvider extends AbstractAwsTestResourceProvider<F
 
     private static final String NAME = "floci";
 
-    private static final String SERVICE_DYNAMODB = "dynamodb";
+    private static final String SERVICE_APIGATEWAY_MANAGEMENT = "execute-api";
+    private static final String SERVICE_CLOUDWATCH_LOGS = "logs";
     private static final String SERVICE_S3 = "s3";
+    private static final String SERVICE_DYNAMODB = "dynamodb";
+    private static final String SERVICE_LAMBDA = "lambda";
+    private static final String SERVICE_SECRETS_MANAGER = "secretsmanager";
+    private static final String SERVICE_SES = "ses";
     private static final String SERVICE_SNS = "sns";
     private static final String SERVICE_SQS = "sqs";
+    private static final String SERVICE_SSM = "ssm";
+
+    private static final List<FlociService> DEFAULT_SERVICES = Arrays.asList(
+        new FlociEndpointService(SERVICE_APIGATEWAY_MANAGEMENT),
+        new FlociEndpointService(SERVICE_CLOUDWATCH_LOGS),
+        new FlociEndpointService(SERVICE_DYNAMODB),
+        new FlociEndpointService(SERVICE_LAMBDA),
+        new FlociEndpointService(SERVICE_S3),
+        new FlociEndpointService(SERVICE_SECRETS_MANAGER),
+        new FlociEndpointService(SERVICE_SES),
+        new FlociEndpointService(SERVICE_SNS),
+        new FlociEndpointService(SERVICE_SQS),
+        new FlociEndpointService(SERVICE_SSM)
+    );
 
     public FlociTestResourceProvider() {
-        super(FlociService.class);
+        super(FlociService.class, DEFAULT_SERVICES);
     }
 
     @Override
@@ -65,19 +86,24 @@ public class FlociTestResourceProvider extends AbstractAwsTestResourceProvider<F
 
     static void configureServices(FlociContainer flociContainer, Set<String> serviceKinds) {
         flociContainer.withAcmConfig(config -> config.enabled(false));
-        flociContainer.withApiGatewayConfig(config -> config.enabled(false));
-        flociContainer.withApiGatewayV2Config(config -> config.enabled(false));
+        flociContainer.withApiGatewayConfig(config -> config.enabled(serviceKinds.contains(SERVICE_APIGATEWAY_MANAGEMENT)));
+        flociContainer.withApiGatewayV2Config(config -> config.enabled(serviceKinds.contains(SERVICE_APIGATEWAY_MANAGEMENT)));
         flociContainer.withAppConfigConfig(config -> config.enabled(false));
         flociContainer.withAppConfigDataConfig(config -> config.enabled(false));
         flociContainer.withAthenaConfig(config -> config.enabled(false));
+        flociContainer.withBcmDataExportsConfig(config -> config.enabled(false));
         flociContainer.withBackupConfig(config -> config.enabled(false));
         flociContainer.withBedrockRuntimeConfig(config -> config.enabled(false));
         flociContainer.withCloudFormationConfig(config -> config.enabled(false));
-        flociContainer.withCloudWatchLogsConfig(config -> config.enabled(false));
+        flociContainer.withCloudFrontConfig(config -> config.enabled(false));
+        flociContainer.withCloudWatchLogsConfig(config -> config.enabled(serviceKinds.contains(SERVICE_CLOUDWATCH_LOGS)));
         flociContainer.withCloudWatchMetricsConfig(config -> config.enabled(false));
         flociContainer.withCodeBuildConfig(config -> config.enabled(false));
         flociContainer.withCodeDeployConfig(config -> config.enabled(false));
         flociContainer.withCognitoConfig(config -> config.enabled(false));
+        flociContainer.withConfigServiceConfig(config -> config.enabled(false));
+        flociContainer.withCostExplorerConfig(config -> config.enabled(false));
+        flociContainer.withCurConfig(config -> config.enabled(false));
         flociContainer.withDynamoDbConfig(config -> config.enabled(serviceKinds.contains(SERVICE_DYNAMODB)));
         flociContainer.withEc2Config(config -> config.enabled(false));
         flociContainer.withEcrConfig(config -> config.enabled(false));
@@ -91,8 +117,9 @@ public class FlociTestResourceProvider extends AbstractAwsTestResourceProvider<F
         flociContainer.withIamConfig(config -> config.enabled(false));
         flociContainer.withKinesisConfig(config -> config.enabled(false));
         flociContainer.withKmsConfig(config -> config.enabled(false));
-        flociContainer.withLambdaConfig(config -> config.enabled(false));
+        flociContainer.withLambdaConfig(config -> config.enabled(serviceKinds.contains(SERVICE_LAMBDA)));
         flociContainer.withMskConfig(config -> config.enabled(false));
+        flociContainer.withNeptuneConfig(config -> config.enabled(false));
         flociContainer.withOpenSearchConfig(config -> config.enabled(false));
         flociContainer.withPipesConfig(config -> config.enabled(false));
         flociContainer.withPricingConfig(config -> config.enabled(false));
@@ -101,11 +128,11 @@ public class FlociTestResourceProvider extends AbstractAwsTestResourceProvider<F
         flociContainer.withRoute53Config(config -> config.enabled(false));
         flociContainer.withS3Config(config -> config.enabled(serviceKinds.contains(SERVICE_S3)));
         flociContainer.withSchedulerConfig(config -> config.enabled(false));
-        flociContainer.withSecretsManagerConfig(config -> config.enabled(false));
-        flociContainer.withSesConfig(config -> config.enabled(false));
+        flociContainer.withSecretsManagerConfig(config -> config.enabled(serviceKinds.contains(SERVICE_SECRETS_MANAGER)));
+        flociContainer.withSesConfig(config -> config.enabled(serviceKinds.contains(SERVICE_SES)));
         flociContainer.withSnsConfig(config -> config.enabled(serviceKinds.contains(SERVICE_SNS)));
         flociContainer.withSqsConfig(config -> config.enabled(serviceKinds.contains(SERVICE_SQS)));
-        flociContainer.withSsmConfig(config -> config.enabled(false));
+        flociContainer.withSsmConfig(config -> config.enabled(serviceKinds.contains(SERVICE_SSM)));
         flociContainer.withStepFunctionsConfig(config -> config.enabled(false));
         flociContainer.withTextractConfig(config -> config.enabled(false));
         flociContainer.withTransferFamilyConfig(config -> config.enabled(false));

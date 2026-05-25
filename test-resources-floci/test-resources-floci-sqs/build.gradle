@@ -7,6 +7,7 @@ Provides support for Floci SQS.
 """
 
 dependencies {
-    implementation(project(":micronaut-test-resources-floci-core"))
-    testImplementation(testFixtures(project(":micronaut-test-resources-floci-core")))
+    implementation(projects.micronautTestResourcesFlociCore)
+    testImplementation(testFixtures(projects.micronautTestResourcesFlociCore))
+    testImplementation(libs.amazon.awssdk.v2.sqs)
 }

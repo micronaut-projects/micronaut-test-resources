@@ -56,6 +56,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String DISPLAY_NAME = "Kafka";
     public static final String SIMPLE_NAME = "kafka";
     private static final long ADMIN_TIMEOUT_SECONDS = 30;
+    private static final int ADMIN_ATTEMPTS = 3;
     private static final TopicProvisioningConfiguration NO_TOPICS =
         new TopicProvisioningConfiguration(Collections.emptyList(), DEFAULT_PARTITIONS);
 
@@ -130,7 +131,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         Properties adminClientConfiguration = new Properties();
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
-            Set<String> existingTopics = adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            Set<String> existingTopics = listTopicNames(adminClient);
             verifyExistingTopicPartitions(adminClient, configuration.topics().stream()
                 .filter(existingTopics::contains)
                 .toList(), configuration);
@@ -171,6 +172,18 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         }
     }
 
+    private static Set<String> listTopicNames(AdminClient adminClient) throws ExecutionException, InterruptedException, TimeoutException {
+        TimeoutException timeout = null;
+        for (int attempt = 0; attempt < ADMIN_ATTEMPTS; attempt++) {
+            try {
+                return adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                timeout = e;
+            }
+        }
+        throw timeout;
+    }
+
     protected void beforeCreateTopics(KafkaContainer container,
                                       TopicProvisioningConfiguration configuration,
                                       List<NewTopic> topicsToCreate) {
@@ -183,10 +196,21 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         if (topicNames.isEmpty()) {
             return;
         }
-        Map<String, TopicDescription> existingTopicDescriptions = adminClient.describeTopics(topicNames)
-            .allTopicNames()
-            .get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        Map<String, TopicDescription> existingTopicDescriptions = describeTopics(adminClient, topicNames);
         verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
+    }
+
+    private static Map<String, TopicDescription> describeTopics(AdminClient adminClient,
+                                                                List<String> topicNames) throws ExecutionException, InterruptedException, TimeoutException {
+        TimeoutException timeout = null;
+        for (int attempt = 0; attempt < ADMIN_ATTEMPTS; attempt++) {
+            try {
+                return adminClient.describeTopics(topicNames).allTopicNames().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                timeout = e;
+            }
+        }
+        throw timeout;
     }
 
     private static void verifyExistingTopicPartitions(Map<String, TopicDescription> existingTopicDescriptions,

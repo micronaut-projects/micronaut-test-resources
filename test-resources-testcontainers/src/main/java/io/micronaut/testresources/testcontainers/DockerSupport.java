@@ -80,14 +80,14 @@ public final class DockerSupport {
     public static boolean isDockerAvailable() {
         var available = AVAILABLE.get();
         if (available != null) {
-            return available;
+            return Boolean.TRUE.equals(available);
         }
         LOCK.lock();
         try {
             available = AVAILABLE.get();
             // Allow re-checking later in time
             if (Boolean.TRUE.equals(available)) {
-                return available;
+                return true;
             }
             available = performDockerCheck();
             AVAILABLE.set(available);

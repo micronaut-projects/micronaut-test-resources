@@ -29,8 +29,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import org.jspecify.annotations.Nullable;
 
 @Internal
 final class IntellijIdeaDatasourceExporter {
@@ -268,10 +270,10 @@ final class IntellijIdeaDatasourceExporter {
 
     private static final class JdbcDatasourceState {
         private final String name;
-        private String url;
-        private String username;
-        private String password;
-        private String driverClassName;
+        private @Nullable String url;
+        private @Nullable String username;
+        private @Nullable String password;
+        private @Nullable String driverClassName;
 
         private JdbcDatasourceState(String name) {
             this.name = name;
@@ -308,7 +310,14 @@ final class IntellijIdeaDatasourceExporter {
             int occurrence = renderedNameIndexes.merge(datasourceName, 1, Integer::sum);
             String displayName = totalCount > 1 && occurrence > 1 ? datasourceName + " (" + occurrence + ")" : datasourceName;
             String uuidSeed = totalCount > 1 ? sessionId + ":" + datasourceName : datasourceName;
-            return new RenderedDatasource(displayName, uuidSeed, datasource.url, datasource.username, datasource.password, datasource.driverClassName);
+            return new RenderedDatasource(
+                displayName,
+                uuidSeed,
+                Objects.requireNonNull(datasource.url),
+                Objects.requireNonNull(datasource.username),
+                Objects.requireNonNull(datasource.password),
+                Objects.requireNonNull(datasource.driverClassName)
+            );
         }
     }
 

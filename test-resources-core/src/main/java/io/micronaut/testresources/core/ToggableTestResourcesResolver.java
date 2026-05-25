@@ -24,6 +24,7 @@ import java.util.Map;
 public interface ToggableTestResourcesResolver extends TestResourcesResolver {
     String getName();
 
+    @Override
     default String getDisplayName() {
         return getName();
     }

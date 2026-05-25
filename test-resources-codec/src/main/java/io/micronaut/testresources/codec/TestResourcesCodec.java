@@ -16,6 +16,7 @@
 package io.micronaut.testresources.codec;
 
 import io.micronaut.http.codec.CodecException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -41,13 +42,13 @@ public final class TestResourcesCodec {
     private TestResourcesCodec() {
     }
 
-    public static Object readValue(InputStream inputStream) throws IOException {
+    public static @Nullable Object readValue(InputStream inputStream) throws IOException {
         var input = new DataInputStream(inputStream);
         validateEnvelope(input);
         return readObject(input, 0);
     }
 
-    public static void writeValue(Object object, OutputStream outputStream) throws IOException {
+    public static void writeValue(@Nullable Object object, OutputStream outputStream) throws IOException {
         var output = new DataOutputStream(outputStream);
         output.writeInt(MAGIC);
         output.writeByte(VERSION);
@@ -66,15 +67,14 @@ public final class TestResourcesCodec {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> T readObject(DataInputStream input, int depth) throws IOException {
+    private static @Nullable Object readObject(DataInputStream input, int depth) throws IOException {
         var kind = SupportedType.of(input.readByte());
         return switch (kind) {
             case NULL -> null;
-            case BOOLEAN -> (T) Boolean.valueOf(input.readBoolean());
-            case INTEGER -> (T) Integer.valueOf(input.readInt());
-            case LONG -> (T) Long.valueOf(input.readLong());
-            case STRING -> (T) input.readUTF();
+            case BOOLEAN -> Boolean.valueOf(input.readBoolean());
+            case INTEGER -> Integer.valueOf(input.readInt());
+            case LONG -> Long.valueOf(input.readLong());
+            case STRING -> input.readUTF();
             case LIST -> {
                 int nestedDepth = validateNestingDepth(depth + 1);
                 int count = validateCollectionSize("list", input.readInt());
@@ -82,7 +82,7 @@ public final class TestResourcesCodec {
                 for (int i = 0; i < count; i++) {
                     list.add(readObject(input, nestedDepth));
                 }
-                yield (T) Collections.unmodifiableList(list);
+                yield Collections.unmodifiableList(list);
             }
             case MAP -> {
                 int nestedDepth = validateNestingDepth(depth + 1);
@@ -91,28 +91,28 @@ public final class TestResourcesCodec {
                 for (int i = 0; i < count; i++) {
                     map.put(input.readUTF(), readObject(input, nestedDepth));
                 }
-                yield (T) Collections.unmodifiableMap(map);
+                yield Collections.unmodifiableMap(map);
             }
         };
     }
 
-    @SuppressWarnings("unchecked")
-    private static void writeObject(Object object, DataOutputStream output) throws IOException {
+    private static void writeObject(@Nullable Object object, DataOutputStream output) throws IOException {
         writeObject(object, output, 0);
     }
 
     @SuppressWarnings("unchecked")
-    private static void writeObject(Object object, DataOutputStream output, int depth) throws IOException {
+    private static void writeObject(@Nullable Object object, DataOutputStream output, int depth) throws IOException {
         if (object instanceof Result<?> result) {
             writeObject(result.value(), output, depth);
+            return;
+        }
+        if (object == null) {
+            output.writeByte(SupportedType.NULL.asByte());
             return;
         }
         var kind = SupportedType.kindOf(object);
         output.writeByte(kind.asByte());
         switch (kind) {
-            case NULL -> {
-                // NULL is fully represented by the type marker.
-            }
             case BOOLEAN -> output.writeBoolean((Boolean) object);
             case INTEGER -> output.writeInt((Integer) object);
             case LONG -> output.writeLong((Long) object);
@@ -164,9 +164,6 @@ public final class TestResourcesCodec {
         }
 
         static SupportedType kindOf(Object value) {
-            if (value == null) {
-                return NULL;
-            }
             if (value instanceof Boolean) {
                 return BOOLEAN;
             }
@@ -189,7 +186,7 @@ public final class TestResourcesCodec {
         }
     }
 
-    private static String typeName(Object value) {
+    private static String typeName(@Nullable Object value) {
         return value == null ? "null" : value.getClass().getName();
     }
 

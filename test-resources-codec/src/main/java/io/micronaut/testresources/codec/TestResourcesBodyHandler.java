@@ -27,6 +27,7 @@ import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.body.MessageBodyHandler;
 import io.micronaut.http.codec.CodecException;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,20 +48,20 @@ import static io.micronaut.testresources.codec.TestResourcesMediaType.TEST_RESOU
 @Produces(TEST_RESOURCES_BINARY)
 public class TestResourcesBodyHandler<T> implements MessageBodyHandler<T> {
     @Override
-    public boolean isReadable(Argument<T> type, MediaType mediaType) {
+    public boolean isReadable(Argument<T> type, @Nullable MediaType mediaType) {
         return mediaType != null && mediaType.matches(TEST_RESOURCES_BINARY_MEDIA_TYPE);
     }
 
     @Override
-    public boolean isWriteable(Argument<T> type, MediaType mediaType) {
+    public boolean isWriteable(Argument<T> type, @Nullable MediaType mediaType) {
         return mediaType != null && mediaType.matches(TEST_RESOURCES_BINARY_MEDIA_TYPE);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T read(Argument<T> type, MediaType mediaType, Headers httpHeaders, InputStream inputStream) throws CodecException {
+    public @Nullable T read(Argument<T> type, @Nullable MediaType mediaType, Headers httpHeaders, InputStream inputStream) throws CodecException {
         try {
-            Object value = TestResourcesCodec.readValue(inputStream);
+            @Nullable Object value = TestResourcesCodec.readValue(inputStream);
             if (value instanceof Map<?, ?> map && type.getType().equals(ConvertibleValues.class)) {
                 return (T) ConvertibleValues.of((Map<String, Object>) map);
             }

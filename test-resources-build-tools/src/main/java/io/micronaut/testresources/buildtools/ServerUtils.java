@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.buildtools;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -181,14 +182,14 @@ public class ServerUtils {
      * @return the server settings once the server is started
      * @throws IOException if an error occurs
      */
-    public static ServerSettings startOrConnectToExistingServer(Integer explicitPort,
+    public static ServerSettings startOrConnectToExistingServer(@Nullable Integer explicitPort,
                                                                 Path portFilePath,
                                                                 Path serverSettingsDirectory,
-                                                                String accessToken,
-                                                                Path cdsDirectory,
+                                                                @Nullable String accessToken,
+                                                                @Nullable Path cdsDirectory,
                                                                 Collection<File> serverClasspath,
-                                                                Integer clientTimeoutMs,
-                                                                Integer serverIdleTimeoutMinutes,
+                                                                @Nullable Integer clientTimeoutMs,
+                                                                @Nullable Integer serverIdleTimeoutMinutes,
                                                                 ServerFactory serverFactory)
         throws IOException {
         Optional<ServerSettings> maybeServerSettings = readServerSettings(serverSettingsDirectory);
@@ -264,7 +265,7 @@ public class ServerUtils {
         return settings;
     }
 
-    private static IllegalStateException explicitPortReuseFailure(int explicitPort, String failureReason) {
+    private static IllegalStateException explicitPortReuseFailure(int explicitPort, @Nullable String failureReason) {
         return new IllegalStateException("Explicit test resources port " + explicitPort + " is already in use "
             + "by a service that could not be validated as Micronaut Test Resources: " + failureReason);
     }
@@ -314,7 +315,7 @@ public class ServerUtils {
         }
     }
 
-    private static boolean isJsonContentType(String contentType) {
+    private static boolean isJsonContentType(@Nullable String contentType) {
         return contentType != null && contentType.toLowerCase(Locale.ROOT).contains(JSON_CONTENT_TYPE);
     }
 
@@ -393,13 +394,13 @@ public class ServerUtils {
      * @return the server settings once the server is started
      * @throws IOException if an error occurs
      */
-    public static ServerSettings startOrConnectToExistingServer(Integer explicitPort,
+    public static ServerSettings startOrConnectToExistingServer(@Nullable Integer explicitPort,
                                                                 Path portFilePath,
                                                                 Path serverSettingsDirectory,
-                                                                String accessToken,
+                                                                @Nullable String accessToken,
                                                                 Collection<File> serverClasspath,
-                                                                Integer clientTimeoutMs,
-                                                                Integer serverIdleTimeoutMinutes,
+                                                                @Nullable Integer clientTimeoutMs,
+                                                                @Nullable Integer serverIdleTimeoutMinutes,
                                                                 ServerFactory serverFactory)
         throws IOException {
         return startOrConnectToExistingServer(
@@ -464,7 +465,7 @@ public class ServerUtils {
      * @param namespace the namespace of the shared settings
      * @return the default path to the settings directory
      */
-    public static Path getDefaultSharedSettingsPath(String namespace) {
+    public static Path getDefaultSharedSettingsPath(@Nullable String namespace) {
         String ns = namespace == null ? "test-resources" : "test-resources-" + namespace;
         return Paths.get(System.getProperty("user.home"), ".micronaut/" + ns);
     }
@@ -484,12 +485,12 @@ public class ServerUtils {
     }
 
     private static void startAndWait(ServerFactory serverFactory,
-                                     Integer explicitPort,
-                                     Integer idleTimeoutMinutes,
+                                     @Nullable Integer explicitPort,
+                                     @Nullable Integer idleTimeoutMinutes,
                                      Path portFilePath,
-                                     String accessToken,
+                                     @Nullable String accessToken,
                                      Collection<File> serverClasspath,
-                                     Path cdsDirectory) throws IOException {
+                                     @Nullable Path cdsDirectory) throws IOException {
         ProcessParameters processParameters =
             createProcessParameters(explicitPort, idleTimeoutMinutes, portFilePath, accessToken,
                 serverClasspath, cdsDirectory);
@@ -505,7 +506,7 @@ public class ServerUtils {
     }
 
     private static void waitForServerToBeAvailable(ServerFactory serverFactory,
-                                                   Integer explicitPort,
+                                                   @Nullable Integer explicitPort,
                                                    Path portFilePath) {
         Integer port = explicitPort;
         if (explicitPort == null) {
@@ -529,11 +530,15 @@ public class ServerUtils {
                 return;
             }
         }
+        if (port == null) {
+            return;
+        }
+        int actualPort = port;
         // Make sure the service is started: in case we use an explicit port,
         // there can be some delay before the service is available
         int retries = 8;
         int waitMs = 25;
-        while (--retries > 0 && !isServerStarted(port)) {
+        while (--retries > 0 && !isServerStarted(actualPort)) {
             try {
                 serverFactory.waitFor(Duration.of(waitMs, ChronoUnit.MILLIS));
                 // exponential backoff
@@ -547,11 +552,11 @@ public class ServerUtils {
         // issue and it will be handled by the test resources client
     }
 
-    private static ProcessParameters createProcessParameters(Integer explicitPort,
-                                                             Integer serverIdleTimeoutMinutes,
-                                                             Path portFilePath, String accessToken,
+    private static ProcessParameters createProcessParameters(@Nullable Integer explicitPort,
+                                                             @Nullable Integer serverIdleTimeoutMinutes,
+                                                             Path portFilePath, @Nullable String accessToken,
                                                              Collection<File> serverClasspath,
-                                                             Path cdsDirectory) {
+                                                             @Nullable Path cdsDirectory) {
         return new DefaultProcessParameters(explicitPort, serverIdleTimeoutMinutes, accessToken,
             cdsDirectory, serverClasspath, portFilePath);
 
@@ -601,7 +606,7 @@ public class ServerUtils {
         }
     }
 
-    private record ServiceProbeResult(boolean reusable, boolean running, String failureReason) {
+    private record ServiceProbeResult(boolean reusable, boolean running, @Nullable String failureReason) {
         private static ServiceProbeResult reusableServer() {
             return new ServiceProbeResult(true, true, null);
         }
@@ -622,26 +627,25 @@ public class ServerUtils {
             return running;
         }
 
-        private String getFailureReason() {
+        private @Nullable String getFailureReason() {
             return failureReason;
         }
     }
 
     private static final class DefaultProcessParameters implements ProcessParameters {
-        private final Integer explicitPort;
-        private final String accessToken;
-        private final Path cdsDirectory;
+        private final @Nullable Integer explicitPort;
+        private final @Nullable String accessToken;
+        private final @Nullable Path cdsDirectory;
         private final Collection<File> serverClasspath;
         private final Path portFilePath;
-        private final Integer idleTimeoutMinutes;
-        private List<String> jvmArgs;
-        private List<File> classpath;
-        private File flatDirsJar;
+        private final @Nullable Integer idleTimeoutMinutes;
+        private @Nullable List<String> jvmArgs;
+        private @Nullable List<File> classpath;
 
-        public DefaultProcessParameters(Integer explicitPort,
-                                        Integer idleTimeoutMinutes,
-                                        String accessToken,
-                                        Path cdsDirectory,
+        DefaultProcessParameters(@Nullable Integer explicitPort,
+                                        @Nullable Integer idleTimeoutMinutes,
+                                        @Nullable String accessToken,
+                                        @Nullable Path cdsDirectory,
                                         Collection<File> serverClasspath,
                                         Path portFilePath) {
             this.explicitPort = explicitPort;
@@ -697,8 +701,8 @@ public class ServerUtils {
             }
             if (cdsDirectory != null && serverClasspath.stream().anyMatch(File::isDirectory)) {
                 // CDS doesn't support directories, so we have to create an arbitrary jar
-                flatDirsJar = cdsDirectory.resolve(FLAT_JAR).toFile();
-                buildFlatJar();
+                File flatDirsJar = cdsDirectory.resolve(FLAT_JAR).toFile();
+                buildFlatJar(flatDirsJar);
                 classpath = Stream.concat(
                     Stream.of(flatDirsJar),
                     serverClasspath.stream().filter(File::isFile)
@@ -714,7 +718,7 @@ public class ServerUtils {
          * build a jar out of them. That jar must be updated if there's any change,
          * so we also build a hash of its contents.
          */
-        private void buildFlatJar() {
+        private void buildFlatJar(File flatDirsJar) {
             byte[] hash = computeClasspathHash(
                 serverClasspath.stream()
                     .filter(File::isDirectory)
@@ -740,10 +744,10 @@ public class ServerUtils {
                 }
                 deleteCdsFiles(flatDirsJar);
             }
-            createFlatJarArchiveFile(hash, hashFile);
+            createFlatJarArchiveFile(flatDirsJar, hash, hashFile);
         }
 
-        private void createFlatJarArchiveFile(byte[] hash, File hashFile) {
+        private void createFlatJarArchiveFile(File flatDirsJar, byte[] hash, File hashFile) {
             try (JarOutputStream jos = new JarOutputStream(
                 Files.newOutputStream(flatDirsJar.toPath()))) {
                 Files.write(hashFile.toPath(), hash);

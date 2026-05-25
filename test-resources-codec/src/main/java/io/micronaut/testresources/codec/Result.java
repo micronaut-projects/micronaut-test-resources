@@ -15,7 +15,6 @@
  */
 package io.micronaut.testresources.codec;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -27,11 +26,11 @@ import java.util.Optional;
  * @param value The wrapped value
  * @param <T> The wrapped type
  */
-public record Result<T>(T value) {
+public record Result<T>(@Nullable T value) {
     public static final Result<Boolean> TRUE = new Result<>(true);
     public static final Result<Boolean> FALSE = new Result<>(false);
 
-    public static <V> Result<V> of(@NonNull V value) {
+    public static <V> Result<V> of(@Nullable V value) {
         return new Result<>(value);
     }
 

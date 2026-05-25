@@ -15,6 +15,8 @@
  */
 package io.micronaut.testresources.buildtools;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,16 +25,19 @@ import java.util.Optional;
  */
 public final class ServerSettings {
     private final int port;
-    private final String accessToken;
-    private final Integer clientTimeout;
-    private final Integer idleTimeoutMinutes;
+    private final @Nullable String accessToken;
+    private final @Nullable Integer clientTimeout;
+    private final @Nullable Integer idleTimeoutMinutes;
 
     @Deprecated
-    public ServerSettings(int port, String accessToken, Integer clientTimeout) {
+    public ServerSettings(int port, @Nullable String accessToken, @Nullable Integer clientTimeout) {
         this(port, accessToken, clientTimeout, null);
     }
 
-    public ServerSettings(int port, String accessToken, Integer clientTimeout, Integer idleTimeoutMinutes) {
+    public ServerSettings(int port,
+                          @Nullable String accessToken,
+                          @Nullable Integer clientTimeout,
+                          @Nullable Integer idleTimeoutMinutes) {
         this.port = port;
         this.accessToken = accessToken;
         this.clientTimeout = clientTimeout;

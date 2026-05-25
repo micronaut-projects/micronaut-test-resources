@@ -56,7 +56,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String DISPLAY_NAME = "Kafka";
     public static final String SIMPLE_NAME = "kafka";
     private static final long ADMIN_TIMEOUT_SECONDS = 30;
-    private static final int ADMIN_METADATA_ATTEMPTS = 2;
+    private static final int ADMIN_METADATA_ATTEMPTS = 3;
     private static final TopicProvisioningConfiguration NO_TOPICS =
         new TopicProvisioningConfiguration(Collections.emptyList(), DEFAULT_PARTITIONS);
 
@@ -190,7 +190,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
     }
 
-    private static <T> T retryMetadataRequest(AdminMetadataRequest<T> request)
+    static <T> T retryMetadataRequest(AdminMetadataRequest<T> request)
         throws ExecutionException, InterruptedException, TimeoutException {
         TimeoutException lastTimeout = new TimeoutException();
         for (int attempt = 0; attempt < ADMIN_METADATA_ATTEMPTS; attempt++) {
@@ -280,7 +280,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     @FunctionalInterface
-    private interface AdminMetadataRequest<T> {
+    interface AdminMetadataRequest<T> {
         T execute() throws ExecutionException, InterruptedException, TimeoutException;
     }
 }

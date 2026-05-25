@@ -182,6 +182,7 @@ public class ServerUtils {
      * @return the server settings once the server is started
      * @throws IOException if an error occurs
      */
+    @SuppressWarnings("java:S3776")
     public static ServerSettings startOrConnectToExistingServer(@Nullable Integer explicitPort,
                                                                 Path portFilePath,
                                                                 Path serverSettingsDirectory,
@@ -505,6 +506,7 @@ public class ServerUtils {
         waitForServerToBeAvailable(serverFactory, explicitPort, portFilePath);
     }
 
+    @SuppressWarnings("java:S3776")
     private static void waitForServerToBeAvailable(ServerFactory serverFactory,
                                                    @Nullable Integer explicitPort,
                                                    Path portFilePath) {

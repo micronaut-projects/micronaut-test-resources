@@ -24,6 +24,7 @@ import java.nio.file.Paths
 class DefaultTestResourceImagesTest extends Specification {
 
     private static final Set<String> EXPECTED_ALIASES = [
+        'azure_cosmos',
         'azurite',
         'consul',
         'couchbase',
@@ -62,6 +63,7 @@ class DefaultTestResourceImagesTest extends Specification {
     def "generates default images as runtime constants"() {
         expect:
         DefaultTestResourceImages.images().keySet() == EXPECTED_ALIASES
+        DefaultTestResourceImages.DEFAULT_AZURE_COSMOS_IMAGE == DefaultTestResourceImages.image('azure_cosmos')
         DefaultTestResourceImages.DEFAULT_AZURITE_IMAGE == DefaultTestResourceImages.image('azurite')
         DefaultTestResourceImages.DEFAULT_CONSUL_IMAGE == DefaultTestResourceImages.image('consul')
         DefaultTestResourceImages.DEFAULT_COUCHBASE_IMAGE == DefaultTestResourceImages.image('couchbase')
@@ -127,6 +129,7 @@ class DefaultTestResourceImagesTest extends Specification {
 
     private static Map<String, List<String>> documentedDefaults() {
         [
+            'modules-azure-cosmos.adoc': ['azure_cosmos'],
             'modules-azure.adoc': ['azurite'],
             'modules-couchbase.adoc': ['couchbase'],
             'modules-databases.adoc': ['mariadb', 'mysql_community', 'oracle_xe', 'oracle_free', 'postgres', 'mssql'],

@@ -9,6 +9,10 @@
 # property: test-resources.containers.azurite.image-name
 FROM mcr.microsoft.com/azure-storage/azurite:3.35.0 AS azurite
 
+# provider: azure-cosmos
+# property: test-resources.containers.azure-cosmos.image-name
+FROM mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest@sha256:50e0086d6171874ee136458d80f413f423a01ef56b1a6009d8628cc1bd1ad4ce AS azure_cosmos
+
 # provider: hashicorp-consul
 # property: test-resources.containers.hashicorp-consul.image-name
 FROM hashicorp/consul:1.15.4 AS consul

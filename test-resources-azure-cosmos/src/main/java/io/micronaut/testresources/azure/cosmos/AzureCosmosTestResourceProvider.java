@@ -15,6 +15,7 @@
  */
 package io.micronaut.testresources.azure.cosmos;
 
+import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.CosmosDBEmulatorContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -32,11 +33,12 @@ import java.util.Set;
 public class AzureCosmosTestResourceProvider extends AbstractTestContainersProvider<CosmosDBEmulatorContainer> {
     public static final String SIMPLE_NAME = "azure-cosmos";
     public static final String DISPLAY_NAME = "Azure Cosmos Emulator";
-    public static final String DEFAULT_IMAGE = "mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest";
+    public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_AZURE_COSMOS_IMAGE;
     public static final String ENDPOINT = "azure.cosmos.endpoint";
     public static final String KEY = "azure.cosmos.key";
 
     private static final Duration STARTUP_TIMEOUT = Duration.ofMinutes(5);
+    private static final String TESTCONTAINERS_COMPATIBLE_IMAGE = "mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator";
     private static final List<String> RESOLVABLE_PROPERTIES = List.of(ENDPOINT, KEY);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.copyOf(RESOLVABLE_PROPERTIES);
 
@@ -62,7 +64,7 @@ public class AzureCosmosTestResourceProvider extends AbstractTestContainersProvi
 
     @Override
     protected CosmosDBEmulatorContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new CosmosDBEmulatorContainer(imageName)
+        return new CosmosDBEmulatorContainer(imageName.asCompatibleSubstituteFor(TESTCONTAINERS_COMPATIBLE_IMAGE))
             .withStartupTimeout(STARTUP_TIMEOUT);
     }
 

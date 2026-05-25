@@ -11,10 +11,17 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 abstract class AbstractAzureCosmosSpec extends AbstractTestContainersSpec implements TestPropertyProvider {
+    private static final String ENDPOINT_VERIFICATION_ALGORITHM_PROPERTY = 'io.netty.handler.ssl.defaultEndpointVerificationAlgorithm'
     private static final AzureCosmosTestResourceProvider PROVIDER = new AzureCosmosTestResourceProvider()
 
     @Shared
     private Path keyStoreFile
+
+    @Shared
+    private Map<String, String> previousSystemProperties = [:]
+
+    @Shared
+    private Set<String> absentSystemProperties = [] as Set
 
     @Override
     String getScopeName() {
@@ -35,12 +42,13 @@ abstract class AbstractAzureCosmosSpec extends AbstractTestContainersSpec implem
                 .findByRequestedProperty(Scope.of(scopeName), AzureCosmosTestResourceProvider.ENDPOINT)
                 .first()
         configureSsl(container, key)
-        setDefaultEndpointVerificationAlgorithmToNone()
+        setSystemProperty(ENDPOINT_VERIFICATION_ALGORITHM_PROPERTY, 'NONE')
         return [(Scope.PROPERTY_KEY): scopeName]
     }
 
     @Override
     void cleanupSpec() {
+        restoreSystemProperties()
         if (keyStoreFile != null) {
             Files.deleteIfExists(keyStoreFile)
         }
@@ -51,8 +59,32 @@ abstract class AbstractAzureCosmosSpec extends AbstractTestContainersSpec implem
         Files.newOutputStream(keyStoreFile).withCloseable { output ->
             container.buildNewKeyStore().store(output, key.toCharArray())
         }
-        System.setProperty('javax.net.ssl.trustStore', keyStoreFile.toString())
-        System.setProperty('javax.net.ssl.trustStorePassword', key)
-        System.setProperty('javax.net.ssl.trustStoreType', 'PKCS12')
+        setSystemProperty('javax.net.ssl.trustStore', keyStoreFile.toString())
+        setSystemProperty('javax.net.ssl.trustStorePassword', key)
+        setSystemProperty('javax.net.ssl.trustStoreType', 'PKCS12')
+    }
+
+    private void setSystemProperty(String name, String value) {
+        rememberSystemProperty(name)
+        System.setProperty(name, value)
+    }
+
+    private void rememberSystemProperty(String name) {
+        if (previousSystemProperties.containsKey(name) || absentSystemProperties.contains(name)) {
+            return
+        }
+        String previousValue = System.getProperty(name)
+        if (previousValue == null) {
+            absentSystemProperties.add(name)
+        } else {
+            previousSystemProperties[name] = previousValue
+        }
+    }
+
+    private void restoreSystemProperties() {
+        absentSystemProperties.each { System.clearProperty(it) }
+        previousSystemProperties.each { name, value -> System.setProperty(name, value) }
+        absentSystemProperties.clear()
+        previousSystemProperties.clear()
     }
 }

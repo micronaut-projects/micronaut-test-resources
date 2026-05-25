@@ -151,9 +151,9 @@
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-oauth2"><a href="#modules-oauth2"><strong>5.21</strong><span>OAuth2 / Keycloak</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.22</strong><span>Hashicorp Vault</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-vault"><a href="#modules-hashicorp-vault"><strong>5.22</strong><span>HashiCorp Vault</span></a></div>
         
-        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-consul"><a href="#modules-hashicorp-consul"><strong>5.23</strong><span>Hashicorp Consul</span></a></div>
+        <div class="toc-item" style="margin-left:10px" id="toc-item-modules-hashicorp-consul"><a href="#modules-hashicorp-consul"><strong>5.23</strong><span>HashiCorp Consul</span></a></div>
         
         <div class="toc-item" style="margin-left:10px" id="toc-item-modules-solr"><a href="#modules-solr"><strong>5.24</strong><span>Solr</span></a></div>
         
@@ -2040,7 +2040,7 @@ test-resources.containers.couchbase.image-tag=custom-tag</code></pre>
 <p>Alternatively, if you have multiple MongoDB servers declared in your configuration, the test resources service will supply a different replica set for each database.</p>
 </div>
 <div class="paragraph">
-<p>For example, if you have <code>mongodb.servers.users</code> and <code>mongodb.servers.books</code> defined, then the test resources service will supply the <code>mongodb.servers.users.uri</code> and <code>mondodb.servers.books.uri</code> properties.</p>
+<p>For example, if you have <code>mongodb.servers.users</code> and <code>mongodb.servers.books</code> defined, then the test resources service will supply the <code>mongodb.servers.users.uri</code> and <code>mongodb.servers.books.uri</code> properties.</p>
 </div>
 <div class="paragraph">
 <p>Note that in this case, a <em>single</em> server is used, the value of <code>test-resources.containers.mongodb.db-name</code> is ignored, and the database name is set to the name of the database you declared (in this example, this would be respectively <code>users</code> and <code>books</code>).</p>
@@ -3002,7 +3002,7 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 </div>
 </div>
 
-<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.22 Hashicorp Vault</h2>
+<h2 id="modules-hashicorp-vault"><a class="anchor" href="#modules-hashicorp-vault"></a>5.22 HashiCorp Vault</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-vault.adoc"'>
@@ -3012,7 +3012,7 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 
 
 <div class="paragraph">
-<p>Vault support will automatically start a <a href="https://www.vaultproject.io/">Hashicorp Vault container</a> and provide the value of <code>vault.client.uri</code> property.</p>
+<p>Vault support will automatically start a <a href="https://www.vaultproject.io/">HashiCorp Vault container</a> and provide the value of <code>vault.client.uri</code> property.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3023,7 +3023,7 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 <p>The default Vault access token is <code>vault-token</code> but this can be overridden by setting the <code>test-resources.containers.hashicorp-vault.token</code> property.</p>
 </li>
 <li>
-<p>Secrets should be inserted into Hashicorp Vault at startup by adding the config:</p>
+<p>Secrets should be inserted into HashiCorp Vault at startup by adding the config:</p>
 </li>
 </ul>
 </div>
@@ -3102,7 +3102,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 </div>
 
-<h2 id="modules-hashicorp-consul"><a class="anchor" href="#modules-hashicorp-consul"></a>5.23 Hashicorp Consul</h2>
+<h2 id="modules-hashicorp-consul"><a class="anchor" href="#modules-hashicorp-consul"></a>5.23 HashiCorp Consul</h2>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-test-resources/edit/4.0.x/src/main/docs/guide/modules-hashicorp-consul.adoc"'>
@@ -3112,13 +3112,13 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 
 
 <div class="paragraph">
-<p>Consul support will automatically start a <a href="https://www.consul.io/">Hashicorp Consul container</a> and provide the values of the <code>consul.client.host</code>, <code>consul.client.port</code>, and <code>consul.client.default-zone</code> properties.</p>
+<p>Consul support will automatically start a <a href="https://www.consul.io/">HashiCorp Consul container</a> and provide the values of the <code>consul.client.host</code>, <code>consul.client.port</code>, and <code>consul.client.default-zone</code> properties.</p>
 </div>
 <div class="paragraph">
 <p>The default image (<code>hashicorp/consul:1.15.4</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-consul.image-name</code> property.</p>
 </div>
 <div class="paragraph">
-<p>Key/value pairs can be inserted into Hashicorp Consul at startup with the <code>test-resources.containers.hashicorp-consul.kv-properties</code> property:</p>
+<p>Key/value pairs can be inserted into HashiCorp Consul at startup with the <code>test-resources.containers.hashicorp-consul.kv-properties</code> property:</p>
 </div>
 <div class="openblock">
 <div class="content">

@@ -172,7 +172,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         }
     }
 
-    private static Set<String> listTopicNames(AdminClient adminClient) throws ExecutionException, InterruptedException, TimeoutException {
+    static Set<String> listTopicNames(AdminClient adminClient) throws ExecutionException, InterruptedException, TimeoutException {
         TimeoutException timeout = null;
         for (int attempt = 0; attempt < ADMIN_ATTEMPTS; attempt++) {
             try {
@@ -200,8 +200,8 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
     }
 
-    private static Map<String, TopicDescription> describeTopics(AdminClient adminClient,
-                                                                List<String> topicNames) throws ExecutionException, InterruptedException, TimeoutException {
+    static Map<String, TopicDescription> describeTopics(AdminClient adminClient,
+                                                        List<String> topicNames) throws ExecutionException, InterruptedException, TimeoutException {
         TimeoutException timeout = null;
         for (int attempt = 0; attempt < ADMIN_ATTEMPTS; attempt++) {
             try {

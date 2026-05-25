@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * A test resource provider which will spawn an Azure Cosmos emulator container.
@@ -41,6 +42,10 @@ public class AzureCosmosTestResourceProvider extends AbstractTestContainersProvi
     private static final String TESTCONTAINERS_COMPATIBLE_IMAGE = "mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator";
     private static final List<String> RESOLVABLE_PROPERTIES = List.of(ENDPOINT, KEY);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.copyOf(RESOLVABLE_PROPERTIES);
+    private static final Map<String, Function<CosmosDBEmulatorContainer, String>> PROPERTY_RESOLVERS = Map.of(
+        ENDPOINT, CosmosDBEmulatorContainer::getEmulatorEndpoint,
+        KEY, CosmosDBEmulatorContainer::getEmulatorKey
+    );
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -48,8 +53,25 @@ public class AzureCosmosTestResourceProvider extends AbstractTestContainersProvi
     }
 
     @Override
+    protected Optional<String> resolveProperty(String propertyName, CosmosDBEmulatorContainer container) {
+        return Optional.ofNullable(PROPERTY_RESOLVERS.get(propertyName)).map(resolver -> resolver.apply(container));
+    }
+
+    @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
+    }
+
+    @Override
+    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        return SUPPORTED_PROPERTIES.contains(propertyName);
+    }
+
+    @SuppressWarnings("java:S2095") // Container lifecycle is transferred to the shared Testcontainers cache.
+    @Override
+    protected CosmosDBEmulatorContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
+        DockerImageName compatibleImage = imageName.asCompatibleSubstituteFor(TESTCONTAINERS_COMPATIBLE_IMAGE);
+        return new CosmosDBEmulatorContainer(compatibleImage).withStartupTimeout(STARTUP_TIMEOUT);
     }
 
     @Override
@@ -60,27 +82,5 @@ public class AzureCosmosTestResourceProvider extends AbstractTestContainersProvi
     @Override
     protected String getDefaultImageName() {
         return DEFAULT_IMAGE;
-    }
-
-    @Override
-    protected CosmosDBEmulatorContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new CosmosDBEmulatorContainer(imageName.asCompatibleSubstituteFor(TESTCONTAINERS_COMPATIBLE_IMAGE))
-            .withStartupTimeout(STARTUP_TIMEOUT);
-    }
-
-    @Override
-    protected Optional<String> resolveProperty(String propertyName, CosmosDBEmulatorContainer container) {
-        if (ENDPOINT.equals(propertyName)) {
-            return Optional.of(container.getEmulatorEndpoint());
-        }
-        if (KEY.equals(propertyName)) {
-            return Optional.of(container.getEmulatorKey());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return SUPPORTED_PROPERTIES.contains(propertyName);
     }
 }

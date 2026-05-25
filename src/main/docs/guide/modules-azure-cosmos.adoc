@@ -1,0 +1,7 @@
+Azure Cosmos emulator support will automatically start a https://learn.microsoft.com/azure/cosmos-db/emulator[Cosmos DB emulator container] and provide the values of the `azure.cosmos.endpoint` and `azure.cosmos.key` properties.
+
+The default image can be overwritten by setting the `test-resources.containers.azure-cosmos.image-name` property.
+
+NOTE: Micronaut Test Resources only resolves the endpoint and key. The emulator certificate still has to be trusted by the consuming JVM, and Netty-based clients may also require `io.netty.handler.ssl.defaultEndpointVerificationAlgorithm=NONE` because the emulator certificate does not match `localhost`.
+
+If you want Micronaut Data to create the database and containers during startup, configure the usual `azure.cosmos.database.*` properties in your application.

@@ -48,9 +48,13 @@ abstract class AbstractAzureCosmosSpec extends AbstractTestContainersSpec implem
 
     @Override
     void cleanupSpec() {
-        restoreSystemProperties()
-        if (keyStoreFile != null) {
-            Files.deleteIfExists(keyStoreFile)
+        try {
+            restoreSystemProperties()
+            if (keyStoreFile != null) {
+                Files.deleteIfExists(keyStoreFile)
+            }
+        } finally {
+            TestContainers.closeScope(scopeName)
         }
     }
 

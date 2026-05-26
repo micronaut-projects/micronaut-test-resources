@@ -908,6 +908,8 @@ services:
     private static final Map<String, String> NON_COMPOSE_PROVIDER_RATIONALE = [
             "test-resources-elasticsearch":
                     "Module is disabled in settings.gradle and not part of regular build scope.",
+            "test-resources-floci/test-resources-floci-core":
+                    "Floci is a Testcontainers-specific AWS emulator integration with service enablement and credentials controlled by the FlociContainer API, not a stable user-maintained Compose service contract.",
             "test-resources-jdbc/test-resources-jdbc-h2":
                     "H2 is an in-process database provider and has no reusable Compose service.",
             "test-resources-jdbc/test-resources-jdbc-oracle-test-pilot":

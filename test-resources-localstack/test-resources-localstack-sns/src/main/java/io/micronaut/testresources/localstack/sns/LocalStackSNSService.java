@@ -15,36 +15,19 @@
  */
 package io.micronaut.testresources.localstack.sns;
 
+import io.micronaut.testresources.aws.AbstractAwsEndpointService;
 import io.micronaut.testresources.localstack.LocalStackService;
 import org.testcontainers.localstack.LocalStackContainer;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Adds support for Localstack SNS.
  */
-public class LocalStackSNSService implements LocalStackService {
+public class LocalStackSNSService extends AbstractAwsEndpointService<LocalStackContainer> implements LocalStackService {
 
     private static final String AWS_SNS_ENDPOINT_OVERRIDE = "aws.services.sns.endpoint-override";
     private static final String SERVICE = "sns";
 
-    @Override
-    public Optional<String> resolveProperty(String propertyName, LocalStackContainer container) {
-        if (AWS_SNS_ENDPOINT_OVERRIDE.equals(propertyName)) {
-            return Optional.of(container.getEndpoint().toString());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public String getServiceKind() {
-        return SERVICE;
-    }
-
-    @Override
-    public List<String> getResolvableProperties() {
-        return Collections.singletonList(AWS_SNS_ENDPOINT_OVERRIDE);
+    public LocalStackSNSService() {
+        super(SERVICE, AWS_SNS_ENDPOINT_OVERRIDE, container -> container.getEndpoint().toString());
     }
 }

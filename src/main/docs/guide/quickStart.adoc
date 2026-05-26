@@ -2,14 +2,15 @@ Micronaut Test Resources are integrated via build plugins.
 
 The recommended approach to get started is to use https://micronaut.io/launch[Micronaut Launch] and select the `test-resources` feature.
 
-If you wanted to integrate it manually, for Gradle you can use the `micronaut-test-resources` plugin:
+If you want to integrate it manually, for Gradle you can use the `micronaut-test-resources` plugin.
+Use the same Micronaut Gradle plugin version for `io.micronaut.test-resources` and `io.micronaut.application`:
 
 .Gradle
 [source,groovy,subs="verbatim,attributes"]
 ----
 plugins {
-    id 'io.micronaut.test-resources' version '4.4.4' // get latest version from https://plugins.gradle.org/plugin/io.micronaut.test-resources
-    id 'io.micronaut.application' version '4.4.4' // get latest version from https://plugins.gradle.org/plugin/io.micronaut.application 
+    id 'io.micronaut.test-resources' version '<micronaut-gradle-plugin-version>'
+    id 'io.micronaut.application' version '<micronaut-gradle-plugin-version>'
 }
 ----
 

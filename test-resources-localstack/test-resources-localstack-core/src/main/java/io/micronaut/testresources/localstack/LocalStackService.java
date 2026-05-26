@@ -15,33 +15,11 @@
  */
 package io.micronaut.testresources.localstack;
 
+import io.micronaut.testresources.aws.AwsEmulatorService;
 import org.testcontainers.localstack.LocalStackContainer;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Interface for localstack service loading.
  */
-public interface LocalStackService {
-    /**
-     * Returns the service kind.
-     * @return the service kind.
-     */
-    String getServiceKind();
-
-    /**
-     * Returns the list of properties that this service
-     * can configure.
-     * @return the list of supported properties
-     */
-    List<String> getResolvableProperties();
-
-    /**
-     * Resolves a property.
-     * @param propertyName the property to resolve
-     * @param container the localstack container
-     * @return the resolved property, if available
-     */
-    Optional<String> resolveProperty(String propertyName, LocalStackContainer container);
+public interface LocalStackService extends AwsEmulatorService<LocalStackContainer> {
 }

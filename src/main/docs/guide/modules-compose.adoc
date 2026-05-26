@@ -204,7 +204,7 @@ Compose-mapped service families in this revision include:
 |===
 
 Every TestResourcesResolver-backed provider module is covered by the Compose module test suite.
-The only intentionally non-applicable modules are H2, because it is an in-process database provider; Oracle Test Pilot, because it resolves from Oracle Test Pilot environment variables instead of a reusable Compose service; R2DBC pool, because it is a wrapper provider; disabled Elasticsearch; and generic Testcontainers, because the user-supplied container definition is already its configuration contract.
+The only intentionally non-applicable modules are H2, because it is an in-process database provider; Oracle Test Pilot, because it resolves from Oracle Test Pilot environment variables instead of a reusable Compose service; R2DBC pool, because it is a wrapper provider; Floci, because its AWS emulator lifecycle and credentials are controlled by the Floci Testcontainers API instead of a stable user-maintained Compose service contract; disabled Elasticsearch; and generic Testcontainers, because the user-supplied container definition is already its configuration contract.
 
 The supported service families use the following service-specific configuration sources:
 

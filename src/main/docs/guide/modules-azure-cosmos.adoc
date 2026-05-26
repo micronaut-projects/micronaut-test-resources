@@ -1,6 +1,8 @@
 Azure Cosmos emulator support will automatically start a https://learn.microsoft.com/azure/cosmos-db/emulator[Cosmos DB emulator container] and provide the values of the `azure.cosmos.endpoint` and `azure.cosmos.key` properties.
 
 The default image (`{default-image-azure-cosmos}`) can be overwritten by setting the `test-resources.containers.azure-cosmos.image-name` property.
+The default uses the vNext preview emulator image to avoid the legacy Linux emulator evaluation-period image and to align with the current cross-platform emulator path.
+If you override the image with the legacy Linux emulator tag, Micronaut Test Resources keeps the legacy Testcontainers startup behavior for that image.
 
 NOTE: Micronaut Test Resources only resolves the endpoint and key. The emulator certificate still has to be trusted by the consuming test JVM, and Netty-based clients in that emulator test JVM may also require `io.netty.handler.ssl.defaultEndpointVerificationAlgorithm=NONE` because the emulator certificate does not match `localhost`.
 

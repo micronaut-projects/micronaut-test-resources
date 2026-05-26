@@ -18,6 +18,7 @@ package io.micronaut.testresources.azure.cosmos;
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import org.testcontainers.containers.CosmosDBEmulatorContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
@@ -38,7 +39,11 @@ public class AzureCosmosTestResourceProvider extends AbstractTestContainersProvi
     public static final String ENDPOINT = "azure.cosmos.endpoint";
     public static final String KEY = "azure.cosmos.key";
 
+    static final int COSMOS_PORT = 8081;
+    static final int VNEXT_HEALTH_PORT = 8080;
+
     private static final Duration STARTUP_TIMEOUT = Duration.ofMinutes(5);
+    private static final String VNEXT_PREVIEW_TAG = "vnext-preview";
     private static final String TESTCONTAINERS_COMPATIBLE_IMAGE = "mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator";
     private static final List<String> RESOLVABLE_PROPERTIES = List.of(ENDPOINT, KEY);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.copyOf(RESOLVABLE_PROPERTIES);
@@ -71,7 +76,14 @@ public class AzureCosmosTestResourceProvider extends AbstractTestContainersProvi
     @Override
     protected CosmosDBEmulatorContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
         DockerImageName compatibleImage = imageName.asCompatibleSubstituteFor(TESTCONTAINERS_COMPATIBLE_IMAGE);
-        return new CosmosDBEmulatorContainer(compatibleImage).withStartupTimeout(STARTUP_TIMEOUT);
+        CosmosDBEmulatorContainer container = new CosmosDBEmulatorContainer(compatibleImage).withStartupTimeout(STARTUP_TIMEOUT);
+        if (VNEXT_PREVIEW_TAG.equals(imageName.getVersionPart())) {
+            container
+                .withEnv("PROTOCOL", "https")
+                .withExposedPorts(COSMOS_PORT, VNEXT_HEALTH_PORT)
+                .waitingFor(Wait.forHttp("/ready").forPort(VNEXT_HEALTH_PORT).forStatusCode(200).withStartupTimeout(STARTUP_TIMEOUT));
+        }
+        return container;
     }
 
     @Override

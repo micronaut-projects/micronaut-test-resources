@@ -66,12 +66,18 @@ public class TestResourcesBodyHandler<T> implements MessageBodyHandler<T> {
                 return (T) ConvertibleValues.of((Map<String, Object>) map);
             }
             if (Result.class.equals(type.getType())) {
-                return (T) Result.of(value);
+                return (T) nullableResult(value);
             }
             return (T) value;
         } catch (IOException e) {
             throw new CodecException("Unable to decode the test resources payload", e);
         }
+    }
+
+    @SuppressWarnings("NullAway")
+    private static Result<?> nullableResult(@Nullable Object value) {
+        // Keep Result.of non-null while preserving decoded null scalar payloads.
+        return new Result<>(value);
     }
 
     @Override

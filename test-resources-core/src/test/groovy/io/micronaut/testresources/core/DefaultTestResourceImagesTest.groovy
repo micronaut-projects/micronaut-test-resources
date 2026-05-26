@@ -28,6 +28,7 @@ class DefaultTestResourceImagesTest extends Specification {
         'consul',
         'couchbase',
         'elasticsearch',
+        'floci',
         'hazelcast',
         'hivemq',
         'infinispan',
@@ -66,6 +67,7 @@ class DefaultTestResourceImagesTest extends Specification {
         DefaultTestResourceImages.DEFAULT_CONSUL_IMAGE == DefaultTestResourceImages.image('consul')
         DefaultTestResourceImages.DEFAULT_COUCHBASE_IMAGE == DefaultTestResourceImages.image('couchbase')
         DefaultTestResourceImages.DEFAULT_ELASTICSEARCH_IMAGE == DefaultTestResourceImages.image('elasticsearch')
+        DefaultTestResourceImages.DEFAULT_FLOCI_IMAGE == DefaultTestResourceImages.image('floci')
         DefaultTestResourceImages.DEFAULT_HAZELCAST_IMAGE == DefaultTestResourceImages.image('hazelcast')
         DefaultTestResourceImages.DEFAULT_HIVEMQ_IMAGE == DefaultTestResourceImages.image('hivemq')
         DefaultTestResourceImages.DEFAULT_INFINISPAN_IMAGE == DefaultTestResourceImages.image('infinispan')
@@ -131,6 +133,7 @@ class DefaultTestResourceImagesTest extends Specification {
             'modules-couchbase.adoc': ['couchbase'],
             'modules-databases.adoc': ['mariadb', 'mysql_community', 'oracle_xe', 'oracle_free', 'postgres', 'mssql'],
             'modules-elasticsearch.adoc': ['elasticsearch'],
+            'modules-floci.adoc': ['floci'],
             'modules-hashicorp-consul.adoc': ['consul'],
             'modules-hashicorp-vault.adoc': ['vault'],
             'modules-hazelcast.adoc': ['hazelcast'],

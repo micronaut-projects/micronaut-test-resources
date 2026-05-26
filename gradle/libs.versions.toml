@@ -49,6 +49,7 @@ jansi = "2.4.3"
 
 # Managed versions appear in the BOM
 managed-opensearch-testcontainers = "4.1.0"
+managed-testcontainers-floci = "2.8.0"
 managed-testcontainers = "2.0.4"
 managed-testcontainers-pulsar = "1.21.3"
 managed-testcontainers-redis = "1.6.4"
@@ -71,6 +72,7 @@ managed-testcontainers-elasticsearch = { module = "org.testcontainers:testcontai
 managed-testcontainers-jdbc = { module = "org.testcontainers:testcontainers-jdbc", version.ref = "managed-testcontainers" }
 managed-testcontainers-hivemq = { module = "org.testcontainers:testcontainers-hivemq", version.ref = "managed-testcontainers" }
 managed-testcontainers-kafka = { module = "org.testcontainers:testcontainers-kafka", version.ref = "managed-testcontainers" }
+managed-testcontainers-floci = { module = "io.floci:testcontainers-floci", version.ref = "managed-testcontainers-floci" }
 managed-testcontainers-localstack = { module = "org.testcontainers:testcontainers-localstack", version.ref = "managed-testcontainers" }
 managed-testcontainers-mariadb = { module = "org.testcontainers:testcontainers-mariadb", version.ref = "managed-testcontainers" }
 managed-testcontainers-minio = { module = "org.testcontainers:testcontainers-minio", version.ref = "managed-testcontainers" }

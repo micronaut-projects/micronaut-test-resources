@@ -1,0 +1,28 @@
+Micronaut Test Resources supports https://github.com/floci-io/floci[Floci] via its Testcontainers module for the Floci services that are also configured by Micronaut AWS SDK v2 client factories.
+
+Floci is an alternative AWS emulator dependency family. It does not replace LocalStack automatically, and the LocalStack modules keep their existing behavior and configuration. Choose a Floci module for the AWS service you want to emulate instead of the corresponding LocalStack module, or use the Floci core module when there is no service-specific Floci module.
+
+The default image (`{default-image-floci}`) can be overwritten by setting the `test-resources.containers.floci.image-name` property.
+
+The following service endpoint overrides are supported:
+
+- API Gateway Management API, by providing the `aws.services.execute-api.endpoint-override` property
+- CloudWatch Logs, by providing the `aws.services.logs.endpoint-override` property
+- S3, by providing the `aws.services.s3.endpoint-override` property
+- DynamoDB, by providing the `aws.services.dynamodb.endpoint-override` property
+- Lambda, by providing the `aws.services.lambda.endpoint-override` property
+- Secrets Manager, by providing the `aws.services.secretsmanager.endpoint-override` property
+- SES, by providing the `aws.services.ses.endpoint-override` property
+- SQS, by providing the `aws.services.sqs.endpoint-override` property
+- SNS, by providing the `aws.services.sns.endpoint-override` property
+- SSM, by providing the `aws.services.ssm.endpoint-override` property
+
+In addition, the following properties will be resolved by test resources:
+
+- `aws.access-key-id`
+- `aws.secret-key`
+- `aws.region`
+
+Avoid placing both a LocalStack and a Floci module for the same AWS service on the same test classpath unless you explicitly disable one resolver, for example by setting `test-resources.containers.localstack.enabled` or `test-resources.containers.floci.enabled` to `false`.
+
+The upstream Floci Testcontainers integration currently bind-mounts the Docker socket into the container unconditionally. Micronaut Test Resources disables unsupported Floci services by default and enables the Floci services that map to Micronaut AWS SDK v2 client configuration, but you should still treat the Floci container as trusted infrastructure with Docker access through `/var/run/docker.sock`.

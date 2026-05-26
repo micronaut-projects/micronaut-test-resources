@@ -1,0 +1,12 @@
+plugins {
+    id 'io.micronaut.build.internal.floci-module'
+}
+
+description = """
+Provides support for Floci DynamoDB.
+"""
+
+dependencies {
+    implementation(projects.micronautTestResourcesFlociCore)
+    testImplementation(testFixtures(projects.micronautTestResourcesFlociCore))
+}

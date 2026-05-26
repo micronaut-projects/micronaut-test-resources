@@ -26,6 +26,8 @@ modules:
     title: Pulsar
   modules-localstack:
     title: Localstack
+  modules-floci:
+    title: Floci
   modules-minio:
     title: MinIO
   modules-seaweedfs:

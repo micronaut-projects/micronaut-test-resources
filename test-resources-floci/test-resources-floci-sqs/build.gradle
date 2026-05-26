@@ -1,0 +1,13 @@
+plugins {
+    id 'io.micronaut.build.internal.floci-module'
+}
+
+description = """
+Provides support for Floci SQS.
+"""
+
+dependencies {
+    implementation(projects.micronautTestResourcesFlociCore)
+    testImplementation(testFixtures(projects.micronautTestResourcesFlociCore))
+    testImplementation(libs.amazon.awssdk.v2.sqs)
+}

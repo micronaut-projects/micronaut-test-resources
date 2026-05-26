@@ -67,14 +67,15 @@ public final class TestResourcesCodec {
         }
     }
 
-    private static @Nullable Object readObject(DataInputStream input, int depth) throws IOException {
+    @SuppressWarnings("unchecked")
+    private static <T> @Nullable T readObject(DataInputStream input, int depth) throws IOException {
         var kind = SupportedType.of(input.readByte());
         return switch (kind) {
             case NULL -> null;
-            case BOOLEAN -> Boolean.valueOf(input.readBoolean());
-            case INTEGER -> Integer.valueOf(input.readInt());
-            case LONG -> Long.valueOf(input.readLong());
-            case STRING -> input.readUTF();
+            case BOOLEAN -> (T) Boolean.valueOf(input.readBoolean());
+            case INTEGER -> (T) Integer.valueOf(input.readInt());
+            case LONG -> (T) Long.valueOf(input.readLong());
+            case STRING -> (T) input.readUTF();
             case LIST -> {
                 int nestedDepth = validateNestingDepth(depth + 1);
                 int count = validateCollectionSize("list", input.readInt());
@@ -82,7 +83,7 @@ public final class TestResourcesCodec {
                 for (int i = 0; i < count; i++) {
                     list.add(readObject(input, nestedDepth));
                 }
-                yield Collections.unmodifiableList(list);
+                yield (T) Collections.unmodifiableList(list);
             }
             case MAP -> {
                 int nestedDepth = validateNestingDepth(depth + 1);
@@ -91,7 +92,7 @@ public final class TestResourcesCodec {
                 for (int i = 0; i < count; i++) {
                     map.put(input.readUTF(), readObject(input, nestedDepth));
                 }
-                yield Collections.unmodifiableMap(map);
+                yield (T) Collections.unmodifiableMap(map);
             }
         };
     }

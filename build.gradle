@@ -4,15 +4,6 @@ plugins {
 
 pluginManager.apply(io.micronaut.build.catalogs.MicronautVersionCatalogUpdatePlugin)
 
-subprojects {
-    plugins.withId("io.micronaut.build.internal.nullaway") {
-        micronautNullAway {
-            disableOnProjectNameContains.add(project.name)
-            disabledChecks.add("NullAway")
-        }
-    }
-}
-
 tasks.withType(io.micronaut.build.catalogs.tasks.VersionCatalogUpdate).configureEach {
     outputDirectory = file("gradle")
     failWhenNoVersionFound = false

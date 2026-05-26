@@ -147,7 +147,12 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             List<String> topicsToReverify = new java.util.ArrayList<String>();
             for (NewTopic topic : topicsToCreate) {
                 try {
-                    createTopicsResult.values().get(topic.name()).get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    var result = createTopicsResult.values().get(topic.name());
+                    if (result == null) {
+                        topicsToReverify.add(topic.name());
+                        continue;
+                    }
+                    result.get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 } catch (ExecutionException e) {
                     if (e.getCause() instanceof TopicExistsException) {
                         topicsToReverify.add(topic.name());

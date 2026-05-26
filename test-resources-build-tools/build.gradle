@@ -66,7 +66,7 @@ configurations {
 dependencies {
     implementation(platform(mn.micronaut.core.bom))
     implementation(mnLogging.slf4j.api)
-    compileOnly("org.jspecify:jspecify:1.0.0")
+    compileOnly(libs.jspecify)
     testImplementation(platform(mn.micronaut.core.bom))
     testImplementation(mn.micronaut.inject.groovy)
     testImplementation(mn.micronaut.http.server.netty)

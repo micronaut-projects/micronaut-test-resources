@@ -131,7 +131,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         Properties adminClientConfiguration = new Properties();
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
-            Set<String> existingTopics = listTopicNames(adminClient);
+            Set<String> existingTopics = listTopicNamesBeforeCreate(adminClient);
             verifyExistingTopicPartitions(adminClient, configuration.topics().stream()
                 .filter(existingTopics::contains)
                 .toList(), configuration);
@@ -169,6 +169,14 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
                 "Timed out after " + ADMIN_TIMEOUT_SECONDS + "s while provisioning Kafka topics " + topicProvisioningDetails(configuration),
                 e
             );
+        }
+    }
+
+    private static Set<String> listTopicNamesBeforeCreate(AdminClient adminClient) throws ExecutionException, InterruptedException {
+        try {
+            return listTopicNames(adminClient);
+        } catch (TimeoutException ignored) {
+            return Collections.emptySet();
         }
     }
 

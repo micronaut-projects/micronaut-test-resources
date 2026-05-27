@@ -19,6 +19,7 @@ import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import io.micronaut.testresources.testcontainers.TestContainers;
 import io.r2dbc.spi.ConnectionFactoryOptions;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
@@ -190,10 +191,10 @@ public abstract class AbstractR2DBCTestResourceProvider<T extends GenericContain
         return options;
     }
 
-    private String resolveFromConnectionOptions(String expression,
-                                                String propertyName,
-                                                ConnectionFactoryOptions options,
-                                                Map<String, Object> properties) {
+    private @Nullable String resolveFromConnectionOptions(String expression,
+                                                          String propertyName,
+                                                          ConnectionFactoryOptions options,
+                                                          Map<String, Object> properties) {
         String property = propertyName.substring(propertyName.lastIndexOf(".") + 1);
         switch (property) {
             case URL:

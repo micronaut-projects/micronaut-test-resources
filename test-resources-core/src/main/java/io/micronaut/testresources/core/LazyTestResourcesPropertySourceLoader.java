@@ -64,7 +64,8 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
     private final class LazyPropertySource implements PropertySource, Ordered {
         private final ResourceLoader resourceLoader;
 
-        private List<String> keys;
+        private List<String> keys = Collections.emptyList();
+        private boolean keysComputed;
 
         private LazyPropertySource(ResourceLoader resourceLoader) {
             this.resourceLoader = resourceLoader;
@@ -92,9 +93,8 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
         }
 
         private void computeKeys() {
-            if (keys == null) {
-                if (resourceLoader instanceof PropertyResolver) {
-                    PropertyResolver propertyResolver = (PropertyResolver) resourceLoader;
+            if (!keysComputed) {
+                if (resourceLoader instanceof PropertyResolver propertyResolver) {
                     Map<String, Collection<String>> entries = producer.getPropertyEntries()
                         .stream()
                         .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));
@@ -108,6 +108,7 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
                 } else {
                     keys = producer.produceKeys(resourceLoader, Collections.emptyMap(), Collections.emptyMap());
                 }
+                keysComputed = true;
             }
         }
 

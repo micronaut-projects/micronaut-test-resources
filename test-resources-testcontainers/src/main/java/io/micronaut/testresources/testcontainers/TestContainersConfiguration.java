@@ -16,6 +16,7 @@
 package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.context.annotation.EachProperty;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -27,30 +28,30 @@ import java.util.Set;
  * See {@link TestContainerMetadata} for the immutable version
  * which is used internally.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "NullAway"})
 @EachProperty("test-resources.containers")
 final class TestContainersConfiguration {
-    private String imageName;
-    private String imageTag;
-    private List<String> hostnames;
-    private Map<String, Integer> exposedPorts;
-    private Map<String, String> roFsBind;
-    private Map<String, String> rwFsBind;
-    private Set<String> roAnonymousVolumes;
-    private Set<String> rwAnonymousVolumes;
-    private List<String> command;
-    private String workingDirectory;
-    private Map<String, String> env;
-    private Map<String, String> labels;
-    private String startupTimeout;
-    private Map<String, String> copyToContainer;
-    private String memory;
-    private String swapMemory;
-    private String sharedMemory;
-    private String network;
-    private List<String> networkAliases;
-    private String networkMode;
-    private Set<String> dependencies;
+    private @Nullable String imageName;
+    private @Nullable String imageTag;
+    private @Nullable List<String> hostnames;
+    private @Nullable Map<String, Integer> exposedPorts;
+    private @Nullable Map<String, String> roFsBind;
+    private @Nullable Map<String, String> rwFsBind;
+    private @Nullable Set<String> roAnonymousVolumes;
+    private @Nullable Set<String> rwAnonymousVolumes;
+    private @Nullable List<String> command;
+    private @Nullable String workingDirectory;
+    private @Nullable Map<String, String> env;
+    private @Nullable Map<String, String> labels;
+    private @Nullable String startupTimeout;
+    private @Nullable Map<String, String> copyToContainer;
+    private @Nullable String memory;
+    private @Nullable String swapMemory;
+    private @Nullable String sharedMemory;
+    private @Nullable String network;
+    private @Nullable List<String> networkAliases;
+    private @Nullable String networkMode;
+    private @Nullable Set<String> dependencies;
 
     /**
      * Returns the name of the docker image to use for the test resources container.

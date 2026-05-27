@@ -17,6 +17,7 @@ package io.micronaut.testresources.testcontainers;
 
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.MountableFile;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -27,8 +28,8 @@ import java.util.Set;
 
 final class TestContainerMetadata {
     private final String id;
-    private final String imageName;
-    private final String imageTag;
+    private final @Nullable String imageName;
+    private final @Nullable String imageTag;
     private final Map<String, Integer> exposedPorts;
     private final Set<String> hostNames;
 
@@ -39,24 +40,24 @@ final class TestContainerMetadata {
     private final Set<String> rwTmpfsMappings;
     private final Set<String> roTmpfsMappings;
     private final List<String> command;
-    private final String workingDirectory;
+    private final @Nullable String workingDirectory;
     private final Map<String, String> env;
     private final Map<String, String> labels;
-    private final Duration startupTimeout;
+    private final @Nullable Duration startupTimeout;
     private final List<CopyFileToContainer> fileCopies;
-    private final Long memory;
-    private final Long swapMemory;
-    private final Long sharedMemory;
-    private final String network;
+    private final @Nullable Long memory;
+    private final @Nullable Long swapMemory;
+    private final @Nullable Long sharedMemory;
+    private final @Nullable String network;
     private final Set<String> networkAliases;
-    private final String networkMode;
-    private final WaitStrategy waitStrategy;
+    private final @Nullable String networkMode;
+    private final @Nullable WaitStrategy waitStrategy;
     private final Set<String> dependencies;
 
     @SuppressWarnings("checkstyle:ParameterNumber")
     TestContainerMetadata(String id,
-                          String imageName,
-                          String imageTag,
+                          @Nullable String imageName,
+                          @Nullable String imageTag,
                           Map<String, Integer> exposedPorts,
                           Set<String> hostNames,
                           Map<String, String> rwFsBinds,
@@ -66,18 +67,18 @@ final class TestContainerMetadata {
                           Set<String> rwTmpfsMappings,
                           Set<String> roTmpfsMappings,
                           List<String> command,
-                          String workingDirectory,
+                          @Nullable String workingDirectory,
                           Map<String, String> env,
                           Map<String, String> labels,
-                          Duration startupTimeout,
+                          @Nullable Duration startupTimeout,
                           List<CopyFileToContainer> fileCopies,
-                          Long memory,
-                          Long swapMemory,
-                          Long sharedMemory,
-                          String network,
+                          @Nullable Long memory,
+                          @Nullable Long swapMemory,
+                          @Nullable Long sharedMemory,
+                          @Nullable String network,
                           Set<String> networkAliases,
-                          String networkMode,
-                          WaitStrategy waitStrategy,
+                          @Nullable String networkMode,
+                          @Nullable WaitStrategy waitStrategy,
                           Set<String> dependencies) {
         this.id = id;
         this.imageName = imageName;

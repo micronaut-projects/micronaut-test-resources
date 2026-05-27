@@ -18,6 +18,7 @@ package io.micronaut.testresources.opentelemetry;
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
@@ -118,11 +119,11 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
         return hasConfiguredEndpoint(requestedProperties.get(OTLP_ENDPOINT)) || hasText(requestedProperties.get(OTLP_ENDPOINT_ENV));
     }
 
-    private static boolean hasConfiguredEndpoint(Object value) {
+    private static boolean hasConfiguredEndpoint(@Nullable Object value) {
         return hasText(value) && !OTLP_ENDPOINT_PLACEHOLDER.equals(String.valueOf(value).trim());
     }
 
-    private static boolean hasText(Object value) {
+    private static boolean hasText(@Nullable Object value) {
         return value != null && !String.valueOf(value).isBlank();
     }
 
@@ -140,7 +141,7 @@ public class OpenTelemetryTestResourceProvider extends AbstractTestContainersPro
         }
     }
 
-    private static String normalize(Object value, String defaultValue) {
+    private static String normalize(@Nullable Object value, String defaultValue) {
         if (value == null) {
             return defaultValue;
         }

@@ -17,6 +17,7 @@ package io.micronaut.testresources.testcontainers;
 
 import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.core.TestResourcesResolutionException;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.ContainerFetchException;
@@ -149,7 +150,11 @@ public final class TestContainers {
                 return container;
             }  catch (ContainerFetchException ex) {
                 // unwrap message for clearer error on the client side
-                var message = ex.getCause().getMessage();
+                Throwable cause = ex.getCause();
+                String message = cause == null ? ex.getMessage() : cause.getMessage();
+                if (message == null) {
+                    message = "Unable to fetch container image";
+                }
                 throw new TestResourcesResolutionException(message);
             }
         });
@@ -165,8 +170,11 @@ public final class TestContainers {
 
     private static void notifyEndOperation(Map<DockerImageName, AtomicInteger> operation, DockerImageName dockerImageName) {
         withMapLock("notifyEndOperation", () -> {
-            var remaining = operation.get(dockerImageName)
-                .decrementAndGet();
+            AtomicInteger counter = operation.get(dockerImageName);
+            if (counter == null) {
+                return null;
+            }
+            var remaining = counter.decrementAndGet();
             if (remaining == 0) {
                 operation.remove(dockerImageName);
             }
@@ -205,7 +213,7 @@ public final class TestContainers {
         return listByScope(Scope.ROOT);
     }
 
-    public static Map<Scope, List<GenericContainer<?>>> listByScope(String id) {
+    public static Map<Scope, List<GenericContainer<?>>> listByScope(@Nullable String id) {
         Scope scope = Scope.of(id);
         return listByScope(scope);
     }
@@ -265,7 +273,7 @@ public final class TestContainers {
         return Collections.unmodifiableMap(NETWORKS_BY_KEY);
     }
 
-    public static boolean closeScope(String id) {
+    public static boolean closeScope(@Nullable String id) {
         Scope scope = Scope.of(id);
         return withMapLock("closeScope", () -> {
             boolean closed = false;

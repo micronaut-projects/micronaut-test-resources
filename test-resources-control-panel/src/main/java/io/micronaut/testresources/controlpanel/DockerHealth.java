@@ -17,6 +17,7 @@ package io.micronaut.testresources.controlpanel;
 
 import com.github.dockerjava.api.model.Info;
 import io.micronaut.core.annotation.Introspected;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ import java.util.List;
 @Introspected
 public record DockerHealth(
     Status dockerStatus,
-    Info info,
+    @Nullable Info info,
     int runningContainers,
     List<TestResourcesContainer> managedContainers,
     List<String> startingContainers,

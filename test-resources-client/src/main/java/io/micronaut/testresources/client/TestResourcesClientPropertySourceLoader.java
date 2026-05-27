@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A property source loader which delegates resolution of properties to the client
@@ -42,7 +43,7 @@ public class TestResourcesClientPropertySourceLoader extends LazyTestResourcesPr
 
     private static final class ClientTestResourcesResolver implements PropertyExpressionProducer {
         private final ReentrantLock lock = new ReentrantLock();
-        private TestResourcesClient client;
+        private @Nullable TestResourcesClient client;
 
         @Override
         public List<String> getPropertyEntries() {

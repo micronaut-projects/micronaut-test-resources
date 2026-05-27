@@ -17,6 +17,7 @@ package io.micronaut.testresources.oauth2.keycloak;
 
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import org.jspecify.annotations.Nullable;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.Transferable;
@@ -129,7 +130,7 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
         );
     }
 
-    private static String stringOrDefault(Object value, String defaultValue) {
+    private static String stringOrDefault(@Nullable Object value, String defaultValue) {
         return value == null ? defaultValue : String.valueOf(value);
     }
 

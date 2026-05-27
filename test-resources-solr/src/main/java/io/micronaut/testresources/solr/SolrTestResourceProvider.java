@@ -17,6 +17,7 @@ package io.micronaut.testresources.solr;
 
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import org.jspecify.annotations.Nullable;
 import org.testcontainers.solr.SolrContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.utility.DockerImageName;
@@ -47,7 +48,7 @@ public class SolrTestResourceProvider extends AbstractTestContainersProvider<Sol
     private static final String SCHEMA_URL_PROPERTY = "solr.schema.url";
     private static final String ZOOKEEPER_ENABLED_PROPERTY = "solr.zookeeper.enabled";
 
-    private Map<String, Object> configuredProperties;
+    private @Nullable Map<String, Object> configuredProperties;
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
@@ -149,6 +150,6 @@ public class SolrTestResourceProvider extends AbstractTestContainersProvider<Sol
 
     @Override
     protected boolean shouldAnswer(String propertyName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return getResolvableProperties(null, null).contains(propertyName);
+        return getResolvableProperties(Map.of(), Map.of()).contains(propertyName);
     }
 }

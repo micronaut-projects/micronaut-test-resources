@@ -16,6 +16,7 @@ import java.util.Properties
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
+import java.util.concurrent.atomic.AtomicInteger
 
 abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
     private static final long ADMIN_TIMEOUT_SECONDS = 30
@@ -217,6 +218,38 @@ class KafkaInvalidTopicProvisioningConfigTest extends AbstractKafkaSpec {
         then:
         def e = thrown(IllegalArgumentException)
         e.message.contains("must be an integer")
+    }
+
+    def "retries Kafka metadata requests once after a timeout"() {
+        given:
+        def attempts = new AtomicInteger()
+
+        when:
+        def result = KafkaTestResourceProvider.retryMetadataRequest({
+            if (attempts.incrementAndGet() == 1) {
+                throw new TimeoutException("first")
+            }
+            "metadata"
+        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
+
+        then:
+        result == "metadata"
+        attempts.get() == 2
+    }
+
+    def "rethrows the last timeout when Kafka metadata retries are exhausted"() {
+        given:
+        def attempts = new AtomicInteger()
+
+        when:
+        KafkaTestResourceProvider.retryMetadataRequest({
+            throw new TimeoutException("timeout-${attempts.incrementAndGet()}")
+        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
+
+        then:
+        def e = thrown(TimeoutException)
+        e.message == "timeout-3"
+        attempts.get() == 3
     }
 }
 

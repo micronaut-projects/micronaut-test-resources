@@ -17,6 +17,7 @@ package io.micronaut.testresources.h2;
 
 import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.core.ToggableTestResourcesResolver;
+import org.jspecify.annotations.Nullable;
 import org.h2.engine.SysProperties;
 import org.h2.tools.Server;
 
@@ -170,7 +171,7 @@ public final class H2TestResourceProvider implements ToggableTestResourcesResolv
         return serverUri != null && !serverUri.isBlank();
     }
 
-    private static String stringOrNull(Object value) {
+    private static @Nullable String stringOrNull(@Nullable Object value) {
         if (value == null) {
             return null;
         }

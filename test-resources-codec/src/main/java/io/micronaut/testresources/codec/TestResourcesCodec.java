@@ -16,6 +16,7 @@
 package io.micronaut.testresources.codec;
 
 import io.micronaut.http.codec.CodecException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -41,13 +42,13 @@ public final class TestResourcesCodec {
     private TestResourcesCodec() {
     }
 
-    public static Object readValue(InputStream inputStream) throws IOException {
+    public static @Nullable Object readValue(InputStream inputStream) throws IOException {
         var input = new DataInputStream(inputStream);
         validateEnvelope(input);
         return readObject(input, 0);
     }
 
-    public static void writeValue(Object object, OutputStream outputStream) throws IOException {
+    public static void writeValue(@Nullable Object object, OutputStream outputStream) throws IOException {
         var output = new DataOutputStream(outputStream);
         output.writeInt(MAGIC);
         output.writeByte(VERSION);
@@ -67,7 +68,7 @@ public final class TestResourcesCodec {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> T readObject(DataInputStream input, int depth) throws IOException {
+    private static <T> @Nullable T readObject(DataInputStream input, int depth) throws IOException {
         var kind = SupportedType.of(input.readByte());
         return switch (kind) {
             case NULL -> null;
@@ -96,23 +97,23 @@ public final class TestResourcesCodec {
         };
     }
 
-    @SuppressWarnings("unchecked")
-    private static void writeObject(Object object, DataOutputStream output) throws IOException {
+    private static void writeObject(@Nullable Object object, DataOutputStream output) throws IOException {
         writeObject(object, output, 0);
     }
 
     @SuppressWarnings("unchecked")
-    private static void writeObject(Object object, DataOutputStream output, int depth) throws IOException {
+    private static void writeObject(@Nullable Object object, DataOutputStream output, int depth) throws IOException {
         if (object instanceof Result<?> result) {
             writeObject(result.value(), output, depth);
+            return;
+        }
+        if (object == null) {
+            output.writeByte(SupportedType.NULL.asByte());
             return;
         }
         var kind = SupportedType.kindOf(object);
         output.writeByte(kind.asByte());
         switch (kind) {
-            case NULL -> {
-                // NULL is fully represented by the type marker.
-            }
             case BOOLEAN -> output.writeBoolean((Boolean) object);
             case INTEGER -> output.writeInt((Integer) object);
             case LONG -> output.writeLong((Long) object);
@@ -164,9 +165,6 @@ public final class TestResourcesCodec {
         }
 
         static SupportedType kindOf(Object value) {
-            if (value == null) {
-                return NULL;
-            }
             if (value instanceof Boolean) {
                 return BOOLEAN;
             }
@@ -189,7 +187,7 @@ public final class TestResourcesCodec {
         }
     }
 
-    private static String typeName(Object value) {
+    private static String typeName(@Nullable Object value) {
         return value == null ? "null" : value.getClass().getName();
     }
 

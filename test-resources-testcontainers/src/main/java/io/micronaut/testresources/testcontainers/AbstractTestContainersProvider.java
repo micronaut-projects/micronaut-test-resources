@@ -20,6 +20,7 @@ import io.micronaut.testresources.core.ToggableTestResourcesResolver;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -263,7 +264,7 @@ public abstract class AbstractTestContainersProvider<T extends GenericContainer<
         }
     }
 
-    protected final String stringOrNull(Object value) {
+    protected final @Nullable String stringOrNull(@Nullable Object value) {
         if (value == null) {
             return null;
         }

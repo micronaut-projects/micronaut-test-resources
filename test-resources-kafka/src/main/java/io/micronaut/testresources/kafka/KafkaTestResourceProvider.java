@@ -56,7 +56,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String DISPLAY_NAME = "Kafka";
     public static final String SIMPLE_NAME = "kafka";
     private static final long ADMIN_TIMEOUT_SECONDS = 30;
-    private static final int ADMIN_ATTEMPTS = 3;
+    private static final int ADMIN_METADATA_ATTEMPTS = 3;
     private static final TopicProvisioningConfiguration NO_TOPICS =
         new TopicProvisioningConfiguration(Collections.emptyList(), DEFAULT_PARTITIONS);
 
@@ -147,7 +147,12 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             List<String> topicsToReverify = new java.util.ArrayList<String>();
             for (NewTopic topic : topicsToCreate) {
                 try {
-                    createTopicsResult.values().get(topic.name()).get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    var result = createTopicsResult.values().get(topic.name());
+                    if (result == null) {
+                        topicsToReverify.add(topic.name());
+                        continue;
+                    }
+                    result.get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 } catch (ExecutionException e) {
                     if (e.getCause() instanceof TopicExistsException) {
                         topicsToReverify.add(topic.name());
@@ -181,15 +186,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     static Set<String> listTopicNames(AdminClient adminClient) throws ExecutionException, InterruptedException, TimeoutException {
-        TimeoutException timeout = null;
-        for (int attempt = 0; attempt < ADMIN_ATTEMPTS; attempt++) {
-            try {
-                return adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            } catch (TimeoutException e) {
-                timeout = e;
-            }
-        }
-        throw timeout;
+        return retryMetadataRequest(() -> adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
     }
 
     protected void beforeCreateTopics(KafkaContainer container,
@@ -210,15 +207,22 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     static Map<String, TopicDescription> describeTopics(AdminClient adminClient,
                                                         List<String> topicNames) throws ExecutionException, InterruptedException, TimeoutException {
-        TimeoutException timeout = null;
-        for (int attempt = 0; attempt < ADMIN_ATTEMPTS; attempt++) {
+        return retryMetadataRequest(() -> adminClient.describeTopics(topicNames)
+            .allTopicNames()
+            .get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
+    }
+
+    static <T> T retryMetadataRequest(AdminMetadataRequest<T> request)
+        throws ExecutionException, InterruptedException, TimeoutException {
+        TimeoutException lastTimeout = new TimeoutException();
+        for (int attempt = 0; attempt < ADMIN_METADATA_ATTEMPTS; attempt++) {
             try {
-                return adminClient.describeTopics(topicNames).allTopicNames().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                return request.execute();
             } catch (TimeoutException e) {
-                timeout = e;
+                lastTimeout = e;
             }
         }
-        throw timeout;
+        throw lastTimeout;
     }
 
     private static void verifyExistingTopicPartitions(Map<String, TopicDescription> existingTopicDescriptions,
@@ -295,5 +299,10 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     }
 
     protected record TopicProvisioningConfiguration(List<String> topics, int partitions) {
+    }
+
+    @FunctionalInterface
+    interface AdminMetadataRequest<T> {
+        T execute() throws ExecutionException, InterruptedException, TimeoutException;
     }
 }

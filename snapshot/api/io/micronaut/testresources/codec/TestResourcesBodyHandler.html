@@ -127,15 +127,15 @@ implements io.micronaut.http.body.MessageBodyHandler&lt;T&gt;</span></div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isReadable(io.micronaut.core.type.Argument,io.micronaut.http.MediaType)" class="member-name-link">isReadable</a><wbr>(io.micronaut.core.type.Argument&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;&nbsp;type,
- io.micronaut.http.MediaType&nbsp;mediaType)</code></div>
+ @Nullable io.micronaut.http.MediaType&nbsp;mediaType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isWriteable(io.micronaut.core.type.Argument,io.micronaut.http.MediaType)" class="member-name-link">isWriteable</a><wbr>(io.micronaut.core.type.Argument&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;&nbsp;type,
- io.micronaut.http.MediaType&nbsp;mediaType)</code></div>
+ @Nullable io.micronaut.http.MediaType&nbsp;mediaType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#read(io.micronaut.core.type.Argument,io.micronaut.http.MediaType,io.micronaut.core.type.Headers,java.io.InputStream)" class="member-name-link">read</a><wbr>(io.micronaut.core.type.Argument&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;&nbsp;type,
- io.micronaut.http.MediaType&nbsp;mediaType,
+ @Nullable io.micronaut.http.MediaType&nbsp;mediaType,
  io.micronaut.core.type.Headers&nbsp;httpHeaders,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -190,7 +190,7 @@ implements io.micronaut.http.body.MessageBodyHandler&lt;T&gt;</span></div>
 <h3>isReadable</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isReadable</span><wbr><span class="parameters">(io.micronaut.core.type.Argument&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;&nbsp;type,
- io.micronaut.http.MediaType&nbsp;mediaType)</span></div>
+ @Nullable io.micronaut.http.MediaType&nbsp;mediaType)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>isReadable</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.body.MessageBodyReader&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;</code></dd>
@@ -203,7 +203,7 @@ implements io.micronaut.http.body.MessageBodyHandler&lt;T&gt;</span></div>
 <h3>isWriteable</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isWriteable</span><wbr><span class="parameters">(io.micronaut.core.type.Argument&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;&nbsp;type,
- io.micronaut.http.MediaType&nbsp;mediaType)</span></div>
+ @Nullable io.micronaut.http.MediaType&nbsp;mediaType)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>isWriteable</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.body.MessageBodyWriter&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;</code></dd>
@@ -215,11 +215,11 @@ implements io.micronaut.http.body.MessageBodyHandler&lt;T&gt;</span></div>
 <section class="detail" id="read(io.micronaut.core.type.Argument,io.micronaut.http.MediaType,io.micronaut.core.type.Headers,java.io.InputStream)">
 <h3>read</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a></span>&nbsp;<span class="element-name">read</span><wbr><span class="parameters">(io.micronaut.core.type.Argument&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;&nbsp;type,
- io.micronaut.http.MediaType&nbsp;mediaType,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a></span>&nbsp;<span class="element-name">read</span><wbr><span class="parameters">(io.micronaut.core.type.Argument&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;&nbsp;type,
+ @Nullable io.micronaut.http.MediaType&nbsp;mediaType,
  io.micronaut.core.type.Headers&nbsp;httpHeaders,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream)</span>
-       throws <span class="exceptions">io.micronaut.http.codec.CodecException</span></div>
+                 throws <span class="exceptions">io.micronaut.http.codec.CodecException</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>read</code>&nbsp;in interface&nbsp;<code>io.micronaut.http.body.MessageBodyReader&lt;<a href="#type-param-T" title="type parameter in TestResourcesBodyHandler">T</a>&gt;</code></dd>

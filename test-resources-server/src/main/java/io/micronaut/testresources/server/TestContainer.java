@@ -30,7 +30,7 @@ public final class TestContainer {
     private final String imageName;
     private final String id;
 
-    private final String scope;
+    private final @Nullable String scope;
 
     public TestContainer(String name, String imageName, String id, @Nullable String scope) {
         this.name = name;

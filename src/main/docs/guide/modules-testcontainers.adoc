@@ -212,6 +212,8 @@ The following wait strategies are supported:
 - `port` strategy
 - `healthcheck`: Docker healthcheck strategy
 
+When combining optionless strategies, such as `port` or `healthcheck`, with other wait strategies in a nested configuration block, set the optionless strategy key to a scalar value such as `true` so the key is preserved.
+
 Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):
 
 [configuration]
@@ -221,7 +223,7 @@ test-resources:
     mycontainer:
         image-name: my/container
         wait-strategy:
-            port: {}
+            port: true
             log:
                 regex: ".*Started.*"
 ----
@@ -235,7 +237,7 @@ test-resources:
     mycontainer:
         image-name: my/container
         wait-strategy:
-            port: {}
+            port: true
             log:
                 regex: ".*Started.*"
             all:

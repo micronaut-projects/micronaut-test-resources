@@ -19,6 +19,7 @@ import io.micronaut.test.extensions.testresources.annotation.TestResourcesProper
 import io.micronaut.test.support.TestPropertyProvider;
 import io.micronaut.test.support.TestPropertyProviderFactory;
 import io.micronaut.testresources.client.TestResourcesClientFactory;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -82,14 +83,14 @@ public class TestResourcesPropertiesFactory implements TestPropertyProviderFacto
             Map<String, String> resolvedProperties = Stream.of(requestedProperties)
                 .map(v -> new Object() {
                     private final String key = v;
-                    private final String value = resolveProperty();
+                    private final @Nullable String value = resolveProperty();
 
-                    private String resolveProperty() {
+                    private @Nullable String resolveProperty() {
                         var props = client.getRequiredProperties(v)
                             .stream()
                             .map(e -> new Object() {
                                 private final String key = e;
-                                private final Object value = properties.get(e);
+                                private final @Nullable Object value = properties.get(e);
                             })
                             .filter(o -> o.value != null)
                             .collect(Collectors.toMap(e -> e.key, e -> e.value));

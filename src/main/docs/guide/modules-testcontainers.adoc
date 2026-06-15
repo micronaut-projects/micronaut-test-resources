@@ -214,28 +214,32 @@ The following wait strategies are supported:
 
 Multiple strategies can be configured, in which case they are all applied (waits until all conditions are met):
 
-[source,yaml]
+[configuration]
 ----
 test-resources:
   containers:
     mycontainer:
         image-name: my/container
         wait-strategy:
-            port:
+            http:
+                path: /
+                port: 8080
             log:
                 regex: ".*Started.*"
 ----
 
 It is possible to configure the `all` strategy itself:
 
-[source,yaml]
+[configuration]
 ----
 test-resources:
   containers:
     mycontainer:
         image-name: my/container
         wait-strategy:
-            port:
+            http:
+                path: /
+                port: 8080
             log:
                 regex: ".*Started.*"
             all:

@@ -4233,7 +4233,7 @@ The <code>network-aliases</code> can be used to assign host names to the contain
 <p>Micronaut Test Resources uses the underlying container&#8217;s default <a href="https://www.testcontainers.org/features/startup_and_waits/">Testcontainers wait strategies</a> unless you configure <code>test-resources.containers.&lt;name&gt;.wait-strategy&#8230;&#8203;</code> or a provider documents a more specific default.</p>
 </div>
 <div class="paragraph">
-<p>It is however possible to override the default by configuration.</p>
+<p>It is possible to override the default by configuration.</p>
 </div>
 <div class="openblock">
 <div class="content">
@@ -4326,16 +4326,21 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 <ul>
 <li>
 <p><code>log</code> strategy with the following properties:</p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p><code>regex</code>: the regular expression to match</p>
 </li>
 <li>
 <p><code>times</code>: the number of times the regex should be matched</p>
 </li>
+</ul>
+</div>
+</li>
 <li>
 <p><code>http</code> strategy with the following properties:</p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p><code>path</code>: the path to check</p>
 </li>
@@ -4347,6 +4352,9 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 </li>
 <li>
 <p><code>status-code</code>: the list of expected status codes</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p><code>port</code> strategy</p>
@@ -4364,7 +4372,8 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
-test-resources.containers.mycontainer.wait-strategy.port=null
+test-resources.containers.mycontainer.wait-strategy.http.path=/
+test-resources.containers.mycontainer.wait-strategy.http.port=8080
 test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code></pre>
 </div>
 </div>
@@ -4375,7 +4384,9 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
     mycontainer:
         image-name: my/container
         wait-strategy:
-            port:
+            http:
+                path: /
+                port: 8080
             log:
                 regex: ".*Started.*"</code></pre>
 </div>
@@ -4387,6 +4398,9 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
     [test-resources.containers.mycontainer]
       image-name="my/container"
       [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.http]
+          path="/"
+          port=8080
         [test-resources.containers.mycontainer.wait-strategy.log]
           regex=".*Started.*"</code></pre>
 </div>
@@ -4398,7 +4412,10 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
     mycontainer {
       imageName = "my/container"
       waitStrategy {
-        port = null
+        http {
+          path = "/"
+          port = 8080
+        }
         log {
           regex = ".*Started.*"
         }
@@ -4416,7 +4433,10 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
       mycontainer {
         image-name = "my/container"
         wait-strategy {
-          port = null
+          http {
+            path = "/"
+            port = 8080
+          }
           log {
             regex = ".*Started.*"
           }
@@ -4435,7 +4455,10 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
       "mycontainer": {
         "image-name": "my/container",
         "wait-strategy": {
-          "port": null,
+          "http": {
+            "path": "/",
+            "port": 8080
+          },
           "log": {
             "regex": ".*Started.*"
           }
@@ -4456,7 +4479,8 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">test-resources.containers.mycontainer.image-name=my/container
-test-resources.containers.mycontainer.wait-strategy.port=null
+test-resources.containers.mycontainer.wait-strategy.http.path=/
+test-resources.containers.mycontainer.wait-strategy.http.port=8080
 test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*
 test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre>
 </div>
@@ -4468,7 +4492,9 @@ test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre
     mycontainer:
         image-name: my/container
         wait-strategy:
-            port:
+            http:
+                path: /
+                port: 8080
             log:
                 regex: ".*Started.*"
             all:
@@ -4482,6 +4508,9 @@ test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre
     [test-resources.containers.mycontainer]
       image-name="my/container"
       [test-resources.containers.mycontainer.wait-strategy]
+        [test-resources.containers.mycontainer.wait-strategy.http]
+          path="/"
+          port=8080
         [test-resources.containers.mycontainer.wait-strategy.log]
           regex=".*Started.*"
         [test-resources.containers.mycontainer.wait-strategy.all]
@@ -4495,7 +4524,10 @@ test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre
     mycontainer {
       imageName = "my/container"
       waitStrategy {
-        port = null
+        http {
+          path = "/"
+          port = 8080
+        }
         log {
           regex = ".*Started.*"
         }
@@ -4516,7 +4548,10 @@ test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre
       mycontainer {
         image-name = "my/container"
         wait-strategy {
-          port = null
+          http {
+            path = "/"
+            port = 8080
+          }
           log {
             regex = ".*Started.*"
           }
@@ -4538,7 +4573,10 @@ test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre
       "mycontainer": {
         "image-name": "my/container",
         "wait-strategy": {
-          "port": null,
+          "http": {
+            "path": "/",
+            "port": 8080
+          },
           "log": {
             "regex": ".*Started.*"
           },

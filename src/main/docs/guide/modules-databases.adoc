@@ -11,6 +11,7 @@ Micronaut Test Resources provides support for the following databases:
 | https://www.mysql.com/[MySQL] | Yes | Yes | `mysql` | `{default-image-mysql-community}`
 | https://www.oracle.com/database/free/[Oracle Database Free] | Yes | Yes | `oracle` | `{default-image-oracle-free}`
 | https://www.oracle.com/database/technologies/appdev/xe.html[Oracle Database XE] | Yes | Yes | `oracle-xe` | `{default-image-oracle-xe}`
+| Oracle Test Pilot for Third-Party Software | Yes | No | `oracle-test-pilot` | n/a
 | https://www.postgresql.org/[PostgreSQL] | Yes | Yes | `postgres` | `{default-image-postgres}`
 | https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | `mssql` | `{default-image-mssql}`
 

@@ -2,6 +2,7 @@ io.micronaut.test.extensions.junit5
 io.micronaut.test.extensions.junit5.annotation
 io.micronaut.test.extensions.testresources
 io.micronaut.test.extensions.testresources.annotation
+io.micronaut.testresources.aws
 io.micronaut.testresources.azure
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
@@ -11,6 +12,11 @@ io.micronaut.testresources.controlpanel
 io.micronaut.testresources.core
 io.micronaut.testresources.couchbase
 io.micronaut.testresources.embedded
+io.micronaut.testresources.floci
+io.micronaut.testresources.floci.dynamodb
+io.micronaut.testresources.floci.s3
+io.micronaut.testresources.floci.sns
+io.micronaut.testresources.floci.sqs
 io.micronaut.testresources.h2
 io.micronaut.testresources.hashicorp.vault
 io.micronaut.testresources.hazelcast

@@ -17,6 +17,7 @@ package io.micronaut.testresources.mysql;
 
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.jdbc.AbstractJdbcTestResourceProvider;
+import org.jspecify.annotations.Nullable;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.mysql.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -104,10 +105,10 @@ public class MySQLTestResourceProvider extends AbstractJdbcTestResourceProvider<
     }
 
     @Override
-    protected String resolveDbSpecificProperty(String propertyName,
-                                               JdbcDatabaseContainer<?> container,
-                                               Map<String, Object> properties,
-                                               Map<String, Object> testResourcesConfig) {
+    protected @Nullable String resolveDbSpecificProperty(String propertyName,
+                                                         JdbcDatabaseContainer<?> container,
+                                                         Map<String, Object> properties,
+                                                         Map<String, Object> testResourcesConfig) {
         if (X_PROTOCOL_URL.equals(propertyName.substring(propertyName.lastIndexOf(".") + 1))) {
             String username = container.getUsername();
             String password = container.getPassword();

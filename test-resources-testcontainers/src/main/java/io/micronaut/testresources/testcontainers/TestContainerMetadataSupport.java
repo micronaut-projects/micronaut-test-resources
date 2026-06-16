@@ -81,8 +81,8 @@ final class TestContainerMetadataSupport {
 
     static Optional<TestContainerMetadata> convertToMetadata(Map<String, Object> testResourcesConfig, String name) {
         String prefix = TEST_RESOURCES_CONTAINERS + name + ".";
-        String imageName = extractStringParameterFrom(prefix, "image-name", testResourcesConfig);
-        String imageTag = extractStringParameterFrom(prefix, "image-tag", testResourcesConfig);
+        @Nullable String imageName = extractStringParameterFrom(prefix, "image-name", testResourcesConfig);
+        @Nullable String imageTag = extractStringParameterFrom(prefix, "image-tag", testResourcesConfig);
         Map<String, Integer> exposedPorts = extractExposedPortsFrom(prefix, testResourcesConfig);
         Set<String> hostNames = extractHostsFrom(prefix, testResourcesConfig);
         Map<String, String> rwFsBinds = extractFsBindsFrom(prefix, testResourcesConfig, false);
@@ -94,22 +94,23 @@ final class TestContainerMetadataSupport {
         Map<String, String> env = extractMapFrom(prefix, "env", testResourcesConfig);
         Map<String, String> labels = extractMapFrom(prefix, "labels", testResourcesConfig);
         List<String> command = extractListFrom(prefix, testResourcesConfig, "command");
-        String workingDirectory = extractStringParameterFrom(prefix, "working-directory", testResourcesConfig);
-        Duration startupTimeout = CONVERSION_SERVICE.convert(extractStringParameterFrom(prefix, "startup-timeout", testResourcesConfig), Duration.class).orElse(null);
+        @Nullable String workingDirectory = extractStringParameterFrom(prefix, "working-directory", testResourcesConfig);
+        @Nullable Duration startupTimeout = CONVERSION_SERVICE.convert(extractStringParameterFrom(prefix, "startup-timeout", testResourcesConfig), Duration.class).orElse(null);
         List<TestContainerMetadata.CopyFileToContainer> fileCopies = extractFileCopiesFrom(prefix, testResourcesConfig);
-        Long memory = extractMemoryParameterFrom(prefix, testResourcesConfig, "memory");
-        Long swapMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "swap-memory");
-        Long sharedMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "shared-memory");
-        String network = extractStringParameterFrom(prefix, "network", testResourcesConfig);
+        @Nullable Long memory = extractMemoryParameterFrom(prefix, testResourcesConfig, "memory");
+        @Nullable Long swapMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "swap-memory");
+        @Nullable Long sharedMemory = extractMemoryParameterFrom(prefix, testResourcesConfig, "shared-memory");
+        @Nullable String network = extractStringParameterFrom(prefix, "network", testResourcesConfig);
         Set<String> networkAliases = extractSetFrom(prefix, testResourcesConfig, "network-aliases");
-        String networkMode = extractStringParameterFrom(prefix, "network-mode", testResourcesConfig);
+        @Nullable String networkMode = extractStringParameterFrom(prefix, "network-mode", testResourcesConfig);
         Set<String> dependsOn = extractSetFrom(prefix, testResourcesConfig, "depends-on");
-        WaitStrategy waitStrategy = extractWaitStrategyFrom(prefix, testResourcesConfig);
+        @Nullable WaitStrategy waitStrategy = extractWaitStrategyFrom(prefix, testResourcesConfig);
         return Optional.of(new TestContainerMetadata(name, imageName, imageTag, exposedPorts, hostNames, rwFsBinds, roFsBinds, rwAnonymousVolumes, roAnonymousVolumes, rwTmpfsMappings, roTmpfsMappings, command, workingDirectory, env, labels, startupTimeout, fileCopies, memory, swapMemory, sharedMemory, network, networkAliases, networkMode, waitStrategy, dependsOn));
     }
 
+    @Nullable
     private static Long extractMemoryParameterFrom(String prefix, Map<String, Object> testResourcesConfig, String key) {
-        String asString = extractStringParameterFrom(prefix, key, testResourcesConfig);
+        @Nullable String asString = extractStringParameterFrom(prefix, key, testResourcesConfig);
         if (asString != null) {
             return MemoryUnitParser.parse(asString);
         }
@@ -154,12 +155,14 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptyMap());
     }
 
+    @Nullable
     private static String extractStringParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfig) {
         return Optional.ofNullable(testResourcesConfig.get(prefix + key))
             .map(String::valueOf)
             .orElse(null);
     }
 
+    @Nullable
     private static Integer extractIntParameterFrom(String prefix, String key, Map<String, Object> testResourcesConfig) {
         return Optional.ofNullable(testResourcesConfig.get(prefix + key))
             .map(Integer.class::cast)
@@ -265,6 +268,7 @@ final class TestContainerMetadataSupport {
             .orElse(Collections.emptyMap());
     }
 
+    @Nullable
     private static WaitStrategy extractWaitStrategyFrom(String prefix, Map<String, Object> testResourcesConfig) {
         String waitStrategyPrefix = prefix + "wait-strategy.";
         List<WaitStrategy> strategies = new ArrayList<>();
@@ -321,16 +325,18 @@ final class TestContainerMetadataSupport {
 
     private static WaitStrategy parseAllStrategy(String prefix, Map<String, Object> testResourcesConfig) {
         assertAllowedKeys(prefix, testResourcesConfig, "mode", "timeout");
-        String modeStr = extractStringParameterFrom(prefix, "mode", testResourcesConfig);
+        @Nullable String modeStr = extractStringParameterFrom(prefix, "mode", testResourcesConfig);
         WaitAllStrategy.Mode mode = WaitAllStrategy.Mode.WITH_OUTER_TIMEOUT;
         if (modeStr != null) {
             mode = WaitAllStrategy.Mode.valueOf(modeStr.toUpperCase(Locale.US));
         }
         WaitAllStrategy waitAllStrategy = new WaitAllStrategy(mode);
-        String timeoutStr = extractStringParameterFrom(prefix, "timeout", testResourcesConfig);
+        @Nullable String timeoutStr = extractStringParameterFrom(prefix, "timeout", testResourcesConfig);
         if (timeoutStr != null) {
-            Duration startupTimeout = CONVERSION_SERVICE.convert(timeoutStr, Duration.class).orElse(null);
-            waitAllStrategy = waitAllStrategy.withStartupTimeout(startupTimeout);
+            Optional<Duration> startupTimeout = CONVERSION_SERVICE.convert(timeoutStr, Duration.class);
+            if (startupTimeout.isPresent()) {
+                waitAllStrategy = waitAllStrategy.withStartupTimeout(startupTimeout.get());
+            }
         }
         return waitAllStrategy;
     }

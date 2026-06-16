@@ -4,7 +4,10 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.micronaut.testresources.jdbc.AbstractJDBCSpec
 import io.micronaut.testresources.jdbc.Book
 import jakarta.inject.Inject
+import spock.lang.IgnoreIf
 
+// r2dbc-mssql 1.0.4 fails TLS certificate hostname validation during login on Java 25.
+@IgnoreIf({ System.getProperty("java.specification.version").toBigDecimal() >= 25 })
 @MicronautTest(environments = ["standalone"], transactional = false )
 class StandaloneStartMSSQLTest extends AbstractJDBCSpec {
     @Inject

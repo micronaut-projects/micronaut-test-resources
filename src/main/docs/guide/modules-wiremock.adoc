@@ -44,7 +44,7 @@ test-resources:
 ----
 
 The same metadata can also copy files from host paths.
-See <<modules-testcontainers,Generic Testcontainers support>> for the full list of container metadata options.
+See xref:modules.adoc#modules-testcontainers[Generic Testcontainers support] for the full list of container metadata options.
 
 Resolved properties:
 

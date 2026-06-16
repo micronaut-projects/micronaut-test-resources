@@ -1,8 +1,8 @@
-Consul support will automatically start a https://www.consul.io/[Hashicorp Consul container] and provide the values of the `consul.client.host`, `consul.client.port`, and `consul.client.default-zone` properties.
+Consul support will automatically start a https://www.consul.io/[HashiCorp Consul container] and provide the values of the `consul.client.host`, `consul.client.port`, and `consul.client.default-zone` properties.
 
 The default image (`{default-image-consul}`) can be overwritten by setting the `test-resources.containers.hashicorp-consul.image-name` property.
 
-Key/value pairs can be inserted into Hashicorp Consul at startup with the `test-resources.containers.hashicorp-consul.kv-properties` property:
+Key/value pairs can be inserted into HashiCorp Consul at startup with the `test-resources.containers.hashicorp-consul.kv-properties` property:
 
 [configuration]
 ----

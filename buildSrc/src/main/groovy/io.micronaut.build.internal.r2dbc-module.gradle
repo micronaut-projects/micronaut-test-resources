@@ -7,5 +7,7 @@ dependencies {
     api(project(':micronaut-test-resources-r2dbc-core'))
     testImplementation(mnData.micronaut.data.r2dbc)
     testImplementation(mnData.micronaut.data.processor)
-    testImplementation(testFixtures(project(":micronaut-test-resources-jdbc-core")))
+    testImplementation(testFixtures(project(":micronaut-test-resources-jdbc-core"))) {
+        exclude group: "io.micronaut.data", module: "micronaut-data-jdbc"
+    }
 }

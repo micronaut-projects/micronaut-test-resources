@@ -15,7 +15,10 @@
  */
 package io.micronaut.testresources.core;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A scope represents the lifecycle of a test resource.
@@ -37,10 +40,10 @@ public final class Scope {
      */
     public static final String PROPERTY_KEY = "micronaut.test.resources.scope";
 
-    private final String id;
-    private final Scope parent;
+    private final @Nullable String id;
+    private final @Nullable Scope parent;
 
-    private Scope(Scope parent, String id) {
+    private Scope(@Nullable Scope parent, @Nullable String id) {
         this.id = id;
         this.parent = parent;
     }
@@ -81,10 +84,7 @@ public final class Scope {
 
         Scope scope = (Scope) o;
 
-        if (id != null ? !id.equals(scope.id) : scope.id != null) {
-            return false;
-        }
-        return parent != null ? parent.equals(scope.parent) : scope.parent == null;
+        return Objects.equals(id, scope.id) && Objects.equals(parent, scope.parent);
     }
 
     @Override
@@ -94,6 +94,7 @@ public final class Scope {
         return result;
     }
 
+    @Override
     public String toString() {
         if (id == null || parent == null) {
             return "";
@@ -126,7 +127,7 @@ public final class Scope {
      * @param id the scope id
      * @return the scope
      */
-    public static Scope of(String id) {
+    public static Scope of(@Nullable String id) {
         if (id == null || id.isEmpty()) {
             return ROOT;
         }

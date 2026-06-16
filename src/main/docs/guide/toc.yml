@@ -57,9 +57,9 @@ modules:
   modules-oauth2:
     title: OAuth2 / Keycloak
   modules-hashicorp-vault:
-    title: Hashicorp Vault
+    title: HashiCorp Vault
   modules-hashicorp-consul:
-    title: Hashicorp Consul
+    title: HashiCorp Consul
   modules-solr:
     title: Solr
   modules-testcontainers:

@@ -17,6 +17,7 @@ package io.micronaut.testresources.jdbc;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
 import io.micronaut.testresources.testcontainers.TestContainers;
+import org.jspecify.annotations.Nullable;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
 import java.util.Collection;
@@ -157,7 +158,7 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
      * @param container the started container
      * @return the resolved property, or null if not resolvable
      */
-    protected String resolveDbSpecificProperty(String propertyName, JdbcDatabaseContainer<?> container) {
+    protected @Nullable String resolveDbSpecificProperty(String propertyName, JdbcDatabaseContainer<?> container) {
         return null;
     }
 
@@ -172,10 +173,10 @@ public abstract class AbstractJdbcTestResourceProvider<T extends JdbcDatabaseCon
      * @param testResourcesConfig the test resources configuration
      * @return the resolved property, or {@code null} if not resolvable
      */
-    protected String resolveDbSpecificProperty(String propertyName,
-                                               JdbcDatabaseContainer<?> container,
-                                               Map<String, Object> properties,
-                                               Map<String, Object> testResourcesConfig) {
+    protected @Nullable String resolveDbSpecificProperty(String propertyName,
+                                                         JdbcDatabaseContainer<?> container,
+                                                         Map<String, Object> properties,
+                                                         Map<String, Object> testResourcesConfig) {
         return resolveDbSpecificProperty(propertyName, container);
     }
 

@@ -89,9 +89,9 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
                 var sb = new StringBuilder();
                 sb.append(errorMessage.get()).append(":");
                 var message = ex.getMessage();
-                if (message.contains("\n")) {
+                if (message != null && message.contains("\n")) {
                     sb.append("  ").append(message);
-                } else {
+                } else if (message != null) {
                     sb.append(" ").append(message);
                 }
                 throw new TestResourcesException(sb.toString());

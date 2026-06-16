@@ -18,9 +18,9 @@ package io.micronaut.testresources.client;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.codec.CodecException;
-import org.jspecify.annotations.Nullable;
 import io.micronaut.testresources.codec.TestResourcesCodec;
 import io.micronaut.testresources.codec.TestResourcesMediaType;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -68,16 +69,16 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
     private final String baseUri;
     private final HttpClient client;
 
-    private final String accessToken;
+    private final @Nullable String accessToken;
     private final Duration clientTimeout;
     private final IntellijIdeaDatasourceExporter intellijIdeaDatasourceExporter;
 
-    public DefaultTestResourcesClient(String baseUri, String accessToken, int clientReadTimeout) {
+    public DefaultTestResourcesClient(String baseUri, @Nullable String accessToken, int clientReadTimeout) {
         this(baseUri, accessToken, clientReadTimeout, new IntellijIdeaDatasourceExporter());
     }
 
     DefaultTestResourcesClient(String baseUri,
-                               String accessToken,
+                               @Nullable String accessToken,
                                int clientReadTimeout,
                                IntellijIdeaDatasourceExporter intellijIdeaDatasourceExporter) {
         this.baseUri = baseUri;
@@ -95,9 +96,9 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         Map<String, Object> properties = new HashMap<>();
         properties.put("propertyEntries", propertyEntries);
         properties.put("testResourcesConfig", testResourcesConfig);
-        return request(RESOLVABLE_PROPERTIES_URI, LIST_OF_STRING,
+        return Objects.requireNonNull(request(RESOLVABLE_PROPERTIES_URI, LIST_OF_STRING,
             r -> POST(r, properties)
-        );
+        ));
     }
 
     @Override
@@ -121,22 +122,22 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
 
     @Override
     public List<String> getRequiredProperties(String expression) {
-        return request(REQUIRED_PROPERTIES_URI + "/" + expression, LIST_OF_STRING, this::GET);
+        return Objects.requireNonNull(request(REQUIRED_PROPERTIES_URI + "/" + expression, LIST_OF_STRING, this::GET));
     }
 
     @Override
     public List<String> getRequiredPropertyEntries() {
-        return request(REQUIRED_PROPERTY_ENTRIES_URI, LIST_OF_STRING, this::GET);
+        return Objects.requireNonNull(request(REQUIRED_PROPERTY_ENTRIES_URI, LIST_OF_STRING, this::GET));
     }
 
     @Override
     public boolean closeAll() {
-        return request(CLOSE_ALL_URI, BOOLEAN, this::GET);
+        return Objects.requireNonNull(request(CLOSE_ALL_URI, BOOLEAN, this::GET));
     }
 
     @Override
     public boolean closeScope(@Nullable String id) {
-        return request(CLOSE_URI + "/" + id, BOOLEAN, this::GET);
+        return Objects.requireNonNull(request(CLOSE_URI + "/" + id, BOOLEAN, this::GET));
     }
 
     void clearIntellijIdeaDatasourceExport(String exporterSessionId) {
@@ -153,8 +154,8 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         request.GET();
     }
 
-    private <T> T request(String path, Argument<T> type,
-                          Consumer<? super HttpRequest.Builder> config) {
+    private <T> @Nullable T request(String path, Argument<T> type,
+                                    Consumer<? super HttpRequest.Builder> config) {
         var request = HttpRequest.newBuilder()
             .uri(uri(path))
             .timeout(clientTimeout);
@@ -188,8 +189,8 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T decodeResponse(byte[] body, Argument<T> type) throws IOException {
-        Object value = readValue(body);
+    private <T> @Nullable T decodeResponse(byte[] body, Argument<T> type) throws IOException {
+        @Nullable Object value = readValue(body);
         if (value == null) {
             return null;
         }
@@ -199,14 +200,14 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         return (T) value;
     }
 
-    private Object readValue(byte[] body) throws IOException {
+    private @Nullable Object readValue(byte[] body) throws IOException {
         if (body.length == 0) {
             return null;
         }
         return TestResourcesCodec.readValue(new ByteArrayInputStream(body));
     }
 
-    private Object readErrorValue(byte[] body) throws IOException {
+    private @Nullable Object readErrorValue(byte[] body) throws IOException {
         try {
             return readValue(body);
         } catch (CodecException e) {
@@ -226,7 +227,7 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         return Map.of(MESSAGE_KEY, text);
     }
 
-    private <T> T handleError(Object payload) {
+    private <T> T handleError(@Nullable Object payload) {
         if (!(payload instanceof Map<?, ?> map)) {
             throw new TestResourcesException(payload == null ? SERVER_FAILED_WITHOUT_ERROR_BODY : payload.toString());
         }
@@ -260,7 +261,7 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         }
     }
 
-    private static Optional<String> sanitizeError(String message) {
+    private static Optional<String> sanitizeError(@Nullable String message) {
         if (message == null || message.isBlank()) {
             return Optional.empty();
         }

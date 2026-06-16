@@ -18,6 +18,7 @@ package io.micronaut.testresources.testcontainers;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 
 final class MemoryUnitParser {
     private static final Pattern MEMORY_UNIT_PATTERN = Pattern.compile("^(\\d+(?:[.]\\d+)?)\\s*([kmg])?(b?)$");
@@ -30,7 +31,7 @@ final class MemoryUnitParser {
      * @param memory the memory string to parse
      * @return the parsed value
      */
-    static Long parse(String memory) {
+    static @Nullable Long parse(String memory) {
         Matcher m = MEMORY_UNIT_PATTERN.matcher(memory.trim().toLowerCase(Locale.ROOT));
         if (m.find()) {
             double value = Double.parseDouble(m.group(1));

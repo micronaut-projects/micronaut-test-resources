@@ -17,6 +17,7 @@ package io.micronaut.testresources.mongodb;
 
 import io.micronaut.testresources.core.DefaultTestResourceImages;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import org.jspecify.annotations.Nullable;
 import org.testcontainers.mongodb.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -38,7 +39,7 @@ public class MongoDBTestResourceProvider extends AbstractTestContainersProvider<
     public static final String DB_NAME = "containers." + SIMPLE_NAME + ".db-name";
     public static final String DISPLAY_NAME = "MongoDB";
 
-    private String dbName;
+    private @Nullable String dbName;
 
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {

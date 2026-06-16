@@ -20,6 +20,7 @@ import io.micronaut.test.extensions.junit5.annotation.TestResourcesScope;
 import io.micronaut.test.extensions.testresources.TestResourcesClientHolder;
 import io.micronaut.testresources.client.TestResourcesClient;
 import io.micronaut.testresources.client.TestResourcesClientFactory;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -43,7 +44,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public class TestResourcesScopeListener implements TestExecutionListener {
     private final Map<String, Set<String>> testsUsingResources = new ConcurrentHashMap<>();
-    private TestResourcesClient testResourcesClient;
+    private @Nullable TestResourcesClient testResourcesClient;
     private final Deque<String> nestedScopes = new ArrayDeque<>();
 
     /**
@@ -51,29 +52,32 @@ public class TestResourcesScopeListener implements TestExecutionListener {
      * so that the test resources client holder is not initialized at build
      * time in native image.
      */
-    private void assertTestResourcesClient() {
-        if (testResourcesClient == null) {
-            testResourcesClient = TestResourcesClientFactory.fromSystemProperties()
+    private TestResourcesClient getTestResourcesClient() {
+        TestResourcesClient current = testResourcesClient;
+        if (current == null) {
+            current = TestResourcesClientFactory.fromSystemProperties()
                 .orElse(TestResourcesClientHolder.lazy());
+            testResourcesClient = current;
         }
+        return current;
     }
 
     @Override
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        assertTestResourcesClient();
+        getTestResourcesClient();
         Set<TestIdentifier> roots = testPlan.getRoots();
         visitTestIdentifiers(roots, testPlan);
     }
 
     @Override
     public void executionStarted(TestIdentifier id) {
-        assertTestResourcesClient();
+        getTestResourcesClient();
         visitTestIdentifier(id, EventKind.TEST_STARTED);
     }
 
     @Override
     public void executionFinished(TestIdentifier id, TestExecutionResult testExecutionResult) {
-        assertTestResourcesClient();
+        getTestResourcesClient();
         visitTestIdentifier(id, EventKind.TEST_FINISHED);
     }
 
@@ -144,7 +148,7 @@ public class TestResourcesScopeListener implements TestExecutionListener {
                         ScopeHolder.remove();
                     }
                     if (testIdentifiers.isEmpty()) {
-                        testResourcesClient.closeScope(scopeName);
+                        getTestResourcesClient().closeScope(scopeName);
                     }
                 }
                 System.out.println("testId = " + testId + " finished and remaining nested scopes = " + nestedScopes);

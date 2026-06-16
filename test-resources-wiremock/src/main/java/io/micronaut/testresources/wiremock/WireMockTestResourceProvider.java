@@ -16,6 +16,7 @@
 package io.micronaut.testresources.wiremock;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import org.jspecify.annotations.Nullable;
 import org.testcontainers.utility.DockerImageName;
 import org.wiremock.integrations.testcontainers.WireMockContainer;
 
@@ -71,7 +72,7 @@ public class WireMockTestResourceProvider extends AbstractTestContainersProvider
         return container;
     }
 
-    private static void addCliArgs(WireMockContainer container, Object configuredCliArgs) {
+    private static void addCliArgs(WireMockContainer container, @Nullable Object configuredCliArgs) {
         if (configuredCliArgs instanceof Iterable<?> cliArgs) {
             cliArgs.forEach(arg -> container.withCliArg(String.valueOf(arg)));
         } else if (configuredCliArgs != null) {

@@ -17,12 +17,13 @@ package io.micronaut.test.extensions.testresources;
 
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.testresources.client.TestResourcesClient;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * An internal class which can be used to inject a fake
@@ -30,17 +31,17 @@ import java.util.function.Supplier;
  */
 @Internal
 public final class TestResourcesClientHolder {
-    private static TestResourcesClient client;
+    private static @Nullable TestResourcesClient client;
 
     private TestResourcesClientHolder() {
 
     }
 
-    public static void set(TestResourcesClient client) {
+    public static void set(@Nullable TestResourcesClient client) {
         TestResourcesClientHolder.client = client;
     }
 
-    public static TestResourcesClient get() {
+    public static @Nullable TestResourcesClient get() {
         return client;
     }
 
@@ -50,46 +51,47 @@ public final class TestResourcesClientHolder {
 
     private static final class LazyTestResourcesClient implements TestResourcesClient {
 
-        private static <T> T nullSafe(Supplier<T> value, T defaultValue) {
-            if (client == null) {
+        private static <T> T nullSafe(Function<TestResourcesClient, T> value, T defaultValue) {
+            TestResourcesClient current = client;
+            if (current == null) {
                 return defaultValue;
             }
-            return value.get();
+            return value.apply(current);
         }
 
         @Override
         public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
-            return nullSafe(client::getResolvableProperties, List.of());
+            return nullSafe(TestResourcesClient::getResolvableProperties, List.of());
         }
 
         @Override
         public Optional<String> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
-            return nullSafe(() -> client.resolve(name, properties, testResourcesConfig), Optional.empty());
+            return nullSafe(client -> client.resolve(name, properties, testResourcesConfig), Optional.empty());
         }
 
         @Override
         public List<String> getRequiredProperties(String expression) {
-            return nullSafe(() -> client.getRequiredProperties(expression), List.of());
+            return nullSafe(client -> client.getRequiredProperties(expression), List.of());
         }
 
         @Override
         public List<String> getRequiredPropertyEntries() {
-            return nullSafe(client::getRequiredPropertyEntries, List.of());
+            return nullSafe(TestResourcesClient::getRequiredPropertyEntries, List.of());
         }
 
         @Override
         public boolean closeAll() {
-            return nullSafe(client::closeAll, true);
+            return nullSafe(TestResourcesClient::closeAll, true);
         }
 
         @Override
-        public boolean closeScope(String id) {
-            return nullSafe(() -> client.closeScope(id), true);
+        public boolean closeScope(@Nullable String id) {
+            return nullSafe(client -> client.closeScope(id), true);
         }
 
         @Override
         public List<String> getResolvableProperties() {
-            return nullSafe(client::getResolvableProperties, List.of());
+            return nullSafe(TestResourcesClient::getResolvableProperties, List.of());
         }
 
     }

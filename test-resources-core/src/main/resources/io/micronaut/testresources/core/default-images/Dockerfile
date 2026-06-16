@@ -43,7 +43,7 @@ FROM apache/kafka:4.1.1 AS kafka
 
 # provider: kafka-schema-registry
 # property: test-resources.containers.kafka-schema-registry.image-name
-FROM confluentinc/cp-schema-registry:8.2.0 AS kafka_schema_registry
+FROM confluentinc/cp-schema-registry:8.2.1 AS kafka_schema_registry
 
 # provider: kafka-connect
 # property: test-resources.containers.kafka-connect.image-name
@@ -51,7 +51,7 @@ FROM confluentinc/cp-kafka-connect:8.2.1 AS kafka_connect
 
 # provider: kafka-ksqldb
 # property: test-resources.containers.kafka-ksqldb.image-name
-FROM confluentinc/cp-ksqldb-server:8.2.0 AS kafka_ksqldb
+FROM confluentinc/cp-ksqldb-server:8.2.1 AS kafka_ksqldb
 
 # provider: keycloak
 # property: test-resources.containers.keycloak.image-name

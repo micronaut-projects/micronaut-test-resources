@@ -17,6 +17,7 @@ package io.micronaut.testresources.server;
 
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration properties used to control access to
@@ -26,13 +27,13 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 public final class AccessConfiguration {
     public static final String ACCESS_TOKEN = "Access-Token";
 
-    private String accessToken;
+    private @Nullable String accessToken;
 
-    public String getAccessToken() {
+    public @Nullable String getAccessToken() {
         return accessToken;
     }
 
-    public void setAccessToken(String accessToken) {
+    public void setAccessToken(@Nullable String accessToken) {
         this.accessToken = accessToken;
     }
 }

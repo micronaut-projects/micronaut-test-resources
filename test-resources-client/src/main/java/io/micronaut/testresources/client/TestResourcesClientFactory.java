@@ -16,6 +16,7 @@
 package io.micronaut.testresources.client;
 
 import io.micronaut.context.ApplicationContext;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +49,7 @@ public final class TestResourcesClientFactory {
     private static final String TEST_RESOURCES_NAMESPACE = "TEST_RESOURCES_NAMESPACE";
     private static final String NAMESPACE_PREFIX = ".micronaut/test-resources-";
 
-    private static WeakReference<TestResourcesClient> cachedClient;
+    private static @Nullable WeakReference<TestResourcesClient> cachedClient;
 
     private TestResourcesClientFactory() {
 
@@ -79,7 +80,7 @@ public final class TestResourcesClientFactory {
 
     static Optional<TestResourcesClient> findByConvention(Path currentDirectory,
                                                           Path homeDirectory,
-                                                          String namespace) {
+                                                          @Nullable String namespace) {
         return fromSystemProperties()
             .or(() -> findPropertiesFileByConvention(currentDirectory, homeDirectory, namespace)
                 .flatMap(TestResourcesClientFactory::fromFileSystem));
@@ -105,6 +106,9 @@ public final class TestResourcesClientFactory {
                 return Optional.of(NoOpClient.INSTANCE);
             }
             String serverUri = props.getProperty(TestResourcesClient.SERVER_URI);
+            if (serverUri == null) {
+                return Optional.empty();
+            }
             String accessToken = props.getProperty(TestResourcesClient.ACCESS_TOKEN);
             int clientReadTimeout = Integer.parseInt(props.getProperty(TestResourcesClient.CLIENT_READ_TIMEOUT, DEFAULT_TIMEOUT_SECONDS));
             return Optional.of(new DefaultTestResourcesClient(serverUri, accessToken, clientReadTimeout));
@@ -141,7 +145,7 @@ public final class TestResourcesClientFactory {
 
     static Optional<Path> findPropertiesFileByConvention(Path currentDirectory,
                                                          Path homeDirectory,
-                                                         String namespace) {
+                                                         @Nullable String namespace) {
         return findLocalPropertiesFile(currentDirectory)
             .or(() -> findHomePropertiesFile(homeDirectory, namespace));
     }
@@ -211,7 +215,7 @@ public final class TestResourcesClientFactory {
             || Files.exists(directory.resolve(SETTINGS_GRADLE_KTS));
     }
 
-    private static Optional<Path> findHomePropertiesFile(Path homeDirectory, String namespace) {
+    private static Optional<Path> findHomePropertiesFile(Path homeDirectory, @Nullable String namespace) {
         if (namespace != null) {
             return existingPropertiesFile(homeDirectory.resolve(
                 NAMESPACE_PREFIX + namespace + "/" + TEST_RESOURCES_PROPERTIES));
@@ -234,7 +238,7 @@ public final class TestResourcesClientFactory {
      * @param context the application context
      * @return the test resources client
      */
-    public static TestResourcesClient extractFrom(ApplicationContext context) {
+    public static @Nullable TestResourcesClient extractFrom(ApplicationContext context) {
         return context.getEnvironment()
             .getPropertySourceLoaders()
             .stream()

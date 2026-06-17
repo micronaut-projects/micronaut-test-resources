@@ -4,7 +4,7 @@ For example, you may need a container image or protocol mapping that is not cove
 In this case, Micronaut Test Resources provide generic support for starting arbitrary test containers.
 Unlike the other resources, this will require adding configuration to your application to make it work.
 
-TIP: For Micronaut Email JavaMail applications that need a local SMTP capture server, prefer the dedicated <<modules-mailpit,Mailpit support>>.
+TIP: For Micronaut Email JavaMail applications that need a local SMTP capture server, prefer the dedicated xref:modules.adoc#modules-mailpit[Mailpit support].
 
 Let's illustrate how we can declare an SMTP test container (here using YAML configuration) for use with https://micronaut-projects.github.io/micronaut-email[Micronaut Email]:
 
@@ -151,7 +151,7 @@ test-resources:
       startup-timeout: 120s
 ----
 
-Please refer to the <<configurationreference#io.micronaut.testresources.testcontainers.TestContainersConfiguration,configuration properties reference>> for details.
+The examples above use the same `test-resources.containers.<name>` metadata that the generic container provider reads when it prepares the container.
 
 [[advanced-networking]]
 == Advanced networking

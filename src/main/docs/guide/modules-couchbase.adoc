@@ -15,4 +15,4 @@ test-resources:
 
 If you explicitly map any of those same properties through generic Testcontainers support, the dedicated Couchbase provider stands down for the full `couchbase.uri` / `couchbase.username` / `couchbase.password` connection set so values never come from mixed containers.
 
-For unsupported Couchbase topologies or additional property shapes, continue using xref:modules-testcontainers.adoc[generic Testcontainers support].
+For unsupported Couchbase topologies or additional property shapes, continue using xref:modules.adoc#modules-testcontainers[generic Testcontainers support].

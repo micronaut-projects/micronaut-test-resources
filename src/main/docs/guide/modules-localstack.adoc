@@ -8,9 +8,34 @@ The following services are supported:
 - DynamoDB, by providing the `aws.services.dynamodb.endpoint-override` property
 - SQS, by providing the `aws.services.sqs.endpoint-override` property
 - SNS, by providing the `aws.services.sns.endpoint-override` property
+- SES, by providing the `aws.services.ses.endpoint-override` property
 
 In addition, the following properties will be resolved by test resources:
 
 - `aws.access-key-id`
 - `aws.secret-key`
 - `aws.region`
+
+To enable SES support, add the LocalStack SES test resources module to the test classpath:
+
+dependency:io.micronaut.testresources:micronaut-test-resources-localstack-ses[scope="testImplementation"]
+
+With this dependency present, Micronaut Test Resources starts or reuses the shared LocalStack container when a test needs `aws.services.ses.endpoint-override`. Micronaut AWS SDK v2 clients and Micronaut Email SES tests can use the resolved endpoint together with the fake `aws.access-key-id`, `aws.secret-key`, and `aws.region` values from the same LocalStack container.
+
+[source,java]
+----
+SesClient.builder()
+    .endpointOverride(URI.create(environment.getProperty("aws.services.ses.endpoint-override", String.class).orElseThrow()))
+    .credentialsProvider(StaticCredentialsProvider.create(
+        AwsBasicCredentials.create(
+            environment.getProperty("aws.access-key-id", String.class).orElseThrow(),
+            environment.getProperty("aws.secret-key", String.class).orElseThrow()
+        )
+    ))
+    .region(Region.of(environment.getProperty("aws.region", String.class).orElseThrow()))
+    .build();
+----
+
+The `test-resources.containers.localstack.image-name` property controls the LocalStack image used for SES in the same way as the other LocalStack services.
+
+LocalStack SES emulates SES sending APIs for tests. You can verify locally captured messages with LocalStack's SES inspection endpoint (`/_aws/ses`) when it is supported by the selected LocalStack image. Receiving inbound email and advanced SMTP or pro-only SES features may require a separate tool or paid LocalStack capabilities.

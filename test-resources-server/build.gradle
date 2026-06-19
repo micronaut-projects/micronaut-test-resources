@@ -25,6 +25,24 @@ dependencies {
     runtimeOnly(mnSerde.micronaut.serde.support)
     runtimeOnly(mn.snakeyaml)
 
+    constraints {
+        implementation(libs.netty.codec.http) {
+            because "fixes GHSA-hvcg-qmg6-jm4c from Micronaut HTTP Netty transitive dependencies"
+        }
+        implementation(libs.netty.codec.http2) {
+            because "fixes GHSA-563q-j3cm-6jxm, GHSA-5x3r-wrvg-rp6q, and GHSA-c2gf-v879-257j from Micronaut HTTP Netty transitive dependencies"
+        }
+        implementation(libs.netty.handler) {
+            because "fixes GHSA-3qp7-7mw8-wx86, GHSA-c653-97m9-rcg9, and GHSA-x4gw-5cx5-pgmh from Micronaut HTTP Netty transitive dependencies"
+        }
+        implementation(libs.netty.resolver.dns) {
+            because "fixes GHSA-5pvg-856g-cp85, GHSA-676x-f7gg-47vc, and GHSA-xmv7-r254-6q78 from Micronaut HTTP Netty transitive dependencies"
+        }
+        implementation(libs.netty.transport.native.epoll) {
+            because "fixes GHSA-w573-9ffj-6ff9 from Micronaut HTTP Netty transitive dependencies"
+        }
+    }
+
     testFixturesImplementation(projects.micronautTestResourcesCore)
     testFixturesImplementation(projects.micronautTestResourcesTestcontainers)
     testImplementation(mn.micronaut.http.client)

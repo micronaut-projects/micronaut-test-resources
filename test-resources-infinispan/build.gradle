@@ -22,5 +22,20 @@ dependencies {
         implementation("io.vertx:vertx-core:4.5.27") {
             because "https://ossindex.sonatype.org/vulnerability/CVE-2026-1002?component-type=maven&component-name=io.vertx%2Fvertx-core&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.2"
         }
+        implementation(libs.netty.codec.http) {
+            because "fixes GHSA-hvcg-qmg6-jm4c from Infinispan transitive dependencies"
+        }
+        implementation(libs.netty.codec.http2) {
+            because "fixes GHSA-563q-j3cm-6jxm, GHSA-5x3r-wrvg-rp6q, and GHSA-c2gf-v879-257j from Infinispan transitive dependencies"
+        }
+        implementation(libs.netty.handler) {
+            because "fixes GHSA-3qp7-7mw8-wx86, GHSA-c653-97m9-rcg9, and GHSA-x4gw-5cx5-pgmh from Infinispan transitive dependencies"
+        }
+        implementation(libs.netty.resolver.dns) {
+            because "fixes GHSA-5pvg-856g-cp85, GHSA-676x-f7gg-47vc, and GHSA-xmv7-r254-6q78 from Infinispan transitive dependencies"
+        }
+        implementation(libs.netty.transport.native.epoll) {
+            because "fixes GHSA-w573-9ffj-6ff9 from Infinispan transitive dependencies"
+        }
     }
 }

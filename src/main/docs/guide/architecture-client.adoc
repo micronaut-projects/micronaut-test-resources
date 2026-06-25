@@ -23,3 +23,7 @@ NOTE: If Micronaut Test Resources unexpectedly connects to an old server or fail
 
 The remote transport is a small binary protocol shared with the server.
 That protocol is intentionally limited to the value shapes used by the RPC layer: strings, booleans, integral numbers, lists, maps, and `null`.
+
+== Disabling test resources for application startup
+
+When the Test Resources client is on an application runtime classpath, for example during a Gradle `run` task, Test Resources can be disabled for that JVM with the `micronaut.test.resources.enabled=false` system property. When disabled, the client does not contribute the lazy Test Resources property source or resolve `auto.test.resources.*` expressions.

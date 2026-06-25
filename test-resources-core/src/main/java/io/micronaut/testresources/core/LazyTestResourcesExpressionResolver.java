@@ -40,6 +40,9 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
                                    ConversionService conversionService,
                                    String expression,
                                    Class<T> requiredType) {
+        if (TestResourcesConfiguration.isDisabled()) {
+            return Optional.empty();
+        }
         if (expression.startsWith(PLACEHOLDER_PREFIX)) {
             String eagerExpression = expression.substring(PLACEHOLDER_PREFIX.length());
             var resolved = delegate.resolve(propertyResolver, conversionService, eagerExpression,

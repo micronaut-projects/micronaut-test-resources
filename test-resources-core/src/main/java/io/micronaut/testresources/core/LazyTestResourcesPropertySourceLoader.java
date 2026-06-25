@@ -48,6 +48,9 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
 
     @Override
     public Optional<PropertySource> load(String resourceName, ResourceLoader resourceLoader) {
+        if (TestResourcesConfiguration.isDisabled()) {
+            return Optional.empty();
+        }
         return Optional.of(new LazyPropertySource(resourceLoader));
     }
 

@@ -9,14 +9,20 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.testresources.codec.Result
 import io.micronaut.testresources.codec.TestResourcesMediaType
 
+import java.util.concurrent.atomic.AtomicInteger
+
 @Controller("/")
 @Requires(property = 'server', notEquals = 'false')
 @Produces(TestResourcesMediaType.TEST_RESOURCES_BINARY)
 @Consumes(TestResourcesMediaType.TEST_RESOURCES_BINARY)
 class TestServer {
 
+    private final AtomicInteger listRequests = new AtomicInteger()
+    private final AtomicInteger resolveRequests = new AtomicInteger()
+
     @Post("/list")
     Result<List<String>> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+        listRequests.incrementAndGet()
         Result.of([
             "dummy1",
             "dummy2",
@@ -45,6 +51,7 @@ class TestServer {
 
     @Post('/resolve')
     Optional<Result<String>> resolve(String name, Map<String, Object> properties, Map<String, Object> testResourcesConfig) {
+        resolveRequests.incrementAndGet()
         if ("missing" == name) {
             return Optional.empty()
         }
@@ -81,5 +88,18 @@ class TestServer {
     @Get("/close/all")
     Result<Boolean> closeAll() {
         Result.TRUE
+    }
+
+    int getListRequests() {
+        listRequests.get()
+    }
+
+    int getResolveRequests() {
+        resolveRequests.get()
+    }
+
+    void reset() {
+        listRequests.set(0)
+        resolveRequests.set(0)
     }
 }

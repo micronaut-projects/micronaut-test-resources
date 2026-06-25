@@ -14,7 +14,3 @@ dependencies {
     testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mnKafka.micronaut.kafka)
 }
-
-tasks.withType(Test).configureEach {
-    maxHeapSize = '1g'
-}

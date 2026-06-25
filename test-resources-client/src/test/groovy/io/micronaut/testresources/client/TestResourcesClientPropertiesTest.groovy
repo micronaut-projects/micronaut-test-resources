@@ -17,6 +17,7 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
     @RestoreSystemProperties
     def "client can be configured from system properties"() {
         System.setProperty("micronaut.test.resources.server.uri", server.getURI().toString())
+        server.applicationContext.getBean(TestServer).reset()
 
         when:
         def app = createApplication()
@@ -31,14 +32,18 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
         then:
         TestResourcesResolutionException e = thrown()
         e.message == "Test resources doesn't support resolving expression 'missing'"
+        server.applicationContext.getBean(TestServer).listRequests > 0
+        server.applicationContext.getBean(TestServer).resolveRequests > 0
 
         cleanup:
+        app?.close()
         System.clearProperty("micronaut.test.resources.server.uri")
     }
 
     @RestoreSystemProperties
     def "client can be disabled from application properties"() {
         System.setProperty("micronaut.test.resources.server.uri", server.getURI().toString())
+        server.applicationContext.getBean(TestServer).reset()
 
         when:
         def app = createApplication(['test-resources.enabled': false])
@@ -46,8 +51,11 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
         then:
         app.getProperty("dummy1", String).empty
         TestResourcesClientFactory.extractFrom(app) == null
+        server.applicationContext.getBean(TestServer).listRequests == 0
+        server.applicationContext.getBean(TestServer).resolveRequests == 0
 
         cleanup:
+        app?.close()
         System.clearProperty("micronaut.test.resources.server.uri")
     }
 
@@ -55,6 +63,7 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
     def "client can be disabled from system properties"() {
         System.setProperty("micronaut.test.resources.server.uri", server.getURI().toString())
         System.setProperty("test-resources.enabled", "false")
+        server.applicationContext.getBean(TestServer).reset()
 
         when:
         def app = createApplication()
@@ -62,8 +71,11 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
         then:
         app.getProperty("dummy1", String).empty
         TestResourcesClientFactory.extractFrom(app) == null
+        server.applicationContext.getBean(TestServer).listRequests == 0
+        server.applicationContext.getBean(TestServer).resolveRequests == 0
 
         cleanup:
+        app?.close()
         System.clearProperty("micronaut.test.resources.server.uri")
         System.clearProperty("test-resources.enabled")
     }

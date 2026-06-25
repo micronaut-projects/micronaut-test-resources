@@ -20,7 +20,9 @@ The working-directory location is scoped to the current project checkout.
 The user-home location is intended for settings shared across builds, so it can survive older experiments or manually managed shared servers.
 
 You can disable application-side test resources resolution by setting `test-resources.enabled=false` in the application's configuration or passing `-Dtest-resources.enabled=false` to the application.
+For example, configure the Gradle `run` task with `jvmArgs("-Dtest-resources.enabled=false")`, or start a packaged application with `java -Dtest-resources.enabled=false -jar application.jar`.
 This prevents the application from resolving missing properties from a configured test resources server, including during local `run` task startup.
+It does not disable build-tool behavior that may start or configure a test resources server before application startup.
 
 NOTE: If Micronaut Test Resources unexpectedly connects to an old server or fails because a recorded server is no longer running, remove the stale `test-resources.properties` file from the relevant `.micronaut` directory and rerun the build so the settings can be recreated.
 

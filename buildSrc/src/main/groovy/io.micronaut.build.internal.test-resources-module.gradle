@@ -16,12 +16,6 @@ dependencies {
     testImplementation(libs.spock)
     testRuntimeOnly mnSerde.micronaut.serde.jackson
     testRuntimeOnly mn.snakeyaml
-
-    constraints {
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.21.5") {
-            because "fixes jackson-databind vulnerabilities reported by the PR vulnerability audit"
-        }
-    }
 }
 
 configurations.all {

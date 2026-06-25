@@ -40,7 +40,7 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
                                    ConversionService conversionService,
                                    String expression,
                                    Class<T> requiredType) {
-        if (TestResourcesConfiguration.isDisabled()) {
+        if (TestResourcesConfiguration.isDisabled(propertyResolver)) {
             return Optional.empty();
         }
         if (expression.startsWith(PLACEHOLDER_PREFIX)) {

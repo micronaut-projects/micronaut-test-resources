@@ -15,6 +15,8 @@
  */
 package io.micronaut.testresources.core;
 
+import io.micronaut.core.value.PropertyResolver;
+
 /**
  * Shared Test Resources configuration keys.
  */
@@ -32,5 +34,14 @@ public final class TestResourcesConfiguration {
      */
     public static boolean isDisabled() {
         return "false".equalsIgnoreCase(System.getProperty(ENABLED));
+    }
+
+    /**
+     * @param propertyResolver The property resolver to inspect
+     * @return {@code true} when Test Resources have been disabled for the current application.
+     */
+    public static boolean isDisabled(PropertyResolver propertyResolver) {
+        return propertyResolver != null && propertyResolver.getProperty(ENABLED, Boolean.class).map(enabled -> !enabled).orElse(false)
+            || isDisabled();
     }
 }

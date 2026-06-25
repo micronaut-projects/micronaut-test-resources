@@ -95,16 +95,18 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
         private void computeKeys() {
             if (!keysComputed) {
                 if (resourceLoader instanceof PropertyResolver propertyResolver) {
-                    Map<String, Collection<String>> entries = producer.getPropertyEntries()
-                        .stream()
-                        .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));
-                    Map<String, Object> testResourcesConfig = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
-                    keys = producer.produceKeys(resourceLoader, entries, testResourcesConfig)
-                        .stream()
-                        // We use "containsProperties" here because "containsProperty"
-                        // has a caching side effect which we don't want!
-                        .filter(key -> !propertyResolver.containsProperties(key))
-                        .collect(Collectors.toList());
+                    if (LazyTestResourcesExpressionResolver.isTestResourcesEnabled(propertyResolver)) {
+                        Map<String, Collection<String>> entries = producer.getPropertyEntries()
+                            .stream()
+                            .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));
+                        Map<String, Object> testResourcesConfig = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+                        keys = producer.produceKeys(resourceLoader, entries, testResourcesConfig)
+                            .stream()
+                            // We use "containsProperties" here because "containsProperty"
+                            // has a caching side effect which we don't want!
+                            .filter(key -> !propertyResolver.containsProperties(key))
+                            .collect(Collectors.toList());
+                    }
                 } else {
                     keys = producer.produceKeys(resourceLoader, Collections.emptyMap(), Collections.emptyMap());
                 }

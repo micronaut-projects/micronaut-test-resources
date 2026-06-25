@@ -36,9 +36,41 @@ class TestResourcesClientPropertiesTest extends Specification implements ClientC
         System.clearProperty("micronaut.test.resources.server.uri")
     }
 
-    private ApplicationContext createApplication() {
+    @RestoreSystemProperties
+    def "client can be disabled from application properties"() {
+        System.setProperty("micronaut.test.resources.server.uri", server.getURI().toString())
+
+        when:
+        def app = createApplication(['test-resources.enabled': false])
+
+        then:
+        app.getProperty("dummy1", String).empty
+        TestResourcesClientFactory.extractFrom(app) == null
+
+        cleanup:
+        System.clearProperty("micronaut.test.resources.server.uri")
+    }
+
+    @RestoreSystemProperties
+    def "client can be disabled from system properties"() {
+        System.setProperty("micronaut.test.resources.server.uri", server.getURI().toString())
+        System.setProperty("test-resources.enabled", "false")
+
+        when:
+        def app = createApplication()
+
+        then:
+        app.getProperty("dummy1", String).empty
+        TestResourcesClientFactory.extractFrom(app) == null
+
+        cleanup:
+        System.clearProperty("micronaut.test.resources.server.uri")
+        System.clearProperty("test-resources.enabled")
+    }
+
+    private ApplicationContext createApplication(Map<String, Object> properties = [:]) {
         def app = ApplicationContext.builder()
-                .properties(['server': 'false'])
+                .properties(['server': 'false'] + properties)
                 .start()
         assert !app.findBean(TestServer).present
         return app

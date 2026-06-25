@@ -41,6 +41,9 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
                                    String expression,
                                    Class<T> requiredType) {
         if (expression.startsWith(PLACEHOLDER_PREFIX)) {
+            if (!isTestResourcesEnabled(propertyResolver)) {
+                return Optional.empty();
+            }
             String eagerExpression = expression.substring(PLACEHOLDER_PREFIX.length());
             var resolved = delegate.resolve(propertyResolver, conversionService, eagerExpression,
                 requiredType);
@@ -53,6 +56,17 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
             return resolved;
         }
         return Optional.empty();
+    }
+
+    /**
+     * Determines if test resources resolution is enabled for an application.
+     *
+     * @param propertyResolver the property resolver to read configuration from
+     * @return true if test resources are enabled
+     */
+    static boolean isTestResourcesEnabled(PropertyResolver propertyResolver) {
+        return propertyResolver.getProperty(TestResourcesResolver.TEST_RESOURCES_PROPERTY + ".enabled", Boolean.class)
+            .orElse(true);
     }
 
     @Override

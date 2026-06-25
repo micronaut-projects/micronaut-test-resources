@@ -48,8 +48,7 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
 
     @Override
     public Optional<PropertySource> load(String resourceName, ResourceLoader resourceLoader) {
-        if (TestResourcesConfiguration.isDisabled()
-                || resourceLoader instanceof PropertyResolver propertyResolver && TestResourcesConfiguration.isDisabled(propertyResolver)) {
+        if (TestResourcesConfiguration.isDisabled()) {
             return Optional.empty();
         }
         return Optional.of(new LazyPropertySource(resourceLoader));
@@ -99,11 +98,6 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
         private void computeKeys() {
             if (!keysComputed) {
                 if (resourceLoader instanceof PropertyResolver propertyResolver) {
-                    if (TestResourcesConfiguration.isDisabled(propertyResolver)) {
-                        keys = Collections.emptyList();
-                        keysComputed = true;
-                        return;
-                    }
                     Map<String, Collection<String>> entries = producer.getPropertyEntries()
                         .stream()
                         .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));

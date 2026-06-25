@@ -18,7 +18,7 @@ dependencies {
     testRuntimeOnly mn.snakeyaml
 
     constraints {
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.21.4") {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.21.5") {
             because "fixes jackson-databind vulnerabilities reported by the PR vulnerability audit"
         }
     }

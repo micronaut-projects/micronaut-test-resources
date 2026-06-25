@@ -128,7 +128,6 @@ public final class TestResourcesClientFactory {
         }
         boolean enabled = Boolean.parseBoolean(System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ENABLED), "true"));
         if (!enabled) {
-            System.err.println("Test resources are disabled");
             return Optional.of(NoOpClient.INSTANCE);
         }
         String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));

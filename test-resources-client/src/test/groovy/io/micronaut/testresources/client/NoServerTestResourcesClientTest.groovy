@@ -23,10 +23,39 @@ class NoServerTestResourcesClientTest extends Specification implements ClientCle
         e.message == "Test resource service is not available at $DUMMY_URL"
     }
 
-    private ApplicationContext createApplication() {
+    @RestoreSystemProperties
+    def "system property can disable test resources client"() {
+        given:
+        System.setProperty(systemPropertyNameOf(TestResourcesClient.ENABLED), "false")
+
+        when:
+        def app = createApplication()
+
+        then:
+        noExceptionThrown()
+        app.getProperty("datasources.default.url", String).empty
+
+        cleanup:
+        app?.close()
+    }
+
+    @RestoreSystemProperties
+    def "application configuration can disable test resources client"() {
+        when:
+        def app = createApplication(['test-resources.enabled': false])
+
+        then:
+        noExceptionThrown()
+        app.getProperty("datasources.default.url", String).empty
+
+        cleanup:
+        app?.close()
+    }
+
+    private ApplicationContext createApplication(Map<String, Object> properties = [:]) {
         System.setProperty(systemPropertyNameOf(TestResourcesClient.SERVER_URI), DUMMY_URL)
         def app = ApplicationContext.builder()
-                .properties(['server': 'false'])
+                .properties(['server': 'false'] + properties)
                 .start()
         assert !app.findBean(TestServer).present
         return app

@@ -122,14 +122,14 @@ public final class TestResourcesClientFactory {
      * @return a new test resources client, if system properties were found.
      */
     public static Optional<TestResourcesClient> fromSystemProperties() {
-        var client = cachedClient != null ? cachedClient.get() : null;
-        if (client != null) {
-            return Optional.of(client);
-        }
         boolean enabled = Boolean.parseBoolean(System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ENABLED), "true"));
         if (!enabled) {
             System.err.println("Test resources are disabled");
             return Optional.of(NoOpClient.INSTANCE);
+        }
+        var client = cachedClient != null ? cachedClient.get() : null;
+        if (client != null) {
+            return Optional.of(client);
         }
         String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));
         if (serverUri != null) {

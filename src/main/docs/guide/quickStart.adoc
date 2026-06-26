@@ -16,6 +16,8 @@ plugins {
 
 Please refer to the https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/#test-resources[Gradle plugin's Test Resources documentation] for more information about configuring the test resources plugin.
 
+When the Test Resources client is on the application runtime classpath but should not resolve runtime application properties, set `test-resources.enabled=false` in application configuration or `micronaut.test.resources.enabled=false` as a system property. Test execution remains enabled by default.
+
 In the case of Maven, you can enable test resources support simply by setting the property `micronaut.test.resources.enabled` (either in your
 POM or via the command-line).
 

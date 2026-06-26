@@ -19,4 +19,6 @@ Please refer to the https://micronaut-projects.github.io/micronaut-gradle-plugin
 In the case of Maven, you can enable test resources support simply by setting the property `micronaut.test.resources.enabled` (either in your
 POM or via the command-line).
 
+When a test resources client is on the application runtime classpath, you can disable runtime resolution without changing test behavior by setting `micronaut.test.resources.enabled=false` as a system property for the application run, or `test-resources.enabled=false` in application configuration.
+
 Please refer to the https://micronaut-projects.github.io/micronaut-maven-plugin/latest/examples/test-resources.html[Maven plugin's Test Resources documentation] for more information about configuring the test resources plugin.

@@ -41,6 +41,9 @@ public class LazyTestResourcesExpressionResolver implements PropertyExpressionRe
                                    String expression,
                                    Class<T> requiredType) {
         if (expression.startsWith(PLACEHOLDER_PREFIX)) {
+            if (!TestResourcesConfiguration.isEnabled(propertyResolver)) {
+                return Optional.empty();
+            }
             String eagerExpression = expression.substring(PLACEHOLDER_PREFIX.length());
             var resolved = delegate.resolve(propertyResolver, conversionService, eagerExpression,
                 requiredType);

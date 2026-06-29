@@ -69,6 +69,7 @@ public class ServerUtils {
     private static final int MAX_READS = 10;
 
     private static final String SERVER_URI = "server.uri";
+    private static final String ENABLED = "enabled";
     private static final String SERVER_ACCESS_TOKEN_MICRONAUT_PROPERTY = "server.access-token";
     private static final String SERVER_ACCESS_TOKEN = "server.access.token";
     private static final String ACCESS_TOKEN_HEADER = "Access-Token";
@@ -106,12 +107,35 @@ public class ServerUtils {
         throws IOException {
         Files.createDirectories(destinationDirectory);
         Path propertiesFile = destinationDirectory.resolve(PROPERTIES_FILE_NAME);
-        try (PrintWriter prn = new PrintWriter(Files.newOutputStream(propertiesFile))) {
+        try (PrintWriter prn = new PrintWriter(Files.newBufferedWriter(propertiesFile, StandardCharsets.UTF_8))) {
+            prn.println(ENABLED + "=true");
             prn.println(SERVER_URI + "=http\\://localhost\\:" + settings.getPort());
             settings.getAccessToken()
                 .ifPresent(token -> prn.println(SERVER_ACCESS_TOKEN + "=" + token));
             settings.getClientTimeout()
                 .ifPresent(timeout -> prn.println(SERVER_CLIENT_READ_TIMEOUT + "=" + timeout));
+            inferProjectDirectory(destinationDirectory)
+                .ifPresent(projectDirectory -> prn.println(CLIENT_PROJECT_PATH_URI + "=" + projectDirectory.toUri()));
+        }
+    }
+
+    /**
+     * Writes disabled server settings in an output directory.
+     * <p>
+     * Build tools use this when test resources are disabled for an application run
+     * but still need to leave a conventional settings file for the client-side
+     * property source loader. The client interprets {@code enabled=false} as a
+     * no-op client and does not require a server URI.
+     *
+     * @param destinationDirectory the destination directory
+     * @throws IOException if an error occurs
+     */
+    public static void writeDisabledServerSettings(Path destinationDirectory)
+        throws IOException {
+        Files.createDirectories(destinationDirectory);
+        Path propertiesFile = destinationDirectory.resolve(PROPERTIES_FILE_NAME);
+        try (PrintWriter prn = new PrintWriter(Files.newBufferedWriter(propertiesFile, StandardCharsets.UTF_8))) {
+            prn.println(ENABLED + "=false");
             inferProjectDirectory(destinationDirectory)
                 .ifPresent(projectDirectory -> prn.println(CLIENT_PROJECT_PATH_URI + "=" + projectDirectory.toUri()));
         }
@@ -129,8 +153,15 @@ public class ServerUtils {
             Properties props = new Properties();
             try (InputStream in = Files.newInputStream(propertiesFile)) {
                 props.load(in);
+                if (!Boolean.parseBoolean(props.getProperty(ENABLED, "true"))) {
+                    return Optional.empty();
+                }
+                String serverUri = props.getProperty(SERVER_URI);
+                if (serverUri == null) {
+                    return Optional.empty();
+                }
                 return Optional.of(new ServerSettings(
-                    new URI(props.getProperty(SERVER_URI)).getPort(),
+                    new URI(serverUri).getPort(),
                     props.getProperty(SERVER_ACCESS_TOKEN),
                     Optional.ofNullable(props.getProperty(SERVER_CLIENT_READ_TIMEOUT))
                         .map(Integer::parseInt)

@@ -45,7 +45,12 @@ public class AccessFilter implements HttpServerFilter {
     @Override
     public Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         if (request.getRemoteAddress().getAddress().isLoopbackAddress()) {
-            if (request.getPath().startsWith("/control-panel")) {
+            String path = request.getPath();
+            // The control panel page lives under /control-panel, while its static
+            // assets (CSS/JS) are served by micronaut-control-panel-ui under
+            // /micronaut-control-panel. Both must bypass the access-token check,
+            // since a browser cannot supply the Access-Token header.
+            if (path.startsWith("/control-panel") || path.startsWith("/micronaut-control-panel")) {
                 return chain.proceed(request);
             }
             String serverToken = accessConfiguration.getAccessToken();

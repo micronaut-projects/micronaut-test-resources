@@ -95,10 +95,15 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
         private void computeKeys() {
             if (!keysComputed) {
                 if (resourceLoader instanceof PropertyResolver propertyResolver) {
+                    Map<String, Object> testResourcesConfig = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+                    if (!isEnabled(testResourcesConfig)) {
+                        keys = Collections.emptyList();
+                        keysComputed = true;
+                        return;
+                    }
                     Map<String, Collection<String>> entries = producer.getPropertyEntries()
                         .stream()
                         .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));
-                    Map<String, Object> testResourcesConfig = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
                     keys = producer.produceKeys(resourceLoader, entries, testResourcesConfig)
                         .stream()
                         // We use "containsProperties" here because "containsProperty"
@@ -110,6 +115,17 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
                 }
                 keysComputed = true;
             }
+        }
+
+        private boolean isEnabled(Map<String, Object> testResourcesConfig) {
+            Object enabled = testResourcesConfig.get("enabled");
+            if (enabled == null) {
+                return true;
+            }
+            if (enabled instanceof Boolean b) {
+                return b;
+            }
+            return Boolean.parseBoolean(String.valueOf(enabled));
         }
 
     }

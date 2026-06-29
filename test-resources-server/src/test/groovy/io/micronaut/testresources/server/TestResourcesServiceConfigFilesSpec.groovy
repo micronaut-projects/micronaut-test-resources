@@ -63,6 +63,31 @@ class TestResourcesServiceConfigFilesSpec extends Specification {
         process.isAlive()
     }
 
+    def "control panel page and its static assets bypass the access token"() {
+        given:
+        def portFile = tempDir.resolve("port-file")
+
+        when:
+        def process = startServer(
+            portFile,
+            [:],
+            ["-Dserver.access-token=${ACCESS_TOKEN}".toString()]
+        )
+        def port = waitForPortFile(portFile)
+
+        then: "a token-protected endpoint still rejects requests without the token"
+        request(port, [:], "/list").statusCode() == 401
+
+        and: "the control panel page is reachable without the token (a browser cannot send it)"
+        request(port, [:], "/control-panel").statusCode() != 401
+
+        and: "the control panel UI static assets, served under /micronaut-control-panel, are too"
+        request(port, [:], "/micronaut-control-panel/css/dashboard.css").statusCode() != 401
+
+        and:
+        process.isAlive()
+    }
+
     private final List<Process> runningProcesses = []
 
     private Process startServer(Path portFile, Map<String, String> environment, List<String> jvmArgs = []) {
@@ -92,9 +117,9 @@ class TestResourcesServiceConfigFilesSpec extends Specification {
         return Integer.parseInt(Files.readString(portFile).trim())
     }
 
-    private HttpResponse<String> request(int port, Map<String, String> headers = [:]) {
+    private HttpResponse<String> request(int port, Map<String, String> headers = [:], String path = "/list") {
         def requestBuilder = HttpRequest.newBuilder()
-            .uri(URI.create("http://127.0.0.1:${port}/list"))
+            .uri(URI.create("http://127.0.0.1:${port}${path}"))
             .timeout(Duration.ofSeconds(10))
             .GET()
         headers.each { name, value -> requestBuilder.header(name, value) }

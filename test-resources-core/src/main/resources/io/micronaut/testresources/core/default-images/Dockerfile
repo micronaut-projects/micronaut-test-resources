@@ -15,7 +15,7 @@ FROM hashicorp/consul:1.15.4 AS consul
 
 # provider: couchbase
 # property: test-resources.containers.couchbase.image-name
-FROM couchbase/server:8.0.1 AS couchbase
+FROM couchbase/server:8.0.2 AS couchbase
 
 # provider: elasticsearch
 # property: test-resources.containers.elasticsearch.image-name

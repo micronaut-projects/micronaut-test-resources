@@ -381,7 +381,7 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb:11.8.6</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb:11.8.8</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.mysql.com/">MySQL</a></p></td>
@@ -1908,7 +1908,7 @@ HttpRequest&lt;?&gt; request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/me
 <p>Floci is an alternative AWS emulator dependency family. It does not replace LocalStack automatically, and the LocalStack modules keep their existing behavior and configuration. Choose a Floci module for the AWS service you want to emulate instead of the corresponding LocalStack module, or use the Floci core module when there is no service-specific Floci module.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>floci/floci:1.5.29</code>) can be overwritten by setting the <code>test-resources.containers.floci.image-name</code> property.</p>
+<p>The default image (<code>floci/floci:1.5.32</code>) can be overwritten by setting the <code>test-resources.containers.floci.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The following service endpoint overrides are supported:</p>
@@ -2015,7 +2015,7 @@ HttpRequest&lt;?&gt; request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/me
 <p>Couchbase support will automatically start a <a href="https://www.couchbase.com">Couchbase Server container</a> and provide the values of the <code>couchbase.uri</code>, <code>couchbase.username</code>, and <code>couchbase.password</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The provider uses the <code>couchbase/server:8.0.1</code> image by default.</p>
+<p>The provider uses the <code>couchbase/server:8.0.2</code> image by default.</p>
 </div>
 <div class="paragraph">
 <p>You can override the image name and tag with <code>test-resources.containers.couchbase.image-name</code> and <code>test-resources.containers.couchbase.image-tag</code>.</p>

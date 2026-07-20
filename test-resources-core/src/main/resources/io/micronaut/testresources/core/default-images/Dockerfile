@@ -23,7 +23,7 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:9.2.1 AS elasticsearch
 
 # provider: floci
 # property: test-resources.containers.floci.image-name
-FROM floci/floci:1.5.32 AS floci
+FROM floci/floci:1.5.33 AS floci
 
 # provider: hazelcast
 # property: test-resources.containers.hazelcast.image-name

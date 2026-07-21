@@ -15,8 +15,8 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "5.0.0"
-micronaut-platform = "5.0.0"
+micronaut = "5.0.2"
+micronaut-platform = "5.0.2"
 micronaut-aot = "3.0.0-M2"
 micronaut-aws = "5.0.0"
 micronaut-cache = "6.0.0"
@@ -61,7 +61,6 @@ commons-compress="1.28.0"
 [libraries]
 # Testcontainers
 boms-testcontainers = { module = "org.testcontainers:testcontainers-bom", version.ref = "managed-testcontainers" }
-
 managed-opensearch-testcontainers = { module = "org.opensearch:opensearch-testcontainers", version.ref = "managed-opensearch-testcontainers" }
 managed-solr-testcontainers = { module = "org.testcontainers:testcontainers-solr", version.ref = "managed-testcontainers" }
 

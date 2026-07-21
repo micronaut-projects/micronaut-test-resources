@@ -27,6 +27,7 @@ import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
 
     public static final String DISPLAY_NAME = "Kafka";
     public static final String SIMPLE_NAME = "kafka";
-    private static final long ADMIN_TIMEOUT_SECONDS = 30;
+    private static final long ADMIN_TIMEOUT_SECONDS = 60;
     private static final int ADMIN_METADATA_ATTEMPTS = 3;
     private static final TopicProvisioningConfiguration NO_TOPICS =
         new TopicProvisioningConfiguration(Collections.emptyList(), DEFAULT_PARTITIONS);
@@ -130,6 +131,14 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     private void provisionTopics(KafkaContainer container, TopicProvisioningConfiguration configuration) {
         Properties adminClientConfiguration = new Properties();
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
+        adminClientConfiguration.put(
+            AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG,
+            String.valueOf(TimeUnit.SECONDS.toMillis(ADMIN_TIMEOUT_SECONDS * 2))
+        );
+        adminClientConfiguration.put(
+            AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG,
+            String.valueOf(TimeUnit.SECONDS.toMillis(ADMIN_TIMEOUT_SECONDS))
+        );
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
             Set<String> existingTopics = retryMetadataRequest(() -> adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
             verifyExistingTopicPartitions(adminClient, configuration.topics().stream()
@@ -144,7 +153,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
             }
             beforeCreateTopics(container, configuration, topicsToCreate);
             var createTopicsResult = adminClient.createTopics(topicsToCreate);
-            List<String> topicsToReverify = new java.util.ArrayList<String>();
+            List<String> topicsToReverify = new ArrayList<>();
             for (NewTopic topic : topicsToCreate) {
                 try {
                     var result = createTopicsResult.values().get(topic.name());

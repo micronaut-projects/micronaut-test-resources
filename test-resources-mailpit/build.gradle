@@ -7,6 +7,7 @@ Provides support for launching a Mailpit SMTP test container.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     testImplementation(mnEmail.micronaut.email)
     testImplementation(mnEmail.micronaut.email.javamail)
     testImplementation(mn.micronaut.http.client)

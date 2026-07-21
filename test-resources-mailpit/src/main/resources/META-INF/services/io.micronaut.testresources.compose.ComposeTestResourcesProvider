@@ -1,0 +1,2 @@
+io.micronaut.testresources.mailpit.MailpitSmtpComposeTestResourcesProvider
+io.micronaut.testresources.mailpit.MailpitHttpComposeTestResourcesProvider

@@ -18,8 +18,11 @@ dependencies {
     }
 
     constraints {
-        api("com.fasterxml.jackson.core:jackson-core:2.21.3") {
+        api("com.fasterxml.jackson.core:jackson-core:2.21.5") {
             because "fixes GHSA-72hv-8253-57qq from AWS SDK v1 transitive dependencies"
+        }
+        api("com.fasterxml.jackson.core:jackson-databind:2.21.5") {
+            because "fixes Jackson security vulnerabilities in AWS SDK v1 transitive dependencies"
         }
     }
 }

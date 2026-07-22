@@ -21,6 +21,11 @@ abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
     @Inject
     ApplicationContext applicationContext
 
+    @Override
+    String getScopeName() {
+        this.class.simpleName
+    }
+
     protected String resolveBootstrapServers() {
         applicationContext.environment
             .getProperty(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, String)
@@ -150,11 +155,17 @@ class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
                                       List<NewTopic> topicsToCreate) {
         Properties properties = new Properties()
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.bootstrapServers)
+        NewTopic topic = new NewTopic(topicsToCreate.first().name(), 1, (short) 1)
         try (AdminClient adminClient = AdminClient.create(properties)) {
-            NewTopic topic = new NewTopic(topicsToCreate.first().name(), 1, (short) 1)
+            adminClient.listTopics().names().get(30, TimeUnit.SECONDS)
             adminClient.createTopics([topic]).all().get(30, TimeUnit.SECONDS)
         } catch (ExecutionException e) {
             throw new AssertionError("Failed to create the racing Kafka topic", e)
+        } catch (TimeoutException e) {
+            throw new AssertionError("Timed out while creating the racing Kafka topic", e)
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt()
+            throw new AssertionError("Interrupted while creating the racing Kafka topic", e)
         }
     }
 }

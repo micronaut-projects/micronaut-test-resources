@@ -7,6 +7,11 @@ import jakarta.inject.Inject
 @MicronautTest
 class KafkaNotStartedTest extends AbstractKafkaSpec {
 
+    @Override
+    Map<String, String> getProperties() {
+        super.properties + [(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS): 'localhost:65535']
+    }
+
     @Inject
     ApplicationContext applicationContext
 

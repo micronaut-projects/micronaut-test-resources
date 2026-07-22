@@ -17,8 +17,8 @@
 [versions]
 micronaut = "5.1.9"
 micronaut-platform = "5.0.5"
-micronaut-aot = "3.0.0-M2"
 micronaut-aws = "5.0.2"
+micronaut-aot = "3.1.0"
 micronaut-cache = "6.1.0"
 micronaut-control-panel = "2.1.0"
 micronaut-data = "5.1.0"

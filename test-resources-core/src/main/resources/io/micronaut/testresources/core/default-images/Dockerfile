@@ -83,7 +83,7 @@ FROM mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04 AS mssql
 
 # provider: mysql
 # property: test-resources.containers.mysql.image-name
-FROM mysql:8.4.8 AS mysql
+FROM mysql:8.4.10 AS mysql
 
 # provider: mysql
 # property: test-resources.containers.mysql.image-name

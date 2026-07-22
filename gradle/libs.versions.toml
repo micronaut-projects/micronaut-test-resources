@@ -46,6 +46,7 @@ amazon-awssdk-v2 = "2.43.0"
 couchbase-java-client = "3.11.1"
 azure-sdk = "1.3.7"
 jansi = "2.4.3"
+netty = "4.2.15.Final"
 
 # Managed versions appear in the BOM
 managed-opensearch-testcontainers = "4.1.0"
@@ -130,10 +131,12 @@ amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", ve
 amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1" }
 amazon-awssdk-v1-sqs = { module = "com.amazonaws:aws-java-sdk-sqs", version.ref = "amazon-awssdk-v1" }
 amazon-awssdk-v1-sns = { module = "com.amazonaws:aws-java-sdk-sns", version.ref = "amazon-awssdk-v1" }
+amazon-awssdk-v1-ses = { module = "com.amazonaws:aws-java-sdk-ses", version.ref = "amazon-awssdk-v1" }
 amazon-awssdk-v2-dynamodb = { module = "software.amazon.awssdk:dynamodb", version.ref = "amazon-awssdk-v2" }
 amazon-awssdk-v2-s3 = { module = "software.amazon.awssdk:s3", version.ref = "amazon-awssdk-v2" }
 amazon-awssdk-v2-sqs = { module = "software.amazon.awssdk:sqs", version.ref = "amazon-awssdk-v2" }
 amazon-awssdk-v2-sns = { module = "software.amazon.awssdk:sns", version.ref = "amazon-awssdk-v2" }
+amazon-awssdk-v2-ses = { module = "software.amazon.awssdk:ses", version.ref = "amazon-awssdk-v2" }
 couchbase-java-client = { module = "com.couchbase.client:java-client", version.ref = "couchbase-java-client" }
 azure-sdk-bom = { module = "com.azure:azure-sdk-bom", version.ref = "azure-sdk" }
 azure-storage-blob = { module = "com.azure:azure-storage-blob" }
@@ -155,6 +158,11 @@ jansi = { module = "org.fusesource.jansi:jansi", version.ref = "jansi" }
 # jdoctor = { module = "me.champeau.jdoctor:jdoctor-core", version.ref="jdoctor" }
 
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress"}
+netty-codec-http = { module = "io.netty:netty-codec-http", version.ref = "netty" }
+netty-codec-http2 = { module = "io.netty:netty-codec-http2", version.ref = "netty" }
+netty-handler = { module = "io.netty:netty-handler", version.ref = "netty" }
+netty-resolver-dns = { module = "io.netty:netty-resolver-dns", version.ref = "netty" }
+netty-transport-native-epoll = { module = "io.netty:netty-transport-native-epoll", version.ref = "netty" }
 
 [bundles]
 

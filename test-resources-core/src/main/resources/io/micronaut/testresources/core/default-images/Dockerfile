@@ -79,7 +79,7 @@ FROM minio/minio:RELEASE.2025-09-07T16-13-09Z AS minio
 
 # provider: mongodb
 # property: test-resources.containers.mongodb.image-name
-FROM mongo:8.2.7 AS mongodb
+FROM mongo:8.3.8 AS mongodb
 
 # provider: mssql
 # property: test-resources.containers.mssql.image-name

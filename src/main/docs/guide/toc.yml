@@ -18,6 +18,8 @@ modules:
     title: Azure Storage
   modules-opensearch:
     title: OpenSearch
+  modules-azure-cosmos:
+    title: Azure Cosmos Emulator
   modules-kafka:
     title: Kafka
   modules-mailpit:

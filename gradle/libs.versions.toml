@@ -42,7 +42,7 @@ micronaut-sql = "7.1.0"
 spock = "2.4-groovy-5.0"
 vertx-client = "5.0.10"
 amazon-awssdk-v1 = "1.12.797"
-amazon-awssdk-v2 = "2.43.0"
+amazon-awssdk-v2 = "2.54.0"
 couchbase-java-client = "3.12.2"
 azure-sdk = "1.3.7"
 jansi = "2.4.3"
@@ -67,6 +67,7 @@ managed-solr-testcontainers = { module = "org.testcontainers:testcontainers-solr
 
 
 managed-testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "managed-testcontainers" }
+managed-testcontainers-azure = { module = "org.testcontainers:testcontainers-azure", version.ref = "managed-testcontainers" }
 managed-testcontainers-consul = { module = "org.testcontainers:testcontainers-consul", version.ref = "managed-testcontainers" }
 managed-testcontainers-couchbase = { module = "org.testcontainers:testcontainers-couchbase", version.ref = "managed-testcontainers" }
 managed-testcontainers-elasticsearch = { module = "org.testcontainers:testcontainers-elasticsearch", version.ref = "managed-testcontainers" }

@@ -61,6 +61,7 @@ public final class TestResourcesClasspath implements KnownModules {
 
     private static final String MICRONAUT_NEO4J = "micronaut-neo4j";
     private static final String MICRONAUT_DATA_MONGODB = "micronaut-data-mongodb";
+    private static final String MICRONAUT_DATA_AZURE_COSMOS = "micronaut-data-azure-cosmos";
     private static final String MICRONAUT_DATA_R2DBC = "micronaut-data-r2dbc";
     // Default driver for mysql r2dbc
     private static final String REACTIVE_MYSQL_DRIVER = "dev.miku:r2dbc-mysql";
@@ -94,6 +95,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String REACTIVE_POOL_DRIVER = "io.r2dbc:r2dbc-pool";
 
     private static final String ELASTICSEARCH_MODULE = "elasticsearch";
+    private static final String AZURE_COSMOS_MODULE = "azure-cosmos";
     private static final String KAFKA_MODULE = "kafka";
     private static final String HIVEMQ_MODULE = "hivemq";
     private static final String MONGODB_MODULE = "mongodb";
@@ -185,6 +187,7 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(name -> name.startsWith(MICRONAUT_MQTT), deps -> true, HIVEMQ_MODULE);
             m.onArtifact(MICRONAUT_SECURITY_OAUTH2, OAUTH2_MODULE);
             m.onArtifact(MICRONAUT_DATA_MONGODB, MONGODB_MODULE);
+            m.onArtifact(MICRONAUT_DATA_AZURE_COSMOS, AZURE_COSMOS_MODULE);
             m.onModule(MICRONAUT_MONGO_SYNC, MONGODB_MODULE);
             m.onModule(MICRONAUT_MONGO_REACTIVE, MONGODB_MODULE);
             m.onArtifact(name -> name.equals(MICRONAUT_TRACING_OPENTELEMETRY) || name.equals(MICRONAUT_TRACING_OPENTELEMETRY_HTTP),

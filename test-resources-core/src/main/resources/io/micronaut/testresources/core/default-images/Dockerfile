@@ -127,7 +127,7 @@ FROM rabbitmq:4.3.0 AS rabbitmq
 
 # provider: redis
 # property: test-resources.containers.redis.image-name
-FROM redis:6.2.21 AS redis
+FROM redis:8.10.0 AS redis
 
 # provider: redis-cluster
 # property: test-resources.containers.redis.image-name

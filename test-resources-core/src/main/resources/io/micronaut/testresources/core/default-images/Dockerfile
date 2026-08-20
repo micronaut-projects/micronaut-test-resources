@@ -135,7 +135,7 @@ FROM grokzen/redis-cluster:6.2.14 AS redis_cluster
 
 # provider: seaweedfs
 # property: test-resources.containers.seaweedfs.image-name
-FROM chrislusf/seaweedfs:4.22 AS seaweedfs
+FROM chrislusf/seaweedfs:4.42 AS seaweedfs
 
 # provider: solr
 # property: test-resources.containers.solr.image-name

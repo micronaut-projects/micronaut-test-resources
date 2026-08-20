@@ -15,7 +15,7 @@ FROM mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview AS azu
 
 # provider: hashicorp-consul
 # property: test-resources.containers.hashicorp-consul.image-name
-FROM hashicorp/consul:1.15.4 AS consul
+FROM hashicorp/consul:2.0.3 AS consul
 
 # provider: couchbase
 # property: test-resources.containers.couchbase.image-name

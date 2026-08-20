@@ -103,7 +103,7 @@ FROM opensearchproject/opensearch:3.8.0 AS opensearch
 
 # provider: opentelemetry
 # property: test-resources.containers.opentelemetry.image-name
-FROM grafana/otel-lgtm:0.27.1 AS opentelemetry
+FROM grafana/otel-lgtm:0.30.2 AS opentelemetry
 
 # provider: oracle
 # property: test-resources.containers.oracle.image-name

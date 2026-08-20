@@ -51,7 +51,7 @@ FROM confluentinc/cp-kafka-connect:8.2.1 AS kafka_connect
 
 # provider: kafka-ksqldb
 # property: test-resources.containers.kafka-ksqldb.image-name
-FROM confluentinc/cp-ksqldb-server:8.2.1 AS kafka_ksqldb
+FROM confluentinc/cp-ksqldb-server:8.3.1 AS kafka_ksqldb
 
 # provider: keycloak
 # property: test-resources.containers.keycloak.image-name

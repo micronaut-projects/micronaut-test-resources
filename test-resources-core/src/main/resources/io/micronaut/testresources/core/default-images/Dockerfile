@@ -7,7 +7,7 @@
 
 # provider: azurite
 # property: test-resources.containers.azurite.image-name
-FROM mcr.microsoft.com/azure-storage/azurite:3.35.0 AS azurite
+FROM mcr.microsoft.com/azure-storage/azurite:3.36.0 AS azurite
 
 # provider: azure-cosmos
 # property: test-resources.containers.azure-cosmos.image-name

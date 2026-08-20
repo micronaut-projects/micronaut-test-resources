@@ -71,7 +71,7 @@ FROM axllent/mailpit:v1.30.7 AS mailpit
 
 # provider: mariadb
 # property: test-resources.containers.mariadb.image-name
-FROM mariadb:11.8.8 AS mariadb
+FROM mariadb:12.3.2 AS mariadb
 
 # provider: minio
 # property: test-resources.containers.minio.image-name

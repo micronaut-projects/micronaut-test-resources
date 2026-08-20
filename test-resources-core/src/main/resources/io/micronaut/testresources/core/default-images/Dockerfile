@@ -19,7 +19,7 @@ FROM couchbase/server:8.0.2 AS couchbase
 
 # provider: elasticsearch
 # property: test-resources.containers.elasticsearch.image-name
-FROM docker.elastic.co/elasticsearch/elasticsearch:9.2.1 AS elasticsearch
+FROM docker.elastic.co/elasticsearch/elasticsearch:9.5.2 AS elasticsearch
 
 # provider: floci
 # property: test-resources.containers.floci.image-name

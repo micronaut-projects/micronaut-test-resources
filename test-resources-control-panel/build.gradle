@@ -11,7 +11,7 @@ dependencies {
     implementation(libs.managed.testcontainers.core)
     implementation(projects.micronautTestResourcesTestcontainers)
     implementation(projects.micronautTestResourcesEmbedded)
-    implementation(projects.micronautTestResourcesServer)
+    implementation(projects.micronautTestResourcesServerThin)
     runtimeOnly(mn.micronaut.management)
 }
 

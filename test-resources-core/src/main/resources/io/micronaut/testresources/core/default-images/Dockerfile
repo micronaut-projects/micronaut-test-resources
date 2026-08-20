@@ -119,7 +119,7 @@ FROM postgres:18.3 AS postgres
 
 # provider: pulsar
 # property: test-resources.containers.pulsar.image-name
-FROM apachepulsar/pulsar:4.1.3 AS pulsar
+FROM apachepulsar/pulsar:4.2.4 AS pulsar
 
 # provider: rabbitmq
 # property: test-resources.containers.rabbitmq.image-name

@@ -123,7 +123,7 @@ vertx-mysql = { module = "io.vertx:vertx-mysql-client", version.ref = "vertx.cli
 vertx-mssql = { module = "io.vertx:vertx-mssql-client", version.ref = "vertx.client" }
 vertx-postgres = { module = "io.vertx:vertx-pg-client", version.ref = "vertx.client" }
 vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.client" }
-scram = { module = "com.ongres.scram:scram-client", version = "3.2" }
+scram = { module = "com.ongres.scram:scram-client", version = "3.4" }
 spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
 
 amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1" }

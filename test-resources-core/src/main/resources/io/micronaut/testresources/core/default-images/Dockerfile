@@ -31,7 +31,7 @@ FROM hazelcast/hazelcast:5.6.0-slim AS hazelcast
 
 # provider: hivemq
 # property: test-resources.containers.hivemq.image-name
-FROM hivemq/hivemq-ce:2021.3 AS hivemq
+FROM hivemq/hivemq-ce:2026.5 AS hivemq
 
 # provider: infinispan
 # property: test-resources.containers.infinispan.image-name

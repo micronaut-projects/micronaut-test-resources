@@ -28,5 +28,8 @@ dependencies {
         implementation("com.fasterxml.jackson.core:jackson-databind:2.22.2") {
             because "fixes Jackson security vulnerabilities in Infinispan transitive dependencies"
         }
+        implementation(libs.micrometer.core) {
+            because "fixes GHSA-g3pr-3p32-fp23 and GHSA-w737-wx49-qj23 in Infinispan transitive dependencies"
+        }
     }
 }

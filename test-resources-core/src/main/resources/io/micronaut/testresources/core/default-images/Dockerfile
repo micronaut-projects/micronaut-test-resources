@@ -27,7 +27,7 @@ FROM floci/floci:1.5.33 AS floci
 
 # provider: hazelcast
 # property: test-resources.containers.hazelcast.image-name
-FROM hazelcast/hazelcast:5.6.0-slim AS hazelcast
+FROM hazelcast/hazelcast:5.7.0-slim AS hazelcast
 
 # provider: hivemq
 # property: test-resources.containers.hivemq.image-name

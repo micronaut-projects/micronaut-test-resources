@@ -138,6 +138,18 @@ class TestResourcesClasspathTest extends Specification {
 
     }
 
+    def "infers Micronaut Data Azure Cosmos"() {
+        when:
+        infer 'io.micronaut.data:micronaut-data-azure-cosmos:1.0'
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-azure-cosmos:1.0.34'
+        )
+    }
+
     def "infers OpenTelemetry test resources for #tracingModule with OTLP exporter"() {
         when:
         infer "io.micronaut.tracing:$tracingModule:1.0", "io.opentelemetry:opentelemetry-exporter-otlp:1.0"

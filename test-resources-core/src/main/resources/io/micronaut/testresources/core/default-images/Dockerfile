@@ -131,7 +131,7 @@ FROM redis:8.10.0 AS redis
 
 # provider: redis-cluster
 # property: test-resources.containers.redis.image-name
-FROM grokzen/redis-cluster:6.2.14 AS redis_cluster
+FROM grokzen/redis-cluster:7.2.5 AS redis_cluster
 
 # provider: seaweedfs
 # property: test-resources.containers.seaweedfs.image-name

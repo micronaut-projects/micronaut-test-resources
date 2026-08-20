@@ -16,7 +16,7 @@
 
 [versions]
 micronaut = "5.1.11"
-micronaut-platform = "5.0.5"
+micronaut-platform = "5.1.1"
 micronaut-aot = "3.1.0"
 micronaut-aws = "5.1.0"
 micronaut-cache = "6.1.0"

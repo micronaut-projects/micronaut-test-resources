@@ -67,6 +67,7 @@ managed-solr-testcontainers = { module = "org.testcontainers:testcontainers-solr
 
 
 managed-testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "managed-testcontainers" }
+managed-testcontainers-azure = { module = "org.testcontainers:testcontainers-azure", version.ref = "managed-testcontainers" }
 managed-testcontainers-consul = { module = "org.testcontainers:testcontainers-consul", version.ref = "managed-testcontainers" }
 managed-testcontainers-couchbase = { module = "org.testcontainers:testcontainers-couchbase", version.ref = "managed-testcontainers" }
 managed-testcontainers-elasticsearch = { module = "org.testcontainers:testcontainers-elasticsearch", version.ref = "managed-testcontainers" }

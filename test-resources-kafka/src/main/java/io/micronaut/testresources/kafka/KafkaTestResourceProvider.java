@@ -131,7 +131,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         Properties adminClientConfiguration = new Properties();
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
-            Set<String> existingTopics = retryMetadataRequest(() -> adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
+            Set<String> existingTopics = listTopicNamesBeforeCreate(adminClient);
             verifyExistingTopicPartitions(adminClient, configuration.topics().stream()
                 .filter(existingTopics::contains)
                 .toList(), configuration);
@@ -177,6 +177,18 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         }
     }
 
+    private static Set<String> listTopicNamesBeforeCreate(AdminClient adminClient) throws ExecutionException, InterruptedException {
+        try {
+            return listTopicNames(adminClient);
+        } catch (TimeoutException ignored) {
+            return Collections.emptySet();
+        }
+    }
+
+    static Set<String> listTopicNames(AdminClient adminClient) throws ExecutionException, InterruptedException, TimeoutException {
+        return retryMetadataRequest(() -> adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
+    }
+
     protected void beforeCreateTopics(KafkaContainer container,
                                       TopicProvisioningConfiguration configuration,
                                       List<NewTopic> topicsToCreate) {
@@ -189,10 +201,15 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         if (topicNames.isEmpty()) {
             return;
         }
-        Map<String, TopicDescription> existingTopicDescriptions = retryMetadataRequest(() -> adminClient.describeTopics(topicNames)
+        Map<String, TopicDescription> existingTopicDescriptions = describeTopics(adminClient, topicNames);
+        verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
+    }
+
+    static Map<String, TopicDescription> describeTopics(AdminClient adminClient,
+                                                        List<String> topicNames) throws ExecutionException, InterruptedException, TimeoutException {
+        return retryMetadataRequest(() -> adminClient.describeTopics(topicNames)
             .allTopicNames()
             .get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
-        verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
     }
 
     static <T> T retryMetadataRequest(AdminMetadataRequest<T> request)

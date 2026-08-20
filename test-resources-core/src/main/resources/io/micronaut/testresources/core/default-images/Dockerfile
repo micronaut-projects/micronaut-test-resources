@@ -99,7 +99,7 @@ FROM neo4j:5.26.29 AS neo4j
 
 # provider: opensearch
 # property: test-resources.containers.opensearch.image-name
-FROM opensearchproject/opensearch:3.6.0 AS opensearch
+FROM opensearchproject/opensearch:3.8.0 AS opensearch
 
 # provider: opentelemetry
 # property: test-resources.containers.opentelemetry.image-name

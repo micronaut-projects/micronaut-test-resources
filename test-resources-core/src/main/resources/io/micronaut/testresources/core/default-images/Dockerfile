@@ -39,7 +39,7 @@ FROM hivemq/hivemq-ce:2026.5 AS hivemq
 
 # provider: infinispan
 # property: test-resources.containers.infinispan.image-name
-FROM quay.io/infinispan/server:16.1.3 AS infinispan
+FROM quay.io/infinispan/server:16.2.2 AS infinispan
 
 # provider: kafka
 # property: test-resources.containers.kafka.image-name

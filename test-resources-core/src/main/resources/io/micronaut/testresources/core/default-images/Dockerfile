@@ -139,7 +139,7 @@ FROM chrislusf/seaweedfs:4.22 AS seaweedfs
 
 # provider: solr
 # property: test-resources.containers.solr.image-name
-FROM solr:9.8.0 AS solr
+FROM solr:10.0.0 AS solr
 
 # provider: hashicorp-vault
 # property: test-resources.containers.hashicorp-vault.image-name

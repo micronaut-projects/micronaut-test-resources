@@ -43,7 +43,7 @@ FROM quay.io/infinispan/server:16.1.3 AS infinispan
 
 # provider: kafka
 # property: test-resources.containers.kafka.image-name
-FROM apache/kafka:4.1.1 AS kafka
+FROM apache/kafka:4.3.1 AS kafka
 
 # provider: kafka-schema-registry
 # property: test-resources.containers.kafka-schema-registry.image-name

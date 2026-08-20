@@ -95,7 +95,7 @@ FROM container-registry.oracle.com/mysql/community-server:8.4.12 AS mysql_commun
 
 # provider: neo4j
 # property: test-resources.containers.neo4j.image-name
-FROM neo4j:5.26.25 AS neo4j
+FROM neo4j:5.26.29 AS neo4j
 
 # provider: opensearch
 # property: test-resources.containers.opensearch.image-name

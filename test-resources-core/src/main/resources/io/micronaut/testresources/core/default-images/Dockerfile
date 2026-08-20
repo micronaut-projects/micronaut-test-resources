@@ -43,7 +43,7 @@ FROM apache/kafka:4.1.1 AS kafka
 
 # provider: kafka-schema-registry
 # property: test-resources.containers.kafka-schema-registry.image-name
-FROM confluentinc/cp-schema-registry:8.2.1 AS kafka_schema_registry
+FROM confluentinc/cp-schema-registry:8.3.1 AS kafka_schema_registry
 
 # provider: kafka-connect
 # property: test-resources.containers.kafka-connect.image-name

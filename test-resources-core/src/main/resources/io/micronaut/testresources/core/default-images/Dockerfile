@@ -115,7 +115,7 @@ FROM gvenzl/oracle-xe:slim-faststart AS oracle_xe
 
 # provider: postgres
 # property: test-resources.containers.postgres.image-name
-FROM postgres:18.3 AS postgres
+FROM postgres:18.6 AS postgres
 
 # provider: pulsar
 # property: test-resources.containers.pulsar.image-name

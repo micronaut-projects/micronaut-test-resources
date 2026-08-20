@@ -91,7 +91,7 @@ FROM mysql:8.4.11 AS mysql
 
 # provider: mysql
 # property: test-resources.containers.mysql.image-name
-FROM container-registry.oracle.com/mysql/community-server:8.4.12 AS mysql_community
+FROM container-registry.oracle.com/mysql/community-server:26.7.1 AS mysql_community
 
 # provider: neo4j
 # property: test-resources.containers.neo4j.image-name

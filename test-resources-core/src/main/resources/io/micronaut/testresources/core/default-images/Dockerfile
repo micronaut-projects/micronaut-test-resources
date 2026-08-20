@@ -63,7 +63,7 @@ FROM localstack/localstack:4.14.0 AS localstack
 
 # provider: mailpit
 # property: test-resources.containers.mailpit.image-name
-FROM axllent/mailpit:v1.29.7 AS mailpit
+FROM axllent/mailpit:v1.30.7 AS mailpit
 
 # provider: mariadb
 # property: test-resources.containers.mariadb.image-name

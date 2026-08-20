@@ -123,7 +123,7 @@ FROM apachepulsar/pulsar:4.1.3 AS pulsar
 
 # provider: rabbitmq
 # property: test-resources.containers.rabbitmq.image-name
-FROM rabbitmq:4.3.0 AS rabbitmq
+FROM rabbitmq:4.3.5 AS rabbitmq
 
 # provider: redis
 # property: test-resources.containers.redis.image-name

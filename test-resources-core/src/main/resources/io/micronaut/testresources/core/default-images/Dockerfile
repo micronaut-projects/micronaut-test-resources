@@ -59,7 +59,7 @@ FROM confluentinc/cp-ksqldb-server:8.3.1 AS kafka_ksqldb
 
 # provider: keycloak
 # property: test-resources.containers.keycloak.image-name
-FROM quay.io/keycloak/keycloak:26.6.1 AS keycloak
+FROM quay.io/keycloak/keycloak:26.7.2 AS keycloak
 
 # provider: localstack
 # property: test-resources.containers.localstack.image-name

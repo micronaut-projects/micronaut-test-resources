@@ -4,6 +4,7 @@ io.micronaut.test.extensions.testresources
 io.micronaut.test.extensions.testresources.annotation
 io.micronaut.testresources.aws
 io.micronaut.testresources.azure
+io.micronaut.testresources.azure.cosmos
 io.micronaut.testresources.buildtools
 io.micronaut.testresources.client
 io.micronaut.testresources.codec

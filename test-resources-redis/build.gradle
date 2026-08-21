@@ -22,5 +22,14 @@ dependencies {
         implementation("com.fasterxml.jackson.core:jackson-databind:2.22.2") {
             because "fixes Jackson security vulnerabilities in Redis transitive dependencies"
         }
+        implementation(libs.httpclient5) {
+            because "fixes GHSA-hjcp-jmpx-g3qm in the Redis testcontainers transitive dependencies"
+        }
+        implementation(libs.httpcore5) {
+            because "fixes GHSA-hf6x-8p5f-cgmf in the Redis testcontainers transitive dependencies"
+        }
+        implementation(libs.httpcore5.h2) {
+            because "fixes GHSA-v3jc-474w-2wm6 in the Redis testcontainers transitive dependencies"
+        }
     }
 }

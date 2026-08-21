@@ -1,0 +1,75 @@
+name: Kafka CI
+on:
+  push:
+    branches:
+      - master
+      - '[0-9]+.[0-9]+.x'
+  pull_request:
+    branches:
+      - master
+      - '[0-9]+.[0-9]+.x'
+jobs:
+  test:
+    name: "test"
+    if: github.repository != 'micronaut-projects/micronaut-project-template'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ['25']
+    env:
+      TESTCONTAINERS_RYUK_DISABLED: true
+    steps:
+      - name: Remove system JDKs
+        run: |
+          sudo rm -rf /usr/lib/jvm/*
+          unset JAVA_HOME
+          export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v '/usr/lib/jvm' | paste -sd:)
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf "/opt/ghc"
+          sudo rm -rf "/usr/share/dotnet"
+          sudo rm -rf "/usr/local/lib/android"
+          sudo apt-get clean
+
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup GraalVM CE
+        uses: graalvm/setup-graalvm@5298d94fb55a4f185c602eeac5de1b553882abe2 # v1
+        with:
+          distribution: 'graalvm'
+          java-version: ${{ matrix.java }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: true
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
+
+      - name: Stop existing Gradle daemons
+        run: ./gradlew --stop || true
+
+      - name: Run Kafka checks
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+          DEVELOCITY_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USERNAME }}
+          DEVELOCITY_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
+          GH_TOKEN_PUBLIC_REPOS_READONLY: ${{ secrets.GH_TOKEN_PUBLIC_REPOS_READONLY }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        run: ./gradlew -Pkafka :micronaut-test-resources-kafka:check --no-daemon --no-parallel --max-workers=1
+
+      - name: Publish Kafka test report
+        if: always()
+        uses: mikepenz/action-junit-report@d9f48fc87bc2354f7e214acf696ca5abc0a986f16 # v6
+        with:
+          check_name: Kafka CI / Test Report (${{ matrix.java }})
+          report_paths: 'test-resources-kafka/build/test-results/test/TEST-*.xml'
+          check_retries: 'true'
+
+      - name: Stop Gradle daemons
+        if: always()
+        run: ./gradlew --stop || true

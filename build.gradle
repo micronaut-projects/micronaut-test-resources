@@ -16,6 +16,15 @@ tasks.named("publishGuide") {
     properties['micronautVersion'] = micronautVersion
 }
 
+def kafkaTestsEnabled = providers.gradleProperty("kafka").isPresent()
+project(":micronaut-test-resources-kafka") {
+    // Kafka starts several heavyweight Testcontainers and is opt-in for the
+    // aggregate build. The dedicated Kafka CI workflow enables it with -Pkafka.
+    tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+        enabled = kafkaTestsEnabled
+    }
+}
+
 repositories {
     mavenCentral()
 //    maven {

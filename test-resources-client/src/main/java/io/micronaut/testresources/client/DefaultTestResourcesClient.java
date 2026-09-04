@@ -20,13 +20,16 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.json.JsonMapper;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpTimeoutException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,6 +58,8 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
     private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
     private static final String INTERNAL_SERVER_ERROR_PREFIX = INTERNAL_SERVER_ERROR + ": ";    
+    private static final int MAX_TRANSIENT_ATTEMPTS = 3;
+    private static final long TRANSIENT_RETRY_DELAY_MILLIS = 250;
 
     private final JsonMapper jsonMapper;
     private final String baseUri;
@@ -137,7 +142,24 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
         }
         config.accept(request);
         try {
-            var response = client.send(request.build(), HttpResponse.BodyHandlers.ofString());
+            var requestValue = request.build();
+            HttpResponse<String> response = null;
+            for (int attempt = 1; attempt <= MAX_TRANSIENT_ATTEMPTS; attempt++) {
+                try {
+                    response = client.send(requestValue, HttpResponse.BodyHandlers.ofString());
+                    break;
+                } catch (IOException e) {
+                    if (!isTransient(e) || attempt == MAX_TRANSIENT_ATTEMPTS) {
+                        throw e;
+                    }
+                    try {
+                        Thread.sleep(TRANSIENT_RETRY_DELAY_MILLIS);
+                    } catch (InterruptedException interrupted) {
+                        Thread.currentThread().interrupt();
+                        throw new TestResourcesException(interrupted);
+                    }
+                }
+            }
             var body = response.body();
             if (response.statusCode() == 200) {
                 if (STRING.equalsType(type)) {
@@ -159,6 +181,20 @@ public class DefaultTestResourcesClient implements TestResourcesClient {
             Thread.currentThread().interrupt();
             throw new TestResourcesException(e);
         }
+    }
+
+    private static boolean isTransient(IOException exception) {
+        Throwable current = exception;
+        while (current != null) {
+            if (current instanceof HttpTimeoutException
+                || current instanceof ConnectException
+                || current instanceof SocketException
+                || current instanceof EOFException) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 
     private <T> T handleError(SimpleJsonErrorModel model) {

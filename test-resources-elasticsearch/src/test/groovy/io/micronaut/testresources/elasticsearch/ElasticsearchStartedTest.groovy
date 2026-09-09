@@ -12,6 +12,7 @@ class ElasticsearchStartedTest extends AbstractElasticsearchSpec {
 
         then:
         info.clusterName() != null
+        runningTestContainers().first().image == "docker.elastic.co/elasticsearch/elasticsearch:8.15.5"
     }
 
 }

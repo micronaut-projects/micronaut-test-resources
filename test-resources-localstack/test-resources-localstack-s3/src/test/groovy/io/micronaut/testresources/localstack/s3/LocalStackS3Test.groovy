@@ -39,6 +39,7 @@ class LocalStackS3Test extends AbstractLocalStackSpec {
 
         and:
         listContainers().size() == 1
+        listContainers().first().image == 'localstack/localstack:3.8.1'
     }
 
     private S3Client buildClient() {

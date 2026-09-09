@@ -2,8 +2,10 @@ package io.micronaut.testresources.client
 
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
+import io.micronaut.testresources.codec.TestResourcesCodec
 import spock.lang.Specification
 
+import java.io.ByteArrayOutputStream
 import java.net.InetSocketAddress
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -23,7 +25,9 @@ class DefaultTestResourcesClientRetryTest extends Specification {
                 exchange.close()
                 return
             }
-            def body = 'resolved'.bytes
+            def output = new ByteArrayOutputStream()
+            TestResourcesCodec.writeValue('resolved', output)
+            def body = output.toByteArray()
             exchange.responseHeaders.add("Content-Type", "application/json")
             exchange.sendResponseHeaders(200, body.length)
             exchange.responseBody.withCloseable { it.write(body) }

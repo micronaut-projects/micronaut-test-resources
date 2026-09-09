@@ -65,7 +65,10 @@ class TestContainersTest extends Specification {
     }
 
     def "normalized container identity can reuse a container across requested properties"() {
-        def container = Stub(GenericContainer)
+        def container = Stub(GenericContainer) {
+            getContainerId() >> "running"
+            isRunning() >> true
+        }
         int created = 0
 
         when:
@@ -177,7 +180,7 @@ class TestContainersTest extends Specification {
 
         when:
         2.times {
-            TestContainers.getOrCreate("foo", TestContainersTest, "stale", [:],
+            TestContainers.getOrCreate("foo", TestContainersTest.name, "stale", Scope.ROOT, [:],
                     { DockerImageName.parse("alpine:3.20") }) { containers[created.getAndIncrement()] }
         }
 

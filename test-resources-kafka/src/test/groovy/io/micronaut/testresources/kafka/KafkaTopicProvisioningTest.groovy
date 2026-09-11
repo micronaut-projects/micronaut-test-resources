@@ -152,6 +152,17 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
 }
 
 class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
+    /**
+     * Shares the broker cached for {@link KafkaTestResourceProvider} in the same scope,
+     * instead of starting a second broker with the same network alias.
+     */
+    @Override
+    protected String getContainerOwnerKey(String propertyName,
+                                          Map<String, Object> properties,
+                                          Map<String, Object> testResourcesConfig) {
+        KafkaTestResourceProvider.name
+    }
+
     @Override
     protected void beforeCreateTopics(org.testcontainers.kafka.KafkaContainer container,
                                       TopicProvisioningConfiguration configuration,
@@ -160,7 +171,7 @@ class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.bootstrapServers)
         NewTopic topic = new NewTopic(topicsToCreate.first().name(), 1, (short) 1)
         try (AdminClient adminClient = AdminClient.create(properties)) {
-            adminClient.listTopics().names().get(30, TimeUnit.SECONDS)
+            KafkaTestResourceProvider.listTopicNames(adminClient)
             adminClient.createTopics([topic]).all().get(30, TimeUnit.SECONDS)
         } catch (ExecutionException e) {
             throw new AssertionError("Failed to create the racing Kafka topic", e)
@@ -261,6 +272,55 @@ class KafkaInvalidTopicProvisioningConfigTest extends AbstractKafkaSpec {
         def e = thrown(TimeoutException)
         e.message == "timeout-3"
         attempts.get() == 3
+    }
+
+    def "retries Kafka metadata requests while the broker does not know the topic yet"() {
+        given:
+        def attempts = new AtomicInteger()
+
+        when:
+        def result = KafkaTestResourceProvider.retryMetadataRequest({
+            if (attempts.incrementAndGet() == 1) {
+                throw new ExecutionException(new org.apache.kafka.common.errors.UnknownTopicOrPartitionException("not yet"))
+            }
+            "metadata"
+        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
+
+        then:
+        result == "metadata"
+        attempts.get() == 2
+    }
+
+    def "rethrows an unknown topic failure when Kafka metadata retries are exhausted"() {
+        given:
+        def attempts = new AtomicInteger()
+
+        when:
+        KafkaTestResourceProvider.retryMetadataRequest({
+            attempts.incrementAndGet()
+            throw new ExecutionException(new org.apache.kafka.common.errors.UnknownTopicOrPartitionException("missing"))
+        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
+
+        then:
+        def e = thrown(ExecutionException)
+        e.cause instanceof org.apache.kafka.common.errors.UnknownTopicOrPartitionException
+        attempts.get() == 3
+    }
+
+    def "does not retry other Kafka metadata failures"() {
+        given:
+        def attempts = new AtomicInteger()
+
+        when:
+        KafkaTestResourceProvider.retryMetadataRequest({
+            attempts.incrementAndGet()
+            throw new ExecutionException(new IllegalStateException("broken"))
+        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
+
+        then:
+        def e = thrown(ExecutionException)
+        e.cause.message == "broken"
+        attempts.get() == 1
     }
 }
 

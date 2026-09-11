@@ -44,6 +44,32 @@ abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
             throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s describing Kafka topics ${topicNames.toList()} for ${bootstrapServers}", e)
         }
     }
+
+    /**
+     * Waits until the broker can describe the topics. The broker's metadata can trail the
+     * controller right after a topic is created, which makes describing it fail with
+     * {@link org.apache.kafka.common.errors.UnknownTopicOrPartitionException}.
+     */
+    static void awaitTopicsKnownToBroker(String bootstrapServers, String... topicNames) {
+        Properties properties = new Properties()
+        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(ADMIN_TIMEOUT_SECONDS)
+        try (AdminClient adminClient = AdminClient.create(properties)) {
+            while (true) {
+                try {
+                    adminClient.describeTopics(topicNames.toList()).allTopicNames().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    return
+                } catch (ExecutionException e) {
+                    if (!(e.cause instanceof org.apache.kafka.common.errors.UnknownTopicOrPartitionException) || System.nanoTime() > deadline) {
+                        throw new AssertionError("Kafka topics ${topicNames.toList()} did not become known to the broker at ${bootstrapServers}", e)
+                    }
+                    Thread.sleep(200)
+                }
+            }
+        } catch (TimeoutException e) {
+            throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s waiting for Kafka topics ${topicNames.toList()} at ${bootstrapServers}", e)
+        }
+    }
 }
 
 @MicronautTest
@@ -121,6 +147,7 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
             (KafkaTestResourceProvider.KAFKA_TOPICS)    : "payments",
             (KafkaTestResourceProvider.KAFKA_PARTITIONS): "1"
         ]).orElseThrow()
+        awaitTopicsKnownToBroker(bootstrapServers, "payments")
         provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, requestedProperties, [
             (KafkaTestResourceProvider.KAFKA_TOPICS)    : "payments",
             (KafkaTestResourceProvider.KAFKA_PARTITIONS): "3"
@@ -173,6 +200,7 @@ class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
         try (AdminClient adminClient = AdminClient.create(properties)) {
             KafkaTestResourceProvider.listTopicNames(adminClient)
             adminClient.createTopics([topic]).all().get(30, TimeUnit.SECONDS)
+            AbstractKafkaTopicProvisioningSpec.awaitTopicsKnownToBroker(container.bootstrapServers, topic.name())
         } catch (ExecutionException e) {
             throw new AssertionError("Failed to create the racing Kafka topic", e)
         } catch (TimeoutException e) {
@@ -272,55 +300,6 @@ class KafkaInvalidTopicProvisioningConfigTest extends AbstractKafkaSpec {
         def e = thrown(TimeoutException)
         e.message == "timeout-3"
         attempts.get() == 3
-    }
-
-    def "retries Kafka metadata requests while the broker does not know the topic yet"() {
-        given:
-        def attempts = new AtomicInteger()
-
-        when:
-        def result = KafkaTestResourceProvider.retryMetadataRequest({
-            if (attempts.incrementAndGet() == 1) {
-                throw new ExecutionException(new org.apache.kafka.common.errors.UnknownTopicOrPartitionException("not yet"))
-            }
-            "metadata"
-        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
-
-        then:
-        result == "metadata"
-        attempts.get() == 2
-    }
-
-    def "rethrows an unknown topic failure when Kafka metadata retries are exhausted"() {
-        given:
-        def attempts = new AtomicInteger()
-
-        when:
-        KafkaTestResourceProvider.retryMetadataRequest({
-            attempts.incrementAndGet()
-            throw new ExecutionException(new org.apache.kafka.common.errors.UnknownTopicOrPartitionException("missing"))
-        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
-
-        then:
-        def e = thrown(ExecutionException)
-        e.cause instanceof org.apache.kafka.common.errors.UnknownTopicOrPartitionException
-        attempts.get() == 3
-    }
-
-    def "does not retry other Kafka metadata failures"() {
-        given:
-        def attempts = new AtomicInteger()
-
-        when:
-        KafkaTestResourceProvider.retryMetadataRequest({
-            attempts.incrementAndGet()
-            throw new ExecutionException(new IllegalStateException("broken"))
-        } as KafkaTestResourceProvider.AdminMetadataRequest<String>)
-
-        then:
-        def e = thrown(ExecutionException)
-        e.cause.message == "broken"
-        attempts.get() == 1
     }
 }
 

@@ -1,5 +1,7 @@
 package io.micronaut.testresources.elasticsearch
 
+import io.micronaut.testresources.core.DefaultTestResourceImages
+
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 
 @MicronautTest
@@ -12,6 +14,7 @@ class ElasticsearchStartedTest extends AbstractElasticsearchSpec {
 
         then:
         info.clusterName() != null
+        runningTestContainers().first().image == DefaultTestResourceImages.DEFAULT_ELASTICSEARCH_IMAGE
     }
 
 }

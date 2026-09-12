@@ -2,7 +2,10 @@ package io.micronaut.testresources.testcontainers
 
 import io.micronaut.testresources.core.Scope
 import org.testcontainers.containers.GenericContainer
+import org.testcontainers.utility.DockerImageName
 import spock.lang.Specification
+
+import java.util.concurrent.atomic.AtomicInteger
 
 class TestContainersTest extends Specification {
 
@@ -62,7 +65,10 @@ class TestContainersTest extends Specification {
     }
 
     def "normalized container identity can reuse a container across requested properties"() {
-        def container = Stub(GenericContainer)
+        def container = Stub(GenericContainer) {
+            getContainerId() >> "running"
+            isRunning() >> true
+        }
         int created = 0
 
         when:
@@ -157,6 +163,30 @@ class TestContainersTest extends Specification {
         then:
         created == 1
         TestContainers.hasDatabase(container, "shared_db")
+    }
+
+    def "recreates a cached container which is no longer running"() {
+        given:
+        def created = new AtomicInteger()
+        def first = Stub(GenericContainer) {
+            getContainerId() >> "stale"
+            isRunning() >> false
+        }
+        def second = Stub(GenericContainer) {
+            getContainerId() >> "fresh"
+            isRunning() >> true
+        }
+        def containers = [first, second]
+
+        when:
+        2.times {
+            TestContainers.getOrCreate("foo", TestContainersTest.name, "stale", Scope.ROOT, [:],
+                    { DockerImageName.parse("alpine:3.20") }) { containers[created.getAndIncrement()] }
+        }
+
+        then:
+        created.get() == 2
+        TestContainers.listAll().values().flatten() == [second]
     }
 
     void create(String name, String scope, GenericContainer container) {

@@ -20,8 +20,17 @@ def kafkaTestsEnabled = providers.gradleProperty("kafka").isPresent()
 project(":micronaut-test-resources-kafka") {
     // Kafka starts several heavyweight Testcontainers and is opt-in for the
     // aggregate build. The dedicated Kafka CI workflow enables it with -Pkafka.
-    tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
-        enabled = kafkaTestsEnabled
+    // Without it, the broker-free specs still run so coverage sees the module.
+    if (!kafkaTestsEnabled) {
+        tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+            if (name == "test") {
+                filter {
+                    includeTestsMatching "io.micronaut.testresources.kafka.KafkaAdminRetryTest"
+                }
+            } else {
+                enabled = false
+            }
+        }
     }
 }
 

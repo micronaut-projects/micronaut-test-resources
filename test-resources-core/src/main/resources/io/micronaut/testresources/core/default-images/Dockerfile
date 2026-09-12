@@ -75,7 +75,7 @@ FROM mariadb:12.3.2 AS mariadb
 
 # provider: minio
 # property: test-resources.containers.minio.image-name
-FROM minio/minio:RELEASE.2025-09-07T16-13-09Z AS minio
+FROM quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z AS minio
 
 # provider: mongodb
 # property: test-resources.containers.mongodb.image-name

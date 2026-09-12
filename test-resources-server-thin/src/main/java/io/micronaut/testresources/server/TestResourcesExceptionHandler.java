@@ -35,19 +35,22 @@ public class TestResourcesExceptionHandler implements ExceptionHandler<Throwable
             .contentType(TestResourcesMediaType.TEST_RESOURCES_BINARY_MEDIA_TYPE);
     }
 
+    /**
+     * Returns the deepest non-blank message in the cause chain, unchanged.
+     * Wrappers such as {@code TestResourcesResolutionException(cause)} carry
+     * {@code cause.toString()} as their message, so walking to the cause
+     * already skips their {@code java.lang.SomeException: } prefix. Messages
+     * themselves may contain colons, for example an image name with a tag.
+     */
     private static String extractMessage(Throwable exception) {
         Throwable cursor = exception;
-        String fallback = exception.getClass().getSimpleName();
+        String message = exception.getClass().getSimpleName();
         while (cursor != null) {
             if (cursor.getMessage() != null && !cursor.getMessage().isBlank()) {
-                fallback = cursor.getMessage();
+                message = cursor.getMessage();
             }
             cursor = cursor.getCause();
         }
-        int prefix = fallback.lastIndexOf(':');
-        if (prefix > -1 && prefix < fallback.length() - 1) {
-            return fallback.substring(prefix + 1).trim();
-        }
-        return fallback;
+        return message;
     }
 }

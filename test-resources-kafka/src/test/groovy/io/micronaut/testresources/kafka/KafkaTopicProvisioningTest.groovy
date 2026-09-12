@@ -44,6 +44,32 @@ abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
             throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s describing Kafka topics ${topicNames.toList()} for ${bootstrapServers}", e)
         }
     }
+
+    /**
+     * Waits until the broker can describe the topics. The broker's metadata can trail the
+     * controller right after a topic is created, which makes describing it fail with
+     * {@link org.apache.kafka.common.errors.UnknownTopicOrPartitionException}.
+     */
+    static void awaitTopicsKnownToBroker(String bootstrapServers, String... topicNames) {
+        Properties properties = new Properties()
+        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(ADMIN_TIMEOUT_SECONDS)
+        try (AdminClient adminClient = AdminClient.create(properties)) {
+            while (true) {
+                try {
+                    adminClient.describeTopics(topicNames.toList()).allTopicNames().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    return
+                } catch (ExecutionException e) {
+                    if (!(e.cause instanceof org.apache.kafka.common.errors.UnknownTopicOrPartitionException) || System.nanoTime() > deadline) {
+                        throw new AssertionError("Kafka topics ${topicNames.toList()} did not become known to the broker at ${bootstrapServers}", e)
+                    }
+                    Thread.sleep(200)
+                }
+            }
+        } catch (TimeoutException e) {
+            throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s waiting for Kafka topics ${topicNames.toList()} at ${bootstrapServers}", e)
+        }
+    }
 }
 
 @MicronautTest
@@ -121,6 +147,7 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
             (KafkaTestResourceProvider.KAFKA_TOPICS)    : "payments",
             (KafkaTestResourceProvider.KAFKA_PARTITIONS): "1"
         ]).orElseThrow()
+        awaitTopicsKnownToBroker(bootstrapServers, "payments")
         provider.resolve(KafkaTestResourceProvider.KAFKA_BOOTSTRAP_SERVERS, requestedProperties, [
             (KafkaTestResourceProvider.KAFKA_TOPICS)    : "payments",
             (KafkaTestResourceProvider.KAFKA_PARTITIONS): "3"
@@ -152,6 +179,17 @@ class KafkaReusedContainerTopicProvisioningTest extends AbstractKafkaTopicProvis
 }
 
 class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
+    /**
+     * Shares the broker cached for {@link KafkaTestResourceProvider} in the same scope,
+     * instead of starting a second broker with the same network alias.
+     */
+    @Override
+    protected String getContainerOwnerKey(String propertyName,
+                                          Map<String, Object> properties,
+                                          Map<String, Object> testResourcesConfig) {
+        KafkaTestResourceProvider.name
+    }
+
     @Override
     protected void beforeCreateTopics(org.testcontainers.kafka.KafkaContainer container,
                                       TopicProvisioningConfiguration configuration,
@@ -160,8 +198,9 @@ class RacingKafkaTestResourceProvider extends KafkaTestResourceProvider {
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.bootstrapServers)
         NewTopic topic = new NewTopic(topicsToCreate.first().name(), 1, (short) 1)
         try (AdminClient adminClient = AdminClient.create(properties)) {
-            adminClient.listTopics().names().get(30, TimeUnit.SECONDS)
+            KafkaTestResourceProvider.listTopicNames(adminClient)
             adminClient.createTopics([topic]).all().get(30, TimeUnit.SECONDS)
+            AbstractKafkaTopicProvisioningSpec.awaitTopicsKnownToBroker(container.bootstrapServers, topic.name())
         } catch (ExecutionException e) {
             throw new AssertionError("Failed to create the racing Kafka topic", e)
         } catch (TimeoutException e) {

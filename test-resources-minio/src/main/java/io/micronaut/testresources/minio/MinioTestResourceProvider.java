@@ -36,6 +36,11 @@ public class MinioTestResourceProvider extends AbstractTestContainersProvider<Mi
     public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_MINIO_IMAGE;
     public static final String DISPLAY_NAME = "MinIO";
     public static final String SIMPLE_NAME = "minio";
+    /**
+     * The image name Testcontainers' {@link MinIOContainer} expects. The default image is served
+     * from Quay, since the Docker Hub repository is no longer pullable anonymously.
+     */
+    private static final String TESTCONTAINERS_COMPATIBLE_IMAGE = "minio/minio";
     private static final List<String> SUPPORTED_KEYS = List.of(
         MINIO_URL,
         MINIO_ACCESS_KEY,
@@ -64,7 +69,7 @@ public class MinioTestResourceProvider extends AbstractTestContainersProvider<Mi
 
     @Override
     protected MinIOContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return new MinIOContainer(imageName);
+        return new MinIOContainer(imageName.asCompatibleSubstituteFor(TESTCONTAINERS_COMPATIBLE_IMAGE));
     }
 
     @Override

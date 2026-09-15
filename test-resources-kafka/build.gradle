@@ -14,4 +14,10 @@ dependencies {
 
     testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mnKafka.micronaut.kafka)
+
+    constraints {
+        implementation("at.yawk.lz4:lz4-java:1.11.1") {
+            because "fixes GHSA-xx22-p4ch-683r in the Kafka client transitive dependencies"
+        }
+    }
 }

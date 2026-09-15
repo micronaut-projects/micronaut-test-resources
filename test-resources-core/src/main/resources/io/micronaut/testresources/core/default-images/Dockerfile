@@ -15,7 +15,7 @@ FROM hashicorp/consul:1.15.4 AS consul
 
 # provider: couchbase
 # property: test-resources.containers.couchbase.image-name
-FROM couchbase/server:8.0.1 AS couchbase
+FROM couchbase/server:8.0.2 AS couchbase
 
 # provider: elasticsearch
 # property: test-resources.containers.elasticsearch.image-name
@@ -23,7 +23,7 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:9.2.1 AS elasticsearch
 
 # provider: floci
 # property: test-resources.containers.floci.image-name
-FROM floci/floci:1.5.19 AS floci
+FROM floci/floci:1.5.33 AS floci
 
 # provider: hazelcast
 # property: test-resources.containers.hazelcast.image-name
@@ -67,7 +67,7 @@ FROM axllent/mailpit:v1.29.7 AS mailpit
 
 # provider: mariadb
 # property: test-resources.containers.mariadb.image-name
-FROM mariadb:11.8.6 AS mariadb
+FROM mariadb:11.8.8 AS mariadb
 
 # provider: minio
 # property: test-resources.containers.minio.image-name
@@ -83,11 +83,11 @@ FROM mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04 AS mssql
 
 # provider: mysql
 # property: test-resources.containers.mysql.image-name
-FROM mysql:8.4.8 AS mysql
+FROM mysql:8.4.10 AS mysql
 
 # provider: mysql
 # property: test-resources.containers.mysql.image-name
-FROM container-registry.oracle.com/mysql/community-server:8.4.9 AS mysql_community
+FROM container-registry.oracle.com/mysql/community-server:8.4.10 AS mysql_community
 
 # provider: neo4j
 # property: test-resources.containers.neo4j.image-name

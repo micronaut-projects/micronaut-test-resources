@@ -1,0 +1,61 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+Provides support for resolving test resources from Docker Compose services.
+"""
+
+dependencies {
+    api(projects.micronautTestResourcesCore)
+    implementation(projects.micronautTestResourcesTestcontainers)
+    implementation(mn.snakeyaml)
+
+    testImplementation(projects.micronautTestResourcesAzure)
+    testImplementation(projects.micronautTestResourcesCouchbase)
+    testImplementation(projects.micronautTestResourcesHashicorpConsul)
+    testImplementation(projects.micronautTestResourcesHashicorpVault)
+    testImplementation(projects.micronautTestResourcesHazelcast)
+    testImplementation(projects.micronautTestResourcesHibernateReactiveMariadb)
+    testImplementation(projects.micronautTestResourcesHibernateReactiveMssql)
+    testImplementation(projects.micronautTestResourcesHibernateReactiveMysql)
+    testImplementation(projects.micronautTestResourcesHibernateReactiveOracleFree)
+    testImplementation(projects.micronautTestResourcesHibernateReactiveOracleXe)
+    testImplementation(projects.micronautTestResourcesHibernateReactivePostgresql)
+    testImplementation(projects.micronautTestResourcesHivemq)
+    testImplementation(projects.micronautTestResourcesInfinispan)
+    testImplementation(projects.micronautTestResourcesJdbcMariadb)
+    testImplementation(projects.micronautTestResourcesJdbcMssql)
+    testImplementation(projects.micronautTestResourcesJdbcMysql)
+    testImplementation(projects.micronautTestResourcesJdbcOracleFree)
+    testImplementation(projects.micronautTestResourcesJdbcOracleXe)
+    testImplementation(projects.micronautTestResourcesJdbcPostgresql)
+    testImplementation(projects.micronautTestResourcesKafka)
+    testImplementation(projects.micronautTestResourcesLocalstackCore)
+    testImplementation(projects.micronautTestResourcesMailpit)
+    testImplementation(projects.micronautTestResourcesMinio)
+    testImplementation(projects.micronautTestResourcesMongodb)
+    testImplementation(projects.micronautTestResourcesNeo4j)
+    testImplementation(projects.micronautTestResourcesOauth2)
+    testImplementation(projects.micronautTestResourcesOpensearch)
+    testImplementation(projects.micronautTestResourcesOpentelemetry)
+    testImplementation(projects.micronautTestResourcesPulsar)
+    testImplementation(projects.micronautTestResourcesR2dbcMariadb)
+    testImplementation(projects.micronautTestResourcesR2dbcMssql)
+    testImplementation(projects.micronautTestResourcesR2dbcMysql)
+    testImplementation(projects.micronautTestResourcesR2dbcOracleFree)
+    testImplementation(projects.micronautTestResourcesR2dbcOracleXe)
+    testImplementation(projects.micronautTestResourcesR2dbcPostgresql)
+    testImplementation(projects.micronautTestResourcesRabbitmq)
+    testImplementation(projects.micronautTestResourcesRedis)
+    testImplementation(projects.micronautTestResourcesSeaweedfs)
+    testImplementation(projects.micronautTestResourcesSolr)
+    testImplementation(projects.micronautTestResourcesWiremock)
+}
+
+micronautBuild {
+    // new module, so disable binary check for now
+    binaryCompatibility {
+        enabled = false
+    }
+}

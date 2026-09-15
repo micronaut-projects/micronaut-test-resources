@@ -115,6 +115,7 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String REACTIVE_MSSQL_MODULE = "r2dbc-mssql";
     private static final String HASHICORP_VAULT_MODULE = "hashicorp-vault";
     private static final String REACTIVE_POOL_MODULE = "r2dbc-pool";
+    private static final String COMPOSE_MODULE = TEST_RESOURCES_GROUP + ":micronaut-test-resources-compose";
 
     static {
         List<ModuleIdentifier> embeddedModules = new ArrayList<>();
@@ -206,6 +207,7 @@ public final class TestResourcesClasspath implements KnownModules {
             m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_ORACLE_DRIVER)), REACTIVE_ORACLE_FREE_MODULE);
             m.onArtifact(name -> name.equals(MICRONAUT_DATA_R2DBC), deps -> deps.anyMatch(moduleEquals(REACTIVE_MSSQL_DRIVER)), REACTIVE_MSSQL_MODULE);
             m.passthroughModules(
+                COMPOSE_MODULE,
                 MYSQL_MYSQL_CONNECTOR_JAVA, MYSQL_MYSQL_CONNECTOR_J,
                 POSTGRESQL_DRIVER,
                 MARIADB_JAVA_CLIENT,

@@ -8,9 +8,16 @@ Provides support for launching a Kafka test container.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     implementation(libs.managed.testcontainers.kafka)
     implementation(mnKafka.kafka.clients)
 
     testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mnKafka.micronaut.kafka)
+
+    constraints {
+        implementation("at.yawk.lz4:lz4-java:1.11.1") {
+            because "fixes GHSA-xx22-p4ch-683r in the Kafka client transitive dependencies"
+        }
+    }
 }

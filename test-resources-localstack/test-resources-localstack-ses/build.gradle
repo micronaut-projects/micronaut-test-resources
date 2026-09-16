@@ -1,0 +1,24 @@
+plugins {
+    id 'io.micronaut.build.internal.localstack-module'
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter '4.1.0'
+    }
+}
+
+description = """
+Provides support for Localstack SES.
+"""
+
+dependencies {
+    implementation(projects.micronautTestResourcesLocalstackCore)
+    runtimeOnly(libs.amazon.awssdk.v1.ses) {
+        because "Localstack requires the AWS SDK in version 1 at runtime"
+    }
+    testImplementation(testFixtures(projects.micronautTestResourcesLocalstackCore))
+    testImplementation(projects.micronautTestResourcesLocalstackSns)
+    testImplementation(libs.amazon.awssdk.v2.ses)
+    testImplementation(libs.amazon.awssdk.v2.sns)
+}

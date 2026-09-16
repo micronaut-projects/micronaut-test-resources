@@ -9,7 +9,7 @@ pluginManagement {
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '8.0.0'
+    id 'io.micronaut.build.shared.settings' version '8.0.1'
 }
 rootProject.name = 'testresources-parent'
 
@@ -75,6 +75,7 @@ def flociModules = [
 include 'test-resources-bom'
 include 'test-resources-aws-base'
 include 'test-resources-azure'
+include 'test-resources-azure-cosmos'
 include 'test-resources-build-tools'
 include 'test-resources-couchbase'
 include 'test-resources-codec'
@@ -98,6 +99,7 @@ include 'test-resources-redis'
 include 'test-resources-rabbitmq'
 include 'test-resources-seaweedfs'
 include 'test-resources-server'
+include 'test-resources-server-thin'
 include 'test-resources-solr'
 include 'test-resources-testcontainers'
 include 'test-resources-hashicorp-vault'

@@ -23,6 +23,7 @@ import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.common.errors.TopicExistsException;
+import org.apache.kafka.common.errors.UnknownTopicOrPartitionException;
 import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -57,6 +58,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
     public static final String SIMPLE_NAME = "kafka";
     private static final long ADMIN_TIMEOUT_SECONDS = 30;
     private static final int ADMIN_METADATA_ATTEMPTS = 3;
+    private static final long UNKNOWN_TOPIC_RETRY_DELAY_MILLIS = 1000;
     private static final TopicProvisioningConfiguration NO_TOPICS =
         new TopicProvisioningConfiguration(Collections.emptyList(), DEFAULT_PARTITIONS);
 
@@ -131,7 +133,7 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         Properties adminClientConfiguration = new Properties();
         adminClientConfiguration.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, container.getBootstrapServers());
         try (AdminClient adminClient = AdminClient.create(adminClientConfiguration)) {
-            Set<String> existingTopics = retryMetadataRequest(() -> adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
+            Set<String> existingTopics = listTopicNamesBeforeCreate(adminClient);
             verifyExistingTopicPartitions(adminClient, configuration.topics().stream()
                 .filter(existingTopics::contains)
                 .toList(), configuration);
@@ -177,6 +179,18 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         }
     }
 
+    private static Set<String> listTopicNamesBeforeCreate(AdminClient adminClient) throws ExecutionException, InterruptedException {
+        try {
+            return listTopicNames(adminClient);
+        } catch (TimeoutException ignored) {
+            return Collections.emptySet();
+        }
+    }
+
+    static Set<String> listTopicNames(AdminClient adminClient) throws ExecutionException, InterruptedException, TimeoutException {
+        return retryMetadataRequest(() -> adminClient.listTopics().names().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
+    }
+
     protected void beforeCreateTopics(KafkaContainer container,
                                       TopicProvisioningConfiguration configuration,
                                       List<NewTopic> topicsToCreate) {
@@ -189,21 +203,40 @@ public class KafkaTestResourceProvider extends AbstractTestContainersProvider<Ka
         if (topicNames.isEmpty()) {
             return;
         }
-        Map<String, TopicDescription> existingTopicDescriptions = retryMetadataRequest(() -> adminClient.describeTopics(topicNames)
+        Map<String, TopicDescription> existingTopicDescriptions = describeTopics(adminClient, topicNames);
+        verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
+    }
+
+    static Map<String, TopicDescription> describeTopics(AdminClient adminClient,
+                                                        List<String> topicNames) throws ExecutionException, InterruptedException, TimeoutException {
+        return retryMetadataRequest(() -> adminClient.describeTopics(topicNames)
             .allTopicNames()
             .get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS));
-        verifyExistingTopicPartitions(existingTopicDescriptions, configuration);
     }
 
     static <T> T retryMetadataRequest(AdminMetadataRequest<T> request)
         throws ExecutionException, InterruptedException, TimeoutException {
         TimeoutException lastTimeout = new TimeoutException();
+        ExecutionException lastUnknownTopic = null;
         for (int attempt = 0; attempt < ADMIN_METADATA_ATTEMPTS; attempt++) {
             try {
                 return request.execute();
             } catch (TimeoutException e) {
                 lastTimeout = e;
+                lastUnknownTopic = null;
+            } catch (ExecutionException e) {
+                if (!(e.getCause() instanceof UnknownTopicOrPartitionException)) {
+                    throw e;
+                }
+                // A topic the controller already knows may not have reached the broker's metadata yet
+                lastUnknownTopic = e;
+                if (attempt < ADMIN_METADATA_ATTEMPTS - 1) {
+                    Thread.sleep(UNKNOWN_TOPIC_RETRY_DELAY_MILLIS);
+                }
             }
+        }
+        if (lastUnknownTopic != null) {
+            throw lastUnknownTopic;
         }
         throw lastTimeout;
     }

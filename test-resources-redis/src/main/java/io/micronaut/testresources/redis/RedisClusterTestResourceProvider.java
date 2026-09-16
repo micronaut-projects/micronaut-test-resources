@@ -48,6 +48,7 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
     private static final List<String> SUPPORTED_PROPERTIES_LIST = List.of(REDIS_URIS);
     private static final Set<String> SUPPORTED_PROPERTIES = Set.of(REDIS_URIS);
     private static final String NOTIFY_KEYSPACE_EVENTS_CONFIG_FORMAT = "notify-keyspace-events %s\n";
+    private static final String REDIS_CLUSTER_LOCALE = "C.UTF-8";
     /**
      * Alternate cluster configuration file, workaround for
      * https://github.com/Grokzen/docker-redis-cluster/discussions/149 .
@@ -94,6 +95,11 @@ public class RedisClusterTestResourceProvider extends AbstractTestContainersProv
         redisClusterContainer.withSlavesPerMaster(slavesPerMaster);
         redisClusterContainer.withInitialPort(initialPort);
         redisClusterContainer.withIP(findIp(testResourcesConfig));
+        // The 7.2.5 image does not generate en_US.UTF-8 correctly. Use the
+        // built-in locale so all Redis processes can start (see
+        // https://github.com/Grokzen/docker-redis-cluster/issues/169).
+        redisClusterContainer.withEnv("LANG", REDIS_CLUSTER_LOCALE);
+        redisClusterContainer.withEnv("LC_ALL", REDIS_CLUSTER_LOCALE);
         redisClusterContainer.setPortBindings(portBindings(initialPort, masters, slavesPerMaster));
 
         String clusterConfig = CLUSTER_CONFIG + findNotifyKeyspaceEvents(testResourcesConfig)

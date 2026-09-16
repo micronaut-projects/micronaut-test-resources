@@ -42,6 +42,10 @@ public final class DockerSupport {
 
     }
 
+    @SuppressWarnings("java:S2095") // The executor is shut down in the finally block below.
+    // Try-with-resources is deliberately not used: ExecutorService.close() waits for the task to
+    // terminate, and the whole point of this method is to give up on a Docker client that does not
+    // answer within TIMEOUT seconds. shutdownNow() after a bounded await is the only safe form.
     private static boolean performDockerCheck() {
         var executor = Executors.newSingleThreadExecutor();
         boolean available;

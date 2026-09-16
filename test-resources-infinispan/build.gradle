@@ -17,19 +17,19 @@ dependencies {
     testImplementation(mnCache.micronaut.cache.infinispan)
 
     constraints {
-        implementation("org.apache.logging.log4j:log4j-core:2.25.4") {
+        implementation("org.apache.logging.log4j:log4j-core:2.26.1") {
             because "https://ossindex.sonatype.org/vulnerability/CVE-2025-68161?component-type=maven&component-name=org.apache.logging.log4j%2Flog4j-core&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.2"
         }
-        implementation("io.vertx:vertx-core:4.5.31") {
+        implementation("io.vertx:vertx-core:4.5.32") {
             because "https://ossindex.sonatype.org/vulnerability/CVE-2026-1002?component-type=maven&component-name=io.vertx%2Fvertx-core&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.2"
         }
-        implementation("com.fasterxml.jackson.core:jackson-core:2.22.1") {
+        implementation("com.fasterxml.jackson.core:jackson-core:2.22.2") {
             because "fixes Jackson security vulnerabilities in Infinispan transitive dependencies"
         }
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.1") {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.2") {
             because "fixes Jackson security vulnerabilities in Infinispan transitive dependencies"
         }
-        implementation("io.micrometer:micrometer-core:1.16.6") {
+        implementation(libs.micrometer.core) {
             because "fixes GHSA-g3pr-3p32-fp23 and GHSA-w737-wx49-qj23 in Infinispan transitive dependencies"
         }
     }

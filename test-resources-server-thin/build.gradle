@@ -1,0 +1,27 @@
+plugins {
+    id 'io.micronaut.build.internal.test-resources-module'
+}
+
+description = """
+The non-fat test resources server runtime. This module contains the server
+classes and declares their runtime dependencies for classpath-based launches.
+"""
+
+dependencies {
+    implementation(mn.micronaut.http.server.netty)
+    implementation(mn.reactor)
+    implementation(projects.micronautTestResourcesCodec)
+    implementation(projects.micronautTestResourcesCore)
+    implementation(projects.micronautTestResourcesEmbedded)
+    implementation(projects.micronautTestResourcesTestcontainers)
+    runtimeOnly(mnLogging.logback.classic)
+    runtimeOnly(mnSerde.micronaut.serde.support)
+    runtimeOnly(mn.snakeyaml)
+}
+
+micronautBuild {
+    binaryCompatibility {
+        // There is no previous release of this newly published artifact.
+        enabled = false
+    }
+}

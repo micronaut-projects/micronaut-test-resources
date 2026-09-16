@@ -15,20 +15,13 @@ client.
 """
 
 dependencies {
-    implementation(mn.micronaut.http.server.netty)
-    implementation(mn.reactor)
-    implementation(projects.micronautTestResourcesCodec)
-    implementation(projects.micronautTestResourcesCore)
-    implementation(projects.micronautTestResourcesEmbedded)
-    implementation(projects.micronautTestResourcesTestcontainers)
-    runtimeOnly(mnLogging.logback.classic)
-    runtimeOnly(mnSerde.micronaut.serde.support)
-    runtimeOnly(mn.snakeyaml)
+    implementation(projects.micronautTestResourcesServerThin)
 
     testFixturesImplementation(projects.micronautTestResourcesCore)
     testFixturesImplementation(projects.micronautTestResourcesTestcontainers)
     testImplementation(mn.micronaut.http.client)
     testImplementation(mnLogging.logback.classic)
+    testImplementation(projects.micronautTestResourcesCodec)
     testImplementation(projects.micronautTestResourcesClient)
     // TODO: MN5 Requires Micronaut Kafka release
 //    testRuntimeOnly(projects.micronautTestResourcesKafka)

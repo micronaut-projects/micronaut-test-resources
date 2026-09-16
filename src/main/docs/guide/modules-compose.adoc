@@ -139,6 +139,9 @@ Compose-mapped service families in this revision include:
 | Azurite
 | Resolves Azure shared-key account name, account key, and connection string.
 
+| Azure Cosmos emulator
+| Resolves `azure.cosmos.endpoint` and `azure.cosmos.key`.
+
 | Couchbase
 | Resolves `couchbase.uri`, `couchbase.username`, and `couchbase.password`.
 
@@ -253,6 +256,10 @@ The supported service families use the following service-specific configuration 
 | Infinispan
 | `USER`, `PASS`
 | If absent, the provider uses the same Hot Rod defaults as the Testcontainers provider.
+
+| Azure Cosmos emulator
+| `PROTOCOL`, `AZURE_COSMOS_KEY`
+| The endpoint scheme comes from `PROTOCOL` and defaults to `https`. The key comes from the password label, `AZURE_COSMOS_KEY`, or the well-known public emulator key.
 
 | Mailpit, WireMock, Neo4j, OpenSearch, OpenTelemetry, Pulsar, Hazelcast, Consul, HiveMQ, Couchbase, Azurite, SeaweedFS, and Solr
 | Service-specific endpoint ports; provider-specific credential labels where applicable.

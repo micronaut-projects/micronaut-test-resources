@@ -12,6 +12,7 @@ dependencies {
     implementation(mn.snakeyaml)
 
     testImplementation(projects.micronautTestResourcesAzure)
+    testImplementation(projects.micronautTestResourcesAzureCosmos)
     testImplementation(projects.micronautTestResourcesCouchbase)
     testImplementation(projects.micronautTestResourcesHashicorpConsul)
     testImplementation(projects.micronautTestResourcesHashicorpVault)

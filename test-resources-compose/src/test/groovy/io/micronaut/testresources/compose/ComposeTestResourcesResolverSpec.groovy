@@ -16,6 +16,7 @@
 package io.micronaut.testresources.compose
 
 import io.micronaut.testresources.azure.AzuriteComposeTestResourcesProvider
+import io.micronaut.testresources.azure.cosmos.AzureCosmosComposeTestResourcesProvider
 import io.micronaut.testresources.consul.ConsulComposeTestResourcesProvider
 import io.micronaut.testresources.core.ScopedTestResourcesLifecycle
 import io.micronaut.testresources.core.TestResourcesResolver
@@ -422,6 +423,23 @@ services:
         provider.resolve(context("solr.schema.url", provider.port, service, ["solr.schema.url": "classpath:schema.xml"])) == "classpath:schema.xml"
         provider.resolve(context("solr.config.url", provider.port, service, [:])) == null
         provider.resolve(context("unsupported", provider.port, service, [:])) == null
+    }
+
+    def "azure cosmos compose provider resolves the emulator endpoint protocol and key"() {
+        given:
+        def provider = new AzureCosmosComposeTestResourcesProvider()
+        def defaults = new ComposeService("cosmos", "mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator", [:], [:], [8081], [])
+        def customized = new ComposeService("cosmos", "custom/image", [
+                (ComposeLabels.PASSWORD): "label-key"
+        ], ["PROTOCOL": "http"], [8081], [])
+
+        expect:
+        provider.matches(defaults)
+        provider.resolve(context("azure.cosmos.endpoint", provider.port, defaults, [:])) == "https://localhost:18081"
+        provider.resolve(context("azure.cosmos.key", provider.port, defaults, [:])).startsWith("C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM")
+        provider.resolve(context("azure.cosmos.endpoint", provider.port, customized, [:])) == "http://localhost:18081"
+        provider.resolve(context("azure.cosmos.key", provider.port, customized, [:])) == "label-key"
+        provider.resolve(context("unsupported", provider.port, defaults, [:])) == null
     }
 
     def "compose coverage inventory covers every resolver backed provider module"() {
@@ -864,6 +882,7 @@ services:
 
     private static final Set<String> COMPOSE_SUPPORTED_PROVIDER_MODULES = [
             "test-resources-azure",
+            "test-resources-azure-cosmos",
             "test-resources-couchbase",
             "test-resources-hashicorp-consul",
             "test-resources-hashicorp-vault",
@@ -921,6 +940,7 @@ services:
     ]
 
     private static final Set<String> REQUIRED_COMPOSE_SERVICE_TYPES = [
+            "azure-cosmos",
             "azurite",
             "couchbase",
             "hashicorp-consul",

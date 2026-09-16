@@ -202,6 +202,21 @@ class TestResourcesClasspathTest extends Specification {
         'io.r2dbc:r2dbc-pool'                    | 'pool'
     }
 
+    def "server runtime embeds a JsonMapper provider"() {
+        // The generated dependency-list.txt is derived from the server's runtime
+        // classpath, so a module being forbidden here proves it is actually
+        // shipped by the server. See https://github.com/micronaut-projects/micronaut-test-resources/issues/1211
+        expect: "the mapper implementation is embedded, hence stripped from a user supplied classpath"
+        !TestResourcesClasspath.isDependencyAllowedOnServerClasspath(
+                new ModuleIdentifier('io.micronaut.serde', 'micronaut-serde-jackson')
+        )
+
+        and: "a module the server does not embed is still allowed through"
+        TestResourcesClasspath.isDependencyAllowedOnServerClasspath(
+                new ModuleIdentifier('org.postgresql', 'postgresql')
+        )
+    }
+
     private void inferredClasspathEquals(String... dependencies) {
         Set<String> expected = dependencies as SortedSet<String>
         Set<String> actual = inferred as SortedSet<String>

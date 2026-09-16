@@ -8,6 +8,7 @@ import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.admin.TopicDescription
+import org.apache.kafka.common.errors.UnknownTopicOrPartitionException
 
 import java.util.Properties
 import java.util.concurrent.ExecutionException
@@ -51,19 +52,29 @@ abstract class AbstractKafkaTopicProvisioningSpec extends AbstractKafkaSpec {
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(ADMIN_TIMEOUT_SECONDS)
         try (AdminClient adminClient = AdminClient.create(properties)) {
-            while (true) {
-                try {
-                    adminClient.describeTopics(topicNames.toList()).allTopicNames().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    return
-                } catch (ExecutionException e) {
-                    if (!(e.cause instanceof org.apache.kafka.common.errors.UnknownTopicOrPartitionException) || System.nanoTime() > deadline) {
-                        throw new AssertionError("Kafka topics ${topicNames.toList()} did not become known to the broker at ${bootstrapServers}", e)
-                    }
-                    Thread.sleep(200)
-                }
+            while (!brokerKnowsTopics(adminClient, bootstrapServers, deadline, topicNames)) {
+                Thread.sleep(200)
             }
         } catch (TimeoutException e) {
             throw new AssertionError("Timed out after ${ADMIN_TIMEOUT_SECONDS}s waiting for Kafka topics ${topicNames.toList()} at ${bootstrapServers}", e)
+        }
+    }
+
+    /**
+     * One describe attempt.
+     *
+     * @return true once the broker can describe every topic, false while its metadata still
+     *         trails the controller and the deadline has not passed
+     */
+    private static boolean brokerKnowsTopics(AdminClient adminClient, String bootstrapServers, long deadline, String... topicNames) {
+        try {
+            adminClient.describeTopics(topicNames.toList()).allTopicNames().get(ADMIN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            return true
+        } catch (ExecutionException e) {
+            if (!(e.cause instanceof UnknownTopicOrPartitionException) || System.nanoTime() > deadline) {
+                throw new AssertionError("Kafka topics ${topicNames.toList()} did not become known to the broker at ${bootstrapServers}", e)
+            }
+            return false
         }
     }
 }

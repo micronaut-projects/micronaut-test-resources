@@ -1,0 +1,2 @@
+io.micronaut.testresources.solr.SolrComposeTestResourcesProvider
+io.micronaut.testresources.solr.SolrZookeeperComposeTestResourcesProvider

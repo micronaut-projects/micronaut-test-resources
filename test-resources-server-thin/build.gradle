@@ -16,6 +16,9 @@ dependencies {
     implementation(projects.micronautTestResourcesTestcontainers)
     runtimeOnly(mnLogging.logback.classic)
     runtimeOnly(mnSerde.micronaut.serde.support)
+    // Provides the JsonMapper bean the server needs as soon as a JSON aware
+    // route or bean (control panel, management, user modules) is on its classpath.
+    runtimeOnly(mnSerde.micronaut.serde.jackson)
     runtimeOnly(mn.snakeyaml)
 }
 

@@ -49,7 +49,10 @@ The containers communicate with Kafka on an internal Docker network, so no fixed
 Request one of the listed URL properties when a service should be started.
 For example, a test-only bean can require and inject the Schema Registry URL:
 
-snippet::io.micronaut.testresources.kafka.SchemaRegistryClientConfiguration[project=test-resources-kafka,source=test,tags=clazz]
+snippet::io.micronaut.testresources.docs.kafka.SchemaRegistryClientConfiguration[project-base="test-suite-docs", tags="imports,clazz", title="Requiring the Schema Registry URL"]
+
+<1> The bean is only loaded when the `kafka.schema.registry.url` property is available
+<2> Test Resources provides the value of the property and starts the Schema Registry (and Kafka) container
 
 Test Resources will provide the URL value for the matching service and start Kafka as a dependency.
 

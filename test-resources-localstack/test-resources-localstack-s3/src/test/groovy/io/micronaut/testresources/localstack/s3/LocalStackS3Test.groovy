@@ -3,6 +3,7 @@ package io.micronaut.testresources.localstack.s3
 import io.micronaut.context.annotation.ConfigurationBuilder
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.testresources.core.DefaultTestResourceImages
 import io.micronaut.testresources.localstack.AbstractLocalStackSpec
 import jakarta.inject.Inject
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
@@ -39,6 +40,7 @@ class LocalStackS3Test extends AbstractLocalStackSpec {
 
         and:
         listContainers().size() == 1
+        listContainers().first().image == DefaultTestResourceImages.DEFAULT_LOCALSTACK_IMAGE
     }
 
     private S3Client buildClient() {

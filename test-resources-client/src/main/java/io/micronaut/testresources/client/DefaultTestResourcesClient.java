@@ -24,14 +24,17 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.net.http.HttpTimeoutException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
@@ -65,6 +68,8 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
     private static final Argument<List<String>> LIST_OF_STRING = Argument.LIST_OF_STRING;
     private static final Argument<String> STRING = Argument.STRING;
     private static final Argument<Boolean> BOOLEAN = Argument.BOOLEAN;
+    private static final int MAX_TRANSIENT_ATTEMPTS = 3;
+    private static final long TRANSIENT_RETRY_DELAY_MILLIS = 250;
 
     private final String baseUri;
     private final HttpClient client;
@@ -167,7 +172,24 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
         }
         config.accept(request);
         try {
-            var response = client.send(request.build(), HttpResponse.BodyHandlers.ofByteArray());
+            var requestValue = request.build();
+            HttpResponse<byte[]> response = null;
+            for (int attempt = 1; attempt <= MAX_TRANSIENT_ATTEMPTS; attempt++) {
+                try {
+                    response = client.send(requestValue, HttpResponse.BodyHandlers.ofByteArray());
+                    break;
+                } catch (IOException e) {
+                    if (!isTransient(e) || attempt == MAX_TRANSIENT_ATTEMPTS) {
+                        throw e;
+                    }
+                    try {
+                        Thread.sleep(TRANSIENT_RETRY_DELAY_MILLIS);
+                    } catch (InterruptedException interrupted) {
+                        Thread.currentThread().interrupt();
+                        throw new TestResourcesException(interrupted);
+                    }
+                }
+            }
             var body = response.body();
             if (response.statusCode() == 200) {
                 return decodeResponse(body, type);
@@ -225,6 +247,20 @@ public final class DefaultTestResourcesClient implements TestResourcesClient {
             return Map.of(MESSAGE_KEY, matcher.group(1));
         }
         return Map.of(MESSAGE_KEY, text);
+    }
+
+    private static boolean isTransient(IOException exception) {
+        Throwable current = exception;
+        while (current != null) {
+            if (current instanceof HttpTimeoutException
+                || current instanceof ConnectException
+                || current instanceof SocketException
+                || current instanceof EOFException) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 
     private <T> T handleError(@Nullable Object payload) {

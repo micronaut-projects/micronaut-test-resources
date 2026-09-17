@@ -118,6 +118,10 @@ public final class TestContainers {
         return withKey(Key.of(owner, name, scope, query), key -> {
             try {
                 T container = withMapLock("getOrCreate", () -> (T) CONTAINERS_BY_KEY.get(key));
+                if (container != null && container.getContainerId() != null && !isRunning(container)) {
+                    removeCachedContainer(key, container);
+                    container = null;
+                }
                 var dockerImageName = imageNameSupplier.get();
                 if (container == null) {
                     notifyStartOperation(PULLING, dockerImageName);
@@ -158,6 +162,30 @@ public final class TestContainers {
                 throw new TestResourcesResolutionException(message);
             }
         });
+    }
+
+    private static boolean isRunning(GenericContainer<?> container) {
+        try {
+            return container.isRunning();
+        } catch (RuntimeException e) {
+            LOGGER.debug("Unable to inspect cached container {}; recreating it", container.getContainerId(), e);
+            return false;
+        }
+    }
+
+    private static void removeCachedContainer(Key key, GenericContainer<?> container) {
+        withMapLock("removeCachedContainer", () -> {
+            if (CONTAINERS_BY_KEY.get(key) == container) {
+                CONTAINERS_BY_KEY.remove(key);
+                CONTAINERS_BY_PROPERTY.values().forEach(containers -> containers.remove(container));
+            }
+            return null;
+        });
+        try {
+            container.close();
+        } catch (RuntimeException e) {
+            LOGGER.debug("Unable to close stale cached container {}", container.getContainerId(), e);
+        }
     }
 
     private static void notifyStartOperation(Map<DockerImageName, AtomicInteger> operation, DockerImageName dockerImageName) {

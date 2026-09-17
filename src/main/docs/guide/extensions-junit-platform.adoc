@@ -29,32 +29,20 @@ In order to reduce consumption, you can now use the `@TestResourcesScope` annota
 
 The easiest is to use an explicit name for a scope:
 
-[source,java]
------
-@TestResourcesScope("my scope")
-class MyTest {
-    @Test
-    void testSomething() {
-        // ...
-    }
-}
------
+snippet::io.micronaut.testresources.docs.junitplatform.ScopeNameTest[project-base="test-suite-docs", tags="imports,clazz", title="Declaring an explicit test resources scope"]
+
+<1> All tests using the `my scope` scope share the same test resources
+<2> The current scope is available to the test resources extension while the test runs
 
 When using this annotation, all tests which are using the same scope will share the test resources of that scope.
 Once the last test which requires that scope is finished, **test resources of that scope are automatically closed**.
 
 In addition to an explicit name, it is possible to supply a naming strategy:
 
-[source,java]
------
-@TestResourcesScope(namingStrategy = MyStrategy)
-class MyTest {
-    @Test
-    void testSomething() {
-        // ...
-    }
-}
------
+snippet::io.micronaut.testresources.docs.junitplatform.ScopeNamingStrategyTest[project-base="test-suite-docs", tags="imports,clazz", title="Declaring a test resources scope with a naming strategy"]
+
+<1> The naming strategy computes the scope name from the test class
+<2> With the `TestClassName` strategy, the scope is the fully qualified name of the test class
 
 Test resources come with 2 built-in strategies:
 

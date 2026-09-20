@@ -1,6 +1,6 @@
 # Micronaut Test Resources Agent Guidance
 
-This repository is the `4.0.x` release-line workspace for Micronaut Test Resources. It is a Gradle multi-module project that provides automatic test resources through resolver SPIs, Testcontainers-backed providers, an embedded mode, a remote server, and build-time client utilities.
+This repository is the Micronaut Test Resources workspace for the active release-line branch you are working on. It is a Gradle multi-module project that provides automatic test resources through resolver SPIs, Testcontainers-backed providers, an embedded mode, a remote server, and build-time client utilities.
 
 This file is intentionally durable: do not add generated timestamps, commit IDs, or branch names from transient analysis runs. Keep root guidance short and move detailed rules into `.agent-instructions/`.
 

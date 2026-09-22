@@ -24,9 +24,11 @@ class RabbitMQProvider(TestResourcesPropertyProvider):
 
 
 # TODO(python): @TestResourcesProperties is read by reflection from the test class (TestResourcesPropertiesFactory)
-# but the Python compiler does not copy it onto the generated class, so the "rabbitmq.uri" property is never
-# requested from test resources ("Error resolving property value [${rabbitmq.servers.product-cluster.port}]").
-# The provider would then be instantiated by reflection before the GraalPy runtime exists.
+# but the Python compiler does not copy it onto the generated class (Micronaut annotations are served by the
+# annotation metadata; only the JUnit extension annotations are copied and the reflection option does not apply to
+# them), so the "rabbitmq.uri" property is never requested from test resources ("Error resolving property value
+# [${rabbitmq.servers.product-cluster.port}]"). The provider would then be instantiated by reflection before the
+# GraalPy runtime exists.
 @Disabled("TODO(python): @TestResourcesProperties is not applied to a Python test class yet")
 # tag::test[]
 @MicronautTest

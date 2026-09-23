@@ -7,5 +7,6 @@ Provides support for launching a SeaweedFS test container.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     testImplementation(libs.amazon.awssdk.v2.s3)
 }

@@ -9,3 +9,6 @@ Test resources are only available during _development_ (for example when running
 A key aspect of test resources to understand is that they are created in reaction to a _missing property_ in configuration.
 For example, if the `datasources.default.url` property is missing, then a test resource will be responsible for resolving its value.
 If that property is set, then the test resource will not be used.
+
+You can disable Micronaut Test Resources for a particular application by setting `test-resources.enabled=false` in the application configuration.
+This is useful for development runs where the build tool would otherwise make the test resources client available, but the application should use only explicitly configured services.

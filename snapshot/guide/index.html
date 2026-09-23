@@ -24,7 +24,7 @@
         }
     </script>
     <style type="text/css">
-        .lang-java { display: block }; .lang-python { display: block }; .lang-kotlin { display: block }; .lang-groovy { display: block }; 
+        .lang-java { display: block }; .lang-python { display: block }; .lang-kotlin { display: block }; .lang-groovy { display: block }; .lang-scala { display: block }; 
     </style>
 </head>
 
@@ -1531,6 +1531,15 @@ You can also add the module explicitly:</p>
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+test = [
+    <span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-mailpit"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="paragraph">
@@ -2298,6 +2307,15 @@ Micronaut Test Resources uses a random mapped host port and does not bind contai
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+test = [
+    <span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-opentelemetry"</span>,
+]</code></pre>
+</div>
+</div>
 
         <div class="listingblock multi-language-sample">
 <div class="title"></div>
@@ -2311,6 +2329,15 @@ Micronaut Test Resources uses a random mapped host port and does not bind contai
     &lt;groupId&gt;io.micronaut.tracing&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-tracing-opentelemetry&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.tracing:micronaut-tracing-opentelemetry"</span>,
+]</code></pre>
 </div>
 </div>
 
@@ -2327,6 +2354,15 @@ Micronaut Test Resources uses a random mapped host port and does not bind contai
     &lt;artifactId&gt;opentelemetry-exporter-otlp&lt;/artifactId&gt;
     &lt;scope&gt;runtime&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.opentelemetry:opentelemetry-exporter-otlp"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -4624,6 +4660,15 @@ The core extension provides a way to expand the set of test properties available
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+test = [
+    <span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-extensions-core"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 <div class="sect1">
@@ -4750,6 +4795,15 @@ class ConnectionSpec {
     &lt;artifactId&gt;micronaut-test-resources-extensions-junit-platform&lt;/artifactId&gt;
     &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+test = [
+    <span class="hljs-string">"io.micronaut.testresources:micronaut-test-resources-extensions-junit-platform"</span>,
+]</code></pre>
 </div>
 </div>
 </p>

@@ -15,7 +15,7 @@
 # a managed version (a version which alias starts with "managed-"
 
 [versions]
-micronaut = "5.2.1"
+micronaut = "5.2.3"
 micronaut-platform = "5.1.1"
 micronaut-aot = "3.1.0"
 micronaut-aws = "5.1.0"
@@ -61,6 +61,9 @@ httpclient5 = "5.6.3"
 httpcore5 = "5.4.3"
 lz4-java = "1.11.1"
 micrometer-core = "1.16.6"
+
+# Documentation examples (test-suite-docs-*)
+wiremock = "3.13.2"
 
 [libraries]
 # Testcontainers
@@ -130,6 +133,7 @@ vertx-postgres = { module = "io.vertx:vertx-pg-client", version.ref = "vertx.cli
 vertx-oracle = { module = "io.vertx:vertx-oracle-client", version.ref = "vertx.client" }
 scram = { module = "com.ongres.scram:scram-client", version = "3.4" }
 spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
+wiremock = { module = "org.wiremock:wiremock-standalone", version.ref = "wiremock" }
 
 amazon-awssdk-v1-dynamodb = { module = "com.amazonaws:aws-java-sdk-dynamodb", version.ref = "amazon-awssdk-v1" }
 amazon-awssdk-v1-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "amazon-awssdk-v1" }

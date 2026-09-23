@@ -9,7 +9,7 @@ pluginManagement {
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '8.0.1'
+    id 'io.micronaut.build.shared.settings' version '8.1.2'
 }
 rootProject.name = 'testresources-parent'
 
@@ -106,6 +106,12 @@ include 'test-resources-hashicorp-consul'
 include 'test-resources-infinispan'
 include 'test-resources-hazelcast'
 include 'test-resources-wiremock'
+
+// The examples of the user guide, in Java, Kotlin, Groovy and Python (project-base="test-suite-docs" of the snippet:: macros)
+include 'test-suite-docs-java'
+include 'test-suite-docs-kotlin'
+include 'test-suite-docs-groovy'
+include 'test-suite-docs-python'
 
 extensionModules.each {
     String projectName = "test-resources-extensions-$it"

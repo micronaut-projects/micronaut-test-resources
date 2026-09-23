@@ -26,26 +26,8 @@ test-resources:
 
 Then the values `smtp.host` and `smtp.port` can for example be used in a bean configuration:
 
-[source,java]
-----
-@Singleton
-public class JavamailSessionProvider implements SessionProvider {
-    @Value("${smtp.host}")          // <1>
-    private String smtpHost;
+snippet::io.micronaut.testresources.docs.testcontainers.JavamailSessionProvider[project-base="test-suite-docs", tags="imports,clazz", title="Using the properties of a generic container"]
 
-    @Value("${smtp.port}")          // <2>
-    private String smtpPort;
-
-
-    @Override
-    public Session session() {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", smtpHost);
-        props.put("mail.smtp.port", smtpPort);
-        return Session.getDefaultInstance(props);
-    }
-}
-----
 <1> The `smtp.host` property that we exposed in the test container configuration
 <2> The `smtp.port` property that we exposed in the test container configuration
 

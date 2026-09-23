@@ -80,7 +80,7 @@ public class OracleFreeTestResourceProvider extends AbstractJdbcTestResourceProv
 
     @Override
     protected OracleContainer createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfig) {
-        return OracleFreeContainerSupport.createContainer(() -> new OracleContainer(imageName));
+        return OracleFreeContainerSupport.createContainer(() -> new JdbcReadyOracleContainer(imageName));
     }
 
 }

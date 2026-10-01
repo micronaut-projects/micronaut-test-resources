@@ -46,6 +46,7 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
     /**
      * @deprecated The OIDC provider metadata supplies this URI; configure the issuer only.
      */
+    @SuppressWarnings("java:S1133") // Retained for source compatibility with consumers of the provider constant.
     @Deprecated(since = "4.3.1")
     public static final String JWKS_URL = "micronaut.security.token.jwt.signatures.jwks.keycloak.url";
 

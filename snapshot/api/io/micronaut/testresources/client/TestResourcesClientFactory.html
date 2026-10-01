@@ -118,7 +118,7 @@ found on a specific file system location.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromSystemProperties()" class="member-name-link">fromSystemProperties</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates a new test resources client configured via system properties.</div>
+<div class="block">Returns a test resources client configured via system properties.</div>
 </div>
 </div>
 </div>
@@ -181,10 +181,19 @@ found on a specific file system location.</div>
 <h3>fromSystemProperties</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="TestResourcesClient.html" title="interface in io.micronaut.testresources.client">TestResourcesClient</a>&gt;</span>&nbsp;<span class="element-name">fromSystemProperties</span>()</div>
-<div class="block">Creates a new test resources client configured via system properties.</div>
+<div class="block">Returns a test resources client configured via system properties.
+<p>
+The <code>micronaut.test.resources.enabled</code> system property is read on
+every call, before any cached client: while it is set to anything other
+than <code>true</code> (ignoring case), this method returns a no-op client and
+leaves the cached client in place. Since it is a system property, it
+applies to every lookup made in the JVM while it is set, including those
+of application contexts starting on other threads.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>a new test resources client, if system properties were found.</dd>
+<dd>the cached client or a newly created one, a no-op client if test
+resources are disabled, or an empty optional if no client is cached and
+<code>micronaut.test.resources.server.uri</code> is not set.</dd>
 </dl>
 </div>
 </section>

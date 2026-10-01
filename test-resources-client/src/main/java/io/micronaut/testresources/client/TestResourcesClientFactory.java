@@ -118,18 +118,24 @@ public final class TestResourcesClientFactory {
 
     /**
      * Creates a new test resources client configured via system properties.
+     * <p>
+     * The {@code micronaut.test.resources.enabled} system property is read on
+     * every call, before any cached client: while it is {@code false}, this method
+     * returns a no-op client and leaves the cached client in place. Since it is a
+     * system property, it applies to every lookup made in the JVM while it is set,
+     * including those of application contexts starting on other threads.
      *
      * @return a new test resources client, if system properties were found.
      */
     public static Optional<TestResourcesClient> fromSystemProperties() {
-        var client = cachedClient != null ? cachedClient.get() : null;
-        if (client != null) {
-            return Optional.of(client);
-        }
         boolean enabled = Boolean.parseBoolean(System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.ENABLED), "true"));
         if (!enabled) {
             System.err.println("Test resources are disabled");
             return Optional.of(NoOpClient.INSTANCE);
+        }
+        var client = cachedClient != null ? cachedClient.get() : null;
+        if (client != null) {
+            return Optional.of(client);
         }
         String serverUri = System.getProperty(ConfigFinder.systemPropertyNameOf(TestResourcesClient.SERVER_URI));
         if (serverUri != null) {

@@ -72,4 +72,4 @@ URI mailpitApiUrl;
 HttpRequest<?> request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/messages"));
 ----
 
-For custom SMTP containers or non-JavaMail configuration, use <<modules-testcontainers,Generic Testcontainers support>>.
+For custom SMTP containers or non-JavaMail configuration, use xref:modules.adoc#modules-testcontainers[Generic Testcontainers support].

@@ -201,7 +201,7 @@
         <h1>Micronaut Test Resources</h1>
         <p></p>
         <p>Test resources integration (like Testcontainers) for Micronaut</p>
-        <p><strong>Version:</strong> 4.3.0 </p>
+        <p><strong>Version:</strong> 4.3.1 </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -1459,21 +1459,95 @@ The containers communicate with Kafka on an internal Docker network, so no fixed
 For example, a test-only bean can require and inject the Schema Registry URL:</p>
 </div>
 <div class="listingblock multi-language-sample">
+<div class="title">Requiring the Schema Registry URL</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 
 @Singleton
-@Requires(property = "kafka.schema.registry.url")
+@Requires(property = "kafka.schema.registry.url") // <b class="conum">(1)</b>
 class SchemaRegistryClientConfiguration {
 
+    private final String schemaRegistryUrl;
+
     SchemaRegistryClientConfiguration(
-            @Value("${kafka.schema.registry.url}") String schemaRegistryUrl) {
+            @Value("${kafka.schema.registry.url}") String schemaRegistryUrl) { // <b class="conum">(2)</b>
         // Configure a Schema Registry client for tests.
+        this.schemaRegistryUrl = schemaRegistryUrl;
+    }
+
+    String getSchemaRegistryUrl() {
+        return schemaRegistryUrl;
     }
 }</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Requiring the Schema Registry URL</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from typing import Annotated
+
+from jakarta.inject import Singleton
+from micronaut.context.annotation import Requires, Value
+
+@Singleton
+@Requires(property="kafka.schema.registry.url")  # <b class="conum">(1)</b>
+class SchemaRegistryClientConfiguration:
+
+    def __init__(self, schema_registry_url: Annotated[str, Value("${kafka.schema.registry.url}")]):  # <b class="conum">(2)</b>
+        # Configure a Schema Registry client for tests.
+        self.schema_registry_url = schema_registry_url</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Requiring the Schema Registry URL</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Requires
+import io.micronaut.context.annotation.Value
+import jakarta.inject.Singleton
+
+@Singleton
+@Requires(property = "kafka.schema.registry.url") // <b class="conum">(1)</b>
+class SchemaRegistryClientConfiguration(
+    @Value("\${kafka.schema.registry.url}") val schemaRegistryUrl: String // <b class="conum">(2)</b>
+) {
+    // Configure a Schema Registry client for tests.
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Requiring the Schema Registry URL</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Requires
+import io.micronaut.context.annotation.Value
+import jakarta.inject.Singleton
+
+@Singleton
+@Requires(property = "kafka.schema.registry.url") // <b class="conum">(1)</b>
+class SchemaRegistryClientConfiguration {
+
+    final String schemaRegistryUrl
+
+    SchemaRegistryClientConfiguration(
+            @Value('${kafka.schema.registry.url}') String schemaRegistryUrl) { // <b class="conum">(2)</b>
+        // Configure a Schema Registry client for tests.
+        this.schemaRegistryUrl = schemaRegistryUrl
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The bean is only loaded when the <code>kafka.schema.registry.url</code> property is available</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Test Resources provides the value of the property and starts the Schema Registry (and Kafka) container</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Test Resources will provide the URL value for the matching service and start Kafka as a dependency.</p>
@@ -1797,13 +1871,107 @@ They are exposed through random host ports and are not fixed host ports.</p>
 <p>During development you can open the resolved <code>mailpit.ui.url</code> value in a browser to inspect captured messages.
 In integration tests you can use <code>mailpit.api.url</code> to assert messages through the Mailpit HTTP API:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Using the Mailpit HTTP API</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Value("${mailpit.api.url}")
-URI mailpitApiUrl;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Value;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.Test;
 
-HttpRequest&lt;?&gt; request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/messages"));</code></pre>
+import java.net.URI;
+
+@MicronautTest
+class MailpitApiTest {
+
+    @Value("${mailpit.api.url}") // <b class="conum">(1)</b>
+    URI mailpitApiUrl;
+
+    @Test
+    void theMessagesAreListedThroughTheMailpitApi() {
+        HttpRequest&lt;?&gt; request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/messages")); // <b class="conum">(2)</b>
+    }
+}</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using the Mailpit HTTP API</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from typing import Annotated
+
+from java.net import URI
+from micronaut.context.annotation import Value
+from micronaut.http import HttpRequest
+from micronaut.test.extensions.junit5.annotation import MicronautTest
+from org.junit.jupiter.api import Test
+
+@MicronautTest
+class MailpitApiTest:
+
+    mailpit_api_url: Annotated[URI, Value("${mailpit.api.url}")]  # <b class="conum">(1)</b>
+
+    @Test
+    def the_messages_are_listed_through_the_mailpit_api(self) -&gt; None:
+        request = HttpRequest.GET(self.mailpit_api_url.resolve("/api/v1/messages"))  # <b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using the Mailpit HTTP API</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Value
+import io.micronaut.http.HttpRequest
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.junit.jupiter.api.Test
+import java.net.URI
+
+@MicronautTest
+class MailpitApiTest {
+
+    @Value("\${mailpit.api.url}") // <b class="conum">(1)</b>
+    lateinit var mailpitApiUrl: URI
+
+    @Test
+    fun theMessagesAreListedThroughTheMailpitApi() {
+        val request: HttpRequest&lt;*&gt; = HttpRequest.GET&lt;Any&gt;(mailpitApiUrl.resolve("/api/v1/messages")) // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using the Mailpit HTTP API</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Value
+import io.micronaut.http.HttpRequest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import spock.lang.Specification
+
+@MicronautTest
+class MailpitApiTest extends Specification {
+
+    @Value('${mailpit.api.url}') // <b class="conum">(1)</b>
+    URI mailpitApiUrl
+
+    void "the messages are listed through the Mailpit API"() {
+        when:
+        HttpRequest&lt;?&gt; request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/messages")) // <b class="conum">(2)</b>
+
+        then:
+        request.uri.path == "/api/v1/messages"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>mailpit.api.url</code> property is resolved by test resources</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The captured messages are listed by the <code>/api/v1/messages</code> endpoint of the Mailpit HTTP API</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>For custom SMTP containers or non-JavaMail configuration, use <a href="#modules-testcontainers">Generic Testcontainers support</a>.</p>
@@ -2754,14 +2922,113 @@ Use it when your build needs to add WireMock support explicitly to the Test Reso
 <div class="paragraph">
 <p>You can inject <code>wiremock.url</code> into a test and use it to configure the WireMock client:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Configuring the WireMock client</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Value("${wiremock.url}")
-String wireMockUrl;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.github.tomakehurst.wiremock.client.WireMock;
+import io.micronaut.context.annotation.Value;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.Test;
 
-URI uri = URI.create(wireMockUrl);
-WireMock.configureFor(uri.getHost(), uri.getPort());</code></pre>
+import java.net.URI;
+
+@MicronautTest
+class WireMockClientTest {
+
+    @Value("${wiremock.url}") // <b class="conum">(1)</b>
+    String wireMockUrl;
+
+    @Test
+    void theWireMockClientIsConfiguredWithTheContainerUrl() {
+        URI uri = URI.create(wireMockUrl);
+        WireMock.configureFor(uri.getHost(), uri.getPort()); // <b class="conum">(2)</b>
+    }
+}</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Configuring the WireMock client</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from typing import Annotated
+
+from com.github.tomakehurst.wiremock.client import WireMock
+from java.net import URI
+from micronaut.context.annotation import Value
+from micronaut.test.extensions.junit5.annotation import MicronautTest
+from org.junit.jupiter.api import Test
+
+@MicronautTest
+class WireMockClientTest:
+
+    wire_mock_url: Annotated[str, Value("${wiremock.url}")]  # <b class="conum">(1)</b>
+
+    @Test
+    def the_wiremock_client_is_configured_with_the_container_url(self) -&gt; None:
+        uri = URI.create(self.wire_mock_url)
+        WireMock.configureFor(uri.getHost(), uri.getPort())  # <b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Configuring the WireMock client</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import com.github.tomakehurst.wiremock.client.WireMock
+import io.micronaut.context.annotation.Value
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.junit.jupiter.api.Test
+import java.net.URI
+
+@MicronautTest
+class WireMockClientTest {
+
+    @Value("\${wiremock.url}") // <b class="conum">(1)</b>
+    lateinit var wireMockUrl: String
+
+    @Test
+    fun theWireMockClientIsConfiguredWithTheContainerUrl() {
+        val uri = URI.create(wireMockUrl)
+        WireMock.configureFor(uri.host, uri.port) // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Configuring the WireMock client</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import com.github.tomakehurst.wiremock.client.WireMock
+import io.micronaut.context.annotation.Value
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import spock.lang.Specification
+
+@MicronautTest
+class WireMockClientTest extends Specification {
+
+    @Value('${wiremock.url}') // <b class="conum">(1)</b>
+    String wireMockUrl
+
+    void "the WireMock client is configured with the container url"() {
+        given:
+        URI uri = URI.create(wireMockUrl)
+
+        when:
+        WireMock.configureFor(uri.host, uri.port) // <b class="conum">(2)</b>
+
+        then:
+        noExceptionThrown()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>wiremock.url</code> property is resolved by test resources</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The WireMock client is configured with the host and the mapped port of the container</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The default image (<code>wiremock/wiremock:3.13.2-2</code>) can be overwritten by setting the <code>test-resources.containers.wiremock.image-name</code> property.
@@ -2972,10 +3239,10 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 <li>
 <p><code>micronaut.security.oauth2.clients.keycloak.openid.issuer</code></p>
 </li>
-<li>
-<p><code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code></p>
-</li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Micronaut Security discovers the JWKS URI from the issuer&#8217;s OpenID Provider metadata. Test Resources does not resolve <code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code>, because it would register a second JWKS configuration with the same name. If a test needs the direct Keycloak JWKS URL, derive <code>/protocol/openid-connect/certs</code> from the issuer.</p>
 </div>
 <div class="paragraph">
 <p>The default image (<code>quay.io/keycloak/keycloak:26.7.2</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
@@ -3480,16 +3747,23 @@ test-resources.containers.fakesmtp.exposed-ports[0].smtp.port=25</code></pre>
 <div class="paragraph">
 <p>Then the values <code>smtp.host</code> and <code>smtp.port</code> can for example be used in a bean configuration:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Using the properties of a generic container</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Singleton
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Value;
+import io.micronaut.email.javamail.sender.SessionProvider;
+import jakarta.inject.Singleton;
+import jakarta.mail.Session;
+
+import java.util.Properties;
+
+@Singleton
 public class JavamailSessionProvider implements SessionProvider {
-    @Value("${smtp.host}")          <i class="conum" data-value="1"></i><b>(1)</b>
+    @Value("${smtp.host}")          // <b class="conum">(1)</b>
     private String smtpHost;
 
-    @Value("${smtp.port}")          <i class="conum" data-value="2"></i><b>(2)</b>
+    @Value("${smtp.port}")          // <b class="conum">(2)</b>
     private String smtpPort;
-
 
     @Override
     public Session session() {
@@ -3497,6 +3771,82 @@ public class JavamailSessionProvider implements SessionProvider {
         props.put("mail.smtp.host", smtpHost);
         props.put("mail.smtp.port", smtpPort);
         return Session.getDefaultInstance(props);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using the properties of a generic container</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from typing import Annotated
+
+from jakarta.inject import Singleton
+from jakarta.mail import Session
+from java.util import Properties
+from micronaut.context.annotation import Value
+from micronaut.email.javamail.sender import SessionProvider
+
+@Singleton
+class JavamailSessionProvider(SessionProvider):
+    smtp_host: Annotated[str, Value("${smtp.host}")]  # <b class="conum">(1)</b>
+
+    smtp_port: Annotated[str, Value("${smtp.port}")]  # <b class="conum">(2)</b>
+
+    def session(self) -&gt; Session:
+        props = Properties()
+        props.put("mail.smtp.host", self.smtp_host)
+        props.put("mail.smtp.port", self.smtp_port)
+        return Session.getDefaultInstance(props)</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using the properties of a generic container</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Value
+import io.micronaut.email.javamail.sender.SessionProvider
+import jakarta.inject.Singleton
+import jakarta.mail.Session
+import java.util.Properties
+
+@Singleton
+class JavamailSessionProvider : SessionProvider {
+    @Value("\${smtp.host}")          // <b class="conum">(1)</b>
+    lateinit var smtpHost: String
+
+    @Value("\${smtp.port}")          // <b class="conum">(2)</b>
+    lateinit var smtpPort: String
+
+    override fun session(): Session {
+        val props = Properties()
+        props["mail.smtp.host"] = smtpHost
+        props["mail.smtp.port"] = smtpPort
+        return Session.getDefaultInstance(props)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Using the properties of a generic container</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Value
+import io.micronaut.email.javamail.sender.SessionProvider
+import jakarta.inject.Singleton
+import jakarta.mail.Session
+
+@Singleton
+class JavamailSessionProvider implements SessionProvider {
+    @Value('${smtp.host}')          // <b class="conum">(1)</b>
+    private String smtpHost
+
+    @Value('${smtp.port}')          // <b class="conum">(2)</b>
+    private String smtpPort
+
+    @Override
+    Session session() {
+        Properties props = new Properties()
+        props.put("mail.smtp.host", smtpHost)
+        props.put("mail.smtp.port", smtpPort)
+        return Session.getDefaultInstance(props)
     }
 }</code></pre>
 </div>
@@ -4683,18 +5033,129 @@ However, there is one assumption: these properties are only available once the a
 <p>In some cases, you may need to expand the set of properties available to tests <em>before</em> the application under test is started (or before the application context is available).
 In Micronaut, a test property can be supplied by implementing the <code>io.micronaut.test.support.TestPropertyProvider</code> interface, for example:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Supplying test properties with a TestPropertyProvider</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class MyTest implements TestPropertyProvider {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Value;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.micronaut.test.support.TestPropertyProvider;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
-    // ...
-    Map&lt;String, String&gt; getProperties() {
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@MicronautTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class MyTest implements TestPropertyProvider {
+
+    @Value("${myapp.someProperty}")
+    String someProperty;
+
+    @Override
+    public Map&lt;String, String&gt; getProperties() { // <b class="conum">(1)</b>
         return Map.of(
                 "myapp.someProperty", "value"
         );
     }
+
+    @Test
+    void thePropertyIsAvailableToTheTest() {
+        assertEquals("value", someProperty);
+    }
 }</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Supplying test properties with a TestPropertyProvider</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Value
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.micronaut.test.support.TestPropertyProvider
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+
+@MicronautTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class MyTest : TestPropertyProvider {
+
+    @Value("\${myapp.someProperty}")
+    lateinit var someProperty: String
+
+    override fun getProperties(): Map&lt;String, String&gt; { // <b class="conum">(1)</b>
+        return mapOf(
+            "myapp.someProperty" to "value"
+        )
+    }
+
+    @Test
+    fun thePropertyIsAvailableToTheTest() {
+        assertEquals("value", someProperty)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Supplying test properties with a TestPropertyProvider</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Value
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.test.support.TestPropertyProvider
+import spock.lang.Specification
+
+@MicronautTest
+class MyTest extends Specification implements TestPropertyProvider {
+
+    @Value('${myapp.someProperty}')
+    String someProperty
+
+    @Override
+    Map&lt;String, String&gt; getProperties() { // <b class="conum">(1)</b>
+        return [
+                "myapp.someProperty": "value"
+        ]
+    }
+
+    void "the property is available to the test"() {
+        expect:
+        someProperty == "value"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The properties are added to the test properties before the application context is started</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note lang-java lang-kotlin">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+With JUnit 5, a test class implementing <code>TestPropertyProvider</code> must use the <code>@TestInstance(TestInstance.Lifecycle.PER_CLASS)</code> lifecycle.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note lang-python">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This example is Java, Kotlin and Groovy only, because Micronaut Test reads the properties of a <code>TestPropertyProvider</code> before the application context, and with it the Python runtime, is started, so a Python test class cannot implement the interface. Supply such properties from a Java <code>ApplicationContextConfigurer</code> (<code>@ContextConfigurer</code>) instead.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>However, a <code>TestPropertyProvider</code> cannot access values which are provided by Micronaut Test Resources, or values which are available in your configuration files, which means that you cannot compute a new property based on the value of other properties.</p>
@@ -4721,34 +5182,176 @@ What we need is therefore a provider which will compute the value of <code>rabbi
 <p>This has to be done <em>before</em> the application is started, so we can use <code>@TestResourcesProperties</code> for this.
 First, annotate your test with:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Computing test properties with @TestResourcesProperties</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@MicronautTest
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.context.annotation.Value;
+import io.micronaut.core.annotation.ReflectiveAccess;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.micronaut.test.extensions.testresources.TestResourcesPropertyProvider;
+import io.micronaut.test.extensions.testresources.annotation.TestResourcesProperties;
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@MicronautTest
 @TestResourcesProperties(
-    value = "rabbitmq.uri",
-    providers = ConnectionSpec.RabbitMQProvider.class
+    value = "rabbitmq.uri", // <b class="conum">(1)</b>
+    providers = ConnectionSpec.RabbitMQProvider.class // <b class="conum">(2)</b>
 )
 class ConnectionSpec {
-    // ...
+
+    @Value("${rabbitmq.servers.product-cluster.port}")
+    int productClusterPort;
+
+    @Test
+    void theProductClusterPortIsDerivedFromTheRabbitMqUri() {
+        assertEquals(5672, productClusterPort);
+    }
 }</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Computing test properties with @TestResourcesProperties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.context.annotation.Value
+import io.micronaut.core.annotation.ReflectiveAccess
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.micronaut.test.extensions.testresources.TestResourcesPropertyProvider
+import io.micronaut.test.extensions.testresources.annotation.TestResourcesProperties
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import java.net.URI
+
+@MicronautTest
+@TestResourcesProperties(
+    value = ["rabbitmq.uri"], // <b class="conum">(1)</b>
+    providers = [ConnectionSpec.RabbitMQProvider::class] // <b class="conum">(2)</b>
+)
+class ConnectionSpec {
+
+    @Value("\${rabbitmq.servers.product-cluster.port}")
+    var productClusterPort: Int = 0
+
+    @Test
+    fun theProductClusterPortIsDerivedFromTheRabbitMqUri() {
+        assertEquals(5672, productClusterPort)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Computing test properties with @TestResourcesProperties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.context.annotation.Value
+import io.micronaut.core.annotation.ReflectiveAccess
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.test.extensions.testresources.TestResourcesPropertyProvider
+import io.micronaut.test.extensions.testresources.annotation.TestResourcesProperties
+import spock.lang.Specification
+
+@MicronautTest
+@TestResourcesProperties(
+    value = "rabbitmq.uri", // <b class="conum">(1)</b>
+    providers = ConnectionSpec.RabbitMQProvider // <b class="conum">(2)</b>
+)
+class ConnectionSpec extends Specification {
+
+    @Value('${rabbitmq.servers.product-cluster.port}')
+    int productClusterPort
+
+    void "the product cluster port is derived from the RabbitMQ uri"() {
+        expect:
+        productClusterPort == 5672
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The test resource properties which are needed to compute the new properties</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The provider which derives the new properties from the test properties</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Next implement the <code>RabbitMQProvider</code> type (here it&#8217;s done as a nested class in the test but there&#8217;s no limitation about where to find it):</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Implementing a TestResourcesPropertyProvider</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @ReflectiveAccess
     public static class RabbitMQProvider implements TestResourcesPropertyProvider {
         @Override
         public Map&lt;String, String&gt; provide(Map&lt;String, Object&gt; testProperties) {
-            String uri = (String) testProperties.get("rabbitmq.uri");
+            String uri = (String) testProperties.get("rabbitmq.uri"); // <b class="conum">(1)</b>
             return Map.of(
-                "rabbitmq.servers.product-cluster.port", String.valueOf(URI.create(uri).getPort())
+                "rabbitmq.servers.product-cluster.port", String.valueOf(URI.create(uri).getPort()) // <b class="conum">(2)</b>
             );
         }
     }</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Implementing a TestResourcesPropertyProvider</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">    @ReflectiveAccess
+    class RabbitMQProvider : TestResourcesPropertyProvider {
+        override fun provide(testProperties: Map&lt;String, Any&gt;): Map&lt;String, String&gt; {
+            val uri = testProperties["rabbitmq.uri"] as String // <b class="conum">(1)</b>
+            return mapOf(
+                "rabbitmq.servers.product-cluster.port" to URI.create(uri).port.toString() // <b class="conum">(2)</b>
+            )
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Implementing a TestResourcesPropertyProvider</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">    @ReflectiveAccess
+    static class RabbitMQProvider implements TestResourcesPropertyProvider {
+        @Override
+        Map&lt;String, String&gt; provide(Map&lt;String, Object&gt; testProperties) {
+            String uri = (String) testProperties.get("rabbitmq.uri") // <b class="conum">(1)</b>
+            return [
+                "rabbitmq.servers.product-cluster.port": String.valueOf(URI.create(uri).port) // <b class="conum">(2)</b>
+            ]
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>rabbitmq.uri</code> property was resolved by test resources and is available in the test properties</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The computed <code>rabbitmq.servers.product-cluster.port</code> property is added to the test properties</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note lang-python">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+These two examples are Java, Kotlin and Groovy only, because <code>@TestResourcesProperties</code> is read from the test class by reflection, and the provider instantiated, before the application context, and with it the Python runtime, is started. Write the annotated test and its <code>TestResourcesPropertyProvider</code> in Java, Kotlin or Groovy.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>A test resources property provider can access:</p>
@@ -4859,16 +5462,93 @@ In order to reduce consumption, you can now use the <code>@TestResourcesScope</c
 <div class="paragraph">
 <p>The easiest is to use an explicit name for a scope:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring an explicit test resources scope</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@TestResourcesScope("my scope")
-class MyTest {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.test.extensions.junit5.ScopeHolder;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.micronaut.test.extensions.junit5.annotation.TestResourcesScope;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@MicronautTest
+@TestResourcesScope("my scope") // <b class="conum">(1)</b>
+class ScopeNameTest {
+
     @Test
     void testSomething() {
-        // ...
+        assertEquals("my scope", ScopeHolder.get().orElse(null)); // <b class="conum">(2)</b>
     }
 }</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring an explicit test resources scope</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.test.extensions.junit5 import ScopeHolder
+from micronaut.test.extensions.junit5.annotation import MicronautTest, TestResourcesScope
+from org.junit.jupiter.api import Test
+
+@MicronautTest
+@TestResourcesScope("my scope")  # <b class="conum">(1)</b>
+class ScopeNameTest:
+
+    @Test
+    def test_something(self) -&gt; None:
+        assert ScopeHolder.get().orElse(None) == "my scope"  # <b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring an explicit test resources scope</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.test.extensions.junit5.ScopeHolder
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.micronaut.test.extensions.junit5.annotation.TestResourcesScope
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+@MicronautTest
+@TestResourcesScope("my scope") // <b class="conum">(1)</b>
+class ScopeNameTest {
+
+    @Test
+    fun testSomething() {
+        assertEquals("my scope", ScopeHolder.get().orElse(null)) // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring an explicit test resources scope</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.test.extensions.junit5.ScopeHolder
+import io.micronaut.test.extensions.junit5.annotation.TestResourcesScope
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import spock.lang.Specification
+
+@MicronautTest
+@TestResourcesScope("my scope") // <b class="conum">(1)</b>
+class ScopeNameTest extends Specification {
+
+    void "test something"() {
+        expect:
+        ScopeHolder.get().orElse(null) == "my scope" // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>All tests using the <code>my scope</code> scope share the same test resources</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The current scope is available to the test resources extension while the test runs</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>When using this annotation, all tests which are using the same scope will share the test resources of that scope.
@@ -4877,16 +5557,96 @@ Once the last test which requires that scope is finished, <strong>test resources
 <div class="paragraph">
 <p>In addition to an explicit name, it is possible to supply a naming strategy:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring a test resources scope with a naming strategy</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@TestResourcesScope(namingStrategy = MyStrategy)
-class MyTest {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.test.extensions.junit5.ScopeHolder;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.micronaut.test.extensions.junit5.annotation.ScopeNamingStrategy;
+import io.micronaut.test.extensions.junit5.annotation.TestResourcesScope;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@MicronautTest
+@TestResourcesScope(namingStrategy = ScopeNamingStrategy.TestClassName.class) // <b class="conum">(1)</b>
+class ScopeNamingStrategyTest {
+
     @Test
     void testSomething() {
-        // ...
+        assertEquals(ScopeNamingStrategyTest.class.getName(), ScopeHolder.get().orElse(null)); // <b class="conum">(2)</b>
     }
 }</code></pre>
 </div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring a test resources scope with a naming strategy</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from micronaut.test.extensions.junit5 import ScopeHolder
+from micronaut.test.extensions.junit5.annotation import MicronautTest, ScopeNamingStrategy, TestResourcesScope
+from org.junit.jupiter.api import Test
+
+@MicronautTest
+@TestResourcesScope(namingStrategy=ScopeNamingStrategy.TestClassName)  # <b class="conum">(1)</b>
+class ScopeNamingStrategyTest:
+
+    @Test
+    def test_something(self) -&gt; None:
+        assert ScopeHolder.get().orElse(None) == "micronaut.testresources.docs.junitplatform.ScopeNamingStrategyTest"  # <b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring a test resources scope with a naming strategy</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">import io.micronaut.test.extensions.junit5.ScopeHolder
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.micronaut.test.extensions.junit5.annotation.ScopeNamingStrategy
+import io.micronaut.test.extensions.junit5.annotation.TestResourcesScope
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+@MicronautTest
+@TestResourcesScope(namingStrategy = ScopeNamingStrategy.TestClassName::class) // <b class="conum">(1)</b>
+class ScopeNamingStrategyTest {
+
+    @Test
+    fun testSomething() {
+        assertEquals(ScopeNamingStrategyTest::class.java.name, ScopeHolder.get().orElse(null)) // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title">Declaring a test resources scope with a naming strategy</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">import io.micronaut.test.extensions.junit5.ScopeHolder
+import io.micronaut.test.extensions.junit5.annotation.ScopeNamingStrategy
+import io.micronaut.test.extensions.junit5.annotation.TestResourcesScope
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import spock.lang.Specification
+
+@MicronautTest
+@TestResourcesScope(namingStrategy = ScopeNamingStrategy.TestClassName) // <b class="conum">(1)</b>
+class ScopeNamingStrategyTest extends Specification {
+
+    void "test something"() {
+        expect:
+        ScopeHolder.get().orElse(null) == ScopeNamingStrategyTest.name // <b class="conum">(2)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The naming strategy computes the scope name from the test class</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>With the <code>TestClassName</code> strategy, the scope is the fully qualified name of the test class</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Test resources come with 2 built-in strategies:</p>

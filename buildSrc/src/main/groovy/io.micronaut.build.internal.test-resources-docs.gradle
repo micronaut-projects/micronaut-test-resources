@@ -4,7 +4,8 @@ plugins {
 
 // Shared setup of the test-suite-docs-* projects backing the snippet:: macros of the user guide.
 // These suites exercise the Micronaut Test extensions in-process (no test resources service is
-// started): the JUnit Platform listeners of the extensions run against the fake client of each suite.
+// started): the JUnit Platform listeners of the extensions run against the fake client installed by the
+// Java, Kotlin and Groovy suites.
 
 configurations.all {
     resolutionStrategy.preferProjectModules()

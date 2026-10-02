@@ -19,7 +19,7 @@ snippet::io.micronaut.testresources.docs.core.MyTest[project-base="test-suite-do
 NOTE: With JUnit 5, a test class implementing `TestPropertyProvider` must use the `@TestInstance(TestInstance.Lifecycle.PER_CLASS)` lifecycle.
 
 [.lang-python]
-NOTE: A Python test class cannot implement `TestPropertyProvider` yet: Micronaut Test reads the test properties before the application context, and with it the Python runtime, is started. Supply such properties from a Java `ApplicationContextConfigurer` (`@ContextConfigurer`) instead.
+NOTE: This example is Java, Kotlin and Groovy only, because Micronaut Test reads the properties of a `TestPropertyProvider` before the application context, and with it the Python runtime, is started, so a Python test class cannot implement the interface. Supply such properties from a Java `ApplicationContextConfigurer` (`@ContextConfigurer`) instead.
 
 However, a `TestPropertyProvider` cannot access values which are provided by Micronaut Test Resources, or values which are available in your configuration files, which means that you cannot compute a new property based on the value of other properties.
 
@@ -48,7 +48,7 @@ snippet::io.micronaut.testresources.docs.core.ConnectionSpec[project-base="test-
 <2> The computed `rabbitmq.servers.product-cluster.port` property is added to the test properties
 
 [.lang-python]
-NOTE: `@TestResourcesProperties` is not supported on Python test classes yet: the annotation is read from the test class, and the provider instantiated, before the application context, and with it the Python runtime, is started. Write the annotated test and its `TestResourcesPropertyProvider` in Java, Kotlin or Groovy.
+NOTE: These two examples are Java, Kotlin and Groovy only, because `@TestResourcesProperties` is read from the test class by reflection, and the provider instantiated, before the application context, and with it the Python runtime, is started. Write the annotated test and its `TestResourcesPropertyProvider` in Java, Kotlin or Groovy.
 
 A test resources property provider can access:
 

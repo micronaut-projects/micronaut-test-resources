@@ -7,6 +7,7 @@ Provides support for launching a Keycloak test container for OAuth2 tests.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     testImplementation(testFixtures(projects.micronautTestResourcesTestcontainers))
     testImplementation(mn.micronaut.jackson.databind)
     testImplementation(mnSecurity.micronaut.security.oauth2)

@@ -7,5 +7,6 @@ Provides support for launching a MinIO test container.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     implementation(libs.managed.testcontainers.minio)
 }

@@ -7,6 +7,7 @@ Provides core support for Solr test resources.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     api(libs.managed.solr.testcontainers)
 }
 

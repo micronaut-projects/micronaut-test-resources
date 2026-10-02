@@ -80,6 +80,7 @@ class TestResourcesClasspathTest extends Specification {
         'com.oracle.database.jdbc:ojdbc8'        | []
         'com.oracle.database.jdbc:ojdbc10'       | []
         'com.oracle.database.jdbc:ojdbc11'       | []
+        'com.oracle.database.jdbc:ojdbc17'       | []
         'dev.miku:r2dbc-mysql'                   | []
         'io.asyncer:r2dbc-mysql'                 | []
         'org.mariadb:r2dbc-mariadb'              | []
@@ -110,6 +111,7 @@ class TestResourcesClasspathTest extends Specification {
         'org.postgresql:postgresql'            | 'postgresql'
         'org.mariadb.jdbc:mariadb-java-client' | 'mariadb'
         'com.oracle.database.jdbc:ojdbc8'      | 'oracle-free'
+        'com.oracle.database.jdbc:ojdbc17'     | 'oracle-free'
         'com.microsoft.sqlserver:mssql-jdbc'   | 'mssql'
     }
 

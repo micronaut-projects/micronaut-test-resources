@@ -33,3 +33,9 @@ dependencies {
         }
     }
 }
+
+configurations.named("testRuntimeClasspath") {
+    // Align with the Jackson version constrained above; Micronaut Cache 6.1.1
+    // publishes a strict 2.21.4 constraint that conflicts with it.
+    resolutionStrategy.force("com.fasterxml.jackson.core:jackson-core:2.22.2")
+}

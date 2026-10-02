@@ -2972,10 +2972,10 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 <li>
 <p><code>micronaut.security.oauth2.clients.keycloak.openid.issuer</code></p>
 </li>
-<li>
-<p><code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code></p>
-</li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Micronaut Security discovers the JWKS URI from the issuer&#8217;s OpenID Provider metadata. Test Resources does not resolve <code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code>, because it would register a second JWKS configuration with the same name. If a test needs the direct Keycloak JWKS URL, derive <code>/protocol/openid-connect/certs</code> from the issuer.</p>
 </div>
 <div class="paragraph">
 <p>The default image (<code>quay.io/keycloak/keycloak:26.7.2</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.

@@ -1342,7 +1342,11 @@ itself needs some configuration properties.</div>
 <dt><a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html#getRequiredProperties(java.lang.String)" class="member-name-link">getRequiredProperties(String)</a> - Method in class io.micronaut.testresources.jdbc.<a href="io/micronaut/testresources/jdbc/AbstractJdbcTestResourceProvider.html" title="class in io.micronaut.testresources.jdbc">AbstractJdbcTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#getRequiredProperties(java.lang.String)" class="member-name-link">getRequiredProperties(String)</a> - Method in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns the list of properties which should be read
+before resolving an expression: this can be used if the resolver
+itself needs some configuration properties.</div>
+</dd>
 <dt><a href="io/micronaut/testresources/opentelemetry/OpenTelemetryTestResourceProvider.html#getRequiredProperties(java.lang.String)" class="member-name-link">getRequiredProperties(String)</a> - Method in class io.micronaut.testresources.opentelemetry.<a href="io/micronaut/testresources/opentelemetry/OpenTelemetryTestResourceProvider.html" title="class in io.micronaut.testresources.opentelemetry">OpenTelemetryTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/oracle/free/OracleFreeTestResourceProvider.html#getRequiredProperties(java.lang.String)" class="member-name-link">getRequiredProperties(String)</a> - Method in class io.micronaut.testresources.oracle.free.<a href="io/micronaut/testresources/oracle/free/OracleFreeTestResourceProvider.html" title="class in io.micronaut.testresources.oracle.free">OracleFreeTestResourceProvider</a></dt>
@@ -1384,6 +1388,8 @@ itself needs some configuration properties.</div>
 <dt><a href="io/micronaut/testresources/kafka/KafkaKsqlDbTestResourceProvider.html#getRequiredPropertyEntries()" class="member-name-link">getRequiredPropertyEntries()</a> - Method in class io.micronaut.testresources.kafka.<a href="io/micronaut/testresources/kafka/KafkaKsqlDbTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaKsqlDbTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/kafka/KafkaSchemaRegistryTestResourceProvider.html#getRequiredPropertyEntries()" class="member-name-link">getRequiredPropertyEntries()</a> - Method in class io.micronaut.testresources.kafka.<a href="io/micronaut/testresources/kafka/KafkaSchemaRegistryTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaSchemaRegistryTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#getRequiredPropertyEntries()" class="member-name-link">getRequiredPropertyEntries()</a> - Method in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#getRequiredPropertyEntries()" class="member-name-link">getRequiredPropertyEntries()</a> - Method in class io.micronaut.testresources.mongodb.<a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
@@ -1451,7 +1457,10 @@ is able to support.</div>
 <dt><a href="io/micronaut/testresources/kafka/KafkaTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map, Map)</a> - Method in class io.micronaut.testresources.kafka.<a href="io/micronaut/testresources/kafka/KafkaTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map, Map)</a> - Method in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns the list of properties that this resolver
+is able to support.</div>
+</dd>
 <dt><a href="io/micronaut/testresources/minio/MinioTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map, Map)</a> - Method in class io.micronaut.testresources.minio.<a href="io/micronaut/testresources/minio/MinioTestResourceProvider.html" title="class in io.micronaut.testresources.minio">MinioTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html#getResolvableProperties(java.util.Map,java.util.Map)" class="member-name-link">getResolvableProperties(Map, Map)</a> - Method in class io.micronaut.testresources.mongodb.<a href="io/micronaut/testresources/mongodb/MongoDBTestResourceProvider.html" title="class in io.micronaut.testresources.mongodb">MongoDBTestResourceProvider</a></dt>
@@ -2001,6 +2010,8 @@ connections.</div>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#JAVAMAIL_SMTP_PORT" class="member-name-link">JAVAMAIL_SMTP_PORT</a> - Static variable in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#JAVAMAIL_SMTP_PREFIX" class="member-name-link">JAVAMAIL_SMTP_PREFIX</a> - Static variable in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#JAVAMAIL_SMTP_STARTTLS" class="member-name-link">JAVAMAIL_SMTP_STARTTLS</a> - Static variable in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#JDBC_CORE" class="member-name-link">JDBC_CORE</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
@@ -2187,6 +2198,8 @@ in order to resolve properties lazily.</div>
 <dt><a href="io/micronaut/testresources/buildtools/KnownModules.html#MAILPIT" class="member-name-link">MAILPIT</a> - Static variable in interface io.micronaut.testresources.buildtools.<a href="io/micronaut/testresources/buildtools/KnownModules.html" title="interface in io.micronaut.testresources.buildtools">KnownModules</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#MAILPIT_API_URL" class="member-name-link">MAILPIT_API_URL</a> - Static variable in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#MAILPIT_PREFIX" class="member-name-link">MAILPIT_PREFIX</a> - Static variable in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#MAILPIT_UI_URL" class="member-name-link">MAILPIT_UI_URL</a> - Static variable in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
@@ -3080,8 +3093,6 @@ resolver.</div>
 <dt><a href="io/micronaut/testresources/hibernate/reactive/core/AbstractHibernateReactiveTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer(String, Map, Map)</a> - Method in class io.micronaut.testresources.hibernate.reactive.core.<a href="io/micronaut/testresources/hibernate/reactive/core/AbstractHibernateReactiveTestResourceProvider.html" title="class in io.micronaut.testresources.hibernate.reactive.core">AbstractHibernateReactiveTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/kafka/KafkaTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer(String, Map, Map)</a> - Method in class io.micronaut.testresources.kafka.<a href="io/micronaut/testresources/kafka/KafkaTestResourceProvider.html" title="class in io.micronaut.testresources.kafka">KafkaTestResourceProvider</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer(String, Map, Map)</a> - Method in class io.micronaut.testresources.mailpit.<a href="io/micronaut/testresources/mailpit/MailpitTestResourceProvider.html" title="class in io.micronaut.testresources.mailpit">MailpitTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html#resolveWithoutContainer(java.lang.String,java.util.Map,java.util.Map)" class="member-name-link">resolveWithoutContainer(String, Map, Map)</a> - Method in class io.micronaut.testresources.r2dbc.core.<a href="io/micronaut/testresources/r2dbc/core/AbstractR2DBCTestResourceProvider.html" title="class in io.micronaut.testresources.r2dbc.core">AbstractR2DBCTestResourceProvider</a></dt>
 <dd>&nbsp;</dd>

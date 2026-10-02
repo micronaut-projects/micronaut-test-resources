@@ -68,6 +68,24 @@ class ServerUtilsTest extends Specification {
         props.getProperty("micronaut.test.resources.project-path-uri") == projectDir.toUri().toString()
     }
 
+    def "writes disabled server settings"() {
+        given:
+        def projectDir = tmpDir.resolve("sample-project")
+        Files.createDirectories(projectDir.resolve("build/test-resources-server-config"))
+        Files.createFile(projectDir.resolve("settings.gradle"))
+        def settingsDir = projectDir.resolve("build/test-resources-server-config")
+
+        when:
+        ServerUtils.writeDisabledServerSettings(settingsDir)
+        def props = new Properties()
+        Files.newInputStream(settingsDir.resolve(ServerUtils.PROPERTIES_FILE_NAME)).withCloseable(props.&load)
+
+        then:
+        props.getProperty("enabled") == "false"
+        props.getProperty("micronaut.test.resources.project-path-uri") == projectDir.toUri().toString()
+        ServerUtils.readServerSettings(settingsDir).empty
+    }
+
     def "requires new server"() {
         def portFile = tmpDir.resolve("port-file")
         def settingsDir = tmpDir.resolve("settings")

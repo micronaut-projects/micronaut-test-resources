@@ -16,15 +16,12 @@
 package io.micronaut.testresources.mailpit;
 
 import io.micronaut.testresources.core.DefaultTestResourceImages;
-import io.micronaut.testresources.core.Scope;
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import io.micronaut.testresources.testcontainers.TestContainers;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,12 +32,14 @@ import java.util.Set;
  */
 public class MailpitTestResourceProvider extends AbstractTestContainersProvider<MailpitTestResourceProvider.MailpitContainer> {
 
-    public static final String JAVAMAIL_SMTP_HOST = "javamail.properties.mail.smtp.host";
-    public static final String JAVAMAIL_SMTP_PORT = "javamail.properties.mail.smtp.port";
-    public static final String JAVAMAIL_SMTP_AUTH = "javamail.properties.mail.smtp.auth";
-    public static final String JAVAMAIL_SMTP_STARTTLS = "javamail.properties.mail.smtp.starttls.enable";
-    public static final String MAILPIT_UI_URL = "mailpit.ui.url";
-    public static final String MAILPIT_API_URL = "mailpit.api.url";
+    public static final String JAVAMAIL_SMTP_PREFIX = "javamail.properties.mail.smtp";
+    public static final String JAVAMAIL_SMTP_HOST = JAVAMAIL_SMTP_PREFIX + ".host";
+    public static final String JAVAMAIL_SMTP_PORT = JAVAMAIL_SMTP_PREFIX + ".port";
+    public static final String JAVAMAIL_SMTP_AUTH = JAVAMAIL_SMTP_PREFIX + ".auth";
+    public static final String JAVAMAIL_SMTP_STARTTLS = JAVAMAIL_SMTP_PREFIX + ".starttls.enable";
+    public static final String MAILPIT_PREFIX = "mailpit";
+    public static final String MAILPIT_UI_URL = MAILPIT_PREFIX + ".ui.url";
+    public static final String MAILPIT_API_URL = MAILPIT_PREFIX + ".api.url";
     public static final String DEFAULT_IMAGE = DefaultTestResourceImages.DEFAULT_MAILPIT_IMAGE;
     public static final String DISPLAY_NAME = "Mailpit";
     public static final String SIMPLE_NAME = "mailpit";
@@ -49,6 +48,10 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     private static final int DEFAULT_UI_PORT = 8025;
     private static final String SMTP_PORT_CONFIG = "containers.mailpit.smtp-port";
     private static final String UI_PORT_CONFIG = "containers.mailpit.ui-port";
+    private static final String HOST_ENTRY = "host";
+    private static final String PORT_ENTRY = "port";
+    private static final String UI_ENTRY = "ui";
+    private static final String API_ENTRY = "api";
     private static final List<String> SUPPORTED_PROPERTIES = List.of(
         JAVAMAIL_SMTP_HOST,
         JAVAMAIL_SMTP_PORT,
@@ -58,26 +61,43 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
         MAILPIT_API_URL
     );
     private static final Set<String> SUPPORTED_PROPERTY_SET = Set.copyOf(SUPPORTED_PROPERTIES);
-    private static final ThreadLocal<Set<String>> RESOLVING_ENDPOINT_PROPERTIES = ThreadLocal.withInitial(HashSet::new);
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>This provider offers all of its properties or none of them: if the application
+     * already configures an SMTP endpoint, nothing is offered, so no Mailpit container is
+     * ever started and the JavaMail configuration is left alone. The decision belongs here
+     * rather than in {@link #shouldAnswer} because this is the only hook which sees the
+     * configuration before a value is asked for; deciding later would mean requiring the
+     * endpoint properties through {@link #getRequiredProperties}, which this provider
+     * resolves itself, and resolution would never terminate.</p>
+     */
     @Override
     public List<String> getResolvableProperties(Map<String, Collection<String>> propertyEntries, Map<String, Object> testResourcesConfig) {
+        if (hasExternalSmtpEndpoint(propertyEntries)) {
+            return List.of();
+        }
         return SUPPORTED_PROPERTIES;
     }
 
     @Override
+    public List<String> getRequiredPropertyEntries() {
+        return List.of(JAVAMAIL_SMTP_PREFIX, MAILPIT_PREFIX);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>This provider must not declare any required property. Required properties are
+     * resolved through the very same property resolver which asked for the expression
+     * (see {@code PropertyResolverSupport.resolveRequiredProperties}), so a provider which
+     * requires a property it also resolves asks itself for that property, forever. The
+     * SMTP host and port are the only context this provider could want, and both are
+     * properties it resolves, so the list stays empty.</p>
+     */
+    @Override
     public List<String> getRequiredProperties(String expression) {
-        if (JAVAMAIL_SMTP_HOST.equals(expression)) {
-            return requiredEndpointProperty(expression, JAVAMAIL_SMTP_PORT);
-        }
-        if (JAVAMAIL_SMTP_PORT.equals(expression)) {
-            return requiredEndpointProperty(expression, JAVAMAIL_SMTP_HOST);
-        }
-        if (SUPPORTED_PROPERTY_SET.contains(expression)) {
-            clearEndpointResolution();
-            return List.of(JAVAMAIL_SMTP_HOST, JAVAMAIL_SMTP_PORT);
-        }
-        clearEndpointResolution();
         return List.of();
     }
 
@@ -101,7 +121,6 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
 
     @Override
     protected Optional<String> resolveProperty(String propertyName, MailpitContainer container) {
-        clearEndpointResolution();
         return switch (propertyName) {
             case JAVAMAIL_SMTP_HOST -> Optional.of(container.getHost());
             case JAVAMAIL_SMTP_PORT -> Optional.of(String.valueOf(container.getMappedPort(container.smtpPort)));
@@ -121,29 +140,7 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
     protected boolean shouldAnswer(String propertyName,
                                    Map<String, Object> requestedProperties,
                                    Map<String, Object> testResourcesConfig) {
-        if (!SUPPORTED_PROPERTY_SET.contains(propertyName)) {
-            clearEndpointResolution();
-            return false;
-        }
-        boolean hasHost = requestedProperties.containsKey(JAVAMAIL_SMTP_HOST);
-        boolean hasPort = requestedProperties.containsKey(JAVAMAIL_SMTP_PORT);
-        if (!hasHost && !hasPort) {
-            return true;
-        }
-        boolean hasMailpitContainer = hasMailpitContainerFor(requestedProperties, JAVAMAIL_SMTP_HOST) ||
-            hasMailpitContainerFor(requestedProperties, JAVAMAIL_SMTP_PORT);
-        if (!hasMailpitContainer) {
-            clearEndpointResolution();
-        }
-        return hasMailpitContainer;
-    }
-
-    @Override
-    protected Optional<String> resolveWithoutContainer(String propertyName,
-                                                       Map<String, Object> properties,
-                                                       Map<String, Object> testResourcesConfig) {
-        return findExistingMailpitContainer(properties)
-            .flatMap(container -> resolveProperty(propertyName, container));
+        return SUPPORTED_PROPERTY_SET.contains(propertyName);
     }
 
     @Override
@@ -155,35 +152,34 @@ public class MailpitTestResourceProvider extends AbstractTestContainersProvider<
         return "http://" + container.getHost() + ":" + container.getMappedPort(container.uiPort);
     }
 
-    private static List<String> requiredEndpointProperty(String expression, String oppositeExpression) {
-        Set<String> resolving = RESOLVING_ENDPOINT_PROPERTIES.get();
-        if (resolving.contains(oppositeExpression)) {
-            clearEndpointResolution();
-            return List.of();
+    /**
+     * Determines whether the SMTP endpoint visible in the property entries belongs to the
+     * application rather than to this provider.
+     *
+     * <p>The entries are read from the environment, which means that once the test resources
+     * property source has been loaded they also contain the keys this provider itself offered,
+     * and those are indistinguishable from user configuration by name alone. The {@code mailpit}
+     * entries are the discriminator: no application configures them, so their presence means
+     * the SMTP entries being looked at are this provider's own offer.</p>
+     *
+     * @param propertyEntries the property entries, keyed by the prefixes returned from
+     * {@link #getRequiredPropertyEntries()}
+     * @return whether the application configures its own SMTP endpoint
+     */
+    private static boolean hasExternalSmtpEndpoint(Map<String, Collection<String>> propertyEntries) {
+        if (isOfferedByThisProvider(propertyEntries)) {
+            return false;
         }
-        resolving.add(expression);
-        return List.of(oppositeExpression);
+        Collection<String> smtpEntries = propertyEntries.get(JAVAMAIL_SMTP_PREFIX);
+        if (smtpEntries == null) {
+            return false;
+        }
+        return smtpEntries.contains(HOST_ENTRY) || smtpEntries.contains(PORT_ENTRY);
     }
 
-    private static void clearEndpointResolution() {
-        RESOLVING_ENDPOINT_PROPERTIES.remove();
-    }
-
-    private static Optional<MailpitContainer> findExistingMailpitContainer(Map<String, Object> properties) {
-        return findExistingMailpitContainer(properties, JAVAMAIL_SMTP_HOST)
-            .or(() -> findExistingMailpitContainer(properties, JAVAMAIL_SMTP_PORT));
-    }
-
-    private static Optional<MailpitContainer> findExistingMailpitContainer(Map<String, Object> properties, String propertyName) {
-        return TestContainers.findByRequestedProperty(Scope.from(properties), propertyName)
-            .stream()
-            .filter(MailpitContainer.class::isInstance)
-            .map(MailpitContainer.class::cast)
-            .findFirst();
-    }
-
-    private static boolean hasMailpitContainerFor(Map<String, Object> properties, String propertyName) {
-        return findExistingMailpitContainer(properties, propertyName).isPresent();
+    private static boolean isOfferedByThisProvider(Map<String, Collection<String>> propertyEntries) {
+        Collection<String> mailpitEntries = propertyEntries.get(MAILPIT_PREFIX);
+        return mailpitEntries != null && mailpitEntries.contains(UI_ENTRY) && mailpitEntries.contains(API_ENTRY);
     }
 
     private static int configuredPort(Map<String, Object> testResourcesConfig, String key, int defaultValue) {

@@ -4,7 +4,7 @@ plugins {
 
 micronautBuild {
     binaryCompatibility {
-        enabledAfter '4.3.2'
+        enabledAfter '4.4.0'
     }
 }
 

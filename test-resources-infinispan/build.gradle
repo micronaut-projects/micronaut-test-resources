@@ -37,14 +37,20 @@ dependencies {
         implementation(libs.netty.transport.native.epoll) {
             because "fixes GHSA-w573-9ffj-6ff9 from Infinispan transitive dependencies"
         }
-        implementation("com.fasterxml.jackson.core:jackson-core:2.22.2") {
+        implementation("com.fasterxml.jackson.core:jackson-core:2.22.3") {
             because "fixes Jackson security vulnerabilities in Infinispan transitive dependencies"
         }
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.2") {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.3") {
             because "fixes Jackson security vulnerabilities in Infinispan transitive dependencies"
         }
         implementation(libs.micrometer.core) {
             because "fixes GHSA-g3pr-3p32-fp23 and GHSA-w737-wx49-qj23 in Infinispan transitive dependencies"
         }
     }
+}
+
+configurations.named("testRuntimeClasspath") {
+    // Align with the Jackson version constrained above; Micronaut Cache 6.1.1
+    // publishes a strict 2.21.4 constraint that conflicts with it.
+    resolutionStrategy.force("com.fasterxml.jackson.core:jackson-core:2.22.3")
 }

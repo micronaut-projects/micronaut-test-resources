@@ -17,6 +17,7 @@ class TestResourcesServiceConfigFilesSpec extends Specification {
     private static final String ACCESS_TOKEN = "dev8-token"
     private static final String MICRONAUT_CONFIG_FILES_ENV = "MICRONAUT_CONFIG_FILES"
     private static final String RUNTIME_CLASSPATH_PROPERTY = "test.resources.server.runtime.classpath"
+    private static final String CONTROL_PANEL_CLASSPATH_PROPERTY = "test.resources.server.control-panel.classpath"
 
     @TempDir
     Path tempDir
@@ -64,24 +65,25 @@ class TestResourcesServiceConfigFilesSpec extends Specification {
     }
 
     def "control panel page and its static assets bypass the access token"() {
-        given:
+        given: "the control panel on the server runtime classpath, as consumers get it"
         def portFile = tempDir.resolve("port-file")
 
         when:
         def process = startServer(
             portFile,
             [:],
-            ["-Dserver.access-token=${ACCESS_TOKEN}".toString()]
+            ["-Dserver.access-token=${ACCESS_TOKEN}".toString()],
+            controlPanelClasspath()
         )
         def port = waitForPortFile(portFile)
 
         then: "a token-protected endpoint still rejects requests without the token"
         request(port, [:], "/list").statusCode() == 401
 
-        and: "the control panel page is reachable without the token (a browser cannot send it)"
-        request(port, [:], "/control-panel").statusCode() != 401
+        and: "the control panel page is served, which requires a JsonMapper on the server runtime classpath"
+        request(port, [:], "/control-panel").statusCode() == 200
 
-        and: "the control panel UI static assets, served under /micronaut-control-panel, are too"
+        and: "the control panel UI static assets, served under /micronaut-control-panel, bypass the token too"
         request(port, [:], "/micronaut-control-panel/css/dashboard.css").statusCode() != 401
 
         and:
@@ -90,12 +92,16 @@ class TestResourcesServiceConfigFilesSpec extends Specification {
 
     private final List<Process> runningProcesses = []
 
-    private Process startServer(Path portFile, Map<String, String> environment, List<String> jvmArgs = []) {
+    private Process startServer(Path portFile, Map<String, String> environment, List<String> jvmArgs = [], String extraClasspath = null) {
+        def classpath = System.getProperty(RUNTIME_CLASSPATH_PROPERTY, System.getProperty("java.class.path"))
+        if (extraClasspath) {
+            classpath = "${classpath}${File.pathSeparator}${extraClasspath}"
+        }
         def command = [
             javaCommand(),
             *jvmArgs,
             "-cp",
-            System.getProperty(RUNTIME_CLASSPATH_PROPERTY, System.getProperty("java.class.path")),
+            classpath.toString(),
             TestResourcesService.name,
             "--port-file=${portFile.toAbsolutePath()}".toString()
         ]
@@ -124,6 +130,12 @@ class TestResourcesServiceConfigFilesSpec extends Specification {
             .GET()
         headers.each { name, value -> requestBuilder.header(name, value) }
         return HttpClient.newHttpClient().send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+    }
+
+    private static String controlPanelClasspath() {
+        def classpath = System.getProperty(CONTROL_PANEL_CLASSPATH_PROPERTY)
+        assert classpath: "System property ${CONTROL_PANEL_CLASSPATH_PROPERTY} must be set by the build"
+        return classpath
     }
 
     private static String javaCommand() {

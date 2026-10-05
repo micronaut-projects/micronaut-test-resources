@@ -84,12 +84,14 @@ public final class TestResourcesClasspath implements KnownModules {
     private static final String ORACLE_DRIVER_8 = "com.oracle.database.jdbc:ojdbc8";
     private static final String ORACLE_DRIVER_10 = "com.oracle.database.jdbc:ojdbc10";
     private static final String ORACLE_DRIVER_11 = "com.oracle.database.jdbc:ojdbc11";
+    private static final String ORACLE_DRIVER_17 = "com.oracle.database.jdbc:ojdbc17";
     private static final List<String> ORACLE_DRIVERS = Arrays.asList(
         ORACLE_DRIVER_5,
         ORACLE_DRIVER_6,
         ORACLE_DRIVER_8,
         ORACLE_DRIVER_10,
-        ORACLE_DRIVER_11
+        ORACLE_DRIVER_11,
+        ORACLE_DRIVER_17
     );
     private static final String REACTIVE_ORACLE_DRIVER = "com.oracle.database.r2dbc:oracle-r2dbc";
     private static final String REACTIVE_POOL_DRIVER = "io.r2dbc:r2dbc-pool";
@@ -215,7 +217,7 @@ public final class TestResourcesClasspath implements KnownModules {
                 MONGODB_DRIVER_ASYNC,
                 MONGODB_DRIVER_SYNC,
                 MONGODB_DRIVER_REACTIVESTREAMS,
-                ORACLE_DRIVER_5, ORACLE_DRIVER_6, ORACLE_DRIVER_8, ORACLE_DRIVER_10, ORACLE_DRIVER_11,
+                ORACLE_DRIVER_5, ORACLE_DRIVER_6, ORACLE_DRIVER_8, ORACLE_DRIVER_10, ORACLE_DRIVER_11, ORACLE_DRIVER_17,
                 REACTIVE_MYSQL_DRIVER, REACTIVE_MYSQL_IO_ASYNCER_DRIVER,
                 REACTIVE_MARIADB_DRIVER,
                 REACTIVE_POSTGRESQL_DRIVER,

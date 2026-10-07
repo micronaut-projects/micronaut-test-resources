@@ -9,6 +9,9 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.ses.SesClient
+import software.amazon.awssdk.services.ses.model.Body
+import software.amazon.awssdk.services.ses.model.Content
+import software.amazon.awssdk.services.ses.model.Message
 import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sns.model.Topic
 
@@ -25,22 +28,18 @@ class LocalStackSESTest extends AbstractLocalStackSpec {
             it.emailAddress("sender@example.com")
         }
 
+        def message = Message.builder()
+                .subject(Content.builder().data("Micronaut Test Resources").build())
+                .body(Body.builder().text(Content.builder().data("SES message from LocalStack").build()).build())
+                .build()
+
         when:
         def result = client.sendEmail {
             it.source("sender@example.com")
             it.destination {
                 it.toAddresses("recipient@example.com")
             }
-            it.message {
-                it.subject {
-                    it.data("Micronaut Test Resources")
-                }
-                it.body {
-                    it.text {
-                        it.data("SES message from LocalStack")
-                    }
-                }
-            }
+            it.message(message)
         }
 
         then:

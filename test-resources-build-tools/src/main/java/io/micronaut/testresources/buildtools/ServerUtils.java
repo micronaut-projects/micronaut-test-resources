@@ -129,6 +129,7 @@ public class ServerUtils {
      *
      * @param destinationDirectory the destination directory
      * @throws IOException if an error occurs
+     * @since 4.4.0
      */
     public static void writeDisabledServerSettings(Path destinationDirectory)
         throws IOException {

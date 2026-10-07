@@ -55,8 +55,7 @@ dependencies {
 }
 
 micronautBuild {
-    // new module, so disable binary check for now
     binaryCompatibility {
-        enabled = false
+        enabledAfter("4.4.0")
     }
 }

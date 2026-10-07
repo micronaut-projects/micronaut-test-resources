@@ -36,10 +36,13 @@ class CouchbaseCustomImageTest extends Specification {
             return new CouchbaseContainer(imageName) {
                 @Override
                 void start() {
+                    // No-op on purpose: the test only captures the requested image name and must
+                    // never start a real Couchbase container.
                 }
 
                 @Override
                 void stop() {
+                    // No-op on purpose, see start() above.
                 }
 
                 @Override

@@ -5,14 +5,10 @@ Use it when your build needs to add WireMock support explicitly to the Test Reso
 
 You can inject `wiremock.url` into a test and use it to configure the WireMock client:
 
-[source,java]
-----
-@Value("${wiremock.url}")
-String wireMockUrl;
+snippet::io.micronaut.testresources.docs.wiremock.WireMockClientTest[project-base="test-suite-docs", tags="imports,clazz", title="Configuring the WireMock client"]
 
-URI uri = URI.create(wireMockUrl);
-WireMock.configureFor(uri.getHost(), uri.getPort());
-----
+<1> The `wiremock.url` property is resolved by test resources
+<2> The WireMock client is configured with the host and the mapped port of the container
 
 The default image (`wiremock/wiremock:3.13.2-2`) can be overwritten by setting the `test-resources.containers.wiremock.image-name` property.
 The default version can be overwritten by setting the `test-resources.containers.wiremock.image-tag` property.

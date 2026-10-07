@@ -43,9 +43,14 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
     public static final String CLIENT_ID = "micronaut.security.oauth2.clients.keycloak.client-id";
     public static final String CLIENT_SECRET = "micronaut.security.oauth2.clients.keycloak.client-secret";
     public static final String ISSUER = "micronaut.security.oauth2.clients.keycloak.openid.issuer";
+    /**
+     * @deprecated The OIDC provider metadata supplies this URI; configure the issuer only.
+     */
+    @SuppressWarnings("java:S1133") // Retained for source compatibility with consumers of the provider constant.
+    @Deprecated(since = "4.3.1")
     public static final String JWKS_URL = "micronaut.security.token.jwt.signatures.jwks.keycloak.url";
 
-    private static final List<String> RESOLVABLE_PROPERTIES = List.of(CLIENT_ID, CLIENT_SECRET, ISSUER, JWKS_URL);
+    private static final List<String> RESOLVABLE_PROPERTIES = List.of(CLIENT_ID, CLIENT_SECRET, ISSUER);
     private static final Set<String> RESOLVABLE_PROPERTIES_SET = Set.copyOf(RESOLVABLE_PROPERTIES);
 
     private static final int KEYCLOAK_PORT = 8080;
@@ -104,7 +109,6 @@ public class KeycloakTestResourceProvider extends AbstractTestContainersProvider
             case CLIENT_ID -> Optional.of(keycloakConfiguration.clientId());
             case CLIENT_SECRET -> Optional.of(keycloakConfiguration.clientSecret());
             case ISSUER -> Optional.of(baseUrl(container) + REALMS_PATH + keycloakConfiguration.realm());
-            case JWKS_URL -> Optional.of(baseUrl(container) + REALMS_PATH + keycloakConfiguration.realm() + "/protocol/openid-connect/certs");
             default -> Optional.empty();
         };
     }

@@ -2,7 +2,9 @@ Micronaut Test Resources supports a subset of https://localstack.cloud/[Localsta
 
 The default image (`{default-image-localstack}`) can be overwritten by setting the `test-resources.containers.localstack.image-name` property.
 
-The following services are supported:
+The Localstack container is provisioned through property resolution: Test Resources detects when your application looks up one of the properties below and no value has been configured, for example, a bean resolving `aws.services.s3.endpoint-override`, and treats that missing lookup as the signal to start the container and supply the value on demand. This means the container will only spin up when a bean or configuration actively attempts to resolve an overridden AWS service endpoint.
+
+The following services are supported, each triggered by requesting its corresponding property:
 
 - S3, by providing the `aws.services.s3.endpoint-override` property
 - DynamoDB, by providing the `aws.services.dynamodb.endpoint-override` property

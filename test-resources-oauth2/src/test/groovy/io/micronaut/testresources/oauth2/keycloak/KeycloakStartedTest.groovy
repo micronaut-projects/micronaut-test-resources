@@ -26,9 +26,6 @@ class KeycloakStartedTest extends AbstractTestContainersSpec {
     @Value('${micronaut.security.oauth2.clients.keycloak.openid.issuer}')
     String issuer
 
-    @Value('${micronaut.security.token.jwt.signatures.jwks.keycloak.url}')
-    String jwksUrl
-
     @Override
     String getScopeName() {
         'keycloak'
@@ -52,7 +49,6 @@ class KeycloakStartedTest extends AbstractTestContainersSpec {
         issuerUri.host
         issuerUri.path == '/realms/micronaut'
         issuerUri.port in mappedPorts
-        jwksUrl == issuer + "/protocol/openid-connect/certs"
         clientId
         clientSecret
     }
@@ -74,7 +70,7 @@ class KeycloakStartedTest extends AbstractTestContainersSpec {
             HttpResponse.BodyHandlers.ofString()
         )
         HttpResponse<String> jwksResponse = client.send(
-            HttpRequest.newBuilder(URI.create(jwksUrl)).GET().build(),
+            HttpRequest.newBuilder(URI.create(issuer + "/protocol/openid-connect/certs")).GET().build(),
             HttpResponse.BodyHandlers.ofString()
         )
         Map<String, Object> tokenJson = JSON_MAPPER.readValue(tokenResponse.body(), Map)
@@ -109,9 +105,6 @@ class KeycloakConfiguredValuesTest extends AbstractTestContainersSpec {
     @Value('${micronaut.security.oauth2.clients.keycloak.openid.issuer}')
     String issuer
 
-    @Value('${micronaut.security.token.jwt.signatures.jwks.keycloak.url}')
-    String jwksUrl
-
     @Override
     String getScopeName() {
         'keycloak-custom'
@@ -137,7 +130,6 @@ class KeycloakConfiguredValuesTest extends AbstractTestContainersSpec {
         clientId == CUSTOM_CLIENT_ID
         clientSecret == CUSTOM_CLIENT_SECRET
         URI.create(issuer).path == "/realms/${CUSTOM_REALM}"
-        jwksUrl == issuer + '/protocol/openid-connect/certs'
         listContainers().size() == 1
     }
 }

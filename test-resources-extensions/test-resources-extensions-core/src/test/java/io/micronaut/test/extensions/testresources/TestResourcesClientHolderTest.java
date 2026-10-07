@@ -17,6 +17,7 @@ package io.micronaut.test.extensions.testresources;
 
 import io.micronaut.testresources.client.TestResourcesClient;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -30,9 +31,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestResourcesClientHolderTest {
 
+    private TestResourcesClient previousClient;
+
+    @BeforeEach
+    void setup() {
+        previousClient = TestResourcesClientHolder.get();
+    }
+
     @AfterEach
     void cleanup() {
-        TestResourcesClientHolder.set(null);
+        TestResourcesClientHolder.set(previousClient);
     }
 
     @Test

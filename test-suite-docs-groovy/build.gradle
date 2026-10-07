@@ -1,0 +1,27 @@
+plugins {
+    id 'groovy'
+    id 'io.micronaut.build.internal.test-resources-docs'
+}
+
+// The examples of the guide, in Groovy (Spock). The Groovy compiler picks up the Micronaut AST transformations
+// from the compile classpath.
+dependencies {
+    testCompileOnly mn.micronaut.inject.groovy
+
+    testImplementation projects.micronautTestResourcesExtensionsCore
+    testImplementation projects.micronautTestResourcesExtensionsJunitPlatform
+    testImplementation mnTest.junit.platform.launcher
+    testImplementation mn.micronaut.http
+    testImplementation mnEmail.micronaut.email.javamail
+    testImplementation libs.wiremock
+    testImplementation(mnTest.micronaut.test.spock) {
+        // temporary fix because Micronaut Test not yet compiled with Spock groovy 5
+        exclude group: 'org.spockframewoek'
+    }
+    testImplementation libs.spock
+
+    testRuntimeOnly mnSerde.micronaut.serde.jackson
+    testRuntimeOnly mn.snakeyaml
+    testRuntimeOnly mnEmail.eclipse.angus
+    testRuntimeOnly mnLogging.logback.classic
+}

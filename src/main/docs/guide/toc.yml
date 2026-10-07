@@ -18,6 +18,8 @@ modules:
     title: Azure Storage
   modules-opensearch:
     title: OpenSearch
+  modules-azure-cosmos:
+    title: Azure Cosmos Emulator
   modules-kafka:
     title: Kafka
   modules-mailpit:
@@ -26,6 +28,8 @@ modules:
     title: Pulsar
   modules-localstack:
     title: Localstack
+  modules-floci:
+    title: Floci
   modules-minio:
     title: MinIO
   modules-seaweedfs:

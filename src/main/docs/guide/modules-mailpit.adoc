@@ -64,12 +64,9 @@ They are exposed through random host ports and are not fixed host ports.
 During development you can open the resolved `mailpit.ui.url` value in a browser to inspect captured messages.
 In integration tests you can use `mailpit.api.url` to assert messages through the Mailpit HTTP API:
 
-[source,java]
-----
-@Value("${mailpit.api.url}")
-URI mailpitApiUrl;
+snippet::io.micronaut.testresources.docs.mailpit.MailpitApiTest[project-base="test-suite-docs", tags="imports,clazz", title="Using the Mailpit HTTP API"]
 
-HttpRequest<?> request = HttpRequest.GET(mailpitApiUrl.resolve("/api/v1/messages"));
-----
+<1> The `mailpit.api.url` property is resolved by test resources
+<2> The captured messages are listed by the `/api/v1/messages` endpoint of the Mailpit HTTP API
 
 For custom SMTP containers or non-JavaMail configuration, use <<modules-testcontainers,Generic Testcontainers support>>.

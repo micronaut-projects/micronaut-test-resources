@@ -1,0 +1,24 @@
+plugins {
+    id 'io.micronaut.build.internal.kotlin-ksp'
+    id 'io.micronaut.build.internal.test-resources-docs'
+}
+
+// The examples of the guide, in Kotlin, processed with KSP.
+dependencies {
+    kspTest mn.micronaut.inject.kotlin
+
+    testImplementation mn.kotlin.stdlib.jdk8
+    testImplementation projects.micronautTestResourcesExtensionsCore
+    testImplementation projects.micronautTestResourcesExtensionsJunitPlatform
+    testImplementation mnTest.junit.platform.launcher
+    testImplementation mn.micronaut.http
+    testImplementation mnEmail.micronaut.email.javamail
+    testImplementation libs.wiremock
+    testImplementation mnTest.micronaut.test.junit5
+
+    testRuntimeOnly mnTest.junit.jupiter.engine
+    testRuntimeOnly mnSerde.micronaut.serde.jackson
+    testRuntimeOnly mn.snakeyaml
+    testRuntimeOnly mnEmail.eclipse.angus
+    testRuntimeOnly mnLogging.logback.classic
+}

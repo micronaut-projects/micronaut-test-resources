@@ -17,10 +17,10 @@ dependencies {
     testImplementation(mnRedis.micronaut.redis.lettuce)
 
     constraints {
-        implementation("com.fasterxml.jackson.core:jackson-core:2.22.2") {
+        implementation("com.fasterxml.jackson.core:jackson-core:2.22.3") {
             because "fixes Jackson security vulnerabilities in Redis transitive dependencies"
         }
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.2") {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.22.3") {
             because "fixes Jackson security vulnerabilities in Redis transitive dependencies"
         }
         implementation(libs.httpclient5) {

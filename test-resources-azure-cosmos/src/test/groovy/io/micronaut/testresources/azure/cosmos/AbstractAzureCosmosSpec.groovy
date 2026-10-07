@@ -84,10 +84,13 @@ abstract class AbstractAzureCosmosSpec extends AbstractTestContainersSpec implem
         sslContext.init(null, [new X509TrustManager() {
             @Override
             void checkClientTrusted(X509Certificate[] chain, String authType) {
+                // Intentionally trusts everything: this manager exists only to read back the
+                // emulator's self-signed certificate so it can be added to the trust store.
             }
 
             @Override
             void checkServerTrusted(X509Certificate[] chain, String authType) {
+                // Intentionally trusts everything, see checkClientTrusted above.
             }
 
             @Override

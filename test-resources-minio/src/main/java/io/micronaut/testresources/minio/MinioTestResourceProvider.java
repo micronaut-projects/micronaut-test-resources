@@ -38,7 +38,7 @@ public class MinioTestResourceProvider extends AbstractTestContainersProvider<Mi
     public static final String SIMPLE_NAME = "minio";
     /**
      * The image name Testcontainers' {@link MinIOContainer} expects. MinIO no longer publishes
-     * images that can be pulled anonymously, so the default image is a community build.
+     * anonymously pullable community images, so the default image is a community fork.
      */
     private static final String TESTCONTAINERS_COMPATIBLE_IMAGE = "minio/minio";
     private static final List<String> SUPPORTED_KEYS = List.of(

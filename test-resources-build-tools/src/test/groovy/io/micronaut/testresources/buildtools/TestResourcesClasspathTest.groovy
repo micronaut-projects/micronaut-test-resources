@@ -80,6 +80,7 @@ class TestResourcesClasspathTest extends Specification {
         'com.oracle.database.jdbc:ojdbc8'        | []
         'com.oracle.database.jdbc:ojdbc10'       | []
         'com.oracle.database.jdbc:ojdbc11'       | []
+        'com.oracle.database.jdbc:ojdbc17'       | []
         'dev.miku:r2dbc-mysql'                   | []
         'io.asyncer:r2dbc-mysql'                 | []
         'org.mariadb:r2dbc-mariadb'              | []
@@ -110,6 +111,7 @@ class TestResourcesClasspathTest extends Specification {
         'org.postgresql:postgresql'            | 'postgresql'
         'org.mariadb.jdbc:mariadb-java-client' | 'mariadb'
         'com.oracle.database.jdbc:ojdbc8'      | 'oracle-free'
+        'com.oracle.database.jdbc:ojdbc17'     | 'oracle-free'
         'com.microsoft.sqlserver:mssql-jdbc'   | 'mssql'
     }
 
@@ -136,6 +138,18 @@ class TestResourcesClasspathTest extends Specification {
                                      "org.mongodb:mongodb-driver-reactivestreams"
                              ]].combinations()
 
+    }
+
+    def "infers Micronaut Data Azure Cosmos"() {
+        when:
+        infer 'io.micronaut.data:micronaut-data-azure-cosmos:1.0'
+
+        then:
+        inferredClasspathEquals(
+                'io.micronaut.testresources:micronaut-test-resources-server:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.34',
+                'io.micronaut.testresources:micronaut-test-resources-azure-cosmos:1.0.34'
+        )
     }
 
     def "infers OpenTelemetry test resources for #tracingModule with OTLP exporter"() {
@@ -188,6 +202,21 @@ class TestResourcesClasspathTest extends Specification {
         'com.oracle.database.r2dbc:oracle-r2dbc' | 'oracle-free'
         'io.r2dbc:r2dbc-mssql'                   | 'mssql'
         'io.r2dbc:r2dbc-pool'                    | 'pool'
+    }
+
+    def "server runtime embeds a JsonMapper provider"() {
+        // The generated dependency-list.txt is derived from the server's runtime
+        // classpath, so a module being forbidden here proves it is actually
+        // shipped by the server. See https://github.com/micronaut-projects/micronaut-test-resources/issues/1211
+        expect: "the mapper implementation is embedded, hence stripped from a user supplied classpath"
+        !TestResourcesClasspath.isDependencyAllowedOnServerClasspath(
+                new ModuleIdentifier('io.micronaut.serde', 'micronaut-serde-jackson')
+        )
+
+        and: "a module the server does not embed is still allowed through"
+        TestResourcesClasspath.isDependencyAllowedOnServerClasspath(
+                new ModuleIdentifier('org.postgresql', 'postgresql')
+        )
     }
 
     private void inferredClasspathEquals(String... dependencies) {

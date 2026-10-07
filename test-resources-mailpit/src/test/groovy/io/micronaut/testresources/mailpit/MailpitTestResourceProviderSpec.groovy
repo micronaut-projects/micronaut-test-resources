@@ -1,15 +1,28 @@
 package io.micronaut.testresources.mailpit
 
+import io.micronaut.core.convert.ArgumentConversionContext
+import io.micronaut.core.convert.ConversionService
+import io.micronaut.core.value.MapPropertyResolver
+import io.micronaut.testresources.core.PropertyResolverSupport
 import org.testcontainers.utility.DockerImageName
 import spock.lang.Specification
 
+import java.util.concurrent.atomic.AtomicReference
+
 class MailpitTestResourceProviderSpec extends Specification {
 
-    private final MailpitTestResourceProvider provider = new MailpitTestResourceProvider()
+    private static final String SMTP_PREFIX = MailpitTestResourceProvider.JAVAMAIL_SMTP_PREFIX
+    private static final String MAILPIT_PREFIX = MailpitTestResourceProvider.MAILPIT_PREFIX
+    private static final List<String> ALL_PROPERTIES = [
+            MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST,
+            MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT,
+            MailpitTestResourceProvider.JAVAMAIL_SMTP_AUTH,
+            MailpitTestResourceProvider.JAVAMAIL_SMTP_STARTTLS,
+            MailpitTestResourceProvider.MAILPIT_UI_URL,
+            MailpitTestResourceProvider.MAILPIT_API_URL
+    ]
 
-    def setup() {
-        provider.getRequiredProperties('unsupported.mail.property')
-    }
+    private final MailpitTestResourceProvider provider = new MailpitTestResourceProvider()
 
     def "resolves JavaMail and diagnostic properties"() {
         given:
@@ -24,41 +37,74 @@ class MailpitTestResourceProviderSpec extends Specification {
         provider.resolveProperty(MailpitTestResourceProvider.MAILPIT_API_URL, container).get() == 'http://localhost:18080/api/v1'
     }
 
-    def "declines to start when SMTP endpoint is already configured"() {
+    def "resolves every Mailpit property when no SMTP endpoint is configured"() {
         expect:
-        !provider.shouldAnswer(
-                requestedProperty,
-                [(configuredProperty): 'configured'],
-                [:]
-        )
+        provider.getResolvableProperties(propertyEntries, [:]) == ALL_PROPERTIES
 
         where:
-        requestedProperty                                      | configuredProperty
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST         | MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST         | MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT
-        MailpitTestResourceProvider.MAILPIT_UI_URL             | MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST
-        MailpitTestResourceProvider.MAILPIT_UI_URL             | MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT
-        MailpitTestResourceProvider.MAILPIT_API_URL            | MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST
-        MailpitTestResourceProvider.MAILPIT_API_URL            | MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_AUTH         | MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_AUTH         | MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_STARTTLS     | MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_STARTTLS     | MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT
+        propertyEntries << [
+                [:],
+                [(SMTP_PREFIX): []],
+                [(SMTP_PREFIX): ['auth', 'starttls']]
+        ]
     }
 
-    def "requires JavaMail SMTP endpoint context before resolving non-endpoint Mailpit properties"() {
-        expect:
-        provider.getRequiredProperties(property) == [
-                MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST,
-                MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT
+    def "keeps resolving its own offer once the test resources property source is loaded"() {
+        given: 'the entries an environment reports after this provider offered its properties'
+        def propertyEntries = [
+                (SMTP_PREFIX)   : ['host', 'port', 'auth', 'starttls'],
+                (MAILPIT_PREFIX): ['ui', 'api']
         ]
+
+        expect: 'the endpoint entries are recognised as this provider own offer, not as user configuration'
+        provider.getResolvableProperties(propertyEntries, [:]) == ALL_PROPERTIES
+    }
+
+    def "declines to resolve anything when an SMTP endpoint is already configured"() {
+        expect:
+        provider.getResolvableProperties([(SMTP_PREFIX): configuredEntries], [:]).isEmpty()
+
+        where:
+        configuredEntries << [
+                ['host'],
+                ['port'],
+                ['host', 'port'],
+                ['host', 'auth', 'starttls'],
+                ['host', 'port', 'auth', 'starttls']
+        ]
+    }
+
+    def "reads the JavaMail SMTP and Mailpit property entries"() {
+        expect:
+        provider.getRequiredPropertyEntries() == [SMTP_PREFIX, MAILPIT_PREFIX]
+    }
+
+    def "never requires a property that it resolves itself"() {
+        given:
+        def resolvable = provider.getResolvableProperties([:], [:])
+
+        expect: 'otherwise resolving one of them asks for the other, forever'
+        resolvable.collectMany { provider.getRequiredProperties(it) }.intersect(resolvable).isEmpty()
+    }
+
+    def "resolving #property does not recurse"() {
+        given: 'a property resolver which answers each nested request on its own thread, like the test resources server does'
+        def propertyResolver = new RecursingPropertyResolver(provider)
+
+        when:
+        PropertyResolverSupport.resolveRequiredProperties(property, propertyResolver, provider)
+
+        then:
+        noExceptionThrown()
 
         where:
         property << [
-                MailpitTestResourceProvider.MAILPIT_UI_URL,
-                MailpitTestResourceProvider.MAILPIT_API_URL,
+                MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST,
+                MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT,
                 MailpitTestResourceProvider.JAVAMAIL_SMTP_AUTH,
-                MailpitTestResourceProvider.JAVAMAIL_SMTP_STARTTLS
+                MailpitTestResourceProvider.JAVAMAIL_SMTP_STARTTLS,
+                MailpitTestResourceProvider.MAILPIT_UI_URL,
+                MailpitTestResourceProvider.MAILPIT_API_URL
         ]
     }
 
@@ -66,38 +112,6 @@ class MailpitTestResourceProviderSpec extends Specification {
         expect:
         provider.shouldAnswer(MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST, [:], [:])
         !provider.shouldAnswer('smtp.host', [:], [:])
-    }
-
-    def "requires opposite JavaMail SMTP endpoint property before resolving endpoint property"() {
-        expect:
-        provider.getRequiredProperties(property) == requiredProperties
-
-        where:
-        property                                       | requiredProperties
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST | [MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT]
-        MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT | [MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST]
-    }
-
-    def "clears endpoint recursion guard after recursive endpoint lookup"() {
-        when:
-        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST)
-
-        then:
-        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT) == []
-        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT) == [MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST]
-    }
-
-    def "clears endpoint recursion guard after declining explicit SMTP endpoint"() {
-        given:
-        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST)
-
-        expect:
-        !provider.shouldAnswer(
-                MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST,
-                [(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT): '2525'],
-                [:]
-        )
-        provider.getRequiredProperties(MailpitTestResourceProvider.JAVAMAIL_SMTP_PORT) == [MailpitTestResourceProvider.JAVAMAIL_SMTP_HOST]
     }
 
     def "can be disabled with test resources configuration"() {
@@ -137,6 +151,61 @@ class MailpitTestResourceProviderSpec extends Specification {
         property                          | value
         'containers.mailpit.smtp-port'    | 0
         'containers.mailpit.ui-port'      | 'not-a-port'
+    }
+
+    /**
+     * Models the loop which resolves a test resources property: every property the provider
+     * declares resolvable is itself resolved by asking the provider again, and each of those
+     * turns runs on a fresh thread, because the test resources server answers each client
+     * request on a request thread. A provider which requires a property it also resolves
+     * therefore loops until the stack overflows; this resolver fails fast instead.
+     */
+    private static class RecursingPropertyResolver extends MapPropertyResolver {
+
+        private static final int MAX_DEPTH = 20
+
+        private final MailpitTestResourceProvider provider
+        private final List<String> resolvable
+        private int depth
+
+        RecursingPropertyResolver(MailpitTestResourceProvider provider) {
+            super([:])
+            this.provider = provider
+            this.resolvable = provider.getResolvableProperties([:], [:])
+        }
+
+        @Override
+        <T> Optional<T> getProperty(String name, ArgumentConversionContext<T> conversionContext) {
+            if (!resolvable.contains(name)) {
+                return super.getProperty(name, conversionContext)
+            }
+            resolveOnNewThread(name)
+            return ConversionService.SHARED.convert("value-of-$name".toString(), conversionContext)
+        }
+
+        private void resolveOnNewThread(String name) {
+            depth++
+            try {
+                if (depth > MAX_DEPTH) {
+                    throw new IllegalStateException("Resolution of '$name' recursed more than $MAX_DEPTH levels deep")
+                }
+                def failure = new AtomicReference<Throwable>()
+                def thread = new Thread({
+                    try {
+                        PropertyResolverSupport.resolveRequiredProperties(name, this, provider)
+                    } catch (Throwable t) {
+                        failure.set(t)
+                    }
+                })
+                thread.start()
+                thread.join()
+                if (failure.get() != null) {
+                    throw failure.get()
+                }
+            } finally {
+                depth--
+            }
+        }
     }
 
     private static class TestMailpitContainer extends MailpitTestResourceProvider.MailpitContainer {

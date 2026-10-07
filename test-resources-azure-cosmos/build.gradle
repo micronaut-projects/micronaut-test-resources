@@ -1,0 +1,23 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides support for launching an Azure Cosmos emulator test container.
+"""
+
+dependencies {
+    implementation(libs.managed.testcontainers.azure)
+
+    testAnnotationProcessor(mn.micronaut.inject.java)
+    testAnnotationProcessor(mnData.micronaut.data.document.processor)
+    testCompileOnly(mnData.micronaut.data.document.processor)
+    testImplementation(platform(libs.micronaut.data))
+    testImplementation('io.micronaut.data:micronaut-data-azure-cosmos')
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabled.set(false)
+    }
+}

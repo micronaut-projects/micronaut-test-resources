@@ -5,7 +5,8 @@ When `micronaut-security-oauth2` is on the application classpath, Test Resources
 - `micronaut.security.oauth2.clients.keycloak.client-id`
 - `micronaut.security.oauth2.clients.keycloak.client-secret`
 - `micronaut.security.oauth2.clients.keycloak.openid.issuer`
-- `micronaut.security.token.jwt.signatures.jwks.keycloak.url`
+
+Micronaut Security discovers the JWKS URI from the issuer's OpenID Provider metadata. Test Resources does not resolve `micronaut.security.token.jwt.signatures.jwks.keycloak.url`, because it would register a second JWKS configuration with the same name. If a test needs the direct Keycloak JWKS URL, derive `/protocol/openid-connect/certs` from the issuer.
 
 The default image (`{default-image-keycloak}`) can be overwritten by setting the `test-resources.containers.keycloak.image-name` property.
 The default image tag can be overwritten by setting the `test-resources.containers.keycloak.image-tag` property.

@@ -8,17 +8,21 @@ Provides core support for launching Localstack test containers.
 """
 
 dependencies {
+    api(projects.micronautTestResourcesAwsBase)
     api(libs.managed.testcontainers.localstack)
     testFixturesApi(platform(mn.micronaut.core.bom))
     testFixturesImplementation(mn.groovy)
     testFixturesImplementation(libs.spock)
-    testFixturesApi(testFixtures(project(":micronaut-test-resources-testcontainers"))) {
+    testFixturesApi(testFixtures(projects.micronautTestResourcesTestcontainers)) {
         because "exposes AbstractTestContainersSpec"
     }
 
     constraints {
-        api("com.fasterxml.jackson.core:jackson-core:2.21.3") {
+        api("com.fasterxml.jackson.core:jackson-core:2.22.3") {
             because "fixes GHSA-72hv-8253-57qq from AWS SDK v1 transitive dependencies"
+        }
+        api("com.fasterxml.jackson.core:jackson-databind:2.22.3") {
+            because "fixes Jackson security vulnerabilities in AWS SDK v1 transitive dependencies"
         }
     }
 }

@@ -1,0 +1,13 @@
+plugins {
+    id 'io.micronaut.build.internal.testcontainers-module'
+}
+
+description = """
+Provides shared support for AWS emulator test resources.
+"""
+
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter("4.1.0")
+    }
+}

@@ -1,0 +1,13 @@
+import io.micronaut.internal.ParallelGateService
+
+plugins {
+    id "io.micronaut.build.internal.testcontainers-module"
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabledAfter("4.1.0")
+    }
+}
+
+ParallelGateService.requiresResource(project, "floci")

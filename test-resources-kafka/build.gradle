@@ -13,4 +13,10 @@ dependencies {
 
     testImplementation(mnReactor.micronaut.reactor)
     testImplementation(mnKafka.micronaut.kafka)
+
+    constraints {
+        implementation(libs.lz4.java) {
+            because "fixes GHSA-xx22-p4ch-683r in the Kafka client transitive dependencies"
+        }
+    }
 }

@@ -1,0 +1,14 @@
+azure:
+  cosmos:
+    default-gateway-mode: true
+    endpoint-discovery-enabled: false
+    database:
+      database-name: testdb
+      packages: io.micronaut.testresources.azure.cosmos
+      update-policy: CREATE_IF_NOT_EXISTS
+      throughput-settings:
+        request-units: 1000
+        auto-scale: true
+      container-settings:
+        - container-name: cosmosbook
+          partition-key-path: /id

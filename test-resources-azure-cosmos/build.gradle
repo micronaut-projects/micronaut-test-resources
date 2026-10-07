@@ -7,6 +7,7 @@ Provides support for launching an Azure Cosmos emulator test container.
 """
 
 dependencies {
+    compileOnly(projects.micronautTestResourcesCompose)
     implementation(libs.managed.testcontainers.azure)
 
     testAnnotationProcessor(mn.micronaut.inject.java)

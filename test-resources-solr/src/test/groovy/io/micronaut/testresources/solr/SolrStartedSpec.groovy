@@ -20,7 +20,7 @@ class SolrStartedSpec extends AbstractSolrSpec {
         listContainers().size() == 1
         with(TestContainers.listByScope("solr").get(Scope.of("solr"))) {
             size() == 1
-            get(0).dockerImageName == "solr:9.8.0"
+            get(0).dockerImageName == "solr:9.10.1"
         }
 
         where:

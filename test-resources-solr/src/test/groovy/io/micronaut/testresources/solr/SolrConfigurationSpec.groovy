@@ -34,7 +34,7 @@ class SolrConfigurationSpec extends AbstractSolrSpec {
         and: 'The container is using the correct image'
         with(TestContainers.listByScope('solr').get(Scope.of('solr'))) {
             size() == 1
-            get(0).dockerImageName == 'solr:9.8.0'
+            get(0).dockerImageName == 'solr:9.10.1'
         }
     }
 

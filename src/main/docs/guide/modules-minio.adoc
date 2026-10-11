@@ -1,3 +1,4 @@
 MinIO support will automatically start a https://min.io[MinIO] container via https://java.testcontainers.org/modules/minio/[Testcontainers] and provide the values of the `minio.url`, `minio.access-key`, and `minio.secret-key` properties.
 
 The default image (`{default-image-minio}`) can be overwritten by setting the `test-resources.containers.minio.image-name` property.
+MinIO no longer publishes community images that can be pulled anonymously, so the default comes from https://github.com/pgsty/silo[PGSTY's community fork] of the open-source (AGPLv3) MinIO server.

@@ -383,7 +383,7 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb:12.3.2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mariadb:12.3.3</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.mysql.com/">MySQL</a></p></td>
@@ -455,7 +455,8 @@ It is possible to override the default image of the container by setting the fol
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mariadb = {image-name = "mariadb:10.3"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mariadb]
+image-name = "mariadb:10.3"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -546,7 +547,8 @@ It is possible to override the default image of the container by setting the fol
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mssql = {accept-license = true}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mssql]
+accept-license = true</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -688,7 +690,17 @@ datasources.write.test-resources.resource-name=main-db</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">datasources = {read = {dialect = "POSTGRES", test-resources = {resource-name = "main-db"}}, write = {dialect = "POSTGRES", test-resources = {resource-name = "main-db"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources.read]
+dialect = "POSTGRES"
+
+[datasources.read.test-resources]
+resource-name = "main-db"
+
+[datasources.write]
+dialect = "POSTGRES"
+
+[datasources.write.test-resources]
+resource-name = "main-db"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -783,7 +795,19 @@ datasources.write.test-resources.resource-name=main-db</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">datasources = {read = {dialect = "POSTGRES", db-name = "read_db", test-resources = {resource-name = "main-db"}}, write = {dialect = "POSTGRES", db-name = "write_db", test-resources = {resource-name = "main-db"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources.read]
+dialect = "POSTGRES"
+db-name = "read_db"
+
+[datasources.read.test-resources]
+resource-name = "main-db"
+
+[datasources.write]
+dialect = "POSTGRES"
+db-name = "write_db"
+
+[datasources.write.test-resources]
+resource-name = "main-db"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -878,7 +902,8 @@ The export is opt-in and disabled by default.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {intellij-idea = {enabled = true}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.intellij-idea]
+enabled = true</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1046,8 +1071,19 @@ r2dbc:
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">datasources = {migrations = {dialect = "POSTGRES", db-name = "migrations_db", test-resources = {resource-name = "main-db"}}}
-r2dbc = {datasources = {default = {dialect = "POSTGRES", db-name = "default_db", test-resources = {resource-name = "main-db"}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[datasources.migrations]
+dialect = "POSTGRES"
+db-name = "migrations_db"
+
+[datasources.migrations.test-resources]
+resource-name = "main-db"
+
+[r2dbc.datasources.default]
+dialect = "POSTGRES"
+db-name = "default_db"
+
+[r2dbc.datasources.default.test-resources]
+resource-name = "main-db"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1145,7 +1181,7 @@ r2dbc {
 <p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.http-hosts</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.5.2</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
+<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.5.4</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
 The default tag can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
 </div>
 
@@ -1184,7 +1220,7 @@ The default tag can be overwritten by setting the <code>test-resources.container
 <p>The generated connection string uses Azurite&#8217;s mapped Testcontainers ports for the blob, queue, and table endpoints, so no fixed host port configuration is required.</p>
 </div>
 <div class="paragraph">
-<p>By default, the provider starts <code>mcr.microsoft.com/azure-storage/azurite:3.36.0</code> with blob, queue, and table listeners bound to all interfaces inside the container.</p>
+<p>By default, the provider starts <code>mcr.microsoft.com/azure-storage/azurite:3.37.0</code> with blob, queue, and table listeners bound to all interfaces inside the container.</p>
 </div>
 <div class="openblock">
 <div class="content">
@@ -1202,7 +1238,8 @@ The default tag can be overwritten by setting the <code>test-resources.container
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">storage = {client = {connection-string = "${azure.credential.storage-shared-key.connection-string}"}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[storage.client]
+connection-string = "${azure.credential.storage-shared-key.connection-string}"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1264,7 +1301,7 @@ If you need Azurite behavior outside these shared-key properties, the generic Te
 <p>OpenSearch support will automatically start an <a href="https://opensearch.org/">OpenSearch</a> container and provide the value of the <code>micronaut.opensearch.rest-client.http-hosts</code> or <code>micronaut.opensearch.httpclient5.http-hosts</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>opensearchproject/opensearch:3.8.0</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
+<p>The default image (<code>opensearchproject/opensearch:3.9.0</code>) can be overwritten by setting the <code>test-resources.containers.opensearch.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-azure-cosmos"><a class="anchor" href="#modules-azure-cosmos"></a>5.5 Azure Cosmos Emulator</h2>
@@ -1367,7 +1404,9 @@ test-resources.containers.kafka.partitions=3</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {kafka = {topics = ["orders", "shipments"], partitions = 3}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.kafka]
+topics = ["orders", "shipments"]
+partitions = 3</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1435,17 +1474,17 @@ Each service depends on the Kafka broker container and uses the same test resour
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.schema.registry.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-schema-registry:8.3.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-schema-registry:8.3.2</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>8081</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.connect.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-kafka-connect:8.3.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-kafka-connect:8.3.2</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>8083</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.ksqldb.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-ksqldb-server:8.3.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-ksqldb-server:8.3.2</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>8088</code></p></td>
 </tr>
 </tbody>
@@ -1669,7 +1708,9 @@ javamail.properties.mail.smtp.port=2525</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">javamail = {properties = {mail = {smtp = {host = "smtp.example.test", port = 2525}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[javamail.properties.mail.smtp]
+host = "smtp.example.test"
+port = 2525</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1740,7 +1781,8 @@ javamail.properties.mail.smtp.port=2525</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mailpit = {enabled = false}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mailpit]
+enabled = false</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1786,7 +1828,7 @@ javamail.properties.mail.smtp.port=2525</code></pre>
 <p>You can also override the image and Mailpit listener ports:</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>axllent/mailpit:v1.30.7</code>) can be overwritten by setting the <code>test-resources.containers.mailpit.image-name</code> property.
+<p>The default image (<code>axllent/mailpit:v1.31.4</code>) can be overwritten by setting the <code>test-resources.containers.mailpit.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.mailpit.image-tag</code> property.</p>
 </div>
 <div class="openblock">
@@ -1812,7 +1854,11 @@ test-resources.containers.mailpit.ui-port=8025</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mailpit = {image-name = "axllent/mailpit", image-tag = "v1.29.7", smtp-port = 1025, ui-port = 8025}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mailpit]
+image-name = "axllent/mailpit"
+image-tag = "v1.29.7"
+smtp-port = 1025
+ui-port = 8025</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2155,7 +2201,7 @@ MinIO no longer publishes community images that can be pulled anonymously, so th
 <p>SeaweedFS support will automatically start a <a href="https://github.com/seaweedfs/seaweedfs">SeaweedFS</a> container and provide the values of the <code>seaweedfs.url</code>, <code>seaweedfs.access-key</code>, and <code>seaweedfs.secret-key</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>chrislusf/seaweedfs:4.42</code>) can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
+<p>The default image (<code>chrislusf/seaweedfs:4.48</code>) can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-couchbase"><a class="anchor" href="#modules-couchbase"></a>5.13 Couchbase</h2>
@@ -2171,7 +2217,7 @@ MinIO no longer publishes community images that can be pulled anonymously, so th
 <p>Couchbase support will automatically start a <a href="https://www.couchbase.com">Couchbase Server container</a> and provide the values of the <code>couchbase.uri</code>, <code>couchbase.username</code>, and <code>couchbase.password</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The provider uses the <code>couchbase/server:8.0.2</code> image by default.</p>
+<p>The provider uses the <code>couchbase/server:8.0.3</code> image by default.</p>
 </div>
 <div class="paragraph">
 <p>You can override the image name and tag with <code>test-resources.containers.couchbase.image-name</code> and <code>test-resources.containers.couchbase.image-tag</code>.</p>
@@ -2195,7 +2241,9 @@ test-resources.containers.couchbase.image-tag=custom-tag</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {couchbase = {image-name = "my-couchbase/server", image-tag = "custom-tag"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.couchbase]
+image-name = "my-couchbase/server"
+image-tag = "custom-tag"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2263,7 +2311,7 @@ test-resources.containers.couchbase.image-tag=custom-tag</code></pre>
 <p>The container is configured with replica set functionality enabled.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>mongo:8.3.8</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
+<p>The default image (<code>mongo:8.3.11</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The default database name can be overwritten by setting the <code>test-resources.containers.mongodb.db-name</code> property.</p>
@@ -2332,8 +2380,19 @@ test-resources:
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">mqtt = {client = {server-uri = "tcp://${mqtt.host}:${mqtt.port}", client-id = "${random.uuid}"}}
-test-resources = {containers = {mosquitto = {image-name = "eclipse-mosquitto", hostnames = ["mqtt.host"], exposed-ports = [{"mqtt.port" = 1883}], ro-fs-bind = [{"mosquitto.conf" = "/mosquitto/config/mosquitto.conf"}]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[mqtt.client]
+server-uri = "tcp://${mqtt.host}:${mqtt.port}"
+client-id = "${random.uuid}"
+
+[test-resources.containers.mosquitto]
+image-name = "eclipse-mosquitto"
+hostnames = ["mqtt.host"]
+
+[[test-resources.containers.mosquitto.exposed-ports]]
+"mqtt.port" = 1883
+
+[[test-resources.containers.mosquitto.ro-fs-bind]]
+"mosquitto.conf" = "/mosquitto/config/mosquitto.conf"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2438,7 +2497,7 @@ listener 1883</code></pre>
 <p>Neo4j support will automatically start a <a href="https://neo4j.com/">Neo4j container</a> and provide the value of the <code>neo4j.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>neo4j:5.26.29</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
+<p>The default image (<code>neo4j:5.26.31</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-opentelemetry"><a class="anchor" href="#modules-opentelemetry"></a>5.17 OpenTelemetry</h2>
@@ -2556,7 +2615,8 @@ Enable only the signals you want to send to the local backend, for example trace
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">otel = {traces = {exporter = "otlp"}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[otel.traces]
+exporter = "otlp"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2617,7 +2677,8 @@ This lets CI, staging, or developer machines point to an existing collector:</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">otel = {exporter = {otlp = {endpoint = "http://collector.example:4317"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[otel.exporter.otlp]
+endpoint = "http://collector.example:4317"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2660,7 +2721,7 @@ This lets CI, staging, or developer machines point to an existing collector:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.30.2</code>.
+<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.35.0</code>.
 The image can be changed with the standard container image settings:</p>
 </div>
 <div class="listingblock">
@@ -2669,7 +2730,7 @@ The image can be changed with the standard container image settings:</p>
   containers:
     opentelemetry:
       image-name: "grafana/otel-lgtm"
-      image-tag: 0.30.2</code></pre>
+      image-tag: 0.35.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2709,7 +2770,8 @@ It does not include telemetry payloads, headers, tokens, or application data.</p
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {opentelemetry = {enabled = false}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.opentelemetry]
+enabled = false</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -2769,7 +2831,7 @@ It is not a production observability deployment, and applications should configu
 <p>RabbitMQ support will automatically start a <a href="https://www.rabbitmq.com/">RabbitMQ container</a> and provide the value of the <code>rabbitmq.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>rabbitmq:4.3.5</code>) can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
+<p>The default image (<code>rabbitmq:4.3.6</code>) can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.19 Redis</h2>
@@ -2788,7 +2850,7 @@ This provider can be configured with a variety of parameters:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The default image (<code>redis:8.10.0</code>, or <code>grokzen/redis-cluster:7.2.5</code> in cluster mode) can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
+<p>The default image (<code>redis:8.10.2</code>, or <code>grokzen/redis-cluster:7.2.5</code> in cluster mode) can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
 </li>
 <li>
 <p>Have Test Resources spawn a Redis cluster by setting <code>test-resources.containers.redis.cluster-mode</code> to <code>true</code>. With this setting, the property <code>redis.uris</code> will be defined instead of <code>redis.uri</code>, and some cluster-specific parameters may be provided under <code>test-resources.containers.redis.cluster</code>:</p>
@@ -2862,7 +2924,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <p>Infinispan support will automatically start an Infinispan container and provide the values of the <code>infinispan.client.hotrod.server.host</code> and <code>infinispan.client.hotrod.server.port</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>quay.io/infinispan/server:16.2.2</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
+<p>The default image (<code>quay.io/infinispan/server:16.2.3</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.infinispan.image-tag</code> property.</p>
 </div>
 <div class="paragraph">
@@ -3059,7 +3121,8 @@ test-resources.containers.wiremock.cli-args[1]=--global-response-templating</cod
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {wiremock = {cli-args = ["--verbose", "--global-response-templating"]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.wiremock]
+cli-args = ["--verbose", "--global-response-templating"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3125,7 +3188,11 @@ test-resources.containers.wiremock.copy-to-container[1].classpath:wiremock/__fil
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {wiremock = {copy-to-container = [{"classpath:wiremock/mappings/hello.json" = "/home/wiremock/mappings/hello.json"}, {"classpath:wiremock/__files/hello.txt" = "/home/wiremock/__files/hello.txt"}]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[[test-resources.containers.wiremock.copy-to-container]]
+"classpath:wiremock/mappings/hello.json" = "/home/wiremock/mappings/hello.json"
+
+[[test-resources.containers.wiremock.copy-to-container]]
+"classpath:wiremock/__files/hello.txt" = "/home/wiremock/__files/hello.txt"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3246,7 +3313,7 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 <p>Micronaut Security discovers the JWKS URI from the issuer&#8217;s OpenID Provider metadata. Test Resources does not resolve <code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code>, because it would register a second JWKS configuration with the same name. If a test needs the direct Keycloak JWKS URL, derive <code>/protocol/openid-connect/certs</code> from the issuer.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>quay.io/keycloak/keycloak:26.7.2</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
+<p>The default image (<code>quay.io/keycloak/keycloak:26.8.0</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
 The default image tag can be overwritten by setting the <code>test-resources.containers.keycloak.image-tag</code> property.</p>
 </div>
 <div class="paragraph">
@@ -3273,7 +3340,10 @@ test-resources.containers.keycloak.client-secret=my-secret</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {keycloak = {realm = "micronaut", client-id = "my-client", client-secret = "my-secret"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.keycloak]
+realm = "micronaut"
+client-id = "my-client"
+client-secret = "my-secret"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3369,7 +3439,9 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {hashicorp-vault = {path = "secret/my-path", secrets = ["key1=value1", "key2=value2"]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.hashicorp-vault]
+path = "secret/my-path"
+secrets = ["key1=value1", "key2=value2"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3428,7 +3500,7 @@ test-resources.containers.hashicorp-vault.secrets[1]=key2=value2</code></pre>
 <p>Consul support will automatically start a <a href="https://www.consul.io/">HashiCorp Consul container</a> and provide the values of the <code>consul.client.host</code>, <code>consul.client.port</code>, and <code>consul.client.default-zone</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>hashicorp/consul:2.0.3</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-consul.image-name</code> property.</p>
+<p>The default image (<code>hashicorp/consul:2.0.4</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-consul.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Key/value pairs can be inserted into HashiCorp Consul at startup with the <code>test-resources.containers.hashicorp-consul.kv-properties</code> property:</p>
@@ -3453,7 +3525,8 @@ test-resources.containers.hashicorp-consul.kv-properties[1]=key2=value2</code></
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {hashicorp-consul = {kv-properties = ["key1=value1", "key2=value2"]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.hashicorp-consul]
+kv-properties = ["key1=value1", "key2=value2"]</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3509,7 +3582,7 @@ test-resources.containers.hashicorp-consul.kv-properties[1]=key2=value2</code></
 <p>Solr support will automatically start a <a href="https://solr.apache.org/">Solr container</a> and provide the value of the <code>micronaut.solr.hosts</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>solr:9.8.0</code>) can be overwritten by setting the <code>test-resources.containers.solr.image-name</code> property.</p>
+<p>The default image (<code>solr:9.10.1</code>) can be overwritten by setting the <code>test-resources.containers.solr.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Resolved properties:</p>
@@ -3559,7 +3632,18 @@ solr.zookeeper.enabled=true</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">solr = {collection = "my-collection", config = {name = "my-config", url = "https://example.com/solr-config.zip"}, schema = {url = "https://example.com/schema.xml"}, zookeeper = {enabled = true}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[solr]
+collection = "my-collection"
+
+[solr.config]
+name = "my-config"
+url = "https://example.com/solr-config.zip"
+
+[solr.schema]
+url = "https://example.com/schema.xml"
+
+[solr.zookeeper]
+enabled = true</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3678,7 +3762,12 @@ test-resources.containers.fakesmtp.exposed-ports[0].smtp.port=25</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {fakesmtp = {image-name = "ghusta/fakesmtp", hostnames = ["smtp.host"], exposed-ports = [{"smtp.port" = 25}]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.fakesmtp]
+image-name = "ghusta/fakesmtp"
+hostnames = ["smtp.host"]
+
+[[test-resources.containers.fakesmtp.exposed-ports]]
+"smtp.port" = 25</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -3896,7 +3985,18 @@ test-resources.containers.mycontainer.rw-fs-bind[0].readwrite-file.conf=/path/to
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", hostnames = ["my.service.host"], exposed-ports = [{"my.service.port" = 1883}], ro-fs-bind = [{"readonly-file.conf" = "/path/to/container/readonly-file.conf"}], rw-fs-bind = [{"readwrite-file.conf" = "/path/to/container/readwrite-file.conf"}]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+hostnames = ["my.service.host"]
+
+[[test-resources.containers.mycontainer.exposed-ports]]
+"my.service.port" = 1883
+
+[[test-resources.containers.mycontainer.ro-fs-bind]]
+"readonly-file.conf" = "/path/to/container/readonly-file.conf"
+
+[[test-resources.containers.mycontainer.rw-fs-bind]]
+"readwrite-file.conf" = "/path/to/container/readwrite-file.conf"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4000,7 +4100,14 @@ test-resources.containers.mycontainer.rw-tmpfs-mappings[0]=/path/to/readwrite/co
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", hostnames = ["my.service.host"], exposed-ports = [{"my.service.port" = 1883}], ro-tmpfs-mappings = ["/path/to/readonly/container/file"], rw-tmpfs-mappings = ["/path/to/readwrite/container/file"]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+hostnames = ["my.service.host"]
+ro-tmpfs-mappings = ["/path/to/readonly/container/file"]
+rw-tmpfs-mappings = ["/path/to/readwrite/container/file"]
+
+[[test-resources.containers.mycontainer.exposed-ports]]
+"my.service.port" = 1883</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4092,7 +4199,14 @@ test-resources.containers.mycontainer.rw-anonymous-volumes[0]=/path/to/readwrite
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", hostnames = ["my.service.host"], exposed-ports = [{"my.service.port" = 1883}], ro-anonymous-volumes = ["/path/to/readonly/container/data"], rw-anonymous-volumes = ["/path/to/readwrite/container/data"]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+hostnames = ["my.service.host"]
+ro-anonymous-volumes = ["/path/to/readonly/container/data"]
+rw-anonymous-volumes = ["/path/to/readwrite/container/data"]
+
+[[test-resources.containers.mycontainer.exposed-ports]]
+"my.service.port" = 1883</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4186,7 +4300,18 @@ test-resources.containers.mycontainer.copy-to-container[1].classpath:/file/on/cl
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", hostnames = ["my.service.host"], exposed-ports = [{"my.service.port" = 1883}], copy-to-container = [{"path/to/local/readonly-file.conf" = "/path/to/container/file.conf"}, {"classpath:/file/on/classpath.conf" = "/path/to/container/other.conf"}]}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+hostnames = ["my.service.host"]
+
+[[test-resources.containers.mycontainer.exposed-ports]]
+"my.service.port" = 1883
+
+[[test-resources.containers.mycontainer.copy-to-container]]
+"path/to/local/readonly-file.conf" = "/path/to/container/file.conf"
+
+[[test-resources.containers.mycontainer.copy-to-container]]
+"classpath:/file/on/classpath.conf" = "/path/to/container/other.conf"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4313,7 +4438,20 @@ test-resources.containers.mycontainer.startup-timeout=120s</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", hostnames = ["my.service.host"], exposed-ports = [{"my.service.port" = 1883}], command = "some.sh", env = [{MY_ENV_VAR = "my value"}], labels = [{"my.label" = "my value"}], startup-timeout = "120s"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+hostnames = ["my.service.host"]
+command = "some.sh"
+startup-timeout = "120s"
+
+[[test-resources.containers.mycontainer.exposed-ports]]
+"my.service.port" = 1883
+
+[[test-resources.containers.mycontainer.env]]
+MY_ENV_VAR = "my value"
+
+[[test-resources.containers.mycontainer.labels]]
+"my.label" = "my value"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4437,7 +4575,19 @@ test-resources.containers.consumer.hostnames=consumer.host</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {producer = {image-name = "alpine:3.14", command = "top", network = "custom", network-aliases = "bob", hostnames = "producer.host"}, consumer = {image-name = "alpine:3.14", command = "top", network = "custom", network-aliases = "alice", hostnames = "consumer.host"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.producer]
+image-name = "alpine:3.14"
+command = "top"
+network = "custom"
+network-aliases = "bob"
+hostnames = "producer.host"
+
+[test-resources.containers.consumer]
+image-name = "alpine:3.14"
+command = "top"
+network = "custom"
+network-aliases = "alice"
+hostnames = "consumer.host"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4551,7 +4701,11 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", wait-strategy = {log = {regex = ".*Started.*"}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+
+[test-resources.containers.mycontainer.wait-strategy.log]
+regex = ".*Started.*"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4682,7 +4836,15 @@ test-resources.containers.mycontainer.wait-strategy.log.regex=.*Started.*</code>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", wait-strategy = {http = {path = "/", port = 8080}, log = {regex = ".*Started.*"}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+
+[test-resources.containers.mycontainer.wait-strategy.http]
+path = "/"
+port = 8080
+
+[test-resources.containers.mycontainer.wait-strategy.log]
+regex = ".*Started.*"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4783,7 +4945,18 @@ test-resources.containers.mycontainer.wait-strategy.all.timeout=120s</code></pre
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", wait-strategy = {http = {path = "/", port = 8080}, log = {regex = ".*Started.*"}, all = {timeout = "120s"}}}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+
+[test-resources.containers.mycontainer.wait-strategy.http]
+path = "/"
+port = 8080
+
+[test-resources.containers.mycontainer.wait-strategy.log]
+regex = ".*Started.*"
+
+[test-resources.containers.mycontainer.wait-strategy.all]
+timeout = "120s"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -4894,7 +5067,12 @@ test-resources.containers.other.image-name=my/other</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">test-resources = {containers = {mycontainer = {image-name = "my/container", depends-on = "other"}, other = {image-name = "my/other"}}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[test-resources.containers.mycontainer]
+image-name = "my/container"
+depends-on = "other"
+
+[test-resources.containers.other]
+image-name = "my/other"</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">

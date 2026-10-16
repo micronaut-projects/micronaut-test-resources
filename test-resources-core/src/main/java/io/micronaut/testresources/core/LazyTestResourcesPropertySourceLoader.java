@@ -98,7 +98,7 @@ public class LazyTestResourcesPropertySourceLoader implements PropertySourceLoad
                     Map<String, Collection<String>> entries = producer.getPropertyEntries()
                         .stream()
                         .collect(Collectors.toMap(k -> k, propertyResolver::getPropertyEntries));
-                    Map<String, Object> testResourcesConfig = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+                    Map<String, Object> testResourcesConfig = PropertyResolverSupport.resolveTestResourcesConfiguration(propertyResolver);
                     keys = producer.produceKeys(resourceLoader, entries, testResourcesConfig)
                         .stream()
                         // We use "containsProperties" here because "containsProperty"

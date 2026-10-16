@@ -19,6 +19,7 @@ import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
+import io.micronaut.testresources.core.PropertyResolverSupport;
 import io.micronaut.testresources.core.TestResourcesResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public class EmbeddedTestResourcesPropertyExpressionResolver extends LazyTestRes
                                        String expression,
                                        Class<T> requiredType) {
             List<TestResourcesResolver> resolvers = loader.getResolvers();
-            Map<String, Object> testProperties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+            Map<String, Object> testProperties = PropertyResolverSupport.resolveTestResourcesConfiguration(propertyResolver);
             for (TestResourcesResolver resolver : resolvers) {
                 if (!EmbeddedDisabledResolverWarningSupport.isEnabled(resolver, testProperties, LOGGER)) {
                     continue;

@@ -23,7 +23,7 @@ FROM couchbase/server:8.0.3 AS couchbase
 
 # provider: elasticsearch
 # property: test-resources.containers.elasticsearch.image-name
-FROM docker.elastic.co/elasticsearch/elasticsearch:9.5.4 AS elasticsearch
+FROM docker.elastic.co/elasticsearch/elasticsearch:9.5.5 AS elasticsearch
 
 # provider: floci
 # property: test-resources.containers.floci.image-name
@@ -39,7 +39,7 @@ FROM hivemq/hivemq-ce:2026.5 AS hivemq
 
 # provider: infinispan
 # property: test-resources.containers.infinispan.image-name
-FROM quay.io/infinispan/server:16.2.3 AS infinispan
+FROM quay.io/infinispan/server:16.3.0 AS infinispan
 
 # provider: kafka
 # property: test-resources.containers.kafka.image-name
@@ -59,7 +59,7 @@ FROM confluentinc/cp-ksqldb-server:8.3.2 AS kafka_ksqldb
 
 # provider: keycloak
 # property: test-resources.containers.keycloak.image-name
-FROM quay.io/keycloak/keycloak:26.8.0 AS keycloak
+FROM quay.io/keycloak/keycloak:26.8.1 AS keycloak
 
 # provider: localstack
 # property: test-resources.containers.localstack.image-name
@@ -67,7 +67,7 @@ FROM localstack/localstack:4.14.0 AS localstack
 
 # provider: mailpit
 # property: test-resources.containers.mailpit.image-name
-FROM axllent/mailpit:v1.31.4 AS mailpit
+FROM axllent/mailpit:v1.31.6 AS mailpit
 
 # provider: mariadb
 # property: test-resources.containers.mariadb.image-name
@@ -79,7 +79,7 @@ FROM pgsty/minio:RELEASE.2026-08-04T00-00-00Z AS minio
 
 # provider: mongodb
 # property: test-resources.containers.mongodb.image-name
-FROM mongo:8.3.11 AS mongodb
+FROM mongo:8.3.13 AS mongodb
 
 # provider: mssql
 # property: test-resources.containers.mssql.image-name
@@ -95,7 +95,7 @@ FROM container-registry.oracle.com/mysql/community-server:26.7.1 AS mysql_commun
 
 # provider: neo4j
 # property: test-resources.containers.neo4j.image-name
-FROM neo4j:5.26.31 AS neo4j
+FROM neo4j:5.26.32 AS neo4j
 
 # provider: opensearch
 # property: test-resources.containers.opensearch.image-name
@@ -103,7 +103,7 @@ FROM opensearchproject/opensearch:3.9.0 AS opensearch
 
 # provider: opentelemetry
 # property: test-resources.containers.opentelemetry.image-name
-FROM grafana/otel-lgtm:0.35.0 AS opentelemetry
+FROM grafana/otel-lgtm:0.37.0 AS opentelemetry
 
 # provider: oracle
 # property: test-resources.containers.oracle.image-name
@@ -119,7 +119,7 @@ FROM postgres:18.6 AS postgres
 
 # provider: pulsar
 # property: test-resources.containers.pulsar.image-name
-FROM apachepulsar/pulsar:4.2.4 AS pulsar
+FROM apachepulsar/pulsar:4.2.5 AS pulsar
 
 # provider: rabbitmq
 # property: test-resources.containers.rabbitmq.image-name
@@ -139,7 +139,7 @@ FROM chrislusf/seaweedfs:4.48 AS seaweedfs
 
 # provider: solr
 # property: test-resources.containers.solr.image-name
-FROM solr:9.10.1 AS solr
+FROM solr:9.11.0 AS solr
 
 # provider: hashicorp-vault
 # property: test-resources.containers.hashicorp-vault.image-name

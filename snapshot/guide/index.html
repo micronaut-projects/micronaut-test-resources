@@ -1181,7 +1181,7 @@ r2dbc {
 <p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.http-hosts</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.5.4</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
+<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.5.5</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
 The default tag can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
 </div>
 
@@ -1828,7 +1828,7 @@ enabled = false</code></pre>
 <p>You can also override the image and Mailpit listener ports:</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>axllent/mailpit:v1.31.4</code>) can be overwritten by setting the <code>test-resources.containers.mailpit.image-name</code> property.
+<p>The default image (<code>axllent/mailpit:v1.31.6</code>) can be overwritten by setting the <code>test-resources.containers.mailpit.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.mailpit.image-tag</code> property.</p>
 </div>
 <div class="openblock">
@@ -2036,7 +2036,7 @@ class MailpitApiTest extends Specification {
 <p>Pulsar support will automatically start an <a href="https://pulsar.apache.org/">Apache Pulsar container</a> and provide the value of the <code>pulsar.service-url</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>apachepulsar/pulsar:4.2.4</code>) can be overridden by setting the <code>test-resources.containers.pulsar.image-name</code> property.</p>
+<p>The default image (<code>apachepulsar/pulsar:4.2.5</code>) can be overridden by setting the <code>test-resources.containers.pulsar.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-localstack"><a class="anchor" href="#modules-localstack"></a>5.9 Localstack</h2>
@@ -2311,7 +2311,7 @@ image-tag = "custom-tag"</code></pre>
 <p>The container is configured with replica set functionality enabled.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>mongo:8.3.11</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
+<p>The default image (<code>mongo:8.3.13</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The default database name can be overwritten by setting the <code>test-resources.containers.mongodb.db-name</code> property.</p>
@@ -2497,7 +2497,7 @@ listener 1883</code></pre>
 <p>Neo4j support will automatically start a <a href="https://neo4j.com/">Neo4j container</a> and provide the value of the <code>neo4j.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>neo4j:5.26.31</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
+<p>The default image (<code>neo4j:5.26.32</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-opentelemetry"><a class="anchor" href="#modules-opentelemetry"></a>5.17 OpenTelemetry</h2>
@@ -2721,7 +2721,7 @@ endpoint = "http://collector.example:4317"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.35.0</code>.
+<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.37.0</code>.
 The image can be changed with the standard container image settings:</p>
 </div>
 <div class="listingblock">
@@ -2730,7 +2730,7 @@ The image can be changed with the standard container image settings:</p>
   containers:
     opentelemetry:
       image-name: "grafana/otel-lgtm"
-      image-tag: 0.35.0</code></pre>
+      image-tag: 0.37.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2924,7 +2924,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <p>Infinispan support will automatically start an Infinispan container and provide the values of the <code>infinispan.client.hotrod.server.host</code> and <code>infinispan.client.hotrod.server.port</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>quay.io/infinispan/server:16.2.3</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
+<p>The default image (<code>quay.io/infinispan/server:16.3.0</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.infinispan.image-tag</code> property.</p>
 </div>
 <div class="paragraph">
@@ -3313,7 +3313,7 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 <p>Micronaut Security discovers the JWKS URI from the issuer&#8217;s OpenID Provider metadata. Test Resources does not resolve <code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code>, because it would register a second JWKS configuration with the same name. If a test needs the direct Keycloak JWKS URL, derive <code>/protocol/openid-connect/certs</code> from the issuer.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>quay.io/keycloak/keycloak:26.8.0</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
+<p>The default image (<code>quay.io/keycloak/keycloak:26.8.1</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
 The default image tag can be overwritten by setting the <code>test-resources.containers.keycloak.image-tag</code> property.</p>
 </div>
 <div class="paragraph">
@@ -3582,7 +3582,7 @@ kv-properties = ["key1=value1", "key2=value2"]</code></pre>
 <p>Solr support will automatically start a <a href="https://solr.apache.org/">Solr container</a> and provide the value of the <code>micronaut.solr.hosts</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>solr:9.10.1</code>) can be overwritten by setting the <code>test-resources.containers.solr.image-name</code> property.</p>
+<p>The default image (<code>solr:9.11.0</code>) can be overwritten by setting the <code>test-resources.containers.solr.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Resolved properties:</p>

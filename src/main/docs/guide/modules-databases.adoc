@@ -9,8 +9,9 @@ Micronaut Test Resources provides support for the following databases:
 | https://www.h2database.com/html/main.html[H2] | Yes | No | `h2` | n/a
 | https://mariadb.org/[MariaDB] | Yes | Yes | `mariadb` | `{default-image-mariadb}`
 | https://www.mysql.com/[MySQL] | Yes | Yes | `mysql` | `{default-image-mysql-community}`
-| https://www.oracle.com/database/technologies/appdev/xe.html[Oracle Database XE] | Yes | Yes | `oracle-xe` | `{default-image-oracle-xe}`
 | https://www.oracle.com/database/free/[Oracle Database Free] | Yes | Yes | `oracle` | `{default-image-oracle-free}`
+| https://www.oracle.com/database/technologies/appdev/xe.html[Oracle Database XE] | Yes | Yes | `oracle-xe` | `{default-image-oracle-xe}`
+| Oracle Test Pilot for Third-Party Software | Yes | No | `oracle-test-pilot` | n/a
 | https://www.postgresql.org/[PostgreSQL] | Yes | Yes | `postgres` | `{default-image-postgres}`
 | https://www.microsoft.com/sql-server[Microsoft SQL Server] | Yes | Yes | `mssql` | `{default-image-mssql}`
 
@@ -19,6 +20,9 @@ Micronaut Test Resources provides support for the following databases:
 Most databases are supplied via a https://www.testcontainers.com/[Testcontainers] container.
 H2 is containerless and starts a loopback-only in-memory TCP server for the lifetime of the test-resources process.
 Shared or remote H2 test resources are not supported at this time, so the H2 resolver stays disabled when `micronaut.test.resources.server.uri` is configured.
+For new Oracle database tests, prefer the `oracle` identifier for Oracle Database Free.
+The `oracle-xe` identifier remains available for compatibility with Oracle Database XE and is deprecated for removal.
+For JDBC tests that run against Oracle Test Pilot, use the `oracle-test-pilot` identifier; it resolves the JDBC URL, username, and password from the `TESTPILOT_CONNECTION_STRING_SUFFIX`, `TESTPILOT_USERNAME`, and `TESTPILOT_PASSWORD` environment variables.
 It is possible to override the default image of the container by setting the following property in your application configuration:
 
 - `test-resources.containers.[db-type].image-name`

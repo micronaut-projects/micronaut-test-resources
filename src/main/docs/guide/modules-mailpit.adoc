@@ -69,4 +69,4 @@ snippet::io.micronaut.testresources.docs.mailpit.MailpitApiTest[project-base="te
 <1> The `mailpit.api.url` property is resolved by test resources
 <2> The captured messages are listed by the `/api/v1/messages` endpoint of the Mailpit HTTP API
 
-For custom SMTP containers or non-JavaMail configuration, use <<modules-testcontainers,Generic Testcontainers support>>.
+For custom SMTP containers or non-JavaMail configuration, use xref:modules.adoc#modules-testcontainers[Generic Testcontainers support].

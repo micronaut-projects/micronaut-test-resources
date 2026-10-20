@@ -35,7 +35,7 @@ At this stage, we know _all properties_ that resolvers are able to resolve.
 So whenever Micronaut will encounter a property without value, it will ask the resolvers to resolve it.
 This is done in 2 steps:
 
-1. the `TestResourceResolver#getRequiredProperties` is called with the expression being resolved. It gives a chance to the resolver to tell what other properties it needs to read _before_ resolving the expression. For example, a database resolver may need to read the `datasources.default.db-type` property before it can resolve the `datasources.default.url` property, so that it can tell if it's actually capable of handling that database type or not.
+1. the `TestResourcesResolver#getRequiredProperties` is called with the expression being resolved. It gives a chance to the resolver to tell what other properties it needs to read _before_ resolving the expression. For example, a database resolver may need to read the `datasources.default.db-type` property before it can resolve the `datasources.default.url` property, so that it can tell if it's actually capable of handling that database type or not.
 2. the `resolve` method is called with the expression being resolved, the map of resolved properties from 1. and the whole configuration map of the `test-resources` from the application.
 
 It is the responsibility of the `TestResourcesResolver` to check, when `resolve` is called, that it can actually resolve the supplied expression. Do **not** assume that it will be called with an expression that it can resolve.

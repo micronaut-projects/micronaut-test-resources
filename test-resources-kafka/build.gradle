@@ -18,5 +18,8 @@ dependencies {
         implementation(libs.lz4.java) {
             because "fixes GHSA-xx22-p4ch-683r in the Kafka client transitive dependencies"
         }
+        implementation(libs.snappy.java) {
+            because "fixes GHSA-gwq9-9ffj-mvrv, GHSA-q233-g92q-qxp6 and GHSA-xqrx-qh46-34m7 in the Kafka client transitive dependencies"
+        }
     }
 }

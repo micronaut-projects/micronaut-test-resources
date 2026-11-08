@@ -19,7 +19,7 @@ import io.micronaut.context.env.PropertyExpressionResolver;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.value.PropertyResolver;
 import io.micronaut.testresources.core.LazyTestResourcesExpressionResolver;
-import io.micronaut.testresources.core.TestResourcesResolver;
+import io.micronaut.testresources.core.PropertyResolverSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +57,7 @@ public class TestResourcesClientPropertyExpressionResolver extends LazyTestResou
                                        Class<T> requiredType) {
             TestResourcesClient client = client();
             Map<String, Object> props = resolveRequiredProperties(expression, propertyResolver, client);
-            Map<String, Object> properties = propertyResolver.getProperties(TestResourcesResolver.TEST_RESOURCES_PROPERTY);
+            Map<String, Object> properties = PropertyResolverSupport.resolveTestResourcesConfiguration(propertyResolver);
             Optional<String> resolved = callClient(expression, client, props, properties);
             if (resolved.isPresent()) {
                 String resolvedValue = resolved.get();

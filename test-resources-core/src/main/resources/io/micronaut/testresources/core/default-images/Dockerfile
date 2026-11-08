@@ -15,7 +15,7 @@ FROM mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview AS azu
 
 # provider: hashicorp-consul
 # property: test-resources.containers.hashicorp-consul.image-name
-FROM hashicorp/consul:2.0.4 AS consul
+FROM hashicorp/consul:2.1.0 AS consul
 
 # provider: couchbase
 # property: test-resources.containers.couchbase.image-name
@@ -23,7 +23,7 @@ FROM couchbase/server:8.0.3 AS couchbase
 
 # provider: elasticsearch
 # property: test-resources.containers.elasticsearch.image-name
-FROM docker.elastic.co/elasticsearch/elasticsearch:9.5.5 AS elasticsearch
+FROM docker.elastic.co/elasticsearch/elasticsearch:9.5.6 AS elasticsearch
 
 # provider: floci
 # property: test-resources.containers.floci.image-name
@@ -39,27 +39,27 @@ FROM hivemq/hivemq-ce:2026.5 AS hivemq
 
 # provider: infinispan
 # property: test-resources.containers.infinispan.image-name
-FROM quay.io/infinispan/server:16.3.0 AS infinispan
+FROM quay.io/infinispan/server:16.3.1 AS infinispan
 
 # provider: kafka
 # property: test-resources.containers.kafka.image-name
-FROM apache/kafka:4.3.1 AS kafka
+FROM apache/kafka:4.4.0 AS kafka
 
 # provider: kafka-schema-registry
 # property: test-resources.containers.kafka-schema-registry.image-name
-FROM confluentinc/cp-schema-registry:8.3.2 AS kafka_schema_registry
+FROM confluentinc/cp-schema-registry:8.4.0 AS kafka_schema_registry
 
 # provider: kafka-connect
 # property: test-resources.containers.kafka-connect.image-name
-FROM confluentinc/cp-kafka-connect:8.3.2 AS kafka_connect
+FROM confluentinc/cp-kafka-connect:8.4.0 AS kafka_connect
 
 # provider: kafka-ksqldb
 # property: test-resources.containers.kafka-ksqldb.image-name
-FROM confluentinc/cp-ksqldb-server:8.3.2 AS kafka_ksqldb
+FROM confluentinc/cp-ksqldb-server:8.4.0 AS kafka_ksqldb
 
 # provider: keycloak
 # property: test-resources.containers.keycloak.image-name
-FROM quay.io/keycloak/keycloak:26.8.1 AS keycloak
+FROM quay.io/keycloak/keycloak:26.8.2 AS keycloak
 
 # provider: localstack
 # property: test-resources.containers.localstack.image-name
@@ -67,7 +67,7 @@ FROM localstack/localstack:4.14.0 AS localstack
 
 # provider: mailpit
 # property: test-resources.containers.mailpit.image-name
-FROM axllent/mailpit:v1.31.6 AS mailpit
+FROM axllent/mailpit:v1.33.1 AS mailpit
 
 # provider: mariadb
 # property: test-resources.containers.mariadb.image-name
@@ -87,11 +87,11 @@ FROM mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04 AS mssql
 
 # provider: mysql
 # property: test-resources.containers.mysql.image-name
-FROM mysql:26.7.0 AS mysql
+FROM mysql:26.10.0 AS mysql
 
 # provider: mysql
 # property: test-resources.containers.mysql.image-name
-FROM container-registry.oracle.com/mysql/community-server:26.7.1 AS mysql_community
+FROM container-registry.oracle.com/mysql/community-server:26.10.0 AS mysql_community
 
 # provider: neo4j
 # property: test-resources.containers.neo4j.image-name
@@ -103,7 +103,7 @@ FROM opensearchproject/opensearch:3.9.0 AS opensearch
 
 # provider: opentelemetry
 # property: test-resources.containers.opentelemetry.image-name
-FROM grafana/otel-lgtm:0.37.0 AS opentelemetry
+FROM grafana/otel-lgtm:0.40.0 AS opentelemetry
 
 # provider: oracle
 # property: test-resources.containers.oracle.image-name
@@ -123,11 +123,11 @@ FROM apachepulsar/pulsar:4.2.5 AS pulsar
 
 # provider: rabbitmq
 # property: test-resources.containers.rabbitmq.image-name
-FROM rabbitmq:4.3.6 AS rabbitmq
+FROM rabbitmq:4.4.0 AS rabbitmq
 
 # provider: redis
 # property: test-resources.containers.redis.image-name
-FROM redis:8.10.2 AS redis
+FROM redis:8.10.3 AS redis
 
 # provider: redis-cluster
 # property: test-resources.containers.redis.image-name
@@ -135,7 +135,7 @@ FROM grokzen/redis-cluster:7.2.5 AS redis_cluster
 
 # provider: seaweedfs
 # property: test-resources.containers.seaweedfs.image-name
-FROM chrislusf/seaweedfs:4.48 AS seaweedfs
+FROM chrislusf/seaweedfs:4.52 AS seaweedfs
 
 # provider: solr
 # property: test-resources.containers.solr.image-name

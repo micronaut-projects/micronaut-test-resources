@@ -47,15 +47,15 @@ FROM apache/kafka:4.4.0 AS kafka
 
 # provider: kafka-schema-registry
 # property: test-resources.containers.kafka-schema-registry.image-name
-FROM confluentinc/cp-schema-registry:8.4.0 AS kafka_schema_registry
+FROM confluentinc/cp-schema-registry:8.4.1 AS kafka_schema_registry
 
 # provider: kafka-connect
 # property: test-resources.containers.kafka-connect.image-name
-FROM confluentinc/cp-kafka-connect:8.4.0 AS kafka_connect
+FROM confluentinc/cp-kafka-connect:8.4.1 AS kafka_connect
 
 # provider: kafka-ksqldb
 # property: test-resources.containers.kafka-ksqldb.image-name
-FROM confluentinc/cp-ksqldb-server:8.4.0 AS kafka_ksqldb
+FROM confluentinc/cp-ksqldb-server:8.4.1 AS kafka_ksqldb
 
 # provider: keycloak
 # property: test-resources.containers.keycloak.image-name
@@ -79,7 +79,7 @@ FROM pgsty/minio:RELEASE.2026-08-04T00-00-00Z AS minio
 
 # provider: mongodb
 # property: test-resources.containers.mongodb.image-name
-FROM mongo:8.3.13 AS mongodb
+FROM mongo:8.3.17 AS mongodb
 
 # provider: mssql
 # property: test-resources.containers.mssql.image-name
@@ -95,7 +95,7 @@ FROM container-registry.oracle.com/mysql/community-server:26.10.0 AS mysql_commu
 
 # provider: neo4j
 # property: test-resources.containers.neo4j.image-name
-FROM neo4j:5.26.32 AS neo4j
+FROM neo4j:5.26.33 AS neo4j
 
 # provider: opensearch
 # property: test-resources.containers.opensearch.image-name
@@ -103,7 +103,7 @@ FROM opensearchproject/opensearch:3.9.0 AS opensearch
 
 # provider: opentelemetry
 # property: test-resources.containers.opentelemetry.image-name
-FROM grafana/otel-lgtm:0.40.0 AS opentelemetry
+FROM grafana/otel-lgtm:0.41.0 AS opentelemetry
 
 # provider: oracle
 # property: test-resources.containers.oracle.image-name
@@ -115,7 +115,7 @@ FROM gvenzl/oracle-xe:slim-faststart AS oracle_xe
 
 # provider: postgres
 # property: test-resources.containers.postgres.image-name
-FROM postgres:18.6 AS postgres
+FROM postgres:18.7 AS postgres
 
 # provider: pulsar
 # property: test-resources.containers.pulsar.image-name
@@ -135,7 +135,7 @@ FROM grokzen/redis-cluster:7.2.5 AS redis_cluster
 
 # provider: seaweedfs
 # property: test-resources.containers.seaweedfs.image-name
-FROM chrislusf/seaweedfs:4.52 AS seaweedfs
+FROM chrislusf/seaweedfs:4.53 AS seaweedfs
 
 # provider: solr
 # property: test-resources.containers.solr.image-name

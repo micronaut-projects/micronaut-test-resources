@@ -390,7 +390,7 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mysql</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server:26.7.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>container-registry.oracle.com/mysql/community-server:26.10.0</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.oracle.com/database/technologies/appdev/xe.html">Oracle Database XE</a></p></td>
@@ -411,7 +411,7 @@ POM or via the command-line).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres:18.6</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgres:18.7</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.microsoft.com/sql-server">Microsoft SQL Server</a></p></td>
@@ -1181,7 +1181,7 @@ r2dbc {
 <p>Elasticsearch support will automatically start an <a href="https://www.elastic.co/elasticsearch/">Elasticsearch container</a> and provide the value of the <code>elasticsearch.http-hosts</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.5.5</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
+<p>The default image (<code>docker.elastic.co/elasticsearch/elasticsearch:9.5.6</code>) can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-name</code> property.
 The default tag can be overwritten by setting the <code>test-resources.containers.elasticsearch.image-tag</code> property.</p>
 </div>
 
@@ -1350,7 +1350,7 @@ Micronaut Test Resources only resolves the endpoint and key. The emulator certif
 <p>Kafka support will automatically start a <a href="https://kafka.apache.org">Kafka container</a> and provide the value of the <code>kafka.bootstrap.servers</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>apache/kafka:4.3.1</code>) can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
+<p>The default image (<code>apache/kafka:4.4.0</code>) can be overwritten by setting the <code>test-resources.containers.kafka.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Kafka topics are only provisioned when <code>test-resources.containers.kafka.topics</code> is configured. When set, test resources creates any missing topics before returning <code>kafka.bootstrap.servers</code>.</p>
@@ -1474,17 +1474,17 @@ Each service depends on the Kafka broker container and uses the same test resour
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.schema.registry.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-schema-registry:8.3.2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-schema-registry:8.4.1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>8081</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.connect.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-kafka-connect:8.3.2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-kafka-connect:8.4.1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>8083</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafka.ksqldb.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-ksqldb-server:8.3.2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>confluentinc/cp-ksqldb-server:8.4.1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>8088</code></p></td>
 </tr>
 </tbody>
@@ -1828,7 +1828,7 @@ enabled = false</code></pre>
 <p>You can also override the image and Mailpit listener ports:</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>axllent/mailpit:v1.31.6</code>) can be overwritten by setting the <code>test-resources.containers.mailpit.image-name</code> property.
+<p>The default image (<code>axllent/mailpit:v1.33.1</code>) can be overwritten by setting the <code>test-resources.containers.mailpit.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.mailpit.image-tag</code> property.</p>
 </div>
 <div class="openblock">
@@ -2201,7 +2201,7 @@ MinIO no longer publishes community images that can be pulled anonymously, so th
 <p>SeaweedFS support will automatically start a <a href="https://github.com/seaweedfs/seaweedfs">SeaweedFS</a> container and provide the values of the <code>seaweedfs.url</code>, <code>seaweedfs.access-key</code>, and <code>seaweedfs.secret-key</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>chrislusf/seaweedfs:4.48</code>) can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
+<p>The default image (<code>chrislusf/seaweedfs:4.53</code>) can be overridden by setting the <code>test-resources.containers.seaweedfs.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-couchbase"><a class="anchor" href="#modules-couchbase"></a>5.13 Couchbase</h2>
@@ -2311,7 +2311,7 @@ image-tag = "custom-tag"</code></pre>
 <p>The container is configured with replica set functionality enabled.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>mongo:8.3.13</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
+<p>The default image (<code>mongo:8.3.17</code>) can be overwritten by setting the <code>test-resources.containers.mongodb.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>The default database name can be overwritten by setting the <code>test-resources.containers.mongodb.db-name</code> property.</p>
@@ -2497,7 +2497,7 @@ listener 1883</code></pre>
 <p>Neo4j support will automatically start a <a href="https://neo4j.com/">Neo4j container</a> and provide the value of the <code>neo4j.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>neo4j:5.26.32</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
+<p>The default image (<code>neo4j:5.26.33</code>) can be overwritten by setting the <code>test-resources.containers.neo4j.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-opentelemetry"><a class="anchor" href="#modules-opentelemetry"></a>5.17 OpenTelemetry</h2>
@@ -2721,7 +2721,7 @@ endpoint = "http://collector.example:4317"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.37.0</code>.
+<p>The default backend is <code>lgtm</code>, the default protocol is <code>grpc</code>, and the default image is <code>grafana/otel-lgtm:0.41.0</code>.
 The image can be changed with the standard container image settings:</p>
 </div>
 <div class="listingblock">
@@ -2730,7 +2730,7 @@ The image can be changed with the standard container image settings:</p>
   containers:
     opentelemetry:
       image-name: "grafana/otel-lgtm"
-      image-tag: 0.37.0</code></pre>
+      image-tag: 0.41.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2831,7 +2831,7 @@ It is not a production observability deployment, and applications should configu
 <p>RabbitMQ support will automatically start a <a href="https://www.rabbitmq.com/">RabbitMQ container</a> and provide the value of the <code>rabbitmq.uri</code> property.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>rabbitmq:4.3.6</code>) can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
+<p>The default image (<code>rabbitmq:4.4.0</code>) can be overwritten by setting the <code>test-resources.containers.rabbitmq.image-name</code> property.</p>
 </div>
 
 <h2 id="modules-redis"><a class="anchor" href="#modules-redis"></a>5.19 Redis</h2>
@@ -2850,7 +2850,7 @@ This provider can be configured with a variety of parameters:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The default image (<code>redis:8.10.2</code>, or <code>grokzen/redis-cluster:7.2.5</code> in cluster mode) can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
+<p>The default image (<code>redis:8.10.3</code>, or <code>grokzen/redis-cluster:7.2.5</code> in cluster mode) can be overwritten by setting the <code>test-resources.containers.redis.image-name</code> property.</p>
 </li>
 <li>
 <p>Have Test Resources spawn a Redis cluster by setting <code>test-resources.containers.redis.cluster-mode</code> to <code>true</code>. With this setting, the property <code>redis.uris</code> will be defined instead of <code>redis.uri</code>, and some cluster-specific parameters may be provided under <code>test-resources.containers.redis.cluster</code>:</p>
@@ -2924,7 +2924,7 @@ The default version can be overwritten by setting the <code>test-resources.conta
 <p>Infinispan support will automatically start an Infinispan container and provide the values of the <code>infinispan.client.hotrod.server.host</code> and <code>infinispan.client.hotrod.server.port</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>quay.io/infinispan/server:16.3.0</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
+<p>The default image (<code>quay.io/infinispan/server:16.3.1</code>) can be overwritten by setting the <code>test-resources.containers.infinispan.image-name</code> property.
 The default version can be overwritten by setting the <code>test-resources.containers.infinispan.image-tag</code> property.</p>
 </div>
 <div class="paragraph">
@@ -3313,7 +3313,7 @@ See <a href="#modules-testcontainers">Generic Testcontainers support</a> for the
 <p>Micronaut Security discovers the JWKS URI from the issuer&#8217;s OpenID Provider metadata. Test Resources does not resolve <code>micronaut.security.token.jwt.signatures.jwks.keycloak.url</code>, because it would register a second JWKS configuration with the same name. If a test needs the direct Keycloak JWKS URL, derive <code>/protocol/openid-connect/certs</code> from the issuer.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>quay.io/keycloak/keycloak:26.8.1</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
+<p>The default image (<code>quay.io/keycloak/keycloak:26.8.2</code>) can be overwritten by setting the <code>test-resources.containers.keycloak.image-name</code> property.
 The default image tag can be overwritten by setting the <code>test-resources.containers.keycloak.image-tag</code> property.</p>
 </div>
 <div class="paragraph">
@@ -3500,7 +3500,7 @@ secrets = ["key1=value1", "key2=value2"]</code></pre>
 <p>Consul support will automatically start a <a href="https://www.consul.io/">HashiCorp Consul container</a> and provide the values of the <code>consul.client.host</code>, <code>consul.client.port</code>, and <code>consul.client.default-zone</code> properties.</p>
 </div>
 <div class="paragraph">
-<p>The default image (<code>hashicorp/consul:2.0.4</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-consul.image-name</code> property.</p>
+<p>The default image (<code>hashicorp/consul:2.1.0</code>) can be overwritten by setting the <code>test-resources.containers.hashicorp-consul.image-name</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Key/value pairs can be inserted into HashiCorp Consul at startup with the <code>test-resources.containers.hashicorp-consul.kv-properties</code> property:</p>

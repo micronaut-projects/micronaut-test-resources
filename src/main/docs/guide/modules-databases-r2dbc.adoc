@@ -8,19 +8,17 @@ The following properties will automatically be set when using an R2DBC database:
 
 In order for the database to be properly detected, _one of_ the following properties has to be set:
 
-- `r2dbc.datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `oracle-xe`, `postgresql`)
+- `r2dbc.datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `mssql`, `oracle`, `postgres`, `postgresql`, `pg`)
 - `r2dbc.datasources.*.driverClassName`: the class name of the driver (fallback)
 - `r2dbc.datasources.*.dialect`: the dialect to use for the database (fallback)
 
 In addition, R2DBC databases can be configured simply by reading the traditional JDBC properties:
 
-- `datasources.*.db-type`: the kind of database (preferred, one of `mariadb`, `mysql`, `oracle`, `oracle-xe`, `postgresql`)
-- `datasources.*.driverClassName`: the class name of the driver (fallback)
+- `datasources.*.db-type`: the kind of JDBC database to share with the R2DBC datasource (preferred, one of `mariadb`, `mysql`, `mssql`, `oracle`, `oracle-xe`, `postgres`, `postgresql`, `pg`)
 - `datasources.*.dialect`: the dialect to use for the database (fallback)
 - `datasources.*.db-name`: overrides the default test database name
-- `datasources.*.username`: overrides the default test user
-- `datasources.*.password`: overrides the default test password
-- `datasources.*.init-script-path`: a path to a SQL file on classpath, which will be executed at container startup
+
+Container-level settings such as `username`, `password`, and `init-script-path` use the `test-resources.containers.[db-type].*` properties described in the database module section.
 
 In which case, the name of the datasource must match the name of the R2DBC datasource.
 This can be useful when using modules like Flyway which only support JDBC for updating schemas, but still have your application use R2DBC: in this case the container which will be used for R2DBC and JDBC will be the same.
